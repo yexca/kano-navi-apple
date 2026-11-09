@@ -1,0 +1,305 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+TOOL_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
+REPO_ROOT=$(cd "$TOOL_DIR/../.." && pwd)
+KANO_CHECKOUT=${KANO_CHECKOUT:-../kano}
+STATE_DIR=${LOCAL_BACKEND_STATE_DIR:-$TOOL_DIR/.state}
+RUNTIME_DIR="$STATE_DIR/runtime"
+DATA_ROOT="$STATE_DIR/data"
+DB_PATH="$DATA_ROOT/database/kano.sqlite"
+DIST_DIR="$RUNTIME_DIR/dist"
+BACKEND_PORT=${KANO_LOCAL_BACKEND_PORT:-7658}
+HTTPS_PORT=${KANO_LOCAL_HTTPS_PORT:-8443}
+BACKEND_BIN="$STATE_DIR/kano-go"
+PROXY_BIN="$STATE_DIR/tlsproxy"
+BACKEND_PID_FILE="$STATE_DIR/backend.pid"
+PROXY_PID_FILE="$STATE_DIR/tlsproxy.pid"
+BACKEND_LOG="$STATE_DIR/backend.log"
+PROXY_LOG="$STATE_DIR/tlsproxy.log"
+CA_KEY="$STATE_DIR/ca.key"
+CA_CERT="$STATE_DIR/ca.pem"
+CA_SERIAL="$STATE_DIR/ca.srl"
+LEAF_KEY="$STATE_DIR/localhost.key"
+LEAF_CERT="$STATE_DIR/localhost.pem"
+CERT_CONFIG="$STATE_DIR/localhost-openssl.cnf"
+SEED_MARKER="$STATE_DIR/seed.marker"
+
+mkdir -p "$STATE_DIR" "$RUNTIME_DIR" "$DATA_ROOT/database" "$DIST_DIR"
+
+pid_value() {
+	local file=$1
+	if [ -f "$file" ]; then
+		cat "$file"
+	fi
+}
+
+running() {
+	local file=$1 pid
+	pid=$(pid_value "$file")
+	[ -n "$pid" ] && kill -0 "$pid" 2>/dev/null
+}
+
+clear_stale_pid() {
+	local file=$1
+	if [ -f "$file" ] && ! running "$file"; then
+		unlink "$file" 2>/dev/null || true
+	fi
+}
+
+write_env() {
+	local key_file="$STATE_DIR/llm-secrets-key"
+	if [ ! -s "$key_file" ]; then
+		openssl rand -hex 32 >"$key_file"
+		chmod 600 "$key_file"
+	fi
+	local secrets_key
+	secrets_key=$(cat "$key_file")
+	cat >"$RUNTIME_DIR/.env" <<EOF
+APP_MODE=development
+LLM_SECRETS_KEY=$secrets_key
+WORKFLOW_SCHEDULER_ENABLED=0
+SKIP_X=1
+SKIP_YOUTUBE=1
+SKIP_BILIBILI=1
+SKIP_SHOP=1
+SKIP_MEDIA=1
+SKIP_LLM=1
+MCP_ENABLED=0
+PORT=$BACKEND_PORT
+EOF
+}
+
+build_backend() {
+	if [ ! -d "$KANO_CHECKOUT/backend" ]; then
+		echo "kano-navi checkout is missing: $KANO_CHECKOUT" >&2
+		return 1
+	fi
+	echo "Building kano-navi backend from $KANO_CHECKOUT"
+	/opt/homebrew/bin/go build -C "$KANO_CHECKOUT/backend" -o "$BACKEND_BIN" ./cmd/kano-go
+}
+
+build_proxy() {
+	if [ ! -x "$PROXY_BIN" ] || [ "$TOOL_DIR/tlsproxy/main.go" -nt "$PROXY_BIN" ]; then
+		/opt/homebrew/bin/go build -o "$PROXY_BIN" "$TOOL_DIR/tlsproxy/main.go"
+	fi
+}
+
+generate_certificates() {
+	if [ ! -s "$CA_KEY" ] || [ ! -s "$CA_CERT" ]; then
+		openssl genrsa -out "$CA_KEY" 2048 >/dev/null 2>&1
+		openssl req -x509 -new -nodes -key "$CA_KEY" -sha256 -days 825 \
+			-subj "/C=XX/O=Kano Navi Local/CN=Kano Navi Local CA" -out "$CA_CERT" >/dev/null 2>&1
+		chmod 600 "$CA_KEY"
+	fi
+	if [ ! -s "$LEAF_KEY" ] || [ ! -s "$LEAF_CERT" ]; then
+		cat >"$CERT_CONFIG" <<EOF
+[req]
+distinguished_name = req_distinguished_name
+req_extensions = req_ext
+prompt = no
+[req_distinguished_name]
+CN = localhost
+[req_ext]
+subjectAltName = @alt_names
+[alt_names]
+DNS.1 = localhost
+IP.1 = 127.0.0.1
+EOF
+		openssl genrsa -out "$LEAF_KEY" 2048 >/dev/null 2>&1
+		openssl req -new -key "$LEAF_KEY" -out "$STATE_DIR/localhost.csr" -config "$CERT_CONFIG" >/dev/null 2>&1
+		if [ -f "$CA_SERIAL" ]; then
+			openssl x509 -req -in "$STATE_DIR/localhost.csr" -CA "$CA_CERT" -CAkey "$CA_KEY" -CAserial "$CA_SERIAL" \
+				-out "$LEAF_CERT" -days 825 -sha256 -extfile "$CERT_CONFIG" -extensions req_ext >/dev/null 2>&1
+		else
+			openssl x509 -req -in "$STATE_DIR/localhost.csr" -CA "$CA_CERT" -CAkey "$CA_KEY" -CAcreateserial -CAserial "$CA_SERIAL" \
+				-out "$LEAF_CERT" -days 825 -sha256 -extfile "$CERT_CONFIG" -extensions req_ext >/dev/null 2>&1
+		fi
+		chmod 600 "$LEAF_KEY"
+	fi
+}
+
+wait_for_http() {
+	local url=$1 cafile=${2:-} i
+	for i in $(seq 1 60); do
+		if [ -n "$cafile" ]; then
+			if curl -fsS --max-time 1 --cacert "$cafile" "$url" >/dev/null 2>&1; then return 0; fi
+		else
+			if curl -fsS --max-time 1 "$url" >/dev/null 2>&1; then return 0; fi
+		fi
+		sleep 0.25
+	done
+	echo "Timed out waiting for $url" >&2
+	return 1
+}
+
+run_seed() {
+	python3 "$TOOL_DIR/seed/seed.py" "$DB_PATH" "$DATA_ROOT"
+	date +%s >"$SEED_MARKER"
+}
+
+start_backend() {
+	clear_stale_pid "$BACKEND_PID_FILE"
+	if running "$BACKEND_PID_FILE"; then
+		return 0
+	fi
+	write_env
+	build_backend
+	local secrets_key
+	secrets_key=$(cat "$STATE_DIR/llm-secrets-key")
+	python3 - "$BACKEND_PID_FILE" "$RUNTIME_DIR" "$BACKEND_LOG" "$secrets_key" "$BACKEND_PORT" "$BACKEND_BIN" "$DB_PATH" "$DIST_DIR" <<'PY'
+import os, pathlib, subprocess, sys
+pid_file, cwd, log_path, secret, port, binary, database, static = sys.argv[1:]
+env = os.environ.copy()
+env.update({"APP_MODE": "development", "LLM_SECRETS_KEY": secret, "WORKFLOW_SCHEDULER_ENABLED": "0", "SKIP_X": "1", "SKIP_YOUTUBE": "1", "SKIP_BILIBILI": "1", "SKIP_SHOP": "1", "SKIP_MEDIA": "1", "SKIP_LLM": "1", "MCP_ENABLED": "0", "PORT": port})
+log = open(log_path, "ab", buffering=0)
+process = subprocess.Popen([binary, "serve", "-database", database, "-static", static, "-listen", "127.0.0.1:" + port], cwd=cwd, env=env, stdout=log, stderr=log, start_new_session=True)
+pathlib.Path(pid_file).write_text(str(process.pid) + "\n")
+PY
+	wait_for_http "http://127.0.0.1:$BACKEND_PORT/api/health"
+}
+
+start_proxy() {
+	clear_stale_pid "$PROXY_PID_FILE"
+	if running "$PROXY_PID_FILE"; then
+		return 0
+	fi
+	build_proxy
+	generate_certificates
+	python3 - "$PROXY_PID_FILE" "$RUNTIME_DIR" "$PROXY_LOG" "$PROXY_BIN" "$HTTPS_PORT" "$BACKEND_PORT" "$LEAF_CERT" "$LEAF_KEY" <<'PY'
+import pathlib, subprocess, sys
+pid_file, cwd, log_path, binary, https_port, backend_port, cert, key = sys.argv[1:]
+log = open(log_path, "ab", buffering=0)
+process = subprocess.Popen([binary, "-listen", "127.0.0.1:" + https_port, "-backend", "http://127.0.0.1:" + backend_port, "-cert", cert, "-key", key], cwd=cwd, stdout=log, stderr=log, start_new_session=True)
+pathlib.Path(pid_file).write_text(str(process.pid) + "\n")
+PY
+	wait_for_http "https://localhost:$HTTPS_PORT/api/health" "$CA_CERT"
+}
+
+start() {
+	local needs_seed=0
+	[ ! -f "$DB_PATH" ] && needs_seed=1
+	[ ! -f "$SEED_MARKER" ] && needs_seed=1
+	start_backend
+	if [ "$needs_seed" -eq 1 ]; then
+		echo "Seeding synthetic data"
+		run_seed
+	fi
+	# OpenStandalone reconciles selected profile media before the synthetic
+	# files exist on a first boot, and can clear stale metadata on later boots.
+	# Repair the two local files after the owner process is ready.
+	python3 "$TOOL_DIR/seed/seed.py" "$DB_PATH" "$DATA_ROOT" --repair-profile
+	start_proxy
+	echo "Local Kano Navi backend: https://localhost:$HTTPS_PORT"
+	echo "CA certificate: $CA_CERT"
+}
+
+stop_one() {
+	local file=$1 name=$2 pid
+	pid=$(pid_value "$file")
+	if [ -n "$pid" ] && kill -0 "$pid" 2>/dev/null; then
+		kill "$pid" 2>/dev/null || true
+		for _ in $(seq 1 40); do
+			kill -0 "$pid" 2>/dev/null || break
+			sleep 0.1
+		done
+		if kill -0 "$pid" 2>/dev/null; then
+			echo "$name did not stop cleanly" >&2
+			kill -KILL "$pid" 2>/dev/null || true
+		fi
+	fi
+	[ -f "$file" ] && unlink "$file" 2>/dev/null || true
+}
+
+stop() {
+	stop_one "$PROXY_PID_FILE" proxy
+	stop_one "$BACKEND_PID_FILE" backend
+	echo "Local Kano Navi backend stopped"
+}
+
+status() {
+	local backend_state=stopped proxy_state=stopped
+	running "$BACKEND_PID_FILE" && backend_state="running ($(pid_value "$BACKEND_PID_FILE"))"
+	running "$PROXY_PID_FILE" && proxy_state="running ($(pid_value "$PROXY_PID_FILE"))"
+	echo "backend: $backend_state (http://127.0.0.1:$BACKEND_PORT)"
+	echo "proxy:   $proxy_state (https://localhost:$HTTPS_PORT)"
+	if curl -fsS --max-time 2 --cacert "$CA_CERT" "https://localhost:$HTTPS_PORT/api/health" >/dev/null 2>&1; then
+		echo "health:  ok"
+		return 0
+	fi
+	echo "health:  unavailable"
+	return 1
+}
+
+logs() {
+	echo "== backend.log =="
+	if [ -f "$BACKEND_LOG" ]; then tail -n 120 "$BACKEND_LOG"; fi
+	echo "== tlsproxy.log =="
+	if [ -f "$PROXY_LOG" ]; then tail -n 120 "$PROXY_LOG"; fi
+}
+
+reseed() {
+	if [ ! -f "$DB_PATH" ]; then
+		start
+		return 0
+	fi
+	stop
+	run_seed
+	start
+}
+
+trust_simulators() {
+	generate_certificates
+	python3 - "$CA_CERT" <<'PY'
+import json, subprocess, sys
+cert = sys.argv[1]
+try:
+    result = subprocess.run(["xcrun", "simctl", "list", "devices", "booted", "-j"], check=True, capture_output=True, text=True, timeout=10)
+    state = json.loads(result.stdout)
+except (OSError, subprocess.SubprocessError, json.JSONDecodeError) as error:
+    print(f"Could not list booted iOS simulators: {error}", file=sys.stderr)
+    raise SystemExit(1)
+udids = [device["udid"] for devices in state.get("devices", {}).values() for device in devices if device.get("state") == "Booted"]
+if not udids:
+    print("No booted iOS simulators")
+    raise SystemExit(0)
+failed = False
+for udid in udids:
+    try:
+        subprocess.run(["xcrun", "simctl", "keychain", udid, "add-root-cert", cert], check=True, timeout=20)
+        print(f"Trusted CA in simulator {udid}")
+    except (OSError, subprocess.SubprocessError) as error:
+        print(f"Could not trust CA in simulator {udid}: {error}", file=sys.stderr)
+        failed = True
+raise SystemExit(1 if failed else 0)
+PY
+}
+
+configure_app() {
+	generate_certificates
+	printf 'API_BASE_URL = https:/$()/localhost:%s\n' "$HTTPS_PORT" >"$REPO_ROOT/Config/Local.xcconfig"
+	echo "Configured Config/Local.xcconfig for https://localhost:$HTTPS_PORT"
+}
+
+unconfigure_app() {
+	if [ -e "$REPO_ROOT/Config/Local.xcconfig" ]; then
+		unlink "$REPO_ROOT/Config/Local.xcconfig"
+	fi
+	echo "Removed Config/Local.xcconfig"
+}
+
+usage() {
+	echo "usage: local-backend {start|stop|status|logs|reseed|trust-simulators|configure-app|unconfigure-app}" >&2
+}
+
+case "${1:-}" in
+	start) start ;;
+	stop) stop ;;
+	status) status ;;
+	logs) logs ;;
+	reseed) reseed ;;
+	trust-simulators) trust_simulators ;;
+	configure-app) configure_app ;;
+	unconfigure-app) unconfigure_app ;;
+	*) usage; exit 2 ;;
+esac

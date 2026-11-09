@@ -19,3 +19,4 @@ build/
 .claude/
 .codegraph/
 .DS_Store
+Tools/local-backend/.state/
