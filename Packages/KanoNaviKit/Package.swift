@@ -14,13 +14,13 @@ let package = Package(
         .library(name: "KanoNaviComponents", targets: ["KanoNaviComponents"]),
     ],
     targets: [
-        .target(name: "KanoNaviCore"),
+        .target(name: "KanoNaviCore", resources: [.process("Resources")]),
         .target(
             name: "KanoNaviComponents",
             dependencies: ["KanoNaviCore"],
             swiftSettings: [.defaultIsolation(MainActor.self)]
         ),
-        .testTarget(name: "KanoNaviCoreTests", dependencies: ["KanoNaviCore"]),
+        .testTarget(name: "KanoNaviCoreTests", dependencies: ["KanoNaviCore"], resources: [.process("Fixtures")]),
         .testTarget(name: "KanoNaviComponentsTests", dependencies: ["KanoNaviComponents"]),
     ]
 )

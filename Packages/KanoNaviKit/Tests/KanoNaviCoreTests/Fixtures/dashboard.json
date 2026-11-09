@@ -1,0 +1,15 @@
+{
+  "profile": {"displayName":"Kano","romanizedName":"Kano","bio":"Bio","avatarUrl":"/media/avatar","bannerUrl":null,"xUrl":"https://example.com/x","youtubeUrl":"https://example.com/youtube"},
+  "liveNow": null,
+  "projection": {"version":1,"nextTransitionAt":"2026-11-10T01:00:00Z","focus":{"eventIds":["event-1"],"videoIds":["video-1"]},"spotlight":{"mode":"next","eventId":"event-1","videoId":"video-1","liveNow":false,"isLive":false,"membersChip":false,"companionVideoId":null},"sales":[],"shelf":{"leadId":"video-1","leadIsFeatured":false,"reservations":[],"works":["video-1"],"archives":[],"shorts":[]}},
+  "summary":{"nextEvent":null,"nextStream":null,"latestVideo":null,"latestPost":null,"counts":{"posts":1,"upcomingEvents":1,"videos":1}},
+  "posts":[{"id":"post-1","source":"x","accountHandle":"synthetic","accountUrl":"https://example.com/account","publishedAt":"2026-11-09T15:00:00Z","text":"Hello","url":"https://example.com/post","media":[],"mediaUrl":null,"mediaStatus":"none","translations":{"ja":{"text":"こんにちは","origin":"manual"}},"sourceLanguage":"en"}],
+  "events":[{"id":"event-1","source":"x","platform":"youtube","title":"Stream","detail":null,"startsOn":"2026-11-11","startsAt":"2026-11-11T11:00:00Z","endsAt":null,"endsOn":null,"timezone":"Asia/Tokyo","timePrecision":"exact","status":"scheduled","eventType":"stream","tag":"live","url":"https://example.com/event","provenance":"automatic","manualLocked":false,"isUpcoming":true,"cancellationStatus":"none","liveStatus":"upcoming","platforms":["youtube"],"links":[{"platform":"youtube","url":"https://example.com/watch","liveStatus":"upcoming"}],"view":{"state":"upcoming","typeCode":"stream","activityCode":"live","activityContext":"stream","isWork":false,"calendarEntries":[{"saleMark":null,"startsOn":"2026-11-11","startsAt":"2026-11-11T11:00:00Z","timePrecision":"exact"}]}}],
+  "videos":[{"id":"video-1","source":"youtube","title":"Song","publishedAt":"2026-11-09T12:00:00Z","scheduledAt":null,"endsAt":null,"url":"https://example.com/video","thumbnailUrl":"/media/thumb","thumbnailStatus":"ready","kind":"video","tag":"song","isUpcoming":false,"isCancelled":false,"liveStatus":"ended","durationSeconds":180,"isShort":false,"availability":"public","alternates":[],"view":{"phase":"past","formCode":"video","shelfGroup":"work","latestEligible":true,"focusEligible":false,"tagContext":"work"}}],
+  "focus":null,
+  "timeline":[],
+  "resources":[],
+  "assets":[],
+  "scheduleImages":[],
+  "meta":{"fetchedAt":"2026-11-10T00:00:00Z","sourceFetchedAt":{"x":"2026-11-10T00:00:00Z","youtube":null,"bilibili":null,"shop":null},"lastSync":{"status":"ok","startedAt":"2026-11-10T00:00:00Z","finishedAt":"2026-11-10T00:01:00Z"},"postWindowDays":7,"xAccounts":["synthetic"],"bilibiliAccounts":[],"featuredVideoId":null,"eventWindow":{"from":"2026-11-09","to":"2026-11-16","paginated":false},"revision":1}
+}
