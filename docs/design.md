@@ -86,6 +86,12 @@ subscription link only).
   (`idle`, `loading`, `refreshing`, `failed(error)`) and `fetchedAt`, so a
   view can show data and an error at the same time.
 
+`KanoNaviCore` exposes these reads through `APIClient` request values. `FileResponseCache`
+stores raw response bodies, ETags and fetch times; `CalendarReader` consumes all
+calendar pages in server order and provides both the widget's 14-day range and
+the Schedule screen's 42-day month grid. The widget uses the same reader with a
+cache directory owned by its extension.
+
 ## Language
 
 - The interface language follows the system's per-app language (English base,

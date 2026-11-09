@@ -9,31 +9,51 @@ struct RootView: View {
             Tab(value: AppTab.now) {
                 NowView()
             } label: {
-                Label { Text(.tabNow) } icon: { Image(systemName: "dot.radiowaves.left.and.right") }
+                Label {
+                    Text(.tabNow)
+                } icon: {
+                    Image(systemName: "dot.radiowaves.left.and.right")
+                }
             }
 
             Tab(value: AppTab.schedule) {
                 ScheduleView()
             } label: {
-                Label { Text(.tabSchedule) } icon: { Image(systemName: "calendar") }
+                Label {
+                    Text(.tabSchedule)
+                } icon: {
+                    Image(systemName: "calendar")
+                }
             }
 
             Tab(value: AppTab.videos) {
                 VideosView()
             } label: {
-                Label { Text(.tabVideos) } icon: { Image(systemName: "play.rectangle") }
+                Label {
+                    Text(.tabVideos)
+                } icon: {
+                    Image(systemName: "play.rectangle")
+                }
             }
 
             Tab(value: AppTab.posts) {
                 PostsView()
             } label: {
-                Label { Text(.tabPosts) } icon: { Image(systemName: "text.bubble") }
+                Label {
+                    Text(.tabPosts)
+                } icon: {
+                    Image(systemName: "text.bubble")
+                }
             }
 
             Tab(value: AppTab.more) {
                 MoreView()
             } label: {
-                Label { Text(.tabMore) } icon: { Image(systemName: "ellipsis.circle") }
+                Label {
+                    Text(.tabMore)
+                } icon: {
+                    Image(systemName: "ellipsis.circle")
+                }
             }
         }
         .onOpenURL { url in
