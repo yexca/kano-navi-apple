@@ -31,14 +31,17 @@ the isolated `.env`, database, empty static directory and cached PNGs live in
 Point the app at the service by running
 `Tools/local-backend/local-backend configure-app`; this writes the ignored
 `Config/Local.xcconfig`. Remove it with `unconfigure-app`. The generated CA is
-trusted only by booted iOS simulators with:
+trusted only by iOS simulators, with:
 
 ```sh
-Tools/local-backend/local-backend trust-simulators
+Tools/local-backend/local-backend trust-simulators "iPhone 17e" "iPhone 17 Pro Max"
 ```
 
-The command uses `xcrun simctl keychain <udid> add-root-cert` and never changes
-the macOS login or system keychain. The database contains synthetic titles,
+The command writes the CA into the trust store of each named simulator (name
+or UDID), or of every booted iOS simulator when none is named, the same row `xcrun simctl keychain add-root-cert` writes
+(that command hangs on this Xcode). It shuts a booted simulator down for the
+write and boots it again. It never changes the macOS login or system keychain.
+The database contains synthetic titles,
 URLs, posts, events, videos, translations and PNG media. `reseed` rebuilds
 those records relative to the current Japan time while preserving the server's
 schema, so old snapshots intentionally become stale unless reseeded.

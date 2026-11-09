@@ -253,28 +253,71 @@ reseed() {
 
 trust_simulators() {
 	generate_certificates
-	python3 - "$CA_CERT" <<'PY'
-import json, subprocess, sys
-cert = sys.argv[1]
-try:
-    result = subprocess.run(["xcrun", "simctl", "list", "devices", "booted", "-j"], check=True, capture_output=True, text=True, timeout=10)
-    state = json.loads(result.stdout)
-except (OSError, subprocess.SubprocessError, json.JSONDecodeError) as error:
-    print(f"Could not list booted iOS simulators: {error}", file=sys.stderr)
-    raise SystemExit(1)
-udids = [device["udid"] for devices in state.get("devices", {}).values() for device in devices if device.get("state") == "Booted"]
-if not udids:
-    print("No booted iOS simulators")
-    raise SystemExit(0)
-failed = False
-for udid in udids:
-    try:
-        subprocess.run(["xcrun", "simctl", "keychain", udid, "add-root-cert", cert], check=True, timeout=120)
-        print(f"Trusted CA in simulator {udid}")
-    except (OSError, subprocess.SubprocessError) as error:
-        print(f"Could not trust CA in simulator {udid}: {error}", file=sys.stderr)
-        failed = True
-raise SystemExit(1 if failed else 0)
+	# `simctl keychain add-root-cert` hangs on this Xcode for PEM files and
+	# intermittently for DER, so write the row it would write straight into
+	# the trust store of each named iOS simulator (name or UDID), or of every
+	# booted one when none is named. A booted simulator is shut down for the
+	# write and booted again.
+	python3 - "$CA_CERT" "$@" <<'PY'
+import hashlib, json, os, plistlib, sqlite3, ssl, subprocess, sys, time
+cert_path = sys.argv[1]
+wanted = set(sys.argv[2:])
+der = ssl.PEM_cert_to_DER_cert(open(cert_path).read())
+
+def read_tlv(data, index):
+    index += 1
+    length = data[index]
+    index += 1
+    if length & 0x80:
+        count = length & 0x7F
+        length = int.from_bytes(data[index:index + count], "big")
+        index += count
+    return index, length
+
+# Certificate > tbsCertificate > [version], serial, signature, issuer,
+# validity, subject. The trust store keys roots by the subject's content.
+content, _ = read_tlv(der, 0)
+cursor, tbs_length = read_tlv(der, content)
+tbs_end = cursor + tbs_length
+fields = []
+while cursor < tbs_end:
+    start, length = read_tlv(der, cursor)
+    fields.append((der[cursor], start, length))
+    cursor = start + length
+if fields[0][0] == 0xA0:
+    fields = fields[1:]
+_, subject_start, subject_length = fields[4]
+subject = der[subject_start:subject_start + subject_length]
+trust_settings = plistlib.dumps([], fmt=plistlib.FMT_XML)
+user_uuid = bytes.fromhex("FFFFEEEEDDDDCCCCBBBBAAAA") + os.getuid().to_bytes(4, "big")
+
+listing = json.loads(subprocess.run(["xcrun", "simctl", "list", "devices", "-j"], check=True, capture_output=True, text=True).stdout)
+root = os.path.expanduser("~/Library/Developer/CoreSimulator/Devices")
+for runtime, devices in listing.get("devices", {}).items():
+    if ".iOS-" not in runtime:
+        continue
+    for device in devices:
+        if wanted:
+            if device["udid"] not in wanted and device["name"] not in wanted:
+                continue
+        elif device.get("state") != "Booted":
+            continue
+        store = os.path.join(root, device["udid"], "data/private/var/protected/trustd/private/TrustStore.sqlite3")
+        if not os.path.exists(store):
+            continue
+        booted = device.get("state") == "Booted"
+        if booted:
+            subprocess.run(["xcrun", "simctl", "shutdown", device["udid"]], check=True)
+        connection = sqlite3.connect(store)
+        connection.execute(
+            "INSERT OR REPLACE INTO tsettings(sha256, subj, tset, data, uuid) VALUES (?, ?, ?, ?, ?)",
+            (hashlib.sha256(der).digest(), subject, trust_settings, der, user_uuid),
+        )
+        connection.commit()
+        connection.close()
+        if booted:
+            subprocess.run(["xcrun", "simctl", "boot", device["udid"]], check=True)
+        print(f"Trusted CA in {device['name']} ({device['udid']})")
 PY
 }
 
@@ -292,7 +335,7 @@ unconfigure_app() {
 }
 
 usage() {
-	echo "usage: local-backend {start|stop|status|logs|reseed|trust-simulators|configure-app|unconfigure-app}" >&2
+	echo "usage: local-backend {start|stop|status|logs|reseed|trust-simulators [simulator...]|configure-app|unconfigure-app}" >&2
 }
 
 case "${1:-}" in
@@ -301,7 +344,7 @@ case "${1:-}" in
 	status) status ;;
 	logs) logs ;;
 	reseed) reseed ;;
-	trust-simulators) trust_simulators ;;
+	trust-simulators) shift; trust_simulators "$@" ;;
 	configure-app) configure_app ;;
 	unconfigure-app) unconfigure_app ;;
 	*) usage; exit 2 ;;
