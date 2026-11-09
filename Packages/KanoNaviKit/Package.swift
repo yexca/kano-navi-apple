@@ -20,7 +20,8 @@ let package = Package(
             dependencies: ["KanoNaviCore"],
             swiftSettings: [.defaultIsolation(MainActor.self)]
         ),
-        .testTarget(name: "KanoNaviCoreTests", dependencies: ["KanoNaviCore"], resources: [.process("Fixtures")]),
+        .testTarget(
+            name: "KanoNaviCoreTests", dependencies: ["KanoNaviCore"], resources: [.process("Fixtures")]),
         .testTarget(name: "KanoNaviComponentsTests", dependencies: ["KanoNaviComponents"]),
     ]
 )

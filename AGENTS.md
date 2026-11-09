@@ -104,6 +104,9 @@ or model providers itself, and never calls admin or MCP control endpoints.
   use destructive reset or checkout commands.
 - Build and test with `xcodebuild`. Read the scheme and destinations from
   `xcodebuild -list` and the project; do not guess them.
+- Format Swift with `swift format format --in-place --recursive <paths>`,
+  which reads the repository's `.swift-format` (4-space indentation, 110
+  columns), and check it with `swift format lint`.
 - Fix compiler warnings, including strict-concurrency warnings, at their
   source. Do not silence them with `@unchecked Sendable`, `nonisolated(unsafe)`
   or `@preconcurrency` unless the change explains why it is safe.
