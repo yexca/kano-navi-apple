@@ -1,13 +1,15 @@
 # Local HTTPS backend
 
-This tool runs the current `../kano` checkout
-with an isolated SQLite snapshot and synthetic, time-relative records. The API
+This tool runs a local checkout of
+[`kano-navi`](https://github.com/yexca/kano-navi) with an isolated SQLite snapshot and synthetic, time-relative records. The API
 is served through a local HTTPS proxy so the iOS app can use the same transport
 rules as production.
 
-Prerequisites are Go 1.27 at `/opt/homebrew/bin/go`, Python 3, OpenSSL, curl,
-and Xcode's `xcrun simctl`. The service checkout must remain at the path above;
-the tool never writes inside it.
+Prerequisites are Go (the version `kano-navi`'s `backend/go.mod` requires),
+Python 3, OpenSSL, curl and Xcode's `xcrun simctl`. The tool finds the
+`kano-navi` checkout through `KANO_CHECKOUT`, or in a `kano` folder next to
+this repository, and never writes inside it. Set `GO` to use a Go binary that
+is not on `PATH`.
 
 Run these commands from the iOS repository:
 

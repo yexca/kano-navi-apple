@@ -3,7 +3,10 @@ set -euo pipefail
 
 TOOL_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 REPO_ROOT=$(cd "$TOOL_DIR/../.." && pwd)
-KANO_CHECKOUT=${KANO_CHECKOUT:-../kano}
+# The kano-navi checkout: KANO_CHECKOUT, or a `kano` folder next to this
+# repository.
+KANO_CHECKOUT=${KANO_CHECKOUT:-$REPO_ROOT/../kano}
+GO=${GO:-go}
 STATE_DIR=${LOCAL_BACKEND_STATE_DIR:-$TOOL_DIR/.state}
 RUNTIME_DIR="$STATE_DIR/runtime"
 DATA_ROOT="$STATE_DIR/data"
@@ -76,12 +79,12 @@ build_backend() {
 		return 1
 	fi
 	echo "Building kano-navi backend from $KANO_CHECKOUT"
-	/opt/homebrew/bin/go build -C "$KANO_CHECKOUT/backend" -o "$BACKEND_BIN" ./cmd/kano-go
+	"$GO" build -C "$KANO_CHECKOUT/backend" -o "$BACKEND_BIN" ./cmd/kano-go
 }
 
 build_proxy() {
 	if [ ! -x "$PROXY_BIN" ] || [ "$TOOL_DIR/tlsproxy/main.go" -nt "$PROXY_BIN" ]; then
-		/opt/homebrew/bin/go build -o "$PROXY_BIN" "$TOOL_DIR/tlsproxy/main.go"
+		"$GO" build -o "$PROXY_BIN" "$TOOL_DIR/tlsproxy/main.go"
 	fi
 }
 
@@ -266,7 +269,7 @@ if not udids:
 failed = False
 for udid in udids:
     try:
-        subprocess.run(["xcrun", "simctl", "keychain", udid, "add-root-cert", cert], check=True, timeout=20)
+        subprocess.run(["xcrun", "simctl", "keychain", udid, "add-root-cert", cert], check=True, timeout=120)
         print(f"Trusted CA in simulator {udid}")
     except (OSError, subprocess.SubprocessError) as error:
         print(f"Could not trust CA in simulator {udid}: {error}", file=sys.stderr)
