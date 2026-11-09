@@ -1,11 +1,17 @@
+import KanoNaviCore
 import SwiftUI
 
 /// The app's tab bar. Each tab owns its own navigation stack.
+///
+/// The dashboard store refreshes only while the scene is active.
 struct RootView: View {
-    @State private var selection = AppTab.now
+    @Environment(AppRouter.self) private var router
+    @Environment(DashboardStore.self) private var dashboard
+    @Environment(\.scenePhase) private var scenePhase
 
     var body: some View {
-        TabView(selection: $selection) {
+        @Bindable var router = router
+        TabView(selection: $router.selectedTab) {
             Tab(value: AppTab.now) {
                 NowView()
             } label: {
@@ -57,15 +63,24 @@ struct RootView: View {
             }
         }
         .onOpenURL { url in
-            // Widget links (`kanonavi://event/<id>`, `kanonavi://schedule`)
-            // all land on the Schedule tab.
-            if url.scheme == "kanonavi" {
-                selection = .schedule
+            router.open(url)
+        }
+        .onChange(of: scenePhase, initial: true) { _, phase in
+            if phase == .active {
+                dashboard.start()
+            } else {
+                dashboard.stop()
             }
         }
     }
 }
 
 #Preview {
+    let client = APIClient(
+        configuration: .main,
+        cache: MemoryResponseCache()
+    )
     RootView()
+        .environment(DashboardStore(client: client))
+        .environment(AppRouter())
 }
