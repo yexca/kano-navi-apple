@@ -6,3 +6,7 @@
 // Origin of the Kano Navi service. The app reads it from Info.plist through
 // `KanoNaviAPIBaseURL`; it must use HTTPS.
 API_BASE_URL = https:/$()/kano.yexca.net
+
+// An optional, git-ignored override for this machine, for example a local
+// backend. See Tools/local-backend/README.md.
+#include? "Local.xcconfig"

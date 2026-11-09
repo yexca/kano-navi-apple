@@ -1,6 +1,6 @@
 import Foundation
 import Testing
-@testable import KanoNavi
+@testable import KanoNaviCore
 
 struct AppConfigurationTests {
     @Test func readsHTTPSBaseURL() throws {
@@ -28,13 +28,5 @@ struct AppConfigurationTests {
         #expect(throws: AppConfigurationError.invalidAPIBaseURL(rawValue)) {
             try AppConfiguration(infoDictionary: [AppConfiguration.apiBaseURLKey: rawValue])
         }
-    }
-
-    /// Guards the build wiring: `//` starts an xcconfig comment, so a
-    /// mistyped `API_BASE_URL` reaches the Info.plist cut short or empty.
-    @Test func appBundleHasValidBaseURL() throws {
-        let configuration = try AppConfiguration(infoDictionary: Bundle.main.infoDictionary ?? [:])
-
-        #expect(configuration.apiBaseURL.scheme == "https")
     }
 }

@@ -1,3 +1,4 @@
+import KanoNaviCore
 import SwiftUI
 
 @main

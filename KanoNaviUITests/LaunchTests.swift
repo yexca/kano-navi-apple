@@ -6,11 +6,14 @@ final class LaunchTests: XCTestCase {
     }
 
     @MainActor
-    func testLaunchShowsRootScreen() throws {
+    func testLaunchShowsTabsAndSwitchesToSchedule() throws {
         let app = XCUIApplication()
         app.launchArguments += ["-AppleLanguages", "(en)", "-AppleLocale", "en_US"]
         app.launch()
 
-        XCTAssertTrue(app.navigationBars["Kano Navi"].waitForExistence(timeout: 10))
+        XCTAssertTrue(app.navigationBars["Now"].waitForExistence(timeout: 10))
+
+        app.tabBars.buttons["Schedule"].tap()
+        XCTAssertTrue(app.navigationBars["Schedule"].waitForExistence(timeout: 5))
     }
 }

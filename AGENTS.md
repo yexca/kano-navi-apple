@@ -10,6 +10,9 @@ Read these first, in a local checkout of `kano-navi` when there is one:
 - [`docs/architecture/public-api.md`](https://github.com/yexca/kano-navi/blob/main/docs/architecture/public-api.md)
 - [`docs/user/index.md`](https://github.com/yexca/kano-navi/blob/main/docs/user/index.md)
 
+This app's own architecture, screens and widget are described in
+[`docs/design.md`](docs/design.md).
+
 ## Local Environment
 
 Read `AGENTS.local.md` at the repository root when it exists. It is

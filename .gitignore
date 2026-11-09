@@ -1,5 +1,6 @@
 # Machine-specific agent notes (see AGENTS.md).
 AGENTS.local.md
+Config/Local.xcconfig
 
 # Xcode per-user state and build output.
 xcuserdata/

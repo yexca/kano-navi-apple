@@ -2,7 +2,7 @@
   "sourceLanguage": "en",
   "strings": {
     "appName": {
-      "comment": "The app's name, shown as the title of the first screen.",
+      "comment": "The app's name.",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -26,31 +26,31 @@
       }
     },
     "rootPlaceholderMessage": {
-      "comment": "Explains the placeholder shown while the app has no pages yet.",
+      "comment": "Explains the placeholder shown on a tab whose screen is not built yet.",
       "extractionState": "manual",
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "The board will appear here."
+            "value": "This screen is on its way."
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "ここにボードが表示されます。"
+            "value": "この画面は準備中です。"
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "看板将显示在这里。"
+            "value": "此页面正在制作中。"
           }
         }
       }
     },
     "rootPlaceholderTitle": {
-      "comment": "Title of the placeholder shown while the app has no pages yet.",
+      "comment": "Title of the placeholder shown on a tab whose screen is not built yet.",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -69,6 +69,126 @@
           "stringUnit": {
             "state": "translated",
             "value": "建设中"
+          }
+        }
+      }
+    },
+    "tabMore": {
+      "comment": "Tab title: works, journey, settings and about.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "More"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "その他"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "更多"
+          }
+        }
+      }
+    },
+    "tabNow": {
+      "comment": "Tab title: what is live or next.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Now"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "いま"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "现在"
+          }
+        }
+      }
+    },
+    "tabPosts": {
+      "comment": "Tab title: posts from X and bilibili.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Posts"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ポスト"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "动态"
+          }
+        }
+      }
+    },
+    "tabSchedule": {
+      "comment": "Tab title: the schedule calendar.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Schedule"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "スケジュール"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "日程"
+          }
+        }
+      }
+    },
+    "tabVideos": {
+      "comment": "Tab title: videos and streams.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Videos"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "動画"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "视频"
           }
         }
       }

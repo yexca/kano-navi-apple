@@ -4,11 +4,11 @@ import Foundation
 ///
 /// `Config/Base.xcconfig` sets `API_BASE_URL`, and `Config/Info.plist` exposes
 /// it under ``apiBaseURLKey``.
-nonisolated struct AppConfiguration: Equatable, Sendable {
-    static let apiBaseURLKey = "KanoNaviAPIBaseURL"
+public struct AppConfiguration: Equatable, Sendable {
+    public static let apiBaseURLKey = "KanoNaviAPIBaseURL"
 
-    /// The configuration of the running app.
-    static var main: AppConfiguration {
+    /// The configuration of the running app or extension.
+    public static var main: AppConfiguration {
         do {
             return try AppConfiguration(infoDictionary: Bundle.main.infoDictionary ?? [:])
         } catch {
@@ -17,9 +17,9 @@ nonisolated struct AppConfiguration: Equatable, Sendable {
     }
 
     /// The origin of the Kano Navi service. It always uses HTTPS.
-    let apiBaseURL: URL
+    public let apiBaseURL: URL
 
-    init(infoDictionary: [String: Any]) throws(AppConfigurationError) {
+    public init(infoDictionary: [String: Any]) throws(AppConfigurationError) {
         guard let rawValue = infoDictionary[Self.apiBaseURLKey] as? String else {
             throw .missingAPIBaseURL
         }
