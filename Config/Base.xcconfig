@@ -1,0 +1,8 @@
+// Build settings shared by every configuration.
+//
+// `//` starts a comment in an xcconfig file, so the scheme separator is written
+// as `/$()/`, which expands to `//`.
+
+// Origin of the Kano Navi service. The app reads it from Info.plist through
+// `KanoNaviAPIBaseURL`; it must use HTTPS.
+API_BASE_URL = https:/$()/kano.yexca.net
