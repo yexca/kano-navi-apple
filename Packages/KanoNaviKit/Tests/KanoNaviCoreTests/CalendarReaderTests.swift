@@ -223,6 +223,38 @@ struct CalendarReaderTests {
         #expect(result == CalendarReadResult(page: page, isFromCache: true, fetchedAt: fetchedAt))
     }
 
+    @Test func cachedResultReadsOnlyTheCache() async throws {
+        let today = try #require(JapanDate(rawValue: "2026-11-10"))
+        let to = today.addingDays(13)
+        let cache = MemoryResponseCache()
+        let newer = try date("2026-11-09T12:00:00Z")
+        let older = try date("2026-11-09T11:59:00Z")
+        try await seedTwoPages(cache, from: today, to: to, newer: newer, older: older)
+        // An empty transport fails any request, so a result can only come
+        // from the cache.
+        let reader = CalendarReader(client: try client(SequenceTransport([]), cache: cache))
+
+        let result = try #require(await reader.cachedResult(from: today, to: to))
+
+        #expect(result.isFromCache)
+        #expect(result.fetchedAt == older)
+        #expect(result.page.events.map(\.id) == ["first", "second"])
+    }
+
+    @Test func cachedResultIsNilWhenAPageIsMissing() async throws {
+        let today = try #require(JapanDate(rawValue: "2026-11-10"))
+        let to = today.addingDays(13)
+        let cache = MemoryResponseCache()
+        let fetchedAt = try date("2026-11-09T12:00:00Z")
+        try await seedTwoPages(cache, from: today, to: to, newer: fetchedAt, older: fetchedAt)
+        await cache.remove(
+            key: "\(baseURL)/api/calendar?from=\(today.rawValue)&to=\(to.rawValue)&page=2&pageSize=100")
+        let reader = CalendarReader(client: try client(SequenceTransport([]), cache: cache))
+
+        #expect(await reader.cachedResult(from: today, to: to) == nil)
+        #expect(await reader.cachedResult(from: today, to: today.addingDays(1)) == nil)
+    }
+
     @Test func failedReadWithoutCacheThrows() async throws {
         let today = try #require(JapanDate(rawValue: "2026-11-10"))
         let reader = CalendarReader(
