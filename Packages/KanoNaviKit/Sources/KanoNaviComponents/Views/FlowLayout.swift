@@ -2,17 +2,23 @@ import SwiftUI
 
 /// Places subviews in rows from the leading edge and wraps to a new row when
 /// the next one does not fit, so chips stay readable at large text sizes.
-struct FlowLayout: Layout {
-    var spacing: CGFloat = 4
+/// Safe in widgets.
+public struct FlowLayout: Layout {
+    var spacing: CGFloat
 
-    func sizeThatFits(proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) -> CGSize {
+    /// Creates a layout with `spacing` points between items and rows.
+    public init(spacing: CGFloat = 4) {
+        self.spacing = spacing
+    }
+
+    public func sizeThatFits(proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) -> CGSize {
         let rows = rows(for: subviews, width: proposal.width ?? .infinity)
         let width = rows.map(\.width).max() ?? 0
         let height = rows.map(\.height).reduce(0, +) + spacing * CGFloat(max(rows.count - 1, 0))
         return CGSize(width: width, height: height)
     }
 
-    func placeSubviews(
+    public func placeSubviews(
         in bounds: CGRect, proposal: ProposedViewSize, subviews: Subviews, cache: inout ()
     ) {
         var y = bounds.minY

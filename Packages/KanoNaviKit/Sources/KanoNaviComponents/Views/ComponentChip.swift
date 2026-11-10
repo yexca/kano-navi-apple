@@ -2,12 +2,24 @@ import SwiftUI
 
 /// A small capsule with a label, the shared look of the state, members and
 /// sale chips.
-struct ComponentChip: View {
+///
+/// Screens use it for other labels in the same look, such as a video's form,
+/// tag or availability: pass a label from `DisplayCodeLabels`, an optional SF
+/// Symbol and a tint (`.secondary` for a neutral code). Safe in widgets.
+public struct ComponentChip: View {
     let title: LocalizedStringResource
     let systemImage: String?
     let tint: Color
 
-    var body: some View {
+    /// Creates a chip with a title, an optional SF Symbol drawn before it and
+    /// the tint of its text and background.
+    public init(title: LocalizedStringResource, systemImage: String? = nil, tint: Color) {
+        self.title = title
+        self.systemImage = systemImage
+        self.tint = tint
+    }
+
+    public var body: some View {
         Group {
             if let systemImage {
                 Label {
