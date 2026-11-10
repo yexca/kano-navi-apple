@@ -6,7 +6,12 @@ import Observation
 public final class DashboardStore {
     public private(set) var snapshot: Dashboard?
     public private(set) var phase: DashboardPhase = .idle
+    /// When `snapshot` was fetched from the service.
     public private(set) var fetchedAt: Date?
+    /// Where `snapshot` came from, or `nil` before there is one. A failed
+    /// refresh leaves it unchanged, so `.cache` with a `.failed` phase means
+    /// the screen shows cached data because the refresh failed.
+    public private(set) var source: DashboardSource?
     public private(set) var isIncompatible = false
 
     private let client: APIClient
@@ -71,6 +76,7 @@ public final class DashboardStore {
             let value = try await client.send(request)
             snapshot = value
             fetchedAt = clock.now
+            source = .network
             lastRevision = value.meta.revision ?? lastRevision
             transitionReloadAt = value.projection?.nextTransitionAt.flatMap { transition in
                 transition > clock.now ? transition : nil
@@ -96,12 +102,12 @@ public final class DashboardStore {
         let launchNow = clock.now
         nextRevisionPoll = launchNow.addingTimeInterval(30)
         nextRevalidation = launchNow.addingTimeInterval(60)
-        let cachedDate = await client.cachedFetchedAt(request)
-        if let cached = await client.cached(request) {
-            snapshot = cached
-            fetchedAt = cachedDate
-            lastRevision = cached.meta.revision
-            transitionReloadAt = cached.projection?.nextTransitionAt.flatMap { transition in
+        if let cached = await client.cachedValue(request) {
+            snapshot = cached.value
+            fetchedAt = cached.fetchedAt
+            source = .cache
+            lastRevision = cached.value.meta.revision
+            transitionReloadAt = cached.value.projection?.nextTransitionAt.flatMap { transition in
                 transition > clock.now ? transition : nil
             }
             phase = .idle
