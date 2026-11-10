@@ -97,6 +97,11 @@ Every screen keeps what it shows and says where it came from:
   refresh shows a banner with the reason and a Try Again button over the data,
   and its footnote says whether the data is the saved copy or the last data
   received since launch, with its JST time.
+  Coming Up shows its range cached on this device while its first read
+  runs. When the service cannot be read and the range comes from the cache,
+  it says "Couldn't update the schedule. Showing the copy from <JST date and
+  time>" with Try Again; a failed reload of entries already on screen, or a
+  first load with nothing cached, says so with Try Again.
 - **Schedule** keeps the month grid and day list when a read fails. A month
   that comes from the cache because the service could not be read shows
   "Couldn't update the schedule. Showing the copy from <JST date and time>"
@@ -116,8 +121,9 @@ Every screen keeps what it shows and says where it came from:
 `KanoNaviCore` exposes these reads through `APIClient` request values. `FileResponseCache`
 stores raw response bodies, ETags and fetch times; `CalendarReader` consumes all
 calendar pages in server order and provides both the widget's 14-day range and
-the Schedule screen's 42-day month grid. When the service cannot be read, the
-reader returns the cached pages marked stale with their fetch time. The widget
+the Schedule screen's 42-day month grid; the Now tab reads the widget's
+14-day range with it. When the service cannot be read, the reader returns the
+cached pages marked stale with their fetch time. The widget
 uses the same reader with a cache directory owned by its extension.
 `APIClient.readResult(_:)` does the same for one request, such as an archive
 page or month index.
@@ -143,11 +149,43 @@ page or month index.
 
 The app is a `TabView` with five tabs.
 
-1. **Now** — the spotlight ticket (live now, or next up, with a countdown and
-   its platform links), Bilibili `liveNow` when present, today's and
-   tomorrow's entries, on-sale items, the latest video, and a freshness line
-   (last collection result and per-source read times, marking a source not
-   read for a day). Pull to refresh.
+1. **Now** — from top to bottom:
+   - The spotlight ticket (live now, or next up, with a countdown and its
+     platform links), and Bilibili `liveNow` on its own card when the
+     spotlight does not show it.
+   - **Coming Up**: the next five entries of today and the 13 Japan days
+     after it, read with `CalendarReader` (the widgets' range) and built from
+     each event's `view.calendarEntries`, so a sale appears at its opening
+     and at its close. Entries are grouped under "Today", "Tomorrow" or the
+     weekday and date; days without entries do not appear. An entry is
+     listed when it is live, on a later day, date-only today, or today and
+     not started yet; an entry of today that has started stays for three
+     hours after its end (its start when it has no end time). The section
+     ends with See Full Schedule, which opens the Schedule tab. When nothing
+     is listed it says "Nothing scheduled in the next two weeks", offers the
+     calendar subscription, and lists under "Recently" the two entries of the
+     dashboard's events that ended last (done, with a clock time, one per
+     event).
+   - Each entry is an `EventTicketRow`: a stub with the large JST time
+     ("About …" for an estimate, "Time TBA" without one) and a relative
+     phrase ("in 3 hours", "tomorrow", "in 4 days"; a clock phrase on today's
+     date or within 12 hours, otherwise Japan days), beside the title in the
+     content language and one line of platform, type and tag, and members
+     and sale marks. A live entry's stub turns red with "● Live" and its end
+     time; a done entry is dimmed; a cancelled one is struck through and
+     says so. Tapping an entry opens it in the Schedule tab.
+   - On Sale: the projection's sales with their opening and closing times.
+   - The latest video.
+   - A one-line freshness footer: when the service last collected data and,
+     when there is one, a summary (collecting, some sources had warnings,
+     some data not read for a day, last collection failed). It turns orange
+     with a warning symbol when the last run failed or the run or a source
+     has not been read for a day. Tapping it opens a sheet with the last
+     collection result and time, each source's last read and when this app
+     last checked.
+
+   Pull to refresh reloads the dashboard and then Coming Up's range; Coming
+   Up also reloads whenever the dashboard is received.
 2. **Schedule** — a Monday-first month calendar of Japan dates with a mark per
    day from `dayCounts`, and the selected day's entries below it. Day lists
    come from each event's `view.calendarEntries`, not its `startsOn`, so a
