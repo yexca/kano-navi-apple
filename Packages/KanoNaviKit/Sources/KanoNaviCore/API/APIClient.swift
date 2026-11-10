@@ -95,6 +95,12 @@ public struct APIClient: Sendable {
     }
 
     public func cached<R: APIRequest>(_ request: R) async -> R.Response? {
+        await cachedValue(request)?.value
+    }
+
+    /// The cached response of a request with the time it was fetched, or
+    /// `nil` when nothing readable is cached. An unreadable entry is removed.
+    func cachedValue<R: APIRequest>(_ request: R) async -> CachedValue<R.Response>? {
         guard let urlRequest = try? makeURLRequest(request),
             let key = urlRequest.url?.absoluteString,
             let response = await cache.load(key: key)
@@ -103,7 +109,8 @@ public struct APIClient: Sendable {
         }
 
         do {
-            return try decodeAndNormalize(response.body, as: R.Response.self)
+            let value = try decodeAndNormalize(response.body, as: R.Response.self)
+            return CachedValue(value: value, fetchedAt: response.fetchedAt)
         } catch {
             await cache.remove(key: key)
             return nil

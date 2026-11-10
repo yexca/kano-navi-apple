@@ -4,42 +4,49 @@ public struct CalendarReader: Sendable {
     public let client: APIClient
     public init(client: APIClient) { self.client = client }
 
+    /// Reads every page of a range from the service, falling back to the
+    /// cached pages when the service cannot be read. Use `readResult(from:to:)`
+    /// to learn whether the fallback was used.
     public func read(from: JapanDate, to: JapanDate) async throws -> CalendarPage {
+        try await readResult(from: from, to: to).page
+    }
+
+    /// Reads every page of a range from the service. When that fails and every
+    /// page of the range is cached, returns the cached pages marked
+    /// `isFromCache`; otherwise rethrows the service's error.
+    public func readResult(from: JapanDate, to: JapanDate) async throws -> CalendarReadResult {
         do {
-            return try await readPages(from: from, to: to, cached: false)
+            let page = try await readPages(from: from, to: to)
+            return CalendarReadResult(page: page, isFromCache: false, fetchedAt: Date())
         } catch {
-            if let cached = try? await readPages(from: from, to: to, cached: true) { return cached }
-            throw error
+            guard let cached = await readCachedPages(from: from, to: to) else { throw error }
+            return CalendarReadResult(page: cached.page, isFromCache: true, fetchedAt: cached.fetchedAt)
         }
     }
 
-    private func readPages(from: JapanDate, to: JapanDate, cached: Bool) async throws -> CalendarPage {
-        var page = 1
-        var allEvents: [ScheduleEvent] = []
-        var allAssets: [ScheduleAsset] = []
-        var mergedCounts: [JapanDate: Int] = [:]
+    private func readPages(from: JapanDate, to: JapanDate) async throws -> CalendarPage {
+        var merger = PageMerger()
         while true {
-            let result: CalendarPage
-            if cached {
-                guard let value = await client.cached(CalendarRequest(from: from, to: to, page: page))
-                else { throw APIError.offline }
-                result = value
-            } else {
-                result = try await client.send(CalendarRequest(from: from, to: to, page: page))
-            }
-            allEvents.append(contentsOf: result.events)
-            allAssets.append(contentsOf: result.scheduleImages)
-            for (day, count) in result.dayCounts { mergedCounts[day] = count }
-            if !result.hasNext {
-                return CalendarPage(
-                    events: allEvents, scheduleImages: allAssets, adjacent: result.adjacent,
-                    dayCounts: mergedCounts, total: result.total, page: result.page,
-                    pageSize: result.pageSize, totalPages: result.totalPages, hasNext: false,
-                    revision: result.revision)
-            }
-            page += 1
-            if page > (result.totalPages ?? page) + 1 {
-                throw APIError.decoding("Invalid calendar pagination")
+            let request = CalendarRequest(from: from, to: to, page: merger.nextPage)
+            if let merged = try merger.add(try await client.send(request)) { return merged }
+        }
+    }
+
+    /// The cached pages of a range and the oldest page's fetch time, or `nil`
+    /// when any page is missing or unreadable.
+    private func readCachedPages(from: JapanDate, to: JapanDate) async -> (
+        page: CalendarPage, fetchedAt: Date
+    )? {
+        var merger = PageMerger()
+        var oldest = Date.distantFuture
+        while true {
+            let request = CalendarRequest(from: from, to: to, page: merger.nextPage)
+            guard let cached = await client.cachedValue(request) else { return nil }
+            oldest = min(oldest, cached.fetchedAt)
+            do {
+                if let merged = try merger.add(cached.value) { return (merged, oldest) }
+            } catch {
+                return nil
             }
         }
     }
@@ -47,22 +54,12 @@ public struct CalendarReader: Sendable {
     public func widgetRange(today: JapanDate = .today, now: Date = Date()) async throws
         -> WidgetCalendarResult
     {
-        do {
-            let page = try await read(from: today, to: today.addingDays(13))
-            let entries = page.events.flatMap { $0.view?.calendarEntries ?? [] }
-            let transition = nextTransition(in: page, after: now)
-            return WidgetCalendarResult(
-                events: page.events, calendarEntries: entries, nextTransitionAt: transition,
-                fetchedAt: Date(), isStale: false)
-        } catch {
-            if let page = await client.cached(CalendarRequest(from: today, to: today.addingDays(13))) {
-                return WidgetCalendarResult(
-                    events: page.events,
-                    calendarEntries: page.events.flatMap { $0.view?.calendarEntries ?? [] },
-                    nextTransitionAt: nextTransition(in: page, after: now), fetchedAt: nil, isStale: true)
-            }
-            throw error
-        }
+        let read = try await readResult(from: today, to: today.addingDays(13))
+        return WidgetCalendarResult(
+            events: read.page.events,
+            calendarEntries: read.page.events.flatMap { $0.view?.calendarEntries ?? [] },
+            nextTransitionAt: nextTransition(in: read.page, after: now), fetchedAt: read.fetchedAt,
+            isStale: read.isFromCache)
     }
 
     public func readWidgetRange(today: JapanDate = .today, now: Date = Date()) async throws
@@ -73,10 +70,10 @@ public struct CalendarReader: Sendable {
 
     public func month(containing date: JapanDate) async throws -> ScheduleMonthResult {
         let dates = date.monthGrid
-        let page = try await read(from: dates.first ?? date, to: dates.last ?? date)
+        let read = try await readResult(from: dates.first ?? date, to: dates.last ?? date)
         return ScheduleMonthResult(
-            dates: dates, events: page.events, dayCounts: page.dayCounts, adjacent: page.adjacent,
-            isStale: false)
+            dates: dates, events: read.page.events, dayCounts: read.page.dayCounts,
+            adjacent: read.page.adjacent, isStale: read.isFromCache, fetchedAt: read.fetchedAt)
     }
 
     public func readMonthGrid(containing date: JapanDate) async throws -> ScheduleMonthResult {
@@ -105,5 +102,33 @@ public struct CalendarReader: Sendable {
         }
         .filter { $0 > now }
         .min()
+    }
+}
+
+/// Merges calendar pages in server order and checks their pagination.
+private struct PageMerger {
+    private(set) var nextPage = 1
+    private var events: [ScheduleEvent] = []
+    private var assets: [ScheduleAsset] = []
+    private var dayCounts: [JapanDate: Int] = [:]
+
+    /// Adds the page numbered `nextPage`. Returns the merged result after the
+    /// last page, or `nil` when another page follows.
+    mutating func add(_ page: CalendarPage) throws -> CalendarPage? {
+        events.append(contentsOf: page.events)
+        assets.append(contentsOf: page.scheduleImages)
+        for (day, count) in page.dayCounts { dayCounts[day] = count }
+        if !page.hasNext {
+            return CalendarPage(
+                events: events, scheduleImages: assets, adjacent: page.adjacent,
+                dayCounts: dayCounts, total: page.total, page: page.page,
+                pageSize: page.pageSize, totalPages: page.totalPages, hasNext: false,
+                revision: page.revision)
+        }
+        nextPage += 1
+        if nextPage > (page.totalPages ?? nextPage) + 1 {
+            throw APIError.decoding("Invalid calendar pagination")
+        }
+        return nil
     }
 }
