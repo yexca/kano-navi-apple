@@ -25,6 +25,102 @@
         }
       }
     },
+    "components.ticket.joined %@ %@": {
+      "comment": "Joins an entry's type and tag in one line, such as “Stream · Gameplay”. Both %@ are labels.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@ · %2$@"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@・%2$@"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@ · %2$@"
+          }
+        }
+      }
+    },
+    "components.ticket.liveSince %@": {
+      "comment": "Under the live mark when the end is not known: when the live entry started. %@ is a clock time in Japan, such as 21:00.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Since %@"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ から"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ 开始"
+          }
+        }
+      }
+    },
+    "components.ticket.liveUntil %@": {
+      "comment": "Under the live mark: when the live entry ends. %@ is a clock time in Japan, such as 23:00.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Until %@"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ まで"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "至 %@"
+          }
+        }
+      }
+    },
+    "components.time.approximate %@": {
+      "comment": "An estimated clock time in Japan. %@ is the time, such as 21:00.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "About %@"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ 頃"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "约 %@"
+          }
+        }
+      }
+    },
     "components.time.dateTime %@ %@": {
       "comment": "A date and clock time in Japan, labelled with the Japan time zone. The first %@ is the date, the second the time.",
       "extractionState": "manual",
@@ -69,6 +165,54 @@
           "stringUnit": {
             "state": "translated",
             "value": "%@ JST"
+          }
+        }
+      }
+    },
+    "components.time.tba": {
+      "comment": "Shown instead of a time when an entry's time is not known yet.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Time TBA"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "時間未定"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "时间待定"
+          }
+        }
+      }
+    },
+    "components.time.zone": {
+      "comment": "The Japan time-zone label drawn beside a large clock time, such as 21:00.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "JST"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "JST"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "JST"
           }
         }
       }
