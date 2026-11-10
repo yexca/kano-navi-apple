@@ -58,3 +58,69 @@ struct NowFreshnessTests {
         #expect(freshness.syncNeedsReview == needsReview)
     }
 }
+
+@MainActor
+struct NowFreshnessSummaryTests {
+    private let now = "2026-11-10T09:00:00Z"
+    private let readToday = "2026-11-10T08:00:00Z"
+    private let readTwoDaysAgo = "2026-11-08T08:00:00Z"
+
+    private func freshness(status: String?, finishedAt: String? = nil, xReadAt: String? = nil) throws
+        -> NowFreshness
+    {
+        var fixture = DashboardFixture()
+        if let status {
+            fixture.lastSync = ["status": status, "finishedAt": finishedAt ?? readToday]
+        }
+        fixture.sourceFetchedAt = [
+            "x": xReadAt ?? readToday, "youtube": readToday, "bilibili": readToday, "shop": NSNull(),
+        ]
+        return NowFreshness(meta: try fixture.dashboard().meta, now: try DashboardFixture.instant(now))
+    }
+
+    @Test(arguments: [
+        ("success", NowFreshness.Summary.healthy, false),
+        ("ok", .healthy, false),
+        ("partial", .warnings, false),
+        ("running", .running, false),
+        ("none", .healthy, false),
+        ("failed", .failed, true),
+        ("an-unknown-code", .failed, true),
+    ])
+    func lastRunStatusDecidesTheSummary(
+        status: String, summary: NowFreshness.Summary, needsAttention: Bool
+    ) throws {
+        let freshness = try freshness(status: status)
+
+        #expect(freshness.summary == summary)
+        #expect(freshness.needsAttention == needsAttention)
+    }
+
+    @Test func sourceNotReadForADayTurnsTheLineOrange() throws {
+        let freshness = try freshness(status: "partial", xReadAt: readTwoDaysAgo)
+
+        #expect(freshness.summary == .notReadForADay)
+        #expect(freshness.needsAttention)
+    }
+
+    @Test func runNotFinishedForADayTurnsTheLineOrange() throws {
+        let freshness = try freshness(status: "success", finishedAt: readTwoDaysAgo)
+
+        #expect(freshness.summary == .notReadForADay)
+        #expect(freshness.needsAttention)
+    }
+
+    @Test func failedRunComesBeforeAnOldSource() throws {
+        let freshness = try freshness(status: "failed", xReadAt: readTwoDaysAgo)
+
+        #expect(freshness.summary == .failed)
+    }
+
+    @Test func sourceNotReadYetIsNotAWarning() throws {
+        // `shop` has no read time: it waits, which is not out of date.
+        let freshness = try freshness(status: nil)
+
+        #expect(freshness.summary == .healthy)
+        #expect(freshness.needsAttention == false)
+    }
+}

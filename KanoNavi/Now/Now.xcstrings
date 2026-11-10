@@ -25,6 +25,174 @@
         }
       }
     },
+    "comingUpEmpty": {
+      "comment": "Shown in Coming Up when nothing is scheduled today or in the 13 days after it.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nothing scheduled in the next two weeks"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "今後2週間の予定はありません"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "未来两周没有安排"
+          }
+        }
+      }
+    },
+    "comingUpHeader": {
+      "comment": "Header of the section listing the next entries of the next two weeks.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Coming Up"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "今後の予定"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "即将到来"
+          }
+        }
+      }
+    },
+    "comingUpLoadFailed": {
+      "comment": "Notice in Coming Up when the schedule could not be loaded and nothing is saved.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The schedule couldn’t be loaded."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "予定を読み込めませんでした。"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "无法加载日程。"
+          }
+        }
+      }
+    },
+    "comingUpSaved %@": {
+      "comment": "Notice in Coming Up when the service could not be read and the entries shown are the copy saved on this device. %@ is when that copy was read from the service, in Japan time with JST, such as “Tue, Nov 10 11:20 JST”.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Couldn’t update the schedule. Showing the copy from %@."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "予定を更新できませんでした。%@ 時点の内容を表示しています。"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "无法更新日程。正在显示截至 %@ 的内容。"
+          }
+        }
+      }
+    },
+    "comingUpToday": {
+      "comment": "Day header in Coming Up for entries on today's date in Japan.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Today"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "今日"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "今天"
+          }
+        }
+      }
+    },
+    "comingUpTomorrow": {
+      "comment": "Day header in Coming Up for entries on tomorrow's date in Japan.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tomorrow"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "明日"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "明天"
+          }
+        }
+      }
+    },
+    "comingUpUpdateFailed": {
+      "comment": "Notice in Coming Up when a refresh failed while older entries stay on screen.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Couldn’t update the schedule. Showing the last loaded data."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "予定を更新できませんでした。最後に読み込んだ内容を表示しています。"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "无法更新日程。正在显示上次加载的内容。"
+          }
+        }
+      }
+    },
     "freshnessChecked": {
       "comment": "Label of when this device last received the dashboard.",
       "extractionState": "manual",
@@ -45,6 +213,54 @@
           "stringUnit": {
             "state": "translated",
             "value": "本应用检查"
+          }
+        }
+      }
+    },
+    "freshnessDetailHint": {
+      "comment": "Accessibility hint of the freshness line.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Shows when each source was last read."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "各ソースを最後に読み込んだ時刻を表示します。"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "显示各来源最近一次读取的时间。"
+          }
+        }
+      }
+    },
+    "freshnessFailed": {
+      "comment": "Freshness summary when the last collection failed.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Last collection failed"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "前回の収集に失敗しました"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "上次收集失败"
           }
         }
       }
@@ -121,6 +337,30 @@
         }
       }
     },
+    "freshnessLine %@ %@": {
+      "comment": "The freshness line: the first %@ is when data was last collected, the second a summary such as “Some sources had warnings”.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@ · %2$@"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@・%2$@"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@ · %2$@"
+          }
+        }
+      }
+    },
     "freshnessNotReadForADay": {
       "comment": "Marks a source not read for more than a day.",
       "extractionState": "manual",
@@ -141,6 +381,30 @@
           "stringUnit": {
             "state": "translated",
             "value": "超过一天未读取"
+          }
+        }
+      }
+    },
+    "freshnessNotReadForADaySummary": {
+      "comment": "Freshness summary when the last collection or a source has not been read for a day.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Some data not read for a day"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "1日以上読み込めていないデータがあります"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "部分数据已超过一天未读取"
           }
         }
       }
@@ -169,6 +433,54 @@
         }
       }
     },
+    "freshnessRunning": {
+      "comment": "Freshness summary while the Kano Navi service is collecting data.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Collecting…"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "収集中…"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "正在收集…"
+          }
+        }
+      }
+    },
+    "freshnessUpdated %@": {
+      "comment": "Start of the freshness line: when the Kano Navi service last collected data. %@ is a Japan time with JST, such as “17:01 JST” or “Mon, Nov 9 17:01 JST”.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Updated %@"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ 更新"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ 更新"
+          }
+        }
+      }
+    },
     "freshnessWaiting": {
       "comment": "Shown for a source whose read time is not known yet.",
       "extractionState": "manual",
@@ -193,6 +505,30 @@
         }
       }
     },
+    "freshnessWarnings": {
+      "comment": "Freshness summary when the last collection finished but some sources reported warnings.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Some sources had warnings"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "一部のソースで警告がありました"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "部分来源出现警告"
+          }
+        }
+      }
+    },
     "loading": {
       "comment": "Shown while the first dashboard loads.",
       "extractionState": "manual",
@@ -213,54 +549,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "正在加载…"
-          }
-        }
-      }
-    },
-    "nothingToday": {
-      "comment": "Shown when there are no entries today.",
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Nothing scheduled today."
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "今日の予定はありません。"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "今天没有安排。"
-          }
-        }
-      }
-    },
-    "nothingTomorrow": {
-      "comment": "Shown when there are no entries tomorrow.",
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Nothing scheduled tomorrow."
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "明日の予定はありません。"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "明天没有安排。"
           }
         }
       }
@@ -333,6 +621,30 @@
           "stringUnit": {
             "state": "translated",
             "value": "打开 %@"
+          }
+        }
+      }
+    },
+    "recentlyHeader": {
+      "comment": "Header of the most recently ended entries, shown when nothing is coming up.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Recently"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "最近"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "最近"
           }
         }
       }
@@ -501,6 +813,30 @@
           "stringUnit": {
             "state": "translated",
             "value": "正在更新…"
+          }
+        }
+      }
+    },
+    "seeFullSchedule": {
+      "comment": "Last row of Coming Up; opens the Schedule tab.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "See Full Schedule"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "すべての予定を見る"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "查看完整日程"
           }
         }
       }
@@ -1009,6 +1345,30 @@
         }
       }
     },
+    "subscribeToCalendar": {
+      "comment": "Button that subscribes to the schedule in the Calendar app, shown when nothing is coming up.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Subscribe to Calendar"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "カレンダーで購読"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "订阅到日历"
+          }
+        }
+      }
+    },
     "timeTBA": {
       "comment": "Shown instead of a time when an entry's time is not known yet.",
       "extractionState": "manual",
@@ -1029,54 +1389,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "时间待定"
-          }
-        }
-      }
-    },
-    "todayHeader": {
-      "comment": "Header of today's entries. %@ is today's date in Japan, such as Tue, Nov 10.",
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Today · %@"
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "今日 · %@"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "今天 · %@"
-          }
-        }
-      }
-    },
-    "tomorrowHeader": {
-      "comment": "Header of tomorrow's entries. %@ is tomorrow's date in Japan, such as Wed, Nov 11.",
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Tomorrow · %@"
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "明日 · %@"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "明天 · %@"
           }
         }
       }

@@ -7,39 +7,22 @@ import Testing
 
 @MainActor
 struct NowEntryTests {
-    @Test func entriesFollowJapanDatesNotTheDeviceDate() throws {
+    @Test func entriesAreInJapanDateOrderThenDateOnlyFirstThenTimeWithTiesInAPIOrder() throws {
         var fixture = DashboardFixture()
-        // 15:30 UTC on Nov 10 is 00:30 on Nov 11 in Japan.
         fixture.events = [
-            DashboardFixture.event(id: "late", startsOn: "2026-11-11", startsAt: "2026-11-10T15:30:00Z"),
-            DashboardFixture.event(id: "next", startsOn: "2026-11-12", startsAt: "2026-11-12T03:00:00Z"),
-        ]
-        let now = try DashboardFixture.instant("2026-11-10T16:00:00Z")
-
-        let board = NowBoard(dashboard: try fixture.dashboard(), now: now)
-
-        #expect(board.today == JapanDate(year: 2026, month: 11, day: 11))
-        #expect(board.todayEntries.map(\.eventID) == ["late"])
-        #expect(board.tomorrowEntries.map(\.eventID) == ["next"])
-    }
-
-    @Test func dateOnlyEntriesComeFirstThenTimeOrderWithTiesInAPIOrder() throws {
-        let events = [
+            DashboardFixture.event(id: "next-day", startsOn: "2026-11-11", startsAt: "2026-11-10T16:00:00Z"),
             DashboardFixture.event(id: "evening", startsOn: "2026-11-10", startsAt: "2026-11-10T11:00:00Z"),
             DashboardFixture.event(id: "morning-a", startsOn: "2026-11-10", startsAt: "2026-11-10T01:00:00Z"),
             DashboardFixture.event(id: "all-day", startsOn: "2026-11-10"),
             DashboardFixture.event(id: "morning-b", startsOn: "2026-11-10", startsAt: "2026-11-10T01:00:00Z"),
         ]
-        var fixture = DashboardFixture()
-        fixture.events = events
 
-        let entries = NowEntry.entries(
-            on: JapanDate(year: 2026, month: 11, day: 10), in: try fixture.dashboard().events)
+        let entries = NowEntry.entries(in: try fixture.dashboard().events)
 
-        #expect(entries.map(\.eventID) == ["all-day", "morning-a", "morning-b", "evening"])
+        #expect(entries.map(\.eventID) == ["all-day", "morning-a", "morning-b", "evening", "next-day"])
     }
 
-    @Test func saleShowsItsClosingEntryOnTheClosingDay() throws {
+    @Test func saleHasAnEntryAtItsOpeningAndAtItsClose() throws {
         var fixture = DashboardFixture()
         fixture.events = [
             DashboardFixture.event(
@@ -51,26 +34,29 @@ struct NowEntryTests {
             )
         ]
 
-        let entries = NowEntry.entries(
-            on: JapanDate(year: 2026, month: 11, day: 10), in: try fixture.dashboard().events)
+        let entries = NowEntry.entries(in: try fixture.dashboard().events)
 
-        let entry = try #require(entries.first)
-        #expect(entries.count == 1)
-        #expect(entry.saleMark == .closes)
-        #expect(entry.state == .open)
-        #expect(entry.id == "sale#1")
+        #expect(entries.map(\.id) == ["sale#0", "sale#1"])
+        #expect(entries.map(\.calendarEntry.saleMark) == [.opens, .closes])
+        #expect(entries.map(\.state) == [.open, .open])
     }
 
-    @Test func membersEntriesAreMarked() throws {
+    @Test func endOfTheEventsOwnEntryIsItsEndElseItsStart() throws {
         var fixture = DashboardFixture()
         fixture.events = [
-            DashboardFixture.event(id: "members", startsOn: "2026-11-10", type: "member"),
-            DashboardFixture.event(id: "public", startsOn: "2026-11-10", type: "stream"),
+            DashboardFixture.event(
+                id: "stream", startsOn: "2026-11-10", startsAt: "2026-11-10T11:00:00Z",
+                endsAt: "2026-11-10T13:00:00Z"),
+            DashboardFixture.event(
+                id: "open-ended", startsOn: "2026-11-10", startsAt: "2026-11-10T11:00:00Z"),
+            DashboardFixture.event(id: "date-only", startsOn: "2026-11-10"),
         ]
 
-        let entries = NowEntry.entries(
-            on: JapanDate(year: 2026, month: 11, day: 10), in: try fixture.dashboard().events)
+        let entries = NowEntry.entries(in: try fixture.dashboard().events)
+        let ends = Dictionary(uniqueKeysWithValues: entries.map { ($0.eventID, $0.endedAt) })
 
-        #expect(entries.map(\.event.isMembersOnly) == [true, false])
+        #expect(ends["stream"] == (try DashboardFixture.instant("2026-11-10T13:00:00Z")))
+        #expect(ends["open-ended"] == (try DashboardFixture.instant("2026-11-10T11:00:00Z")))
+        #expect(ends["date-only"] == .some(nil))
     }
 }

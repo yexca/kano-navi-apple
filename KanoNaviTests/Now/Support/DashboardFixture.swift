@@ -89,7 +89,8 @@ struct DashboardFixture {
 
     static func event(
         id: String, title: String = "Synthetic entry", startsOn: String, startsAt: String? = nil,
-        type: String = "stream", state: String = "upcoming", entries: [[String: Any]]? = nil,
+        endsAt: String? = nil, type: String = "stream", state: String = "upcoming",
+        entries: [[String: Any]]? = nil,
         links: [[String: Any]] = [], url: String? = nil, saleWindow: [String: Any]? = nil
     ) -> [String: Any] {
         var event: [String: Any] = [
@@ -108,6 +109,7 @@ struct DashboardFixture {
             ],
         ]
         event["startsAt"] = startsAt
+        event["endsAt"] = endsAt
         event["url"] = url
         event["saleWindow"] = saleWindow
         return event

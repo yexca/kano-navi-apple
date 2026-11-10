@@ -2,15 +2,16 @@ import KanoNaviComponents
 import KanoNaviCore
 import SwiftUI
 
-/// The Now tab's sections for one snapshot.
+/// The Now tab's sections for one snapshot: the spotlight, Coming Up, on-sale
+/// items, the latest video and the freshness line.
 struct NowBoardList: View {
     let board: NowBoard
+    let comingUp: NowComingUpModel
+    let feedURL: URL?
     let now: Date
     let notice: NowNotice?
     let fetchedAt: Date?
     let retry: () async -> Void
-
-    @Environment(\.locale) private var locale
 
     var body: some View {
         List {
@@ -42,17 +43,7 @@ struct NowBoardList: View {
                 }
             }
 
-            Section {
-                entries(board.todayEntries, empty: .Now.nothingToday)
-            } header: {
-                Text(.Now.todayHeader(JSTTimeFormat.day(board.today, locale: locale)))
-            }
-
-            Section {
-                entries(board.tomorrowEntries, empty: .Now.nothingTomorrow)
-            } header: {
-                Text(.Now.tomorrowHeader(JSTTimeFormat.day(board.tomorrow, locale: locale)))
-            }
+            NowComingUpSections(model: comingUp, dashboardEvents: board.events, feedURL: feedURL, now: now)
 
             if board.sales.isEmpty == false {
                 Section {
@@ -72,18 +63,9 @@ struct NowBoardList: View {
                 }
             }
 
-            NowFreshnessSection(freshness: board.freshness, fetchedAt: fetchedAt)
-        }
-    }
-
-    @ViewBuilder
-    private func entries(_ entries: [NowEntry], empty: LocalizedStringResource) -> some View {
-        if entries.isEmpty {
-            Text(empty)
-                .foregroundStyle(.secondary)
-        } else {
-            ForEach(entries) { entry in
-                NowEntryRow(entry: entry)
+            Section {
+            } footer: {
+                NowFreshnessFooter(freshness: board.freshness, fetchedAt: fetchedAt, now: now)
             }
         }
     }
