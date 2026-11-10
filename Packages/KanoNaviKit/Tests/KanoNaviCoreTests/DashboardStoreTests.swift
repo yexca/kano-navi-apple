@@ -233,4 +233,92 @@ struct DashboardStoreTests {
         #expect(store.snapshot == snapshot)
         store.stop()
     }
+
+    // MARK: - Snapshot source
+
+    private let cachedAt = KanoNaviDateCoding.date(from: "2026-11-09T12:00:00Z")
+
+    /// A cache holding the dashboard as an earlier launch saved it.
+    private func cacheWithDashboard() async throws -> MemoryResponseCache {
+        let cache = MemoryResponseCache()
+        await cache.save(
+            CachedResponse(body: try fixture(), etag: "W/\"one\"", fetchedAt: try #require(cachedAt)),
+            key: "https://api.example.com/api/dashboard?days=7")
+        return cache
+    }
+
+    private func api(transport: any APITransport, cache: any ResponseCache) throws -> APIClient {
+        try APIClient(
+            baseURL: try #require(URL(string: "https://api.example.com")), transport: transport, cache: cache)
+    }
+
+    @Test func noSnapshotHasNoSource() throws {
+        let store = DashboardStore(client: try api(transport: SequenceTransport([])))
+        #expect(store.source == nil)
+    }
+
+    @Test func cachedSnapshotAtLaunchIsMarkedCacheUntilRefreshSucceeds() async throws {
+        let clock = ManualRefreshClock(
+            now: try #require(KanoNaviDateCoding.date(from: "2026-11-10T00:00:00Z")))
+        let transport = GateTransport(response: TransportResponse(data: try fixture(), statusCode: 200))
+        let store = DashboardStore(
+            client: try api(transport: transport, cache: try await cacheWithDashboard()), clock: clock)
+        store.start()
+        for _ in 0..<1000 where await transport.started == false {
+            await Task.yield()
+        }
+        try #require(await transport.started)
+
+        #expect(store.snapshot != nil)
+        #expect(store.source == .cache)
+        #expect(store.fetchedAt == cachedAt)
+        #expect(store.phase == .refreshing)
+
+        await transport.release()
+        try await waitForSnapshot(store)
+        #expect(store.source == .network)
+        #expect(store.fetchedAt == clock.now)
+        store.stop()
+    }
+
+    @Test func failedRefreshAfterCachedLaunchKeepsCacheSource() async throws {
+        let clock = ManualRefreshClock(
+            now: try #require(KanoNaviDateCoding.date(from: "2026-11-10T00:00:00Z")))
+        let transport = SequenceTransport([.failure(URLError(.notConnectedToInternet))])
+        let store = DashboardStore(
+            client: try api(transport: transport, cache: try await cacheWithDashboard()), clock: clock)
+        store.start()
+        await waitForPhase(store, .failed(.offline))
+
+        #expect(store.snapshot != nil)
+        #expect(store.source == .cache)
+        #expect(store.fetchedAt == cachedAt)
+        store.stop()
+    }
+
+    @Test func failedRefreshAfterNetworkSnapshotKeepsNetworkSource() async throws {
+        let transport = SequenceTransport([
+            .success(TransportResponse(data: try fixture(), statusCode: 200)),
+            .failure(URLError(.notConnectedToInternet)),
+        ])
+        let store = DashboardStore(client: try api(transport: transport))
+        await store.refresh()
+        #expect(store.source == .network)
+
+        await store.refresh()
+
+        #expect(store.phase == .failed(.offline))
+        #expect(store.source == .network)
+    }
+
+    @Test func notModifiedRefreshIsMarkedNetwork() async throws {
+        let transport = SequenceTransport([.success(TransportResponse(data: Data(), statusCode: 304))])
+        let store = DashboardStore(
+            client: try api(transport: transport, cache: try await cacheWithDashboard()))
+
+        await store.refresh()
+
+        #expect(store.phase == .idle)
+        #expect(store.source == .network)
+    }
 }
