@@ -68,6 +68,11 @@ struct LabelsTests {
         #expect(resolved(DisplayCodeLabels.platform(.bilibili), "zh-Hans") == "哔哩哔哩")
     }
 
+    @Test func japaneseStateAndSyncLabelsFollowTheBoard() {
+        #expect(resolved(DisplayCodeLabels.eventState(.pending), "ja") == "未定")
+        #expect(resolved(DisplayCodeLabels.syncStatus("none"), "ja") == "未同期")
+    }
+
     @Test func chineseStreamLabelsAreChinese() {
         #expect(resolved(DisplayCodeLabels.eventType("stream"), "zh-Hans") == "直播")
         #expect(resolved(DisplayCodeLabels.tag("live"), "zh-Hans") == "直播")
