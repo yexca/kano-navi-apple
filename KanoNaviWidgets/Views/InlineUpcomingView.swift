@@ -1,3 +1,4 @@
+import KanoNaviComponents
 import KanoNaviCore
 import SwiftUI
 
@@ -25,10 +26,12 @@ struct InlineUpcomingView: View {
         if item.isLive(at: entry.date) {
             return WidgetFormat.string(DisplayCodeLabels.eventState(.live), locale: locale)
         }
-        guard let startsAt = item.startsAt else {
-            return WidgetFormat.day(item.day, locale: locale)
+        guard let startsAt = item.startsAt,
+            JSTTimeFormat.showsTime(startsAt: startsAt, timePrecision: item.timePrecision)
+        else {
+            return JSTTimeFormat.day(item.day, locale: locale)
         }
-        let time = WidgetFormat.timeJST(startsAt, locale: locale)
+        let time = JSTTimeFormat.time(startsAt, locale: locale)
         guard item.day != entry.today else { return time }
         return WidgetFormat.weekday(item.day, locale: locale) + " " + time
     }

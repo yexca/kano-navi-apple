@@ -35,7 +35,7 @@ nonisolated struct WidgetSchedule: Equatable, Sendable {
             return view.calendarEntries.enumerated().map { index, entry in
                 WidgetItem(
                     id: event.id + "#" + String(index), eventID: event.id, title: title,
-                    day: entry.startsOn, startsAt: entry.startsAt,
+                    day: entry.startsOn, startsAt: entry.startsAt, timePrecision: entry.timePrecision,
                     endsAt: entry.saleMark == nil ? event.endsAt : nil, saleMark: entry.saleMark,
                     state: view.state, typeCode: view.typeCode)
             }

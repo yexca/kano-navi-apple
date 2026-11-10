@@ -385,30 +385,6 @@
         }
       }
     },
-    "widgetTimeJST": {
-      "comment": "A time of day in Japan time. %@ is the formatted time, such as 21:00.",
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%@ JST"
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%@ JST"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%@ JST"
-          }
-        }
-      }
-    },
     "widgetTimesInJST": {
       "comment": "Note in a widget header that every time shown is Japan time.",
       "extractionState": "manual",

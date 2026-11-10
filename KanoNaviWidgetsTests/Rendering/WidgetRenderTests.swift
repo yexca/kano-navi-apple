@@ -111,6 +111,10 @@ struct WidgetRenderTests {
                                     .environment(\.dynamicTypeSize, size)
                                     .environment(\.colorScheme, scheme)
                             }
+                            MonochromeTile {
+                                tile(family: family, device: device, entry: entry)
+                            }
+                            .environment(\.dynamicTypeSize, size)
                             Text(verbatim: "\(device.name) \(size)")
                                 .font(.system(size: 11))
                                 .foregroundStyle(.black)

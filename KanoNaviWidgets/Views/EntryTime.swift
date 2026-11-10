@@ -1,6 +1,9 @@
+import KanoNaviComponents
 import SwiftUI
+import WidgetKit
 
-/// An entry's Japan time, "All day" for a date-only entry, or the live badge.
+/// An entry's Japan time, "All day" for an entry without a clock time, or
+/// the live indicator.
 struct EntryTime: View {
     let item: WidgetItem
     let now: Date
@@ -11,14 +14,17 @@ struct EntryTime: View {
 
     var body: some View {
         if item.isLive(at: now) {
-            LiveBadge()
-        } else if let startsAt = item.startsAt {
-            Text(
-                labelsZone
-                    ? WidgetFormat.timeJST(startsAt, locale: locale)
-                    : WidgetFormat.time(startsAt, locale: locale)
-            )
-            .monospacedDigit()
+            LiveIndicator()
+                .widgetAccentable()
+        } else if let startsAt = item.startsAt,
+            JSTTimeFormat.showsTime(startsAt: startsAt, timePrecision: item.timePrecision)
+        {
+            if labelsZone {
+                JSTTimeLabel(startsAt: startsAt, startsOn: item.day, timePrecision: item.timePrecision)
+            } else {
+                Text(JSTTimeFormat.clockTime(startsAt, locale: locale))
+                    .monospacedDigit()
+            }
         } else {
             Text(.widgetAllDay)
         }
