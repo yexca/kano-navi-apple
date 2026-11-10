@@ -16,6 +16,14 @@ struct ScheduleStringsTests {
         #expect(resolved(.Schedule.dayEntryCount(3), "ja") == "3件の予定")
     }
 
+    @Test func savedNoticeNamesWhenTheCopyWasRead() {
+        let time = "Tue, Nov 10 11:20 JST"
+        #expect(
+            resolved(.Schedule.staleNoticeSaved(time), "en")
+                == "Couldn't update the schedule. Showing the copy from \(time).")
+        #expect(resolved(.Schedule.staleNoticeSaved(time), "ja").contains("\(time) 時点"))
+    }
+
     private func resolved(_ resource: LocalizedStringResource, _ identifier: String) -> String {
         var resource = resource
         resource.locale = Locale(identifier: identifier)

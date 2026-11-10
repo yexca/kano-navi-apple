@@ -93,6 +93,41 @@ struct ScheduleModelTests {
         #expect(model.gridDates.count == 42)
     }
 
+    @Test func failuresSayWhetherAMonthIsStillOnScreen() async {
+        let good = ScheduleFixtures.month(containing: november, events: [])
+        let failing = model(StubMonthLoader([:]))
+        let reloading = model(StubMonthLoader([november: [.success(good), .failure(.offline)]]))
+
+        await failing.loadIfNeeded()
+        await reloading.loadIfNeeded()
+        #expect(reloading.notice == nil)
+        await reloading.refresh()
+
+        #expect(failing.notice == .loadFailed)
+        #expect(reloading.notice == .updateFailed)
+    }
+
+    @Test func cachedMonthIsShownWithItsFetchTimeUntilAFreshRead() async throws {
+        let event = try ScheduleFixtures.event(id: "saved", startsOn: "2026-11-10")
+        let fetchedAt = Date(timeIntervalSince1970: 1_794_280_000)
+        let saved = ScheduleFixtures.month(
+            containing: november, events: [event], dayCounts: [ScheduleFixtures.today: 1], isStale: true,
+            fetchedAt: fetchedAt)
+        let fresh = ScheduleFixtures.month(
+            containing: november, events: [event], dayCounts: [ScheduleFixtures.today: 1])
+        let model = model(StubMonthLoader([november: [.success(saved), .success(fresh)]]))
+
+        await model.loadIfNeeded()
+
+        #expect(model.notice == .saved(fetchedAt: fetchedAt))
+        #expect(model.count(on: ScheduleFixtures.today) == 1)
+        #expect(model.entries(on: ScheduleFixtures.today).map(\.event.id) == ["saved"])
+
+        await model.refresh()
+
+        #expect(model.notice == nil)
+    }
+
     @Test func loadedMonthIsNotLoadedAgain() async {
         let stub = StubMonthLoader([
             november: [.success(ScheduleFixtures.month(containing: november, events: []))]

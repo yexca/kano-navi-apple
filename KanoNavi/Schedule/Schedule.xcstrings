@@ -601,6 +601,30 @@
         }
       }
     },
+    "staleNoticeSaved": {
+      "comment": "Notice when the service could not be read and the schedule shown is the copy saved on this device. %@ is when that copy was read from the service, in Japan time with JST, such as “Tue, Nov 10 11:20 JST”.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Couldn't update the schedule. Showing the copy from %@."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "予定を更新できませんでした。%@ 時点の内容を表示しています。"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "无法更新日程。正在显示截至 %@ 的内容。"
+          }
+        }
+      }
+    },
     "subscribe": {
       "comment": "Menu item that subscribes to the schedule in the Calendar app.",
       "extractionState": "manual",
