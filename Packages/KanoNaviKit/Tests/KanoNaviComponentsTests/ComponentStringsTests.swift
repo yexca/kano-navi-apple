@@ -24,7 +24,7 @@ struct ComponentStringsTests {
 
     @Test @MainActor func knownPlatformsUseTheCoreLabels() {
         #expect(resolved(PlatformMark.name(for: .youtube), "ja") == "YouTube")
-        #expect(resolved(PlatformMark.name(for: .bilibili), "ja") == "哔哩哔哩")
+        #expect(resolved(PlatformMark.name(for: .bilibili), "ja") == "bilibili")
         #expect(resolved(PlatformMark.name(for: .other), "en") == "Web")
     }
 
