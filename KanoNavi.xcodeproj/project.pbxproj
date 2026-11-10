@@ -11,6 +11,7 @@
 		0A0000000000000000000086 /* KanoNaviComponents in Frameworks */ = {isa = PBXBuildFile; productRef = 0A0000000000000000000082 /* KanoNaviComponents */; };
 		0A0000000000000000000087 /* KanoNaviCore in Frameworks */ = {isa = PBXBuildFile; productRef = 0A0000000000000000000083 /* KanoNaviCore */; };
 		0A0000000000000000000088 /* KanoNaviComponents in Frameworks */ = {isa = PBXBuildFile; productRef = 0A0000000000000000000084 /* KanoNaviComponents */; };
+		0A000000000000000000008B /* KanoNaviCore in Frameworks */ = {isa = PBXBuildFile; productRef = 0A000000000000000000008A /* KanoNaviCore */; };
 		0A0000000000000000000089 /* KanoNaviWidgets.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 0A0000000000000000000023 /* KanoNaviWidgets.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
@@ -59,8 +60,19 @@
 		0A0000000000000000000020 /* KanoNavi.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = KanoNavi.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0A0000000000000000000021 /* KanoNaviTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = KanoNaviTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		0A0000000000000000000022 /* KanoNaviUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = KanoNaviUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		0A0000000000000000000024 /* KanoNaviWidgetsTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = KanoNaviWidgetsTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		0A0000000000000000000023 /* KanoNaviWidgets.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = KanoNaviWidgets.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		0A0000000000000000000090 /* Exceptions for "KanoNaviWidgets" folder in "KanoNaviWidgetsTests" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				KanoNaviWidgetsBundle.swift,
+			);
+			target = 0A0000000000000000000034 /* KanoNaviWidgetsTests */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		0A0000000000000000000010 /* KanoNavi */ = {
@@ -80,7 +92,15 @@
 		};
 		0A0000000000000000000013 /* KanoNaviWidgets */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				0A0000000000000000000090 /* Exceptions for "KanoNaviWidgets" folder in "KanoNaviWidgetsTests" target */,
+			);
 			path = KanoNaviWidgets;
+			sourceTree = "<group>";
+		};
+		0A0000000000000000000014 /* KanoNaviWidgetsTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = KanoNaviWidgetsTests;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -118,6 +138,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		0A000000000000000000004E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0A000000000000000000008B /* KanoNaviCore in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -129,6 +157,7 @@
 				0A0000000000000000000011 /* KanoNaviTests */,
 				0A0000000000000000000012 /* KanoNaviUITests */,
 				0A0000000000000000000013 /* KanoNaviWidgets */,
+				0A0000000000000000000014 /* KanoNaviWidgetsTests */,
 				0A0000000000000000000003 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -140,6 +169,7 @@
 				0A0000000000000000000021 /* KanoNaviTests.xctest */,
 				0A0000000000000000000022 /* KanoNaviUITests.xctest */,
 				0A0000000000000000000023 /* KanoNaviWidgets.appex */,
+				0A0000000000000000000024 /* KanoNaviWidgetsTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -253,6 +283,30 @@
 			productReference = 0A0000000000000000000023 /* KanoNaviWidgets.appex */;
 			productType = "com.apple.product-type.app-extension";
 		};
+		0A0000000000000000000034 /* KanoNaviWidgetsTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 0A0000000000000000000065 /* Build configuration list for PBXNativeTarget "KanoNaviWidgetsTests" */;
+			buildPhases = (
+				0A000000000000000000004D /* Sources */,
+				0A000000000000000000004E /* Frameworks */,
+				0A000000000000000000004F /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				0A0000000000000000000013 /* KanoNaviWidgets */,
+				0A0000000000000000000014 /* KanoNaviWidgetsTests */,
+			);
+			name = KanoNaviWidgetsTests;
+			packageProductDependencies = (
+				0A000000000000000000008A /* KanoNaviCore */,
+			);
+			productName = KanoNaviWidgetsTests;
+			productReference = 0A0000000000000000000024 /* KanoNaviWidgetsTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -275,6 +329,9 @@
 						TestTargetID = 0A0000000000000000000030;
 					};
 					0A0000000000000000000033 = {
+						CreatedOnToolsVersion = 27.0;
+					};
+					0A0000000000000000000034 = {
 						CreatedOnToolsVersion = 27.0;
 					};
 				};
@@ -302,6 +359,7 @@
 				0A0000000000000000000031 /* KanoNaviTests */,
 				0A0000000000000000000032 /* KanoNaviUITests */,
 				0A0000000000000000000033 /* KanoNaviWidgets */,
+				0A0000000000000000000034 /* KanoNaviWidgetsTests */,
 			);
 		};
 /* End PBXProject section */
@@ -335,6 +393,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		0A000000000000000000004F /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -360,6 +425,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		0A0000000000000000000046 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		0A000000000000000000004D /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -714,6 +786,44 @@
 			};
 			name = Release;
 		};
+		0A000000000000000000007A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = net.yexca.kanonavi.widgets.tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		0A000000000000000000007B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = net.yexca.kanonavi.widgets.tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -762,6 +872,15 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
+		0A0000000000000000000065 /* Build configuration list for PBXNativeTarget "KanoNaviWidgetsTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0A000000000000000000007A /* Debug */,
+				0A000000000000000000007B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
@@ -787,6 +906,10 @@
 		0A0000000000000000000084 /* KanoNaviComponents */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = KanoNaviComponents;
+		};
+		0A000000000000000000008A /* KanoNaviCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = KanoNaviCore;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
