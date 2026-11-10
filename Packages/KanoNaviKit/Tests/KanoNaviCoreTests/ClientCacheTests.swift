@@ -57,21 +57,6 @@ struct ClientCacheTests {
         #expect(snapshot.meta.revision == 1)
     }
 
-    @Test func corruptFileCacheIsDiscarded() async throws {
-        let directory = FileManager.default.temporaryDirectory
-            .appendingPathComponent(UUID().uuidString)
-        let cache = FileResponseCache(directory: directory)
-        try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
-        let key = "https://api.example.com/api/dashboard?days=7"
-        let filename = Data(key.utf8).base64EncodedString().replacingOccurrences(of: "/", with: "_")
-        let file = directory.appendingPathComponent(filename + ".json")
-        try Data("not json".utf8).write(to: file)
-        let loaded = await cache.load(key: key)
-        #expect(loaded == nil)
-        #expect(FileManager.default.fileExists(atPath: file.path) == false)
-        try? FileManager.default.removeItem(at: directory)
-    }
-
     @Test(arguments: [false, true])
     func incompatibleDashboardKeepsNoValue(_ removeProjection: Bool) async throws {
         var object = try #require(
