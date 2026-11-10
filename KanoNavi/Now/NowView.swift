@@ -23,7 +23,9 @@ struct NowView: View {
                 NowBoardList(
                     board: NowBoard(dashboard: snapshot, now: context.date),
                     now: context.date,
-                    status: NowStatus(phase: dashboard.phase, isIncompatible: dashboard.isIncompatible),
+                    notice: NowNotice(
+                        source: dashboard.source, phase: dashboard.phase,
+                        isIncompatible: dashboard.isIncompatible),
                     fetchedAt: dashboard.fetchedAt,
                     retry: refresh
                 )

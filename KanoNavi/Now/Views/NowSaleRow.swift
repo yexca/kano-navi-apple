@@ -1,3 +1,4 @@
+import KanoNaviComponents
 import KanoNaviCore
 import SwiftUI
 
@@ -17,9 +18,7 @@ struct NowSaleRow: View {
             VStack(alignment: .leading, spacing: 6) {
                 NowTitle(text: sale.title)
                     .font(.headline)
-                NowFlowLayout(spacing: 6) {
-                    NowChip(label: DisplayCodeLabels.eventState(sale.state))
-                }
+                EventStateBadge(state: sale.state)
                 if let opens = sale.opens {
                     Text(.Now.saleFrom(moment(opens)))
                         .foregroundStyle(.secondary)
@@ -37,7 +36,7 @@ struct NowSaleRow: View {
     }
 
     private func moment(_ moment: NowSale.Moment) -> String {
-        guard let time = moment.time else { return NowTimeFormat.day(moment.date, locale: locale) }
-        return String(localized: .Now.jstTime(NowTimeFormat.dateTime(time, locale: locale)))
+        guard let time = moment.time else { return JSTTimeFormat.day(moment.date, locale: locale) }
+        return JSTTimeFormat.dateTime(time, locale: locale)
     }
 }

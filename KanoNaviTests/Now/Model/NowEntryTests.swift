@@ -1,4 +1,5 @@
 import Foundation
+import KanoNaviComponents
 import KanoNaviCore
 import Testing
 
@@ -70,6 +71,6 @@ struct NowEntryTests {
         let entries = NowEntry.entries(
             on: JapanDate(year: 2026, month: 11, day: 10), in: try fixture.dashboard().events)
 
-        #expect(entries.map(\.isMembers) == [true, false])
+        #expect(entries.map(\.event.isMembersOnly) == [true, false])
     }
 }

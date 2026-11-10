@@ -1,3 +1,4 @@
+import KanoNaviComponents
 import KanoNaviCore
 import SwiftUI
 
@@ -54,12 +55,12 @@ struct NowFreshnessSection: View {
             Text(.Now.freshnessWaiting)
         case .current:
             if let date {
-                Text(.Now.jstTime(NowTimeFormat.dateTime(date, locale: locale)))
+                Text(verbatim: JSTTimeFormat.dateTime(date, locale: locale))
             }
         case .outOfDate:
             VStack(alignment: .trailing, spacing: 2) {
                 if let date {
-                    Text(.Now.jstTime(NowTimeFormat.dateTime(date, locale: locale)))
+                    Text(verbatim: JSTTimeFormat.dateTime(date, locale: locale))
                 }
                 Label {
                     Text(outOfDate)

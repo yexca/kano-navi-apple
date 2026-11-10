@@ -1,3 +1,4 @@
+import KanoNaviComponents
 import KanoNaviCore
 import SwiftUI
 
@@ -5,7 +6,7 @@ import SwiftUI
 struct NowBoardList: View {
     let board: NowBoard
     let now: Date
-    let status: NowStatus?
+    let notice: NowNotice?
     let fetchedAt: Date?
     let retry: () async -> Void
 
@@ -13,10 +14,18 @@ struct NowBoardList: View {
 
     var body: some View {
         List {
-            if let status {
+            switch notice {
+            case .failed(let status, let isSavedCopy):
                 Section {
-                    NowStatusBanner(status: status, fetchedAt: fetchedAt, retry: retry)
+                    NowStatusBanner(
+                        status: status, isSavedCopy: isSavedCopy, fetchedAt: fetchedAt, retry: retry)
                 }
+            case .savedCopy(let isUpdating):
+                Section {
+                    NowSavedCopyNotice(isUpdating: isUpdating, fetchedAt: fetchedAt)
+                }
+            case nil:
+                EmptyView()
             }
 
             Section {
@@ -36,13 +45,13 @@ struct NowBoardList: View {
             Section {
                 entries(board.todayEntries, empty: .Now.nothingToday)
             } header: {
-                Text(.Now.todayHeader(NowTimeFormat.day(board.today, locale: locale)))
+                Text(.Now.todayHeader(JSTTimeFormat.day(board.today, locale: locale)))
             }
 
             Section {
                 entries(board.tomorrowEntries, empty: .Now.nothingTomorrow)
             } header: {
-                Text(.Now.tomorrowHeader(NowTimeFormat.day(board.tomorrow, locale: locale)))
+                Text(.Now.tomorrowHeader(JSTTimeFormat.day(board.tomorrow, locale: locale)))
             }
 
             if board.sales.isEmpty == false {

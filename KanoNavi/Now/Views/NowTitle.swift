@@ -1,3 +1,4 @@
+import KanoNaviComponents
 import KanoNaviCore
 import SwiftUI
 
@@ -26,13 +27,7 @@ struct NowTitle: View {
 
     private func mark(for resolved: ResolvedContentText) -> some View {
         NowFlowLayout(spacing: 8) {
-            Label {
-                Text(DisplayCodeLabels.translationOrigin(resolved.origin))
-            } icon: {
-                Image(systemName: "character.bubble")
-            }
-            .foregroundStyle(.secondary)
-            .labelStyle(NowCompactLabelStyle())
+            TranslationMark(origin: resolved.origin)
 
             if switchable {
                 Button(showsOriginal ? .Now.showTranslation : .Now.showOriginal) {

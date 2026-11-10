@@ -1,3 +1,4 @@
+import KanoNaviComponents
 import KanoNaviCore
 import SwiftUI
 
@@ -16,7 +17,7 @@ struct NowVideoCard: View {
             NowTitle(text: video.title, switchable: true)
                 .font(.headline)
             if let publishedAt = video.publishedAt {
-                Text(.Now.jstTime(NowTimeFormat.dateTime(publishedAt, locale: locale)))
+                Text(verbatim: JSTTimeFormat.dateTime(publishedAt, locale: locale))
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
             }
