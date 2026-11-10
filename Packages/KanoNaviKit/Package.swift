@@ -18,6 +18,7 @@ let package = Package(
         .target(
             name: "KanoNaviComponents",
             dependencies: ["KanoNaviCore"],
+            resources: [.process("Resources")],
             swiftSettings: [.defaultIsolation(MainActor.self)]
         ),
         .testTarget(

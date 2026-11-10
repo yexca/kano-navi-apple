@@ -25,3 +25,13 @@ backed by the package String Catalog.
 scene, `stop()` when it leaves the foreground, and `refresh()` for pull to
 refresh. Its `snapshot`, `phase`, `fetchedAt`, and `isIncompatible` properties
 let screens retain stale data while showing a failure state.
+
+`KanoNaviComponents` holds the SwiftUI pieces the app and the widgets share:
+`EventRow`, `EventChips`, `EventStateBadge`, `LiveIndicator`, `MembersChip`,
+`SaleChip`, `PlatformMark`, `TranslationMark` and `JSTTimeLabel`, plus
+`JSTTimeFormat` for Japan-time text and presentation facts on `ScheduleEvent`
+(`displayState`, `isMembersOnly`, `isConfirmed`, `displayCalendarEntries`,
+`resolvedTitle`). They have no interactive controls, UIKit or navigation, so
+they render in WidgetKit; the container decides what a tap does. Code labels
+come from `DisplayCodeLabels`; the few words the components add live in the
+module's own String Catalog.
