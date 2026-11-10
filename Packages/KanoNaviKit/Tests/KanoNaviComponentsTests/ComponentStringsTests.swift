@@ -18,6 +18,16 @@ struct ComponentStringsTests {
                 == "11月12日(木) 21:00 JST")
     }
 
+    @Test func ticketWordsResolveInEachInterfaceLanguage() {
+        #expect(resolved(ComponentStrings.timeTBA, "ja") == "時間未定")
+        #expect(resolved(ComponentStrings.approximateTime("21:00"), "en") == "About 21:00")
+        #expect(resolved(ComponentStrings.approximateTime("21:00"), "zh-Hans") == "约 21:00")
+        #expect(resolved(ComponentStrings.liveUntil("23:00"), "ja") == "23:00 まで")
+        #expect(resolved(ComponentStrings.liveSince("21:00"), "en") == "Since 21:00")
+        #expect(resolved(ComponentStrings.joined("配信", "ゲーム"), "ja") == "配信・ゲーム")
+        #expect(resolved(ComponentStrings.timeZoneJST, "zh-Hans") == "JST")
+    }
+
     @Test @MainActor func knownPlatformsUseTheCoreLabels() {
         #expect(resolved(PlatformMark.name(for: .youtube), "ja") == "YouTube")
         #expect(resolved(PlatformMark.name(for: .bilibili), "ja") == "bilibili")

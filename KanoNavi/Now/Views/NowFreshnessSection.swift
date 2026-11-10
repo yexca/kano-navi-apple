@@ -2,8 +2,9 @@ import KanoNaviComponents
 import KanoNaviCore
 import SwiftUI
 
-/// The freshness line: the last collection run and each source's last
-/// successful read, marking anything not read for a day.
+/// The freshness detail: the last collection run, each source's last
+/// successful read, marking anything not read for a day, and when this app
+/// last received the dashboard. ``NowFreshnessSheet`` shows it.
 struct NowFreshnessSection: View {
     let freshness: NowFreshness
     /// When this device last received the dashboard.
@@ -39,8 +40,6 @@ struct NowFreshnessSection: View {
                     Text(.Now.freshnessChecked)
                 }
             }
-        } header: {
-            Text(.Now.freshnessHeader)
         } footer: {
             Text(.Now.freshnessFooter)
         }

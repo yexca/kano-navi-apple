@@ -22,7 +22,9 @@ the cached pages and says so: `readResult(from:to:)` returns a
 `CalendarReadResult` with `isFromCache` and `fetchedAt` (the end of a fresh
 read, or the oldest cached page's fetch time), and `month(containing:)` and
 `widgetRange(today:now:)` carry the same facts as `isStale` and `fetchedAt` in
-`ScheduleMonthResult` and `WidgetCalendarResult`. `read(from:to:)` returns
+`ScheduleMonthResult` and `WidgetCalendarResult`. `cachedResult(from:to:)`
+returns the cached range without asking the service, or `nil` when a page is
+missing, for a screen to show while its first read runs. `read(from:to:)` returns
 the page alone. With nothing cached, the service's error is thrown.
 `APIClient.readResult(_:)` reads any one request the same way and returns a
 `ReadResult` with the value, `isFromCache` and `fetchedAt`; cancellation and an
@@ -44,7 +46,9 @@ properties let screens retain stale data while showing a failure state.
 refreshed.
 
 `KanoNaviComponents` holds the SwiftUI pieces the app and the widgets share:
-`EventRow`, `EventChips`, `EventStateBadge`, `LiveIndicator`, `MembersChip`,
+`EventRow`, `EventTicketRow` (an entry as a ticket: a stub with the large JST
+time and a relative phrase from `EventTicketTiming`, read at an instant the
+container passes, beside the title and one line of marks), `EventChips`, `EventStateBadge`, `LiveIndicator`, `MembersChip`,
 `SaleChip`, `PlatformMark`, `TranslationMark` and `JSTTimeLabel`, the
 `ComponentChip` capsule they share (for other labels in the same look, such as
 a video's form, tag or availability) and the wrapping `FlowLayout`, plus

@@ -24,6 +24,14 @@ public struct CalendarReader: Sendable {
         }
     }
 
+    /// The range as cached on this device, marked `isFromCache`, without
+    /// asking the service; `nil` when any page of the range is not cached.
+    /// A screen shows it while its first read of the service runs.
+    public func cachedResult(from: JapanDate, to: JapanDate) async -> CalendarReadResult? {
+        guard let cached = await readCachedPages(from: from, to: to) else { return nil }
+        return CalendarReadResult(page: cached.page, isFromCache: true, fetchedAt: cached.fetchedAt)
+    }
+
     private func readPages(from: JapanDate, to: JapanDate) async throws -> CalendarPage {
         var merger = PageMerger()
         while true {

@@ -57,6 +57,42 @@ struct NowFreshness: Equatable {
         return ["success", "ok", "partial"].contains(syncStatus) == false
     }
 
+    /// What the one-line footer adds after the last run's time.
+    enum Summary: Equatable {
+        /// Nothing to add.
+        case healthy
+        /// A run is collecting now.
+        case running
+        /// The last run finished, but some sources reported warnings.
+        case warnings
+        /// The last run, or a source, was not read for a day.
+        case notReadForADay
+        /// The last run failed.
+        case failed
+    }
+
+    /// The footer's summary. A failed run comes first, then anything not
+    /// read for a day, then a partial run's warnings and a running run.
+    var summary: Summary {
+        if syncNeedsReview, syncStatus != "running", syncStatus != "none" {
+            return .failed
+        }
+        if syncState == .outOfDate || sources.contains(where: { $0.state == .outOfDate }) {
+            return .notReadForADay
+        }
+        switch syncStatus {
+        case "partial": return .warnings
+        case "running": return .running
+        default: return .healthy
+        }
+    }
+
+    /// Whether the footer is drawn as a warning: the last run failed, or the
+    /// run or a source was not read for a day.
+    var needsAttention: Bool {
+        summary == .failed || summary == .notReadForADay
+    }
+
     static func state(of date: Date?, now: Date) -> State {
         guard let date, date.timeIntervalSince(now) <= futureTolerance else { return .waiting }
         return now.timeIntervalSince(date) > staleAfter ? .outOfDate : .current
