@@ -12,7 +12,7 @@ struct AppVersion: Equatable {
 
     static var main: AppVersion { AppVersion(infoDictionary: Bundle.main.infoDictionary ?? [:]) }
 
-    /// `1.0 (1)`, or whichever part is known.
+    /// `0.1.0 (1)`, or whichever part is known.
     var displayString: String {
         switch (version, build) {
         case (let version?, let build?) where version != build: "\(version) (\(build))"
