@@ -32,16 +32,6 @@ struct RootView: View {
                 }
             }
 
-            Tab(value: AppTab.videos) {
-                VideosView()
-            } label: {
-                Label {
-                    Text(.tabVideos)
-                } icon: {
-                    Image(systemName: "play.rectangle")
-                }
-            }
-
             Tab(value: AppTab.posts) {
                 PostsView()
             } label: {
@@ -49,6 +39,16 @@ struct RootView: View {
                     Text(.tabPosts)
                 } icon: {
                     Image(systemName: "text.bubble")
+                }
+            }
+
+            Tab(value: AppTab.videos) {
+                VideosView()
+            } label: {
+                Label {
+                    Text(.tabVideos)
+                } icon: {
+                    Image(systemName: "play.rectangle")
                 }
             }
 

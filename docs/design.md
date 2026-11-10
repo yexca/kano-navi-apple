@@ -149,10 +149,10 @@ The app is a `TabView` with five tabs.
    when `provenance` is `manual` or `manualLocked` is set, the board's rule),
    sale window, and a link to the original announcement. The toolbar offers the calendar subscription
    (`webcal://` link to `/api/calendar.ics` in the interface language).
-3. **Videos** — the projection shelf (lead, reservations, works, archives,
-   Shorts) and a month archive with the category filter.
-4. **Posts** — recent posts with quotes and images, and a month archive with
+3. **Posts** — recent posts with quotes and images, and a month archive with
    the account filter. Promoted posts are marked as the agency's.
+4. **Videos** — the projection shelf (lead, reservations, works, archives,
+   Shorts) and a month archive with the category filter.
 5. **More** — Works, Journey, LINE BLOG archive, Settings and About. About
    states that the app is an unofficial fan project and links the web board
    and the `kano-navi` repository.

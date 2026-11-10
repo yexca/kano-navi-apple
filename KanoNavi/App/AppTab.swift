@@ -2,7 +2,7 @@
 enum AppTab: Hashable {
     case now
     case schedule
-    case videos
     case posts
+    case videos
     case more
 }

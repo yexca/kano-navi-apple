@@ -13,6 +13,9 @@ final class LaunchTests: XCTestCase {
 
         XCTAssertTrue(app.navigationBars["Now"].waitForExistence(timeout: 10))
 
+        let tabs = app.tabBars.buttons.allElementsBoundByIndex.map(\.label)
+        XCTAssertEqual(tabs, ["Now", "Schedule", "Posts", "Videos", "More"])
+
         app.tabBars.buttons["Schedule"].tap()
         XCTAssertTrue(app.navigationBars["Schedule"].waitForExistence(timeout: 5))
     }
