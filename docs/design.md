@@ -83,14 +83,16 @@ subscription link only).
 - Polling stops when the scene goes to the background. There is no background
   refresh in the app; the widgets refresh on their own timeline.
 - A store exposes `snapshot` (last good data, possibly stale), `phase`
-  (`idle`, `loading`, `refreshing`, `failed(error)`) and `fetchedAt`, so a
-  view can show data and an error at the same time.
+  (`idle`, `loading`, `refreshing`, `failed(error)`), `fetchedAt` and
+  `source` (`cache` until a refresh succeeds, then `network`), so a view can
+  show data and an error at the same time and say whether the data is cached.
 
 `KanoNaviCore` exposes these reads through `APIClient` request values. `FileResponseCache`
 stores raw response bodies, ETags and fetch times; `CalendarReader` consumes all
 calendar pages in server order and provides both the widget's 14-day range and
-the Schedule screen's 42-day month grid. The widget uses the same reader with a
-cache directory owned by its extension.
+the Schedule screen's 42-day month grid. When the service cannot be read, the
+reader returns the cached pages marked stale with their fetch time. The widget
+uses the same reader with a cache directory owned by its extension.
 
 ## Language
 
