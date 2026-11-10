@@ -102,6 +102,13 @@ Every screen keeps what it shows and says where it came from:
   "Couldn't update the schedule. Showing the copy from <JST date and time>"
   with Try Again; a failed reload of a month already on screen, or a first
   load with nothing cached, says so with Try Again.
+- **Videos** and **Posts** mark the shelf and the recent posts, which come
+  from the dashboard, with the same notices as Now. Their month archives keep
+  the month on screen when a read fails. A month read from the cache because
+  the service could not be read shows "Couldn't update this month. Showing the
+  copy from <JST date and time>" with Try Again; a failed reload of a month
+  already on screen, a first load with nothing cached, and a failed next page
+  (at the end of the list) each say so with Try Again.
 - **Widgets** show cached data after a failed read with a cloud mark and "As
   of <JST time>" (the mark alone in the small and rectangular layouts), and
   "Schedule unavailable" when nothing is cached.
@@ -112,6 +119,8 @@ calendar pages in server order and provides both the widget's 14-day range and
 the Schedule screen's 42-day month grid. When the service cannot be read, the
 reader returns the cached pages marked stale with their fetch time. The widget
 uses the same reader with a cache directory owned by its extension.
+`APIClient.readResult(_:)` does the same for one request, such as an archive
+page or month index.
 
 ## Language
 
@@ -149,13 +158,36 @@ The app is a `TabView` with five tabs.
    when `provenance` is `manual` or `manualLocked` is set, the board's rule),
    sale window, and a link to the original announcement. The toolbar offers the calendar subscription
    (`webcal://` link to `/api/calendar.ics` in the interface language).
-3. **Posts** — recent posts with quotes and images, and a month archive with
-   the account filter. Promoted posts are marked as the agency's.
-4. **Videos** — the projection shelf (lead, reservations, works, archives,
-   Shorts) and a month archive with the category filter.
+3. **Posts** — the dashboard's posts in its order: the account (`@handle` on
+   X; a Bilibili account by its platform, never its mid), JST time, text in
+   the content language with Show Original, the ready images (up to four,
+   "+N" for the rest), the quoted post nested in it (a deleted or withheld
+   quote says so and still links to it) and Open on X or Open on Bilibili.
+   A promoted related-account post carries an Agency Post chip. Past Posts
+   opens the month archive with the account filter: the dashboard's
+   `xAccounts`, then its `bilibiliAccounts`.
+4. **Videos** — the projection's shelf joined to the dashboard's `videos` by
+   ID, each group in the projection's order, leaving out an ID without a
+   record: the lead (marked Featured when `leadIsFeatured`, otherwise Latest
+   Work), then Coming Up (reservations), Works, Stream Archives and Shorts. A
+   card shows the cover, the title in the content language, a status chip from
+   `view.phase` (live, upcoming, started, cancelled) or else the
+   `view.formCode` chip, the tag, availability when not everyone can watch
+   (members, private, removed), the JST time (scheduled start, else
+   publication) and buttons for the video's page and its `alternates`. Shorts
+   are vertical cards in a row that scrolls sideways. Pull to refresh reloads
+   the dashboard. Past Videos opens the month archive with the category filter
+   (`game`, `talk`, `song`, `other`).
 5. **More** — Works, Journey, LINE BLOG archive, Settings and About. About
    states that the app is an unofficial fan project and links the web board
    and the `kano-navi` repository.
+
+Both month archives read their month index (`/api/videos/months`,
+`/api/posts/months`) and show one Japan month at a time, newest first, from
+its first to its last date, 20 items per page; the next page is read when the
+list reaches its end. A filter's counts come from the page's `categoryCounts`
+or `accountCounts`, which count the whole month whatever the filter (keys are
+lowercase handles); All is their sum.
 
 Delivery order: Now, Schedule, widgets, Settings and About first; Videos and
 Posts next; Works, Journey and LINE BLOG last.

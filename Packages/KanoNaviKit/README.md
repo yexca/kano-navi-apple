@@ -24,6 +24,9 @@ read, or the oldest cached page's fetch time), and `month(containing:)` and
 `widgetRange(today:now:)` carry the same facts as `isStale` and `fetchedAt` in
 `ScheduleMonthResult` and `WidgetCalendarResult`. `read(from:to:)` returns
 the page alone. With nothing cached, the service's error is thrown.
+`APIClient.readResult(_:)` reads any one request the same way and returns a
+`ReadResult` with the value, `isFromCache` and `fetchedAt`; cancellation and an
+invalid request are never answered from the cache.
 
 `JapanDate` represents a Tokyo calendar date, while `JapanTime` supplies Tokyo
 `Date.FormatStyle` values. `ContentLanguageResolver` resolves translated copy
@@ -42,7 +45,9 @@ refreshed.
 
 `KanoNaviComponents` holds the SwiftUI pieces the app and the widgets share:
 `EventRow`, `EventChips`, `EventStateBadge`, `LiveIndicator`, `MembersChip`,
-`SaleChip`, `PlatformMark`, `TranslationMark` and `JSTTimeLabel`, plus
+`SaleChip`, `PlatformMark`, `TranslationMark` and `JSTTimeLabel`, the
+`ComponentChip` capsule they share (for other labels in the same look, such as
+a video's form, tag or availability) and the wrapping `FlowLayout`, plus
 `JSTTimeFormat` for Japan-time text and presentation facts on `ScheduleEvent`
 (`displayState`, `isMembersOnly`, `isConfirmed`, `displayCalendarEntries`,
 `resolvedTitle`). They have no interactive controls, UIKit or navigation, so

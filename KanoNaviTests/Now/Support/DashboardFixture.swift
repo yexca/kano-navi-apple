@@ -14,12 +14,18 @@ struct DashboardFixture {
     var nextEvent: [String: Any]?
     var lastSync: [String: Any]?
     var sourceFetchedAt: [String: Any]?
+    /// The projection's shelf; an empty shelf when `nil`.
+    var shelf: [String: Any]?
+    var posts: [[String: Any]] = []
+    var xAccounts = ["synthetic"]
+    var bilibiliAccounts: [String]?
 
     func dashboard() throws -> Dashboard {
         var summary: [String: Any] = [:]
         summary["latestVideo"] = latestVideo
         summary["nextEvent"] = nextEvent
-        var meta: [String: Any] = ["postWindowDays": 7, "xAccounts": ["synthetic"]]
+        var meta: [String: Any] = ["postWindowDays": 7, "xAccounts": xAccounts]
+        meta["bilibiliAccounts"] = bilibiliAccounts
         meta["lastSync"] = lastSync
         meta["sourceFetchedAt"] = sourceFetchedAt
         var body: [String: Any] = [
@@ -35,12 +41,12 @@ struct DashboardFixture {
                 "focus": ["eventIds": [], "videoIds": []],
                 "spotlight": spotlight.map { $0 as Any } ?? NSNull(),
                 "sales": sales,
-                "shelf": [
+                "shelf": shelf ?? [
                     "leadIsFeatured": false, "reservations": [], "works": [], "archives": [], "shorts": [],
                 ],
             ],
             "summary": summary,
-            "posts": [],
+            "posts": posts,
             "events": events,
             "videos": videos,
             "timeline": [],
