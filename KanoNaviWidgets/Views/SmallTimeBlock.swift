@@ -1,3 +1,4 @@
+import KanoNaviComponents
 import KanoNaviCore
 import SwiftUI
 import WidgetKit
@@ -15,7 +16,7 @@ struct SmallTimeBlock: View {
         VStack(alignment: .leading, spacing: 0) {
             if item.isLive(at: now) {
                 if let endsAt = item.endsAt {
-                    Text(.widgetEndsAt(WidgetFormat.timeJST(endsAt, locale: locale)))
+                    Text(.widgetEndsAt(JSTTimeFormat.time(endsAt, locale: locale)))
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }

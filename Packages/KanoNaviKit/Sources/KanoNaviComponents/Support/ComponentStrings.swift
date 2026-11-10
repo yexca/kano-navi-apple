@@ -10,11 +10,6 @@ nonisolated enum ComponentStrings {
         resource("components.live")
     }
 
-    /// The name of the `other` platform: a web page such as a shop or a post.
-    static var otherPlatform: LocalizedStringResource {
-        resource("components.platform.other")
-    }
-
     /// A formatted clock time followed by the Japan time-zone label.
     static func timeJST(_ time: String) -> LocalizedStringResource {
         resource("components.time.jst \(time)")

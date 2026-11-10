@@ -25,30 +25,6 @@
         }
       }
     },
-    "components.platform.other": {
-      "comment": "Name of a link to a web page outside YouTube and Bilibili, such as a shop or a post.",
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Web"
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ウェブ"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "网页"
-          }
-        }
-      }
-    },
     "components.time.dateTime %@ %@": {
       "comment": "A date and clock time in Japan, labelled with the Japan time zone. The first %@ is the date, the second the time.",
       "extractionState": "manual",

@@ -1,3 +1,4 @@
+import KanoNaviComponents
 import KanoNaviCore
 import SwiftUI
 
@@ -20,7 +21,7 @@ struct NowEntryRow: View {
                 ? AnyLayout(VStackLayout(alignment: .leading, spacing: 4))
                 : AnyLayout(HStackLayout(alignment: .firstTextBaseline, spacing: 12))
             layout {
-                Text(time)
+                time
                     .font(.subheadline.weight(.semibold))
                     .monospacedDigit()
                     .foregroundStyle(isPast ? .secondary : .primary)
@@ -30,7 +31,14 @@ struct NowEntryRow: View {
                     NowTitle(text: entry.title)
                         .strikethrough(entry.state == .cancelled)
                         .foregroundStyle(isPast ? .secondary : .primary)
-                    chips
+                    NowFlowLayout(spacing: 6) {
+                        EventChips(event: entry.event, saleMark: entry.saleMark)
+                        ForEach(platforms, id: \.rawValue) { platform in
+                            PlatformMark(platform: platform, showsName: false)
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                        }
+                    }
                 }
             }
             .frame(maxWidth: .infinity, alignment: .leading)
@@ -43,30 +51,24 @@ struct NowEntryRow: View {
         entry.state == .done || entry.state == .cancelled
     }
 
-    private var time: LocalizedStringResource {
-        guard let startsAt = entry.startsAt else { return .Now.timeTBA }
-        let value = NowTimeFormat.time(startsAt, locale: locale)
-        return entry.isApproximate ? .Now.approximateJSTTime(value) : .Now.jstTime(value)
+    /// The entry's JST time; an estimate reads "about", and an entry
+    /// without a clock time says the time is to be announced.
+    @ViewBuilder private var time: some View {
+        let calendarEntry = entry.calendarEntry
+        if let startsAt = calendarEntry.startsAt,
+            JSTTimeFormat.showsTime(startsAt: startsAt, timePrecision: calendarEntry.timePrecision)
+        {
+            if entry.isApproximate {
+                Text(.Now.approximately(JSTTimeFormat.time(startsAt, locale: locale)))
+            } else {
+                JSTTimeLabel(entry: calendarEntry)
+            }
+        } else {
+            Text(.Now.timeTBA)
+        }
     }
 
-    private var chips: some View {
-        NowFlowLayout(spacing: 6) {
-            if entry.state == .live {
-                NowLiveBadge()
-            } else if entry.state != .upcoming {
-                NowChip(label: DisplayCodeLabels.eventState(entry.state))
-            }
-            if let saleMark = entry.saleMark {
-                NowChip(label: DisplayCodeLabels.saleMark(saleMark))
-            }
-            if entry.isMembers {
-                NowMembersChip()
-            } else if let typeCode = entry.typeCode {
-                NowChip(label: DisplayCodeLabels.eventType(typeCode))
-            }
-            if let activityCode = entry.activityCode {
-                NowChip(label: DisplayCodeLabels.activity(activityCode))
-            }
-        }
+    private var platforms: [EventPlatform] {
+        entry.event.platforms ?? entry.event.platform.map { [$0] } ?? []
     }
 }

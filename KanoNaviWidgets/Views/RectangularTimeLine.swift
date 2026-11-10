@@ -1,3 +1,4 @@
+import KanoNaviComponents
 import KanoNaviCore
 import SwiftUI
 
@@ -13,7 +14,7 @@ struct RectangularTimeLine: View {
     var body: some View {
         if item.isLive(at: now) {
             if let endsAt = item.endsAt {
-                Text(.widgetEndsAt(WidgetFormat.timeJST(endsAt, locale: locale)))
+                Text(.widgetEndsAt(JSTTimeFormat.time(endsAt, locale: locale)))
             }
         } else {
             HStack(spacing: 4) {

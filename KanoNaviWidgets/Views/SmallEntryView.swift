@@ -1,3 +1,4 @@
+import KanoNaviComponents
 import KanoNaviCore
 import SwiftUI
 import WidgetKit
@@ -15,7 +16,8 @@ struct SmallEntryView: View {
         VStack(alignment: .leading, spacing: 3) {
             HStack(alignment: .firstTextBaseline) {
                 if item.isLive(at: now) {
-                    LiveBadge()
+                    LiveIndicator()
+                        .widgetAccentable()
                 } else {
                     Text(.widgetUpNext)
                         .fontWeight(.semibold)

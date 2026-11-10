@@ -1,3 +1,4 @@
+import KanoNaviComponents
 import KanoNaviCore
 import SwiftUI
 
@@ -19,7 +20,7 @@ struct NowSpotlightTicket: View {
 
             NowFlowLayout(spacing: 8) {
                 if spotlight.isLive {
-                    NowLiveBadge()
+                    LiveIndicator()
                 }
                 if let kicker {
                     Text(kicker)
@@ -28,7 +29,7 @@ struct NowSpotlightTicket: View {
                         .textCase(.uppercase)
                 }
                 if spotlight.showsMembersChip {
-                    NowMembersChip()
+                    MembersChip()
                 }
             }
 
@@ -57,9 +58,9 @@ struct NowSpotlightTicket: View {
     @ViewBuilder
     private var timing: some View {
         if let startsAt = spotlight.startsAt {
-            let time = Text(jstTime(startsAt))
+            let time = Text(verbatim: jstTime(startsAt))
             if spotlight.isLive {
-                Text(.Now.startedAt(String(localized: jstTime(startsAt))))
+                Text(.Now.startedAt(jstTime(startsAt)))
                     .foregroundStyle(.secondary)
             } else if spotlight.mode == .next, startsAt > now {
                 NowCountdown(date: startsAt, now: now)
@@ -69,15 +70,16 @@ struct NowSpotlightTicket: View {
             }
         } else if let startsOn = spotlight.startsOn {
             VStack(alignment: .leading, spacing: 2) {
-                Text(verbatim: NowTimeFormat.day(startsOn, locale: locale))
+                Text(verbatim: JSTTimeFormat.day(startsOn, locale: locale))
                 Text(.Now.timeTBA)
                     .foregroundStyle(.secondary)
             }
         }
     }
 
-    private func jstTime(_ date: Date) -> LocalizedStringResource {
-        let value = NowTimeFormat.dateTime(date, locale: locale)
-        return spotlight.timePrecision == "approximate" ? .Now.approximateJSTTime(value) : .Now.jstTime(value)
+    /// The ticket's start as a JST date and time; an estimate reads "about".
+    private func jstTime(_ date: Date) -> String {
+        let value = JSTTimeFormat.dateTime(date, locale: locale)
+        return spotlight.timePrecision == "approximate" ? String(localized: .Now.approximately(value)) : value
     }
 }

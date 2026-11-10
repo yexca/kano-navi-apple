@@ -13,6 +13,9 @@ nonisolated struct WidgetItem: Equatable, Identifiable, Sendable {
     var day: JapanDate
     /// The entry's instant; `nil` when the server only knows the date.
     var startsAt: Date?
+    /// How precise `startsAt` is: `exact`, `approximate`, `date` or
+    /// `unknown`. Only entries with a clock time show one.
+    var timePrecision = "exact"
     /// When the event ends. Sale entries have none; their closing is an
     /// entry of its own.
     var endsAt: Date?

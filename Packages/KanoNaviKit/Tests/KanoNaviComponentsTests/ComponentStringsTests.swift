@@ -11,10 +11,6 @@ struct ComponentStringsTests {
         #expect(resolved(ComponentStrings.live, "zh-Hans") == "直播中")
     }
 
-    @Test func otherPlatformResolvesInJapanese() {
-        #expect(resolved(ComponentStrings.otherPlatform, "ja") == "ウェブ")
-    }
-
     @Test func timeLabelsComposeFromTheModuleCatalog() {
         #expect(resolved(ComponentStrings.timeJST("21:00"), "ja") == "21:00 JST")
         #expect(
@@ -25,7 +21,13 @@ struct ComponentStringsTests {
     @Test @MainActor func knownPlatformsUseTheCoreLabels() {
         #expect(resolved(PlatformMark.name(for: .youtube), "ja") == "YouTube")
         #expect(resolved(PlatformMark.name(for: .bilibili), "ja") == "bilibili")
-        #expect(resolved(PlatformMark.name(for: .other), "en") == "Web")
+    }
+
+    @Test(arguments: ["en", "ja", "zh-Hans"])
+    @MainActor func otherPlatformUsesTheCoreLabel(_ identifier: String) {
+        #expect(
+            resolved(PlatformMark.name(for: .other), identifier)
+                == resolved(DisplayCodeLabels.platform(.other), identifier))
     }
 
     private func resolved(_ resource: LocalizedStringResource, _ identifier: String) -> String {

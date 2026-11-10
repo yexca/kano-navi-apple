@@ -1,3 +1,4 @@
+import KanoNaviComponents
 import SwiftUI
 
 /// Marks cached data shown after a failed read, with the time it was read.
@@ -30,7 +31,7 @@ struct FreshnessLabel: View {
 
     private var message: LocalizedStringResource {
         if let fetchedAt = schedule.fetchedAt {
-            .widgetStaleAsOf(WidgetFormat.timeJST(fetchedAt, locale: locale))
+            .widgetStaleAsOf(JSTTimeFormat.time(fetchedAt, locale: locale))
         } else {
             .widgetStale
         }

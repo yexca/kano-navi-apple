@@ -29,10 +29,10 @@ public struct PlatformMark: View {
         }
     }
 
-    /// The platform's name. `other` is a web page outside the listed
-    /// platforms; the core label table has no entry for it yet.
+    /// The platform's name from the core label table. `other` is a web page
+    /// outside the listed platforms, such as a shop or a post.
     static func name(for platform: EventPlatform) -> LocalizedStringResource {
-        platform == .other ? ComponentStrings.otherPlatform : DisplayCodeLabels.platform(platform)
+        DisplayCodeLabels.platform(platform)
     }
 
     /// The symbol drawn for a platform.

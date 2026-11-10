@@ -87,6 +87,25 @@ subscription link only).
   `source` (`cache` until a refresh succeeds, then `network`), so a view can
   show data and an error at the same time and say whether the data is cached.
 
+### Cached and Stale Data on Screen
+
+Every screen keeps what it shows and says where it came from:
+
+- **Now** marks the snapshot read from the cache at launch with "Showing data
+  saved on this device from <JST date and time>", plus "Updating…" while the
+  first refresh runs; the mark goes away once a refresh succeeds. A failed
+  refresh shows a banner with the reason and a Try Again button over the data,
+  and its footnote says whether the data is the saved copy or the last data
+  received since launch, with its JST time.
+- **Schedule** keeps the month grid and day list when a read fails. A month
+  that comes from the cache because the service could not be read shows
+  "Couldn't update the schedule. Showing the copy from <JST date and time>"
+  with Try Again; a failed reload of a month already on screen, or a first
+  load with nothing cached, says so with Try Again.
+- **Widgets** show cached data after a failed read with a cloud mark and "As
+  of <JST time>" (the mark alone in the small and rectangular layouts), and
+  "Schedule unavailable" when nothing is cached.
+
 `KanoNaviCore` exposes these reads through `APIClient` request values. `FileResponseCache`
 stores raw response bodies, ETags and fetch times; `CalendarReader` consumes all
 calendar pages in server order and provides both the widget's 14-day range and
@@ -121,10 +140,14 @@ The app is a `TabView` with five tabs.
    (last collection result and per-source read times, marking a source not
    read for a day). Pull to refresh.
 2. **Schedule** — a Monday-first month calendar of Japan dates with a mark per
-   day from `dayCounts`, and the selected day's or week's entries below it.
-   An entry opens a detail sheet: title, time in JST, state, type and tag,
-   platforms and links, Auto-detected or Confirmed, sale window, and a link to
-   the original announcement. The toolbar offers the calendar subscription
+   day from `dayCounts`, and the selected day's entries below it. Day lists
+   come from each event's `view.calendarEntries`, not its `startsOn`, so a
+   sale is listed on its opening day and on its closing day with the matching
+   chip; within a day, entries without a time come first, then by start, ties
+   in server order. An entry opens a detail sheet: title, time in JST, state,
+   type and tag, platforms and links, Auto-detected or Confirmed (Confirmed
+   when `provenance` is `manual` or `manualLocked` is set, the board's rule),
+   sale window, and a link to the original announcement. The toolbar offers the calendar subscription
    (`webcal://` link to `/api/calendar.ics` in the interface language).
 3. **Videos** — the projection shelf (lead, reservations, works, archives,
    Shorts) and a month archive with the category filter.
@@ -142,11 +165,19 @@ Posts next; Works, Journey and LINE BLOG last.
 `KanoNaviWidgets` holds the calendar widgets, the app's one required feature.
 
 - **Upcoming** (`systemSmall`, `systemMedium`, `systemLarge`): small shows the
-  next entry with its JST time and a countdown, or "Live now"; medium lists the
-  next entries grouped by Japan day; large shows the current week's days with
-  their entries.
+  next entry with its JST time and a countdown, or the live entry; medium lists
+  the next entries grouped by Japan day; large shows the seven Japan days from
+  today, each with its entries or "No entries". At accessibility text sizes
+  medium and large list the next entries by day, each time above its title,
+  instead of a time column or seven rows.
 - **Lock Screen** (`accessoryRectangular`, `accessoryInline`): the next entry
-  and its time.
+  and its time. The rectangular layout has three fixed lines, so its text
+  stops growing at the `xxxLarge` Dynamic Type size.
+- The widgets draw the live state, JST times and dates with the shared
+  `KanoNaviComponents` views and formatting. Sale, members and cancellation
+  marks stay widget-specific, compact one-word capsules, because the shared
+  chips (icon plus caption text) leave no room for titles in a one-line row at
+  large text sizes.
 - The timeline provider reads `/api/calendar` for today through 13 days ahead
   (Japan dates) itself, so the widget needs no App Group. It caches the last
   good response in the extension's own container and shows it, marked stale,

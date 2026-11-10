@@ -1,9 +1,13 @@
+import KanoNaviComponents
 import SwiftUI
 
 /// A problem shown above the last good data, which stays on screen.
 struct NowStatusBanner: View {
     let status: NowStatus
-    /// When the data on screen was received.
+    /// Whether the data on screen is the snapshot saved on this device
+    /// rather than one received since launch.
+    let isSavedCopy: Bool
+    /// When the data on screen was received from the service.
     let fetchedAt: Date?
     let retry: () async -> Void
 
@@ -21,7 +25,7 @@ struct NowStatusBanner: View {
             }
             Text(message)
             if let fetchedAt {
-                Text(.Now.statusShowingLast(NowTimeFormat.dateTime(fetchedAt, locale: locale)))
+                Text(receivedNote(fetchedAt))
                     .font(.footnote)
                     .foregroundStyle(.secondary)
             }
@@ -54,6 +58,11 @@ struct NowStatusBanner: View {
 
     private var message: LocalizedStringResource {
         Self.message(for: status)
+    }
+
+    private func receivedNote(_ fetchedAt: Date) -> LocalizedStringResource {
+        let time = JSTTimeFormat.dateTime(fetchedAt, locale: locale)
+        return isSavedCopy ? .Now.statusShowingSaved(time) : .Now.statusShowingLast(time)
     }
 
     static func message(for status: NowStatus) -> LocalizedStringResource {

@@ -12,6 +12,7 @@
 		0A0000000000000000000087 /* KanoNaviCore in Frameworks */ = {isa = PBXBuildFile; productRef = 0A0000000000000000000083 /* KanoNaviCore */; };
 		0A0000000000000000000088 /* KanoNaviComponents in Frameworks */ = {isa = PBXBuildFile; productRef = 0A0000000000000000000084 /* KanoNaviComponents */; };
 		0A000000000000000000008B /* KanoNaviCore in Frameworks */ = {isa = PBXBuildFile; productRef = 0A000000000000000000008A /* KanoNaviCore */; };
+		0A00000000000000000000A2 /* KanoNaviComponents in Frameworks */ = {isa = PBXBuildFile; productRef = 0A00000000000000000000A1 /* KanoNaviComponents */; };
 		0A0000000000000000000089 /* KanoNaviWidgets.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 0A0000000000000000000023 /* KanoNaviWidgets.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
@@ -143,6 +144,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0A000000000000000000008B /* KanoNaviCore in Frameworks */,
+				0A00000000000000000000A2 /* KanoNaviComponents in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -302,6 +304,7 @@
 			name = KanoNaviWidgetsTests;
 			packageProductDependencies = (
 				0A000000000000000000008A /* KanoNaviCore */,
+				0A00000000000000000000A1 /* KanoNaviComponents */,
 			);
 			productName = KanoNaviWidgetsTests;
 			productReference = 0A0000000000000000000024 /* KanoNaviWidgetsTests.xctest */;
@@ -910,6 +913,10 @@
 		0A000000000000000000008A /* KanoNaviCore */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = KanoNaviCore;
+		};
+		0A00000000000000000000A1 /* KanoNaviComponents */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = KanoNaviComponents;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

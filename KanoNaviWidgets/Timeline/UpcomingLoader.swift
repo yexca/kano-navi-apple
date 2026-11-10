@@ -16,22 +16,10 @@ nonisolated struct UpcomingLoader: Sendable {
             ))
     }
 
-    /// Today through 13 days ahead, in Japan dates. Returns `nil` when the
+    /// Today through 13 days ahead, in Japan dates. A failed read returns the
+    /// cached range marked stale with its fetch time; returns `nil` when the
     /// read fails and nothing is cached.
     func load(now: Date) async -> WidgetCalendarResult? {
-        let today = JapanDate.date(from: now)
-        let startedAt = Date.now
-        guard var result = try? await CalendarReader(client: client).widgetRange(today: today, now: now)
-        else { return nil }
-        // `CalendarReader.read` falls back to cached pages without saying so.
-        // A first page cached before this read began means the read failed.
-        let cachedAt = await client.cachedFetchedAt(CalendarRequest(from: today, to: today.addingDays(13)))
-        if let cachedAt, cachedAt < startedAt {
-            result.isStale = true
-            result.fetchedAt = cachedAt
-        } else if result.isStale, result.fetchedAt == nil {
-            result.fetchedAt = cachedAt
-        }
-        return result
+        try? await CalendarReader(client: client).widgetRange(today: JapanDate.date(from: now), now: now)
     }
 }

@@ -20,9 +20,9 @@ struct ScheduleScreen: View {
     var body: some View {
         NavigationStack {
             List {
-                if let notice {
+                if let notice = model.notice {
                     Section {
-                        ScheduleStatusNotice(kind: notice) {
+                        ScheduleStatusNotice(notice: notice) {
                             Task { await model.refresh() }
                         }
                     }
@@ -88,13 +88,6 @@ struct ScheduleScreen: View {
             Text(.Schedule.noEntries)
                 .foregroundStyle(.secondary)
         }
-    }
-
-    private var notice: ScheduleStatusNotice.Kind? {
-        if model.failure != nil {
-            return model.month == nil ? .loadFailed : .updateFailed
-        }
-        return model.month?.isStale == true ? .stale : nil
     }
 
     /// Applies a deep link's focus once, then clears it.

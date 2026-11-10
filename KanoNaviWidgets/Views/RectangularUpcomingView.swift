@@ -1,3 +1,4 @@
+import KanoNaviComponents
 import KanoNaviCore
 import SwiftUI
 import WidgetKit
@@ -23,7 +24,8 @@ struct RectangularUpcomingView: View {
                 VStack(alignment: .leading, spacing: 0) {
                     HStack(spacing: 4) {
                         if item.isLive(at: entry.date) {
-                            LiveBadge()
+                            LiveIndicator()
+                                .widgetAccentable()
                         } else {
                             Text(.widgetUpNext)
                                 .fontWeight(.semibold)

@@ -41,11 +41,11 @@ enum ScheduleFixtures {
 
     static func month(
         containing date: JapanDate, events: [ScheduleEvent], dayCounts: [JapanDate: Int] = [:],
-        isStale: Bool = false
+        isStale: Bool = false, fetchedAt: Date? = nil
     ) -> ScheduleMonthResult {
         ScheduleMonthResult(
             dates: date.monthGrid, events: events, dayCounts: dayCounts, adjacent: ArchiveAdjacent(),
-            isStale: isStale)
+            isStale: isStale, fetchedAt: fetchedAt)
     }
 }
 

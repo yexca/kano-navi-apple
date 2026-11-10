@@ -1,3 +1,4 @@
+import KanoNaviComponents
 import KanoNaviCore
 import SwiftUI
 
@@ -14,7 +15,7 @@ struct DayLabel: View {
         } else if date == today.addingDays(1) {
             Text(.widgetTomorrow)
         } else {
-            Text(WidgetFormat.day(date, locale: locale))
+            Text(JSTTimeFormat.day(date, locale: locale))
         }
     }
 }

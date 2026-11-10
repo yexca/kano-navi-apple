@@ -5,18 +5,21 @@ import KanoNaviCore
 /// at its opening and one at its close, from the event's `view`.
 struct NowEntry: Equatable, Identifiable {
     var id: String
-    var eventID: String
-    var title: NowContentText
-    var startsAt: Date?
-    var timePrecision: String
-    var saleMark: SaleMark?
-    var state: EventState
-    var typeCode: String?
-    var activityCode: String?
-    var isMembers: Bool
+    /// The event the entry belongs to, for its chips and platforms.
+    var event: ScheduleEvent
+    /// The calendar entry that places the event on the day.
+    var calendarEntry: CalendarEntryView
+
+    var eventID: String { event.id }
+    var title: NowContentText {
+        NowContentText(event.title, sourceLanguage: event.sourceLanguage, translations: event.translations)
+    }
+    var saleMark: SaleMark? { calendarEntry.saleMark }
+    /// The state the server decided for the event.
+    var state: EventState { event.view?.state ?? .unknown("") }
 
     /// Whether the time is an estimate the board marks with "about".
-    var isApproximate: Bool { timePrecision == "approximate" }
+    var isApproximate: Bool { calendarEntry.timePrecision == "approximate" }
 }
 
 extension NowEntry {
@@ -29,25 +32,14 @@ extension NowEntry {
             for (index, calendarEntry) in view.calendarEntries.enumerated()
             where calendarEntry.startsOn == date {
                 let entry = NowEntry(
-                    id: event.id + "#" + String(index),
-                    eventID: event.id,
-                    title: NowContentText(
-                        event.title, sourceLanguage: event.sourceLanguage, translations: event.translations),
-                    startsAt: calendarEntry.startsAt,
-                    timePrecision: calendarEntry.timePrecision,
-                    saleMark: calendarEntry.saleMark,
-                    state: view.state,
-                    typeCode: view.typeCode,
-                    activityCode: view.activityCode,
-                    isMembers: (view.typeCode ?? event.eventType) == "member"
-                )
+                    id: event.id + "#" + String(index), event: event, calendarEntry: calendarEntry)
                 result.append((result.count, entry))
             }
         }
         return
             result
             .sorted { lhs, rhs in
-                switch (lhs.entry.startsAt, rhs.entry.startsAt) {
+                switch (lhs.entry.calendarEntry.startsAt, rhs.entry.calendarEntry.startsAt) {
                 case (nil, nil): lhs.order < rhs.order
                 case (nil, _): true
                 case (_, nil): false

@@ -52,6 +52,15 @@ final class ScheduleModel {
     /// The last failure loading the month on screen.
     var failure: (any Error)? { failures[displayedMonth] }
 
+    /// Why the month on screen is not a fresh read, or `nil` when it is.
+    var notice: ScheduleNotice? {
+        if failure != nil {
+            return month == nil ? .loadFailed : .updateFailed
+        }
+        guard let month, month.isStale else { return nil }
+        return .saved(fetchedAt: month.fetchedAt)
+    }
+
     /// The number of entries the server counts on a date.
     func count(on date: JapanDate) -> Int {
         result(containing: date)?.dayCounts[date] ?? 0

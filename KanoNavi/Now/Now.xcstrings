@@ -1,26 +1,26 @@
 {
   "sourceLanguage": "en",
   "strings": {
-    "approximateJSTTime": {
-      "comment": "An approximate time in Japan. %@ is a date and/or time, such as 21:00.",
+    "approximately": {
+      "comment": "An estimated time. %@ is the time labelled with JST, such as “21:00 JST” or “Tue, Nov 10 21:00 JST”.",
       "extractionState": "manual",
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "About %@ JST"
+            "value": "About %@"
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "%@ JST 頃"
+            "value": "%@ 頃"
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "约 %@ JST"
+            "value": "约 %@"
           }
         }
       }
@@ -193,54 +193,6 @@
         }
       }
     },
-    "jstTime": {
-      "comment": "A time in Japan. %@ is a date and/or time, such as 21:00.",
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%@ JST"
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%@ JST"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%@ JST"
-          }
-        }
-      }
-    },
-    "liveBadge": {
-      "comment": "The word shown with the red live dot.",
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Live"
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "配信中"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "直播中"
-          }
-        }
-      }
-    },
     "loading": {
       "comment": "Shown while the first dashboard loads.",
       "extractionState": "manual",
@@ -261,30 +213,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "正在加载…"
-          }
-        }
-      }
-    },
-    "membersOnly": {
-      "comment": "Chip on a members-only entry.",
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Members Only"
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "メン限"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "会员限定"
           }
         }
       }
@@ -501,6 +429,78 @@
           "stringUnit": {
             "state": "translated",
             "value": "在售"
+          }
+        }
+      }
+    },
+    "savedCopy": {
+      "comment": "Notice that the data on screen is the copy saved on this device and has not been refreshed.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Showing data saved on this device."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "この端末に保存したデータを表示しています。"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "正在显示本机保存的数据。"
+          }
+        }
+      }
+    },
+    "savedCopyFrom": {
+      "comment": "Notice that the data on screen is the copy saved on this device and has not been refreshed. %@ is when it was received, in Japan time with JST, such as “Tue, Nov 10 11:20 JST”.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Showing data saved on this device from %@."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ 時点でこの端末に保存したデータを表示しています。"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "正在显示本机保存的截至 %@ 的数据。"
+          }
+        }
+      }
+    },
+    "savedCopyUpdating": {
+      "comment": "Shown under the saved-data notice while the app reads the service.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Updating…"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "更新中…"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "正在更新…"
           }
         }
       }
@@ -938,7 +938,7 @@
       }
     },
     "statusShowingLast": {
-      "comment": "Says when the data on screen was received. %@ is a date and time, such as Nov 10, 21:00.",
+      "comment": "Footnote of a failed refresh: when the data on screen was received. %@ is a date and time in Japan with JST, such as “Tue, Nov 10 11:20 JST”.",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -957,6 +957,30 @@
           "stringUnit": {
             "state": "translated",
             "value": "正在显示 %@ 收到的数据。"
+          }
+        }
+      }
+    },
+    "statusShowingSaved": {
+      "comment": "Footnote of a failed refresh when the data on screen is the copy saved on this device. %@ is when it was received, in Japan time with JST, such as “Tue, Nov 10 11:20 JST”.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Showing the copy saved on this device, received %@."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "この端末に保存した、%@ に受信したデータを表示しています。"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "正在显示本机保存的数据，接收于 %@。"
           }
         }
       }
