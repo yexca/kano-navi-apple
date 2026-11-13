@@ -535,8 +535,10 @@ notices and pull to refresh.
     the article has anything in that language, a translated title alone
     included, and neither appears when it has nothing. A translation is
     text: pictures in it are left out.
-  - The article ends with the link to its comments and their count from the
-    article list (an article known to have none says so), Older Article and
+  - The article ends with the link to its comments and their count, which
+    the article states (a copy cached before the service counted them takes
+    it from the article list; an article known to have none says so), Older
+    Article and
     Newer Article with the neighbour's title (`previousId` is older,
     `nextId` newer), which swap the article in place so Back returns to
     where the reader was opened, and the original address and archived
