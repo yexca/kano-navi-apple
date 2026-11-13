@@ -17,7 +17,11 @@ struct LineBlogArticleFooter: View {
         VStack(alignment: .leading, spacing: 18) {
             Divider()
 
-            LineBlogCommentsLink(articleID: response.post.id, count: summary(response.post.id)?.commentCount)
+            // The article states its own count; a copy cached before the
+            // service counted them takes it from the article list.
+            LineBlogCommentsLink(
+                articleID: response.post.id,
+                count: response.post.commentCount ?? summary(response.post.id)?.commentCount)
 
             if response.previousID != nil || response.nextID != nil {
                 let layout =

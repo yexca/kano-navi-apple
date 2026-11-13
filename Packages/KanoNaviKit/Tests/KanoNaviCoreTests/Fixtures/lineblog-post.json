@@ -5,6 +5,7 @@
     "title": {"ja": "質問", "zh-CN": "问题", "en": "Questions"},
     "url": "https://blog.example.com/kano/archives/200.html",
     "archiveUrl": "https://archive.example.org/web/2019/https://blog.example.com/kano/archives/200.html",
+    "commentCount": 4,
     "blocks": [
       {
         "type": "paragraph",

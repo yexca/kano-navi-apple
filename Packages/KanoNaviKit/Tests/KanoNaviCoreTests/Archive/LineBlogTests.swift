@@ -41,6 +41,7 @@ struct LineBlogTests {
         #expect(page.nextID == "300")
         #expect(page.post.url.absoluteString == "https://blog.example.com/kano/archives/200.html")
         #expect(page.post.archiveURL.host() == "archive.example.org")
+        #expect(page.post.commentCount == 4)
         #expect(
             page.post.blocks.map(\.type) == [
                 "paragraph", "paragraph", "quote", "rule", "video", "youtube", "youtube", "card", "card",
@@ -53,6 +54,11 @@ struct LineBlogTests {
         let page = try await client.lineBlogPost(id: "100")
         #expect(page.previousID == nil)
         #expect(page.nextID == "200")
+    }
+
+    @Test func articleCachedBeforeTheServiceCountedCommentsHasNoCount() async throws {
+        let page = try await client.lineBlogPost(id: "100")
+        #expect(page.post.commentCount == nil)
     }
 
     @Test func paragraphHasInlinesAndTranslations() async throws {

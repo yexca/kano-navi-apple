@@ -31,12 +31,15 @@ public struct LineBlogArticle: Codable, Equatable, Sendable, Identifiable {
     public var url: URL
     /// The Wayback Machine capture it was recovered from (provenance).
     public var archiveURL: URL
+    /// How many comments the archive holds for the article, 0 without any.
+    /// `nil` in a copy cached before the service counted them.
+    public var commentCount: Int?
     /// In reading order.
     public var blocks: [LineBlogBlock]
 
     enum CodingKeys: String, CodingKey {
         case id, published, title, url
         case archiveURL = "archiveUrl"
-        case blocks
+        case commentCount, blocks
     }
 }
