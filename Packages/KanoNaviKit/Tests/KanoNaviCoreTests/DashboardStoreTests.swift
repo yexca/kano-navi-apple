@@ -42,7 +42,7 @@ struct DashboardStoreTests {
                 try await Task.sleep(for: .milliseconds(1))
                 return
             }
-            await Task.yield()
+            await pause()
         }
         _ = try #require(store.snapshot)
     }
@@ -52,7 +52,7 @@ struct DashboardStoreTests {
             if store.snapshot?.meta.revision == revision, store.phase == .idle {
                 return
             }
-            await Task.yield()
+            await pause()
         }
         #expect(store.snapshot?.meta.revision == revision)
     }
@@ -65,7 +65,7 @@ struct DashboardStoreTests {
             if await transport.requestCount() >= count {
                 return
             }
-            await Task.yield()
+            await pause()
         }
         Issue.record("Timed out waiting for (count) requests")
     }
@@ -75,9 +75,17 @@ struct DashboardStoreTests {
             if store.phase == expected {
                 return
             }
-            await Task.yield()
+            await pause()
         }
         #expect(store.phase == expected)
+    }
+
+    /// One turn of a wait loop. The short sleep bounds a wait by time (about a
+    /// second and more), so a busy parallel test run cannot use the turns up
+    /// before the store's task gets to run.
+    private func pause() async {
+        await Task.yield()
+        try? await Task.sleep(for: .milliseconds(1))
     }
 
     @Test func failureKeepsLastGoodSnapshot() async throws {
