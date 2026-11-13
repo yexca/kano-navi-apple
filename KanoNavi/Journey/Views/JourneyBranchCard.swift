@@ -11,6 +11,8 @@ struct JourneyBranchCard: View {
     let select: () -> Void
 
     @ContentLocaleSetting private var contentLocale
+    /// Grows with the text, but stays narrow enough at the largest sizes
+    /// for the next card to show.
     @ScaledMetric(relativeTo: .subheadline) private var cardWidth = 104
     @ScaledMetric(relativeTo: .subheadline) private var portraitSize = 56
 
@@ -18,7 +20,7 @@ struct JourneyBranchCard: View {
         let tone = JourneyTone(code: branch?.tone ?? "")
         Button(action: select) {
             VStack(spacing: 6) {
-                JourneyPortrait(portrait: branch?.portrait, isAll: branch == nil, tone: tone)
+                JourneyPortrait(mark: JourneyBranchMark(branch: branch), tone: tone, isRinged: branch != nil)
                     .frame(width: min(portraitSize, 96), height: min(portraitSize, 96))
                     .overlay(alignment: .bottomTrailing) {
                         if isSelected {
@@ -32,7 +34,7 @@ struct JourneyBranchCard: View {
                 name
                     .font(.subheadline.weight(.semibold))
                     .multilineTextAlignment(.center)
-                    .lineLimit(3)
+                    .fixedSize(horizontal: false, vertical: true)
                 if let branch {
                     Text(.Journey.branchSince(branch.since))
                         .font(.caption)
@@ -42,7 +44,7 @@ struct JourneyBranchCard: View {
                     .font(.caption2)
                     .foregroundStyle(.secondary)
             }
-            .frame(width: cardWidth)
+            .frame(width: min(cardWidth, 176))
             .padding(.vertical, 10)
             .padding(.horizontal, 6)
             .background(background, in: .rect(cornerRadius: 14))

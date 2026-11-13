@@ -12,26 +12,37 @@ struct JourneyBranchFilter: View {
     let countLabel: (Int) -> LocalizedStringResource
 
     var body: some View {
-        ScrollView(.horizontal) {
-            HStack(alignment: .top, spacing: 10) {
-                JourneyBranchCard(
-                    branch: nil, count: countLabel(total), isSelected: selection == nil, select: selectAll)
-                ForEach(branches) { branch in
+        ScrollViewReader { proxy in
+            ScrollView(.horizontal) {
+                HStack(alignment: .top, spacing: 10) {
                     JourneyBranchCard(
-                        branch: branch, count: countLabel(counts[branch.id] ?? 0),
-                        isSelected: selection == branch.id
-                    ) {
-                        toggle(branch.id)
+                        branch: nil, count: countLabel(total), isSelected: selection == nil, select: selectAll
+                    )
+                    .id(Self.allID)
+                    ForEach(branches) { branch in
+                        JourneyBranchCard(
+                            branch: branch, count: countLabel(counts[branch.id] ?? 0),
+                            isSelected: selection == branch.id
+                        ) {
+                            toggle(branch.id)
+                        }
+                        .id(branch.id)
                     }
                 }
+                .padding(.horizontal)
+                .padding(.vertical, 4)
             }
-            .padding(.horizontal)
-            .padding(.vertical, 4)
+            .scrollIndicators(.hidden)
+            .onAppear {
+                proxy.scrollTo(selection ?? Self.allID, anchor: .center)
+            }
         }
-        .scrollIndicators(.hidden)
         .accessibilityElement(children: .contain)
         .accessibilityLabel(Text(.Journey.identityFilter))
     }
+
+    /// The All card's scroll ID, which no branch ID can take.
+    private static let allID = "\u{0}all"
 
     private func selectAll() {
         selection = nil

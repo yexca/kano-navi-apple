@@ -1,30 +1,32 @@
 import KanoNaviCore
 import SwiftUI
 
-/// An identity's portrait cropped to a circle, ringed in its tone; the All
-/// card and a missing portrait draw a symbol instead.
+/// An identity's mark cropped to a circle and ringed in its tone: the
+/// portrait, or a symbol for the All card and for a branch without one.
 struct JourneyPortrait: View {
-    let portrait: JourneyMedia?
-    let isAll: Bool
+    let mark: JourneyBranchMark
     let tone: JourneyTone
+    /// Whether the circle is ringed in the tone (not for the All card).
+    let isRinged: Bool
 
     var body: some View {
         Circle()
             .fill(.fill.secondary)
             .overlay {
-                if let portrait {
+                switch mark {
+                case .portrait(let portrait):
                     MediaImage(
                         decorative: portrait.imageSource, contentMode: .fill, anchor: portrait.thumbnailAnchor
                     )
-                } else {
-                    Image(systemName: isAll ? "square.grid.2x2.fill" : "person.fill")
+                case .symbol(let systemImage):
+                    Image(systemName: systemImage)
                         .font(.title2)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(isRinged ? AnyShapeStyle(tone.color) : AnyShapeStyle(.secondary))
                 }
             }
             .clipShape(.circle)
             .overlay {
-                Circle().strokeBorder(tone.color.opacity(isAll ? 0 : 0.6), lineWidth: 2)
+                Circle().strokeBorder(tone.color.opacity(isRinged ? 0.6 : 0), lineWidth: 2)
             }
             .accessibilityHidden(true)
     }

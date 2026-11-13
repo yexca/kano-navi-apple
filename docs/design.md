@@ -335,7 +335,9 @@ document through `DocumentModel` (saved-copy and failure notices, pull to
 refresh). A segmented control switches between the timeline and the gallery;
 both start with the identity cards (All, then each branch with its portrait,
 name, "since" year and its milestone or image count), which filter both
-views. Tapping the selected card shows all again.
+views. A branch without a portrait shows a person symbol in its tone's ring
+instead; the selected card is outlined and carries a check mark. Tapping the
+selected card shows all again.
 
 - **Timeline.** Milestones read oldest first, as the story runs, under a
   sticky header per year with its count; within a year they keep the API's
