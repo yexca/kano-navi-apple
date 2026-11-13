@@ -53,6 +53,10 @@ struct JourneyGalleryGrid: View {
         .onChange(of: branch) {
             keepCategory(in: gallery.categories(branch: branch))
         }
+        // The identity may have changed while the timeline was shown.
+        .onAppear {
+            keepCategory(in: gallery.categories(branch: branch))
+        }
         .mediaViewer(item: $opened, in: items, source: \.imageSource) { [contentLocale] media in
             Text(verbatim: media.title(in: contentLocale))
         } caption: { media in
