@@ -4,37 +4,52 @@ import Observation
 
 /// The selected tab and pending deep-link targets.
 ///
-/// The widgets open `kanonavi://event/<id>` and
-/// `kanonavi://schedule?date=<YYYY-MM-DD>`; both select the Schedule tab and
-/// leave a ``ScheduleFocus`` for it to consume.
+/// Widgets and local notifications open `kanonavi://` URLs targeting tabs,
+/// schedule entries or dates, and the notification settings screen.
 @Observable
 final class AppRouter {
     var selectedTab = AppTab.now
     var scheduleFocus: ScheduleFocus?
+    var moreDestination: MoreDestination?
 
     /// Applies a `kanonavi://` URL. Returns `false` for any other URL.
     @discardableResult
     func open(_ url: URL) -> Bool {
-        guard let focus = Self.scheduleFocus(for: url) else { return false }
-        selectedTab = .schedule
-        scheduleFocus = focus
+        guard let route = NotificationRoute(url: url) else { return false }
+        open(route)
         return true
+    }
+
+    func open(_ route: NotificationRoute) {
+        switch route {
+        case .now:
+            selectedTab = .now
+        case .posts:
+            selectedTab = .posts
+        case .videos:
+            selectedTab = .videos
+        case .event(let id):
+            selectedTab = .schedule
+            scheduleFocus = .event(id: id)
+        case .schedule(let date):
+            selectedTab = .schedule
+            scheduleFocus = .date(date)
+        case .notificationSettings:
+            selectedTab = .more
+            moreDestination = .notifications
+        }
     }
 
     /// The schedule target a `kanonavi://` URL names, if any. A schedule link
     /// without a valid date focuses today's Japan date.
     static func scheduleFocus(for url: URL) -> ScheduleFocus? {
-        guard url.scheme == "kanonavi" else { return nil }
-        switch url.host() {
-        case "event":
-            let id = url.pathComponents.dropFirst().joined(separator: "/")
-            return id.isEmpty ? nil : .event(id: id)
-        case "schedule":
-            let components = URLComponents(url: url, resolvingAgainstBaseURL: false)
-            let rawDate = components?.queryItems?.first { $0.name == "date" }?.value
-            return .date(rawDate.flatMap(JapanDate.init(rawValue:)) ?? .today)
+        switch NotificationRoute(url: url) {
+        case .event(let id):
+            .event(id: id)
+        case .schedule(let date):
+            .date(date)
         default:
-            return nil
+            nil
         }
     }
 }

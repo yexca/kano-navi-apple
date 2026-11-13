@@ -3,11 +3,15 @@ import SwiftUI
 
 /// The app's tab bar. Each tab owns its own navigation stack.
 ///
-/// The dashboard store refreshes only while the scene is active.
+/// The dashboard store refreshes only while the scene is active; when the scene
+/// enters the background, local notification refresh is scheduled if enabled.
 struct RootView: View {
     @Environment(AppRouter.self) private var router
     @Environment(DashboardStore.self) private var dashboard
+    @Environment(NotificationController.self) private var notifications: NotificationController?
     @Environment(\.scenePhase) private var scenePhase
+    @Environment(\.locale) private var locale
+    @AppStorage(AppSettings.contentLanguageKey) private var contentLanguage: ContentLanguage = .system
 
     var body: some View {
         @Bindable var router = router
@@ -66,10 +70,32 @@ struct RootView: View {
             router.open(url)
         }
         .onChange(of: scenePhase, initial: true) { _, phase in
-            if phase == .active {
+            switch phase {
+            case .active:
                 dashboard.start()
-            } else {
+                Task {
+                    await notifications?.refreshSystemStatus()
+                }
+            case .background:
                 dashboard.stop()
+                Task {
+                    await notifications?.handleDidEnterBackground()
+                }
+            case .inactive:
+                dashboard.stop()
+            @unknown default:
+                dashboard.stop()
+            }
+        }
+        .onChange(of: dashboard.snapshot, initial: true) { _, snapshot in
+            guard let snapshot else { return }
+            Task {
+                await notifications?.observeForegroundSnapshot(snapshot, interfaceLocale: locale)
+            }
+        }
+        .onChange(of: contentLanguage) { _, _ in
+            Task {
+                await notifications?.handleLanguageChange(interfaceLocale: locale)
             }
         }
     }

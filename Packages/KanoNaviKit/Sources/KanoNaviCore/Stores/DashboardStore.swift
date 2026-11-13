@@ -4,6 +4,13 @@ import Observation
 @MainActor
 @Observable
 public final class DashboardStore {
+    private static let pollInterval: TimeInterval = 30
+    private static let revalidationInterval: TimeInterval = 60
+    private static let defaultStreamRetry: TimeInterval = 5
+    private static let maxStreamFailures = 3
+    private static let streamFallbackDuration: TimeInterval = 300
+    nonisolated private static let maxPushJitter: TimeInterval = 3
+
     public private(set) var snapshot: Dashboard?
     public private(set) var phase: DashboardPhase = .idle
     /// When `snapshot` was fetched from the service.
@@ -17,8 +24,17 @@ public final class DashboardStore {
     private let client: APIClient
     private let request: DashboardRequest
     private let clock: any RefreshClock
+    private let stream: (any RevisionStreamSource)?
+    private let pushJitter: @Sendable () -> TimeInterval
+
     private var loopTask: Task<Void, Never>?
+    private var sleepTask: Task<Void, Never>?
+    private var streamTask: Task<Void, Never>?
+    private var pushTask: Task<Void, Never>?
     private var lastRevision: Int?
+    private var pushedRevision: Int?
+    private var pushPending = false
+    private var streamCooldownUntil: Date?
     private var nextRevisionPoll: Date?
     private var nextRevalidation: Date?
     private var transitionReloadAt: Date?
@@ -29,11 +45,15 @@ public final class DashboardStore {
     public init(
         client: APIClient,
         days: Int = 7,
-        clock: any RefreshClock = SystemRefreshClock()
+        clock: any RefreshClock = SystemRefreshClock(),
+        stream: (any RevisionStreamSource)? = nil,
+        pushJitter: (@Sendable () -> TimeInterval)? = nil
     ) {
         self.client = client
         self.request = DashboardRequest(days: days)
         self.clock = clock
+        self.stream = stream
+        self.pushJitter = pushJitter ?? { Double.random(in: 0...Self.maxPushJitter) }
     }
 
     public func start() {
@@ -47,8 +67,15 @@ public final class DashboardStore {
     }
 
     public func stop() {
+        pushTask?.cancel()
+        pushTask = nil
+        streamTask?.cancel()
+        streamTask = nil
+        sleepTask?.cancel()
+        sleepTask = nil
         loopTask?.cancel()
         loopTask = nil
+        pushPending = false
     }
 
     public func refresh() async {
@@ -59,6 +86,12 @@ public final class DashboardStore {
             return
         }
 
+        if pushTask != nil {
+            pushTask?.cancel()
+            pushTask = nil
+            pushPending = true
+        }
+
         refreshInFlight = true
         await performRefresh()
         refreshInFlight = false
@@ -66,6 +99,13 @@ public final class DashboardStore {
         refreshWaiters.removeAll()
         for waiter in waiters {
             waiter.resume()
+        }
+
+        if pushPending {
+            pushPending = false
+            if let pushedRevision, lastRevision == nil || pushedRevision != lastRevision {
+                schedulePushRefresh()
+            }
         }
     }
 
@@ -100,8 +140,12 @@ public final class DashboardStore {
 
     private func loadAtLaunch() async {
         let launchNow = clock.now
-        nextRevisionPoll = launchNow.addingTimeInterval(30)
-        nextRevalidation = launchNow.addingTimeInterval(60)
+        if stream == nil || isInStreamCooldown(at: launchNow) {
+            nextRevisionPoll = launchNow.addingTimeInterval(Self.pollInterval)
+        } else {
+            nextRevisionPoll = nil
+        }
+        nextRevalidation = launchNow.addingTimeInterval(Self.revalidationInterval)
         if let cached = await client.cachedValue(request) {
             snapshot = cached.value
             fetchedAt = cached.fetchedAt
@@ -112,6 +156,8 @@ public final class DashboardStore {
             }
             phase = .idle
         }
+        guard Task.isCancelled == false else { return }
+        startStreamIfNeeded()
         await refresh()
     }
 
@@ -121,20 +167,15 @@ public final class DashboardStore {
             let candidates = [nextRevisionPoll, nextRevalidation, transitionReloadAt]
                 .compactMap { $0 }
                 .filter { $0 > now }
-            let wakeAt = candidates.min() ?? now.addingTimeInterval(60)
-            do {
-                try await clock.sleep(for: .seconds(max(0, wakeAt.timeIntervalSince(now))))
-            } catch {
-                return
-            }
-            if Task.isCancelled {
+            let wakeAt = candidates.min() ?? now.addingTimeInterval(Self.revalidationInterval)
+            guard await sleepUntil(wakeAt) else {
                 return
             }
 
             let current = clock.now
             var shouldRefresh = false
             if let due = nextRevisionPoll, current >= due {
-                nextRevisionPoll = current.addingTimeInterval(30)
+                nextRevisionPoll = current.addingTimeInterval(Self.pollInterval)
                 do {
                     let revision = try await client.send(RevisionRequest(since: lastRevision)).revision
                     if let lastRevision, revision != lastRevision {
@@ -153,7 +194,7 @@ public final class DashboardStore {
                 }
             }
             if let due = nextRevalidation, current >= due {
-                nextRevalidation = current.addingTimeInterval(60)
+                nextRevalidation = current.addingTimeInterval(Self.revalidationInterval)
                 shouldRefresh = true
             }
             if let due = transitionReloadAt, current >= due {
@@ -163,6 +204,146 @@ public final class DashboardStore {
             if shouldRefresh {
                 await refresh()
             }
+        }
+    }
+
+    private func sleepUntil(_ wakeAt: Date) async -> Bool {
+        let delay = max(0, wakeAt.timeIntervalSince(clock.now))
+        let waiter = Task<Void, Never> { [clock] in
+            _ = try? await clock.sleep(for: .seconds(delay))
+        }
+        sleepTask = waiter
+        await waiter.value
+        if sleepTask == waiter {
+            sleepTask = nil
+        }
+        return Task.isCancelled == false
+    }
+
+    private func wakeLoop() {
+        sleepTask?.cancel()
+        sleepTask = nil
+    }
+
+    private func isInStreamCooldown(at now: Date) -> Bool {
+        guard let streamCooldownUntil else { return false }
+        return now < streamCooldownUntil
+    }
+
+    private func startStreamIfNeeded() {
+        guard stream != nil, streamTask == nil else { return }
+        streamTask = Task { [weak self] in
+            await self?.runStream()
+        }
+    }
+
+    private func runStream() async {
+        guard let stream else { return }
+        var consecutiveFailures = 0
+        var retryDelay = Self.defaultStreamRetry
+
+        while Task.isCancelled == false {
+            if let cooldownUntil = streamCooldownUntil {
+                let remaining = cooldownUntil.timeIntervalSince(clock.now)
+                if remaining > 0 {
+                    do {
+                        try await clock.sleep(for: .seconds(remaining))
+                    } catch {
+                        return
+                    }
+                    if Task.isCancelled {
+                        return
+                    }
+                }
+                streamCooldownUntil = nil
+            }
+
+            do {
+                for try await message in stream.connect() {
+                    if Task.isCancelled {
+                        return
+                    }
+                    switch message {
+                    case .retry(let milliseconds):
+                        retryDelay = max(0.1, TimeInterval(milliseconds) / 1000)
+                    case .revision(let revision):
+                        consecutiveFailures = 0
+                        nextRevisionPoll = nil
+                        clearPollFailure()
+                        handlePushedRevision(revision)
+                    }
+                }
+                if Task.isCancelled {
+                    return
+                }
+                consecutiveFailures += 1
+                if consecutiveFailures >= Self.maxStreamFailures {
+                    enterPollingFallback(retryAfter: nil)
+                    consecutiveFailures = 0
+                } else {
+                    try await clock.sleep(for: .seconds(retryDelay))
+                }
+            } catch is CancellationError {
+                return
+            } catch let RevisionStreamError.unavailable(retryAfter) {
+                if Task.isCancelled {
+                    return
+                }
+                enterPollingFallback(retryAfter: retryAfter)
+                consecutiveFailures = 0
+            } catch {
+                if Task.isCancelled {
+                    return
+                }
+                consecutiveFailures += 1
+                if consecutiveFailures >= Self.maxStreamFailures {
+                    enterPollingFallback(retryAfter: nil)
+                    consecutiveFailures = 0
+                } else {
+                    do {
+                        try await clock.sleep(for: .seconds(retryDelay))
+                    } catch {
+                        return
+                    }
+                }
+            }
+        }
+    }
+
+    private func enterPollingFallback(retryAfter: TimeInterval?) {
+        let now = clock.now
+        let cooldown = max(Self.streamFallbackDuration, retryAfter ?? 0)
+        streamCooldownUntil = now.addingTimeInterval(cooldown)
+        if nextRevisionPoll == nil {
+            nextRevisionPoll = now.addingTimeInterval(Self.pollInterval)
+            wakeLoop()
+        }
+    }
+
+    private func handlePushedRevision(_ revision: Int) {
+        pushedRevision = revision
+        if refreshInFlight {
+            pushPending = true
+        } else if lastRevision == nil || revision != lastRevision {
+            schedulePushRefresh()
+        }
+    }
+
+    private func schedulePushRefresh() {
+        pushTask?.cancel()
+        let delay = max(0, pushJitter())
+        pushTask = Task { [weak self] in
+            guard let self else { return }
+            if delay > 0 {
+                do {
+                    try await self.clock.sleep(for: .seconds(delay))
+                } catch {
+                    return
+                }
+            }
+            guard Task.isCancelled == false else { return }
+            self.pushTask = nil
+            await self.refresh()
         }
     }
 

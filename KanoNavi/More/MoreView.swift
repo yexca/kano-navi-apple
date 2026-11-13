@@ -4,6 +4,7 @@ import SwiftUI
 /// and About. A Journey milestone with a release opens that release's Works
 /// screen on the same stack. See `docs/design.md`.
 struct MoreView: View {
+    @Environment(AppRouter.self) private var router: AppRouter?
     @State private var path = NavigationPath()
 
     var body: some View {
@@ -30,8 +31,19 @@ struct MoreView: View {
                 case .worksRelease(let releaseID): WorksReleaseScreen(releaseID: releaseID)
                 case .lineBlog: LineBlogView()
                 case .settings: SettingsView()
+                case .notifications: NotificationSettingsView()
                 case .about: AboutView()
                 }
+            }
+        }
+        .onChange(of: router?.moreDestination, initial: true) { _, destination in
+            guard let destination else { return }
+            router?.moreDestination = nil
+            switch destination {
+            case .notifications:
+                path = NavigationPath([MoreDestination.settings, MoreDestination.notifications])
+            default:
+                path = NavigationPath([destination])
             }
         }
         .environment(

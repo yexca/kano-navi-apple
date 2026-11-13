@@ -1,0 +1,759 @@
+{
+  "sourceLanguage": "en",
+  "strings": {
+    "backgroundRefreshDisabledMessage": {
+      "comment": "Shown when iOS Background App Refresh is disabled for the device or app.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Background App Refresh is turned off, so new posts, videos and schedule changes update only while the app is open. Scheduled reminders still fire on time."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "「アプリのバックグラウンド更新」がオフのため、新しいポスト・動画・予定の通知はアプリを開いている間のみ更新されます。予約済みのリマインダーは時間どおり届きます。"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "“后台 App 刷新”已关闭，新动态、新视频与日程变更仅在打开应用时同步；已预约的准点提醒仍会按时送达。"
+          }
+        }
+      }
+    },
+    "bannerEventCancelledTitle": {
+      "comment": "Notification title when a schedule entry is cancelled.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Schedule Cancelled" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "予定の中止" } },
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "日程已取消" } }
+      }
+    },
+    "bannerEventRescheduledTitle": {
+      "comment": "Notification title when a schedule entry changes date or time.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Schedule Updated" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "予定時間の変更" } },
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "日程时间变更" } }
+      }
+    },
+    "bannerLiveTitle": {
+      "comment": "Notification title when a broadcast goes live.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Live Now" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "配信中" } },
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "正在直播" } }
+      }
+    },
+    "bannerNewArchiveTitle": {
+      "comment": "Notification title when a stream archive becomes available.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Stream Archive Available" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "配信アーカイブ公開" } },
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "直播回放已发布" } }
+      }
+    },
+    "bannerNewEventTitle": {
+      "comment": "Notification title when a new schedule entry is added.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "New Schedule Entry" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "新しい予定" } },
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "新增日程" } }
+      }
+    },
+    "bannerNewPostBilibiliTitle": {
+      "comment": "Notification title for a new Bilibili post.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "New Post on Bilibili" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "新しい Bilibili 動態" } },
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "Bilibili 新动态" } }
+      }
+    },
+    "bannerNewPostXTitle": {
+      "comment": "Notification title for Kano's own X post.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "New Post on X" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "新しい X ポスト" } },
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "X 新动态" } }
+      }
+    },
+    "bannerNewShortTitle": {
+      "comment": "Notification title for a new Short video.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "New Short" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "新しいショート動画" } },
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "新短视频" } }
+      }
+    },
+    "bannerNewVideoTitle": {
+      "comment": "Notification title for a new video upload or premiere.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "New Video" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "新しい動画" } },
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "新视频投稿" } }
+      }
+    },
+    "bannerPostMediaFallback": {
+      "comment": "Fallback notification body when a post has no text.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Shared a new post." } },
+        "ja": { "stringUnit": { "state": "translated", "value": "新しい投稿が公開されました。" } },
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "发布了新动态。" } }
+      }
+    },
+    "bannerPromotedPostTitle": {
+      "comment": "Notification title for a promoted related-account post.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Related Account Post" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "関連アカウントの投稿" } },
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "相关账号动态" } }
+      }
+    },
+    "bannerReminderSaleClosesAtBody": {
+      "comment": "Body of a sale closing reminder with an exact JST date/time.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Closes at %@" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "%@ に販売終了" } },
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "将于 %@ 截止" } }
+      }
+    },
+    "bannerReminderSaleClosesDayBody": {
+      "comment": "Body of a sale closing reminder when only the closing date is known.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Closes on %@" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "%@ に販売終了" } },
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "将于 %@ 截止" } }
+      }
+    },
+    "bannerReminderSaleClosesTitle": {
+      "comment": "Notification title for a merchandise sale closing reminder.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Sale Ending Soon" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "まもなく販売終了" } },
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "周边即将截止" } }
+      }
+    },
+    "bannerReminderSaleOpensTitle": {
+      "comment": "Notification title when a merchandise sale opens.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Merchandise Sale Opens" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "グッズ販売開始" } },
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "周边开售提醒" } }
+      }
+    },
+    "bannerReminderSaleOpensTodayBody": {
+      "comment": "Body of a sale opening reminder when only the opening date is known.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Opens today (%@)" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "本日販売開始（%@）" } },
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "今日开售（%@）" } }
+      }
+    },
+    "bannerReminderStart10mTitle": {
+      "comment": "Notification title for a 10-minute event start reminder.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Starting in 10 Minutes" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "開始10分前" } },
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "10 分钟后开始" } }
+      }
+    },
+    "bannerReminderStart30mTitle": {
+      "comment": "Notification title for a 30-minute event start reminder.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Starting in 30 Minutes" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "開始30分前" } },
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "30 分钟后开始" } }
+      }
+    },
+    "bannerReminderStartNowTitle": {
+      "comment": "Notification title for an at-start event reminder.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Starting Now" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "開始時刻" } },
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "准点开始提醒" } }
+      }
+    },
+    "bannerSummaryBody": {
+      "comment": "Summary notification body naming how many additional updates arrived.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "%lld more updates arrived." } },
+        "ja": { "stringUnit": { "state": "translated", "value": "ほか %lld 件の更新があります。" } },
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "还有 %lld 条新消息。" } }
+      }
+    },
+    "bannerSummaryLiveTitle": {
+      "comment": "Summary notification title for bundled live updates.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "More Live Updates" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "その他のライブ通知" } },
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "更多直播动态" } }
+      }
+    },
+    "bannerSummaryPostsTitle": {
+      "comment": "Summary notification title for bundled post updates.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "More New Posts" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "その他の新着ポスト" } },
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "更多新动态" } }
+      }
+    },
+    "bannerSummaryScheduleTitle": {
+      "comment": "Summary notification title for bundled schedule updates.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "More Schedule Updates" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "その他の予定更新" } },
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "更多日程更新" } }
+      }
+    },
+    "bannerSummaryVideosTitle": {
+      "comment": "Summary notification title for bundled video updates.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "More New Videos" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "その他の新着動画" } },
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "更多新视频" } }
+      }
+    },
+    "enableFooter": {
+      "comment": "Footer below the master notification switch.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Checks for updates in the background and schedules local reminders on this device."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "バックグラウンドで更新を確認し、この端末でローカルリマインダーを予約します。"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "在后台检查最新动态，并在本机按时触发本地提醒。"
+          }
+        }
+      }
+    },
+    "enableToggle": {
+      "comment": "Master switch enabling local notifications.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Allow Notifications" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "通知を受け取る" } },
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "启用通知" } }
+      }
+    },
+    "liveNowToggle": {
+      "comment": "Toggle for live broadcast notifications.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Live Now" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "配信開始の通知" } },
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "正在直播提醒" } }
+      }
+    },
+    "liveSectionFooter": {
+      "comment": "Footer explaining live broadcast notifications.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Notifies when a scheduled stream goes live or an unannounced Bilibili broadcast begins."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "予定された配信が始まったときや、ゲリラの Bilibili 配信が始まったときに通知します。"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "当预约直播正式开播，或 Bilibili 突击开播时发送通知。"
+          }
+        }
+      }
+    },
+    "liveSectionHeader": {
+      "comment": "Header of the live broadcast notification section.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Live Broadcasts" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "ライブ配信" } },
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "开播提醒" } }
+      }
+    },
+    "membersIncludeToggle": {
+      "comment": "Toggle controlling whether members-only streams and videos send notifications.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Include Members-Only Content" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "メン限コンテンツを含める" } },
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "包含会员限定内容" } }
+      }
+    },
+    "membersSectionFooter": {
+      "comment": "Footer explaining the members-only filter.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Applies to members-only streams and videos." } },
+        "ja": { "stringUnit": { "state": "translated", "value": "メンバー限定の配信や動画の通知に適用されます。" } },
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "控制是否推送会员限定直播与视频通知。" } }
+      }
+    },
+    "membersSectionHeader": {
+      "comment": "Header of the membership notification filter section.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Membership" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "メンバーシップ" } },
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "会员限定" } }
+      }
+    },
+    "openSystemSettings": {
+      "comment": "Button opening Kano Navi's page in the iOS Settings app.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Open Settings" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "設定を開く" } },
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "打开系统设置" } }
+      }
+    },
+    "permissionDeniedMessage": {
+      "comment": "Explains how to re-enable notifications when iOS permission was denied.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Allow notifications for Kano Navi in the Settings app to receive updates and reminders."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "更新やリマインダーを受け取るには、設定アプリで鹿乃ナビの通知を許可してください。"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "请在系统“设置”中允许鹿乃 Navi 发送通知，以接收最新消息和准点提醒。"
+          }
+        }
+      }
+    },
+    "permissionDeniedTitle": {
+      "comment": "Headline shown when iOS notification permission is denied.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Notifications Are Turned Off in Settings" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "設定で通知がオフになっています" } },
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "系统“设置”中已关闭通知" } }
+      }
+    },
+    "postsBilibili": {
+      "comment": "Toggle for Kano's Bilibili posts.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Bilibili Posts" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "Bilibili 動態" } },
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "Bilibili 动态" } }
+      }
+    },
+    "postsOwnX": {
+      "comment": "Toggle for Kano's own X posts.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Kano’s X Posts" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "本人の X ポスト" } },
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "X 本人帖子" } }
+      }
+    },
+    "postsPromoted": {
+      "comment": "Toggle for related-account posts promoted onto the board.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Related Accounts" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "関連アカウントの再投稿" } },
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "相关账号转发" } }
+      }
+    },
+    "postsSectionFooter": {
+      "comment": "Footer of the post notifications section.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Choose which accounts send new-post alerts." } },
+        "ja": { "stringUnit": { "state": "translated", "value": "新しい投稿を通知するアカウントを選びます。" } },
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "选择需要接收新动态提醒的来源账号。" } }
+      }
+    },
+    "postsSectionHeader": {
+      "comment": "Header of the post notifications section.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "New Posts" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "新しいポスト" } },
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "新动态推送" } }
+      }
+    },
+    "reminderEventStartPicker": {
+      "comment": "Picker choosing lead time for stream and event start reminders.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Stream & Event Start" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "配信・イベント開始" } },
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "直播与活动开始" } }
+      }
+    },
+    "reminderLead10m": {
+      "comment": "Reminder lead option: 10 minutes before start.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "10 Minutes Before" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "10分前" } },
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "提前 10 分钟" } }
+      }
+    },
+    "reminderLead30m": {
+      "comment": "Reminder lead option: 30 minutes before start.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "30 Minutes Before" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "30分前" } },
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "提前 30 分钟" } }
+      }
+    },
+    "reminderLeadAtStart": {
+      "comment": "Reminder lead option: at exact start time.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "At Start Time" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "開始時刻" } },
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "准点开始时" } }
+      }
+    },
+    "reminderLeadOff": {
+      "comment": "Reminder lead option: disabled.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Off" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "オフ" } },
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "关闭" } }
+      }
+    },
+    "reminderSaleClosesPicker": {
+      "comment": "Picker choosing lead time for merchandise sale closing reminders.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Merchandise Sale Closing" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "グッズ販売終了" } },
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "周边截止提醒" } }
+      }
+    },
+    "reminderSaleOpensToggle": {
+      "comment": "Toggle for merchandise sale opening reminders.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Merchandise Sale Opens" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "グッズ販売開始" } },
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "周边开售提醒" } }
+      }
+    },
+    "remindersSectionFooter": {
+      "comment": "Footer explaining JST reminder timing and date-only sale reminders.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Event times follow Japan time (JST). Date-only sales remind at 09:00 JST."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "時刻は日本時間（JST）基準です。時刻未定の販売日は 09:00 JST に通知します。"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "所有时间均以日本时间（JST）为准；仅公布日期的周边将在当天或前一天 09:00 JST 提醒。"
+          }
+        }
+      }
+    },
+    "remindersSectionHeader": {
+      "comment": "Header of the timed reminders section.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Timed Reminders" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "時間指定リマインダー" } },
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "准点与截止提醒" } }
+      }
+    },
+    "saleCloseLead1h": {
+      "comment": "Sale close reminder lead: 1 hour before.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "1 Hour Before" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "1時間前" } },
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "截止前 1 小时" } }
+      }
+    },
+    "saleCloseLead24h": {
+      "comment": "Sale close reminder lead: 24 hours before.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "24 Hours Before" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "24時間前" } },
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "截止前 24 小时" } }
+      }
+    },
+    "saleCloseLead6h": {
+      "comment": "Sale close reminder lead: 6 hours before.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "6 Hours Before" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "6時間前" } },
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "截止前 6 小时" } }
+      }
+    },
+    "saleCloseLeadOff": {
+      "comment": "Sale close reminder lead: disabled.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Off" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "オフ" } },
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "关闭" } }
+      }
+    },
+    "scheduleCategoryEvents": {
+      "comment": "Schedule category toggle: events and appearances.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Events" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "イベント・出演" } },
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "活动与出演" } }
+      }
+    },
+    "scheduleCategoryReleases": {
+      "comment": "Schedule category toggle: music releases and video premieres.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Releases & Videos" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "作品・動画公開" } },
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "作品与发售" } }
+      }
+    },
+    "scheduleCategorySales": {
+      "comment": "Schedule category toggle: merchandise sales.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Merchandise Sales" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "グッズ販売" } },
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "周边贩售" } }
+      }
+    },
+    "scheduleCategoryStreams": {
+      "comment": "Schedule category toggle: live streams.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Streams" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "配信" } },
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "直播" } }
+      }
+    },
+    "scheduleChanges": {
+      "comment": "Toggle for schedule cancellations and time changes.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Cancellations & Time Changes" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "中止・時間の変更" } },
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "取消与时间变更" } }
+      }
+    },
+    "scheduleConfirmedOnly": {
+      "comment": "Toggle limiting schedule alerts to maintainer-confirmed entries.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Confirmed Entries Only" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "確認済みの予定のみ" } },
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "仅已确认的日程" } }
+      }
+    },
+    "scheduleNewEvents": {
+      "comment": "Toggle for newly added schedule entries.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "New Schedule Entries" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "新しい予定の追加" } },
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "新增日程" } }
+      }
+    },
+    "scheduleSectionFooter": {
+      "comment": "Footer explaining automatic vs confirmed schedule entries.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Automatic entries detected from posts are included unless Confirmed Entries Only is on."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "「確認済みの予定のみ」をオンにすると、投稿から自動検出された予定は通知されません。"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "开启“仅已确认的日程”后，从动态自动识别的日程将不会触发推送。"
+          }
+        }
+      }
+    },
+    "scheduleSectionHeader": {
+      "comment": "Header of the schedule updates notification section.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Schedule Updates" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "予定の追加・変更" } },
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "日程更新推送" } }
+      }
+    },
+    "screenTitle": {
+      "comment": "Title of the Notification Settings screen.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Notifications" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "通知" } },
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "通知" } }
+      }
+    },
+    "statusDenied": {
+      "comment": "Short status label when notifications are denied in iOS Settings.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Off in Settings" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "設定でオフ" } },
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "系统已关闭" } }
+      }
+    },
+    "statusOff": {
+      "comment": "Short status label when notifications are off.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Off" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "オフ" } },
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "关闭" } }
+      }
+    },
+    "statusOn": {
+      "comment": "Short status label when notifications are on.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "On" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "オン" } },
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "开启" } }
+      }
+    },
+    "videosArchives": {
+      "comment": "Toggle for stream archive video notifications.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Stream Archives" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "配信アーカイブ" } },
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "直播回放归档" } }
+      }
+    },
+    "videosSectionFooter": {
+      "comment": "Footer explaining deduplication between stream waiting rooms and schedule entries.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Stream waiting rooms already on the schedule do not send duplicate video alerts."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "予定表にある配信待機枠は重複して通知されません。"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "已在日程表中的直播待机间不会重复发送视频通知。"
+          }
+        }
+      }
+    },
+    "videosSectionHeader": {
+      "comment": "Header of the video notifications section.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "New Videos" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "新しい動画" } },
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "新视频推送" } }
+      }
+    },
+    "videosShorts": {
+      "comment": "Toggle for YouTube Shorts / vertical short video notifications.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Shorts" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "ショート動画" } },
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "短视频 Shorts" } }
+      }
+    },
+    "videosWorks": {
+      "comment": "Toggle for regular video uploads and premieres.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Uploads & Premieres" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "動画投稿・プレミア公開" } },
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "投稿与首播作品" } }
+      }
+    }
+  },
+  "version": "1.0"
+}

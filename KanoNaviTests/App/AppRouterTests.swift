@@ -32,6 +32,7 @@ struct AppRouterTests {
         #expect(router.open(url) == false)
         #expect(router.selectedTab == .now)
         #expect(router.scheduleFocus == nil)
+        #expect(router.moreDestination == nil)
     }
 
     @Test func openingALinkSelectsSchedule() throws {
@@ -41,5 +42,22 @@ struct AppRouterTests {
         #expect(router.open(url))
         #expect(router.selectedTab == .schedule)
         #expect(router.scheduleFocus == .event(id: "synthetic-1"))
+    }
+
+    @Test func openingNotificationTabAndSettingsRoutes() throws {
+        let router = AppRouter()
+
+        #expect(router.open(try #require(URL(string: "kanonavi://posts"))))
+        #expect(router.selectedTab == .posts)
+
+        #expect(router.open(try #require(URL(string: "kanonavi://videos"))))
+        #expect(router.selectedTab == .videos)
+
+        #expect(router.open(try #require(URL(string: "kanonavi://now"))))
+        #expect(router.selectedTab == .now)
+
+        #expect(router.open(try #require(URL(string: "kanonavi://settings/notifications"))))
+        #expect(router.selectedTab == .more)
+        #expect(router.moreDestination == .notifications)
     }
 }

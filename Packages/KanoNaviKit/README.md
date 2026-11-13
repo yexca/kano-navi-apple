@@ -58,12 +58,24 @@ backed by the package String Catalog.
 
 `DashboardStore` is `@MainActor @Observable`. Call `start()` for an active
 scene, `stop()` when it leaves the foreground, and `refresh()` for pull to
-refresh. Its `snapshot`, `phase`, `fetchedAt`, `source`, and `isIncompatible`
-properties let screens retain stale data while showing a failure state.
-`source` is `.cache` for the snapshot read from the cache at launch and
-`.network` after a successful refresh; a failed refresh leaves it unchanged, so
-`.cache` with a `.failed` phase means the cached snapshot could not be
-refreshed.
+refresh. When given a `RevisionStreamSource` (`URLSessionRevisionStream`, built
+on `SSEDecoder` over `/api/dashboard/events`), `start()` listens for pushed
+revisions with a 0–3 second jitter and falls back to polling
+`/api/dashboard/revision` every 30 seconds after three consecutive stream
+errors or an HTTP 503, retrying the stream after five minutes (or
+`Retry-After` when longer). Its `snapshot`, `phase`, `fetchedAt`, `source`, and
+`isIncompatible` properties let screens retain stale data while showing a
+failure state. `source` is `.cache` for the snapshot read from the cache at
+launch and `.network` after a successful refresh; a failed refresh leaves it
+unchanged, so `.cache` with a `.failed` phase means the cached snapshot could
+not be refreshed.
+
+`NotificationPlanner` evaluates pure, deterministic notification diffs and
+timed reminder schedules from `Dashboard`, `ScheduleEvent` ranges,
+`NotificationPreferences`, and `NotificationBaseline` without importing UIKit
+or `UserNotifications`. `FileNotificationStateStore` persists the baseline on
+disk (`MemoryNotificationStateStore` in tests), and `NotificationRoute` parses
+and builds the app's `kanonavi://` deep links.
 
 `KanoNaviComponents` holds the SwiftUI pieces the app and the widgets share:
 `EventRow`, `EventTicketRow` (an entry as a ticket: a stub with the large JST

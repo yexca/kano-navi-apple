@@ -385,6 +385,54 @@
         }
       }
     },
+    "settingsNotificationsFooter": {
+      "comment": "Footer below the Notifications link in Settings.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Alerts for live broadcasts, new posts, videos, schedule changes and upcoming reminders."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "配信開始、新しいポストや動画、予定の追加・変更、開始前や販売終了前のリマインダーを設定します。"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "管理开播提醒、新动态与视频、日程更新，以及直播活动开始与周边开售截止提醒。"
+          }
+        }
+      }
+    },
+    "settingsNotificationsRow": {
+      "comment": "Row in Settings opening Notification Settings.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Notifications"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "通知"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "通知"
+          }
+        }
+      }
+    },
     "settingsSameAsApp": {
       "comment": "Content language choice that follows the app's interface language.",
       "extractionState": "manual",

@@ -6,5 +6,6 @@ enum MoreDestination: Hashable {
     case worksRelease(String)
     case lineBlog
     case settings
+    case notifications
     case about
 }

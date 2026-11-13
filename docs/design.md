@@ -23,9 +23,9 @@ app is built on them.
 
 | Target / module                 | Kind                     | Contents                                                                 |
 | ------------------------------- | ------------------------ | ------------------------------------------------------------------------ |
-| `KanoNavi`                      | App                      | Scenes, tabs, screens, settings                                          |
+| `KanoNavi`                      | App                      | Scenes, tabs, screens, settings, local notifications                     |
 | `KanoNaviWidgets`               | Widget extension         | Calendar widgets and their timeline provider                             |
-| `KanoNaviKit` → `KanoNaviCore`  | Local Swift package lib  | API models, client, caching, refresh scheduling, Japan time, content language, display-code labels |
+| `KanoNaviKit` → `KanoNaviCore`  | Local Swift package lib  | API models, client, SSE revision streaming, caching, refresh scheduling, notification planning, Japan time, content language, display-code labels |
 | `KanoNaviKit` → `KanoNaviComponents` | Local Swift package lib | SwiftUI pieces shared by the app and widgets: state chips, platform marks, time labels, event rows |
 | `KanoNaviTests`                 | Unit tests               | App-level tests (Swift Testing)                                          |
 | `KanoNaviUITests`               | UI tests                 | Launch and navigation smoke tests (XCTest)                               |
@@ -36,7 +36,8 @@ outside the Apple SDKs. `KanoNaviCore` does not import SwiftUI;
 `KanoNaviComponents` depends on `KanoNaviCore`.
 
 Folders inside `KanoNavi/` follow features: `App/`, `Now/`, `Schedule/`,
-`Videos/`, `Posts/`, `Journey/`, `Works/`, `LineBlog/`, `More/`, `Shared/`.
+`Videos/`, `Posts/`, `Journey/`, `Works/`, `LineBlog/`, `More/`,
+`Notifications/`, `Shared/`.
 
 ## API Contract
 
@@ -74,9 +75,9 @@ shows the exact JSON shapes and closed code sets.
   are built in the app, as the web board builds them.
 - `/api/health`'s `lastSync.message` is not displayed; only `status` is.
 
-Endpoints the app uses: `/api/dashboard?days=7`, `/api/dashboard/revision`,
-`/api/calendar`, `/api/posts`, `/api/posts/months`, `/api/videos`,
-`/api/videos/months`, `/api/works`, `/api/works/upload-list`,
+Endpoints the app uses: `/api/dashboard?days=7`, `/api/dashboard/events`,
+`/api/dashboard/revision`, `/api/calendar`, `/api/posts`, `/api/posts/months`,
+`/api/videos`, `/api/videos/months`, `/api/works`, `/api/works/upload-list`,
 `/api/works/uploads`, `/api/journey`, `/api/lineblog`,
 `/api/lineblog/posts/{id}`, `/api/lineblog/posts/{id}/comments`,
 `/api/calendar.ics` (as a subscription link only). The Journey, Works and
@@ -92,14 +93,21 @@ alone.
 - The last good dashboard and calendar pages are stored as raw JSON plus ETag
   in the caches directory, so launch shows them at once and then revalidates.
 - While a scene is active, the dashboard store:
-  - polls `/api/dashboard/revision` every 30 seconds and reloads when it
-    changes;
+  - opens an SSE connection to `/api/dashboard/events` (`text/event-stream`),
+    waits a random 0–3 second jitter when a pushed revision differs from the
+    current snapshot before reloading, and falls back to polling
+    `/api/dashboard/revision` every 30 seconds after three consecutive stream
+    errors or an HTTP 503 (retrying the stream after five minutes, or
+    `Retry-After` when longer); without a stream source it polls
+    `/api/dashboard/revision` every 30 seconds;
   - reloads at `projection.nextTransitionAt`, when a time-dependent decision
     changes without a stored revision;
   - revalidates once a minute through the ETag;
   - reloads on foreground and on pull to refresh.
-- Polling stops when the scene goes to the background. There is no background
-  refresh in the app; the widgets refresh on their own timeline.
+- Streaming and polling stop when the scene goes to the background. When local
+  notifications are enabled, the app schedules a `BGAppRefreshTask`
+  (`<bundle-id>.refresh`) to check the dashboard and 14-day calendar in the
+  background; the widgets refresh on their own timeline.
 - A store exposes `snapshot` (last good data, possibly stale), `phase`
   (`idle`, `loading`, `refreshing`, `failed(error)`), `fetchedAt` and
   `source` (`cache` until a refresh succeeds, then `network`), so a view can
@@ -315,8 +323,10 @@ The app is a `TabView` with five tabs.
    the dashboard. Past Videos opens the month archive with the category filter
    (`game`, `talk`, `song`, `other`).
 5. **More** — Journey, Works and the LINE BLOG archive, each described
-   below, then Settings and About. About states that the app is an unofficial
-   fan project and links the web board and the `kano-navi` repository.
+   below, then Settings (Notifications, Content Language, and the link to the
+   system's per-app language setting) and About. About states that the app is
+   an unofficial fan project and links the web board and the `kano-navi`
+   repository.
 
 Both month archives read their month index (`/api/videos/months`,
 `/api/posts/months`) and show one Japan month at a time, newest first, from
@@ -552,6 +562,52 @@ notices and pull to refresh.
   rating is the old form's stars or face with the value in figures beside
   it (`4/5`), read by VoiceOver as one sentence; an unknown kind shows the
   figures alone. An article without comments says so.
+
+## Notifications and Reminders
+
+Notifications run on device through `UNUserNotificationCenter` without remote
+push tokens or an App Group, so unsigned builds keep working. Notification
+permission is requested only when the user turns on **Allow Notifications** in
+**More → Settings → Notifications**, never at launch.
+
+- **Baseline and backfill guard.** `FileNotificationStateStore` saves seen post
+  IDs, video IDs, event snapshots and live broadcast IDs in Application
+  Support. Recording the first snapshot (or turning notifications back on)
+  seeds this baseline without posting banners. Later evaluations ignore posts
+  and non-reservation videos published more than 48 hours before the check, so
+  archive backfills do not alert.
+- **Immediate alerts.** Evaluated during `BGAppRefreshTask` runs (which read
+  `/api/dashboard?days=7` and the 14-day calendar window) and kept silent while
+  a scene is active so foreground browsing only advances the baseline:
+  - *Live Now*: a scheduled entry entering `live`, or an unannounced Bilibili
+    `liveNow` stream.
+  - *Posts*: three switches — Kano's own X posts, Bilibili posts, and promoted
+    related-account posts (`view.promoted`).
+  - *Videos*: Works (`work`), Shorts (`short`), and Stream Archives (`archive`,
+    off by default). Reservation videos (`reservation`) are skipped because the
+    service derives schedule entries from them.
+  - *Schedule Updates*: newly added entries and cancellations or time changes,
+    filtered by category (`stream`/`member`, `event`, `release`, `sale`) and an
+    optional **Confirmed Entries Only** switch.
+  - *Members-only*: one switch controls whether members-only streams, videos
+    and reminders are included (on by default).
+  - Up to three banners are posted per thread (`live`, `posts`, `videos`,
+    `schedule`); four or more updates in one thread send the newest two plus a
+    summary banner.
+- **Timed reminders.** `UNCalendarNotificationTrigger` requests are rebuilt
+  from the 14-day calendar window (up to 48 nearest future triggers):
+  - *Streams and events*: off, at start, 10 minutes before, or 30 minutes
+    before (`startsAt` in JST, skipping cancelled or past entries).
+  - *Merchandise sales*: sale opening (`sale_start`) and sale closing
+    (`sale_end`: off, 1 hour, 6 hours, or 24 hours before). Date-only sale
+    occurrences fire relative to `09:00 JST` on that Japan date.
+  - Titles follow the interface language and item text follows the content
+    language; changing either rebuilds pending reminder text.
+- **Deep links.** Tapping a notification or widget opens a `kanonavi://` URL
+  routed by `AppRouter`: `kanonavi://now`, `kanonavi://posts`,
+  `kanonavi://videos`, `kanonavi://event/<id>`,
+  `kanonavi://schedule?date=<YYYY-MM-DD>`, and
+  `kanonavi://settings/notifications`.
 
 ## Widgets
 
