@@ -128,6 +128,86 @@ uses the same reader with a cache directory owned by its extension.
 `APIClient.readResult(_:)` does the same for one request, such as an archive
 page or month index.
 
+## Images and Single Documents
+
+The Journey, Works and LINE BLOG screens share three pieces in
+`KanoNavi/Shared/`: image loading, a full-screen image viewer and the loading
+of a read that is one whole document.
+
+### Images
+
+`MediaImage` (`Shared/Media/`) draws one file of the service's media route
+from a `MediaImageSource`: the absolute URL and, when the API states it, the
+original's pixel size.
+
+- **Shape.** A fitted image takes the width it is offered and the height its
+  pixel size gives before the file arrives, so a list does not jump; without
+  a known size it holds a 3:2 box until the file is read. A cropped image
+  fills the frame its screen gives it and keeps an anchor in view the way CSS
+  `object-position` does; `UnitPoint(objectPosition:)` reads the Journey's
+  `focus`.
+- **Copy.** `MediaImageVariant` picks the `w` to ask for, following
+  [Resized Copies](https://github.com/yexca/kano-navi/blob/main/docs/architecture/media-cache.md#resized-copies):
+  the smallest listed width that covers the pixels drawn (points times the
+  display scale; for a cropped image, the width it is scaled to) and is at or
+  below the original's width. With an unknown width, or when no listed width
+  qualifies, it loads the original without `w`.
+- **Loading.** `MediaImageLoader` is an actor read from the environment. It
+  fetches with a `URLSession` of its own whose 512 MB `URLCache` lives in the
+  caches directory; archive files are immutable, so a file seen once is
+  answered from disk without asking the server. It decodes with ImageIO to
+  the size drawn, away from the main actor, and keeps decoded images in a
+  128 MB least-recently-used memory cache that empties on a memory warning.
+  Views drawing the same file at the same size share one fetch and one
+  decoded image, and a load stops once every view waiting for it has gone.
+- **States.** A file the server does not have (404 `media_not_found`) or
+  that is not an image draws "Image unavailable"; a failed fetch draws a Try
+  Again button. The screen keeps the provenance link beside the image in
+  both.
+- **Accessibility.** An image carries a label, or is marked decorative and
+  hidden from VoiceOver; the unavailable and failed states are its
+  accessibility value.
+
+### Image Viewer
+
+`mediaViewer(item:in:source:label:caption:)` presents `MediaViewer` full
+screen over a list of pictures, opening on the one given.
+
+- Swiping sideways turns the page. A pinch or a double tap zooms and a drag
+  moves the zoomed picture; while a picture is zoomed, dragging neither turns
+  the page nor closes the viewer.
+- The Close button, a drag downwards and the VoiceOver escape gesture close
+  it. A tap hides and shows the bars; they stay while VoiceOver is on.
+- A page loads the copy that fits the screen by the same width rule and
+  shows a smaller copy already in memory, such as the thumbnail, meanwhile.
+- The screen supplies the caption under each picture (title, credit,
+  provenance link). The viewer is dark in both appearances; a caption taller
+  than two fifths of the screen scrolls, so the largest text sizes leave the
+  picture in view.
+
+### Single Documents
+
+`DocumentModel` (`Shared/Document/`) holds one read that is a whole
+document: the Journey, the Works collection, the LINE BLOG index, one article
+or its comments. It is generic over an `APIRequest` and built on
+`APIClient.cached(_:)` and `APIClient.readResult(_:)`.
+
+- Loading shows the copy cached on this device at once and then reads the
+  service. The model exposes the value, a phase (`idle`, `loading`, `loaded`,
+  `failed`), whether the value is the cached copy because the service could
+  not be read, when it was fetched, and the failure.
+- These documents change only with a server release, so nothing polls. Pull
+  to refresh and Try Again read again; so does a screen that appears again
+  after a failed read.
+- A failed read keeps what is on screen. `DocumentStatusNotice` says
+  "Couldn't update this page. Showing the copy from <JST date and time>" for
+  the cached copy, or that what was loaded before is shown, each with Try
+  Again. With nothing to show, `DocumentUnavailableView` gives the reason
+  (offline, the service's error status, unreadable data, update needed) with
+  Try Again. `DocumentView` puts the two together for a screen.
+- `StatusNotice` is the notice's layout; the month archives word it through
+  `ArchiveStatusNotice`.
+
 ## Language
 
 - The interface language follows the system's per-app language (English base,
