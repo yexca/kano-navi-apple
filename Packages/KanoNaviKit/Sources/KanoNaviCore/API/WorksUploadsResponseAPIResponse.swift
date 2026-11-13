@@ -15,7 +15,7 @@ extension WorksUploadsResponse: APIResponse {
             item.videos = item.videos.map { $0.resolvingMedia(against: baseURL) }
             value.uploads[key] = item
         }
-        value.recent = value.recent?.map { $0.resolvingMedia(against: baseURL) }
+        value.recent = value.recent.map { $0.resolvingMedia(against: baseURL) }
         return value
     }
 }

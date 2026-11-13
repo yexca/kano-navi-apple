@@ -17,7 +17,9 @@ public struct JapanDate: Codable, Equatable, Hashable, Comparable, Sendable, Cus
         formatter.locale = Locale(identifier: "en_US_POSIX")
         formatter.timeZone = Self.timeZone
         formatter.dateFormat = "yyyy-MM-dd"
-        guard formatter.date(from: canonical) != nil else { return nil }
+        // The formatter rolls an impossible day such as 02-30 over; reject it.
+        guard let instant = formatter.date(from: canonical), formatter.string(from: instant) == canonical
+        else { return nil }
         self.rawValue = canonical
     }
 

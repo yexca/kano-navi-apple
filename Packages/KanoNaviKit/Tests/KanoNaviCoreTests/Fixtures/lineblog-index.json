@@ -1,0 +1,17 @@
+{
+  "updatedAt": "2019-11-18",
+  "originalBlogUrl": "https://blog.example.com/kano/",
+  "posts": [
+    {
+      "id": "300", "published": "2019-03-20T12:52:12.000Z",
+      "title": {"ja": "🌊", "zh-CN": null, "en": "🌊"},
+      "thumbnail": {"url": "/media/lineblog/thumb.jpg", "width": 1536, "height": 1920, "mimeType": "image/jpeg"},
+      "commentCount": 2
+    },
+    {
+      "id": "200", "published": "2018-12-07T06:16:42.000Z",
+      "title": {"ja": "質問", "zh-CN": "问题", "en": "Questions"}, "thumbnail": null, "commentCount": 0
+    }
+  ],
+  "months": [{"month": "2019-03", "total": 1}, {"month": "2018-12", "total": 1}]
+}

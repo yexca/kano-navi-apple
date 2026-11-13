@@ -1,0 +1,9 @@
+{
+  "updatedAt": "2019-11-18",
+  "comments": [
+    {"number": 5, "author": "Fan A", "posted": "2016-09-04T12:21:00.000Z", "body": "一行目\n二行目", "rating": {"icon": "star", "value": 5}},
+    {"number": 3, "author": "Fan B", "posted": "2016-09-04T11:00:00.000Z", "body": "かわいい", "rating": {"icon": "face", "value": 4}},
+    {"number": 2, "author": "Fan C", "posted": "2016-09-04T10:00:00.000Z", "body": "こんにちは", "rating": null},
+    {"number": 1, "author": "Fan D", "posted": "2016-09-04T09:00:00.000Z", "body": "?", "rating": {"icon": "heart", "value": 1}}
+  ]
+}

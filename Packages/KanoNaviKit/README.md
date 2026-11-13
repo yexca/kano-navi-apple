@@ -10,6 +10,26 @@ The model types mirror the public API: `Dashboard`, `ScheduleEvent`, `Video`,
 record `view` values are required for a current dashboard response; an absent
 projection or a version other than 1 is incompatible.
 
+The archive reads have their own requests and responses: `JourneyRequest` →
+`JourneyResponse`, `WorksRequest` → `WorksResponse`, `WorksUploadListRequest` →
+`WorksUploadListResponse` (joined with `WorksUploadsResponse` by upload ID),
+`LineBlogIndexRequest` → `LineBlogIndexResponse`, `LineBlogPostRequest(id:)` →
+`LineBlogPostResponse` and `LineBlogCommentsRequest(articleID:)` →
+`LineBlogCommentsResponse`, with matching `APIClient` methods (`journey()`,
+`works()`, `worksUploadList()`, `lineBlog()`, `lineBlogPost(id:)`,
+`lineBlogComments(articleID:)`). An article ID that is not an article number
+fails validation with `RequestValidationError.invalidArticleID` before
+anything is sent. Localized archive text is a `LocalizedText`;
+`resolved(for:fallback:)` returns a `LocalizedTextResolution` with the text and
+the language it is in, falling back in `LocalizedText.defaultFallback` order
+(English, Japanese, Chinese) or `japaneseOriginalFallback` for LINE BLOG.
+`JourneyDate` keeps a milestone date's precision. LINE BLOG articles are
+`LineBlogBlock` and `LineBlogInline` enums whose unknown types decode as
+`.unknown(type:)`. `PlatformVideoIDs.links` builds niconico, YouTube and
+Bilibili watch pages from a track's `listen` or an upload's IDs. Media `url`s
+resolve against the API base URL; provenance addresses stay as the API gives
+them.
+
 `FileResponseCache` stores raw bodies, ETags, and fetch times as one JSON file
 per request, which a later launch reads back for ETag revalidation and offline
 fallback; an unreadable file is removed. Inject `MemoryResponseCache` or

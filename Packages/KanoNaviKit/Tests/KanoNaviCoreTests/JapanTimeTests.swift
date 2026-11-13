@@ -11,6 +11,15 @@ struct JapanTimeTests {
         #expect(JapanDate.date(from: after).rawValue == "2026-11-10")
     }
 
+    @Test(arguments: ["2026-02-29", "2026-02-30", "2026-04-31"])
+    func impossibleDayIsNotAJapanDate(raw: String) {
+        #expect(JapanDate(rawValue: raw) == nil)
+    }
+
+    @Test func leapDayIsAJapanDate() {
+        #expect(JapanDate(rawValue: "2024-02-29")?.day == 29)
+    }
+
     @Test func monthGridStartsMondayAndHasSixWeeks() throws {
         let date = try #require(JapanDate(rawValue: "2026-11-01"))
         #expect(date.monthGrid.count == 42)
