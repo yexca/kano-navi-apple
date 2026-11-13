@@ -342,7 +342,7 @@ selected card shows all again.
 - **Timeline.** Milestones read oldest first, as the story runs, under a
   sticky header per year with its count; within a year they keep the API's
   order. The toolbar's Jump to Year menu offers Latest first, then every
-  year shown. A row shows a marker with the kind's symbol on a line in the
+  year shown, and scrolls that year's header to the top. A row shows a marker with the kind's symbol on a line in the
   branch's tone, the date at its stored precision (a year, `Sep` or `Sep 7`
   within the year; a `dateEnd` as a range; the `dateNote` after it), the
   branch's name, the kind, the title and up to three lines of detail in the
@@ -368,6 +368,9 @@ selected card shows all again.
   chosen identity's images. Thumbnails are squares cropped around `focus`; a
   cancelled release's cover carries a mark. A thumbnail opens the viewer over
   the filtered images.
+- **A milestone that is gone.** When a reload no longer lists the
+  milestone whose page is open, the page says "Milestone Not Found" and
+  points back to the timeline.
 - **Viewer caption.** What the image shows, with Release cancelled and
   Third-party file marks; the title (a cover's caption under it); the date
   labelled with what it is (`dateKind`), or "Date unverified"; who published
@@ -383,9 +386,12 @@ selected card shows all again.
   "Date" and an unknown source kind "Other source"; an unknown note is left
   out, since a note is a sentence about one image.
 - **Tones.** `honey`, `leaf`, `berry`, `lavender` and `sky` are colours in
-  `JourneyColors.xcassets` with light and dark values (the light ones
-  darkened from the web board's to reach 4.5:1 on white); an unknown tone is
-  the secondary colour. A tone always accompanies the branch's name.
+  `JourneyColors.xcassets` with light and dark values; the light ones are
+  darker than the web board's. Tone text (dates, branch tags, "Key
+  milestone") reaches at least 4.5:1 in both appearances on the system
+  background, on a branch tag's 14% tint, on a highlighted row's 8% tint
+  and on a tag inside a highlighted row. An unknown tone is the secondary
+  colour. A tone always accompanies the branch's name.
 
 ### Works
 

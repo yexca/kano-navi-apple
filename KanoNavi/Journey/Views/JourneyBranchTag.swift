@@ -14,6 +14,6 @@ struct JourneyBranchTag: View {
             .foregroundStyle(tone.color)
             .padding(.horizontal, 7)
             .padding(.vertical, 2)
-            .background(tone.color.opacity(0.14), in: .capsule)
+            .background(tone.color.opacity(JourneyTone.tagOpacity), in: .capsule)
     }
 }

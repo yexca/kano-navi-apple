@@ -20,6 +20,13 @@ struct JourneyStringsTests {
         #expect(resolved(.Journey.dateKindStream, "en") == "Original stream date")
     }
 
+    @Test func missingMilestoneHasItsOwnWording() {
+        #expect(resolved(.Journey.milestoneMissingTitle, "en") == "Milestone Not Found")
+        #expect(resolved(.Journey.milestoneMissingTitle, "ja") == "出来事が見つかりません")
+        #expect(resolved(.Journey.milestoneMissingTitle, "zh-Hans") == "找不到此节点")
+        #expect(resolved(.Journey.milestoneMissingMessage, "en") != resolved(.Journey.timelineEmpty, "en"))
+    }
+
     @Test func countsArePluralized() {
         #expect(resolved(.Journey.milestoneCount(1), "en") == "1 milestone")
         #expect(resolved(.Journey.milestoneCount(28), "en") == "28 milestones")
