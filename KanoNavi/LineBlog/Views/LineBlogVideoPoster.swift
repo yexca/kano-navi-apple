@@ -42,15 +42,11 @@ struct LineBlogVideoPoster: View {
         Color.black
             .aspectRatio(LineBlogVideoGeometry.defaultAspectRatio, contentMode: .fit)
             .overlay {
-                if let cover, let aspectRatio = cover.aspectRatio {
+                if let cover {
                     // A cover is a 4:3 still with bars above and below the
-                    // 16:9 picture: laid out to cover the frame, the bars
-                    // fall outside it.
-                    MediaImageLayout(aspectRatio: aspectRatio, mode: .fill, anchor: .center) {
-                        MediaImage(decorative: cover)
-                    }
-                } else if let cover {
-                    MediaImage(decorative: cover)
+                    // 16:9 picture: filling the frame, the bars fall
+                    // outside it.
+                    MediaImage(decorative: cover, contentMode: .fill)
                 }
             }
             .clipped()
