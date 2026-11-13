@@ -36,7 +36,7 @@ outside the Apple SDKs. `KanoNaviCore` does not import SwiftUI;
 `KanoNaviComponents` depends on `KanoNaviCore`.
 
 Folders inside `KanoNavi/` follow features: `App/`, `Now/`, `Schedule/`,
-`Videos/`, `Posts/`, `More/`, `Settings/`, `Shared/`.
+`Videos/`, `Posts/`, `Journey/`, `Works/`, `LineBlog/`, `More/`, `Shared/`.
 
 ## API Contract
 
@@ -314,9 +314,9 @@ The app is a `TabView` with five tabs.
    are vertical cards in a row that scrolls sideways. Pull to refresh reloads
    the dashboard. Past Videos opens the month archive with the category filter
    (`game`, `talk`, `song`, `other`).
-5. **More** — Works, Journey, LINE BLOG archive, Settings and About. About
-   states that the app is an unofficial fan project and links the web board
-   and the `kano-navi` repository.
+5. **More** — Journey, Works and the LINE BLOG archive, each described
+   below, then Settings and About. About states that the app is an unofficial
+   fan project and links the web board and the `kano-navi` repository.
 
 Both month archives read their month index (`/api/videos/months`,
 `/api/posts/months`) and show one Japan month at a time, newest first, from
@@ -327,6 +327,18 @@ lowercase handles); All is their sum.
 
 Delivery order: Now, Schedule, widgets, Settings and About first; Videos and
 Posts next; Works, Journey and LINE BLOG last.
+
+### Journey
+
+Opens from More and shows a placeholder.
+
+### Works
+
+Opens from More and shows a placeholder.
+
+### LINE BLOG
+
+Opens from More and shows a placeholder.
 
 ## Widgets
 
