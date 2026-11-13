@@ -8,10 +8,11 @@ extension WorksRecentUpload {
         NowContentText(title, sourceLanguage: sourceLanguage, translations: translations)
     }
 
-    /// The video's own page first, then its alternates on other platforms.
+    /// The video's own page first, then its alternates on other platforms,
+    /// each page once.
     var pageLinks: [NowLink] {
         let own = NowLink.page(on: EventPlatform(videoSource: source.rawValue), url: url)
         let others = alternates.map { NowLink.page(on: EventPlatform(videoSource: $0.source), url: $0.url) }
-        return [own] + others.filter { $0.url != url }
+        return ([own] + others).uniqued(by: \.url)
     }
 }

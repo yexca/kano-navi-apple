@@ -12,7 +12,7 @@ struct WorksKanoCreditMarks: View {
             if showsKanoMark {
                 ComponentChip(title: .Works.kanoTrack, systemImage: "music.microphone", tint: .pink)
             }
-            ForEach(credits, id: \.self) { credit in
+            ForEach(credits.uniqued(), id: \.self) { credit in
                 ComponentChip(title: WorksCodeLabels.kanoCredit(credit), tint: .pink)
             }
         }

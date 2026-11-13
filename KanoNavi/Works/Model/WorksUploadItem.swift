@@ -10,7 +10,10 @@ nonisolated struct WorksUploadItem: Equatable, Identifiable, Sendable {
     let cover: WorksUploadCover?
     /// The watch pages built from the entry's platform IDs.
     let links: [WorksUploadLink]
-    /// The upload has stored YouTube videos and none of them can be watched.
+    /// Every watch page of the upload is a stored video that is removed or
+    /// private, so nothing is left to watch. A page the service stores
+    /// nothing about, such as one on niconico, may still be there, and an
+    /// upload with one is never gone: only its removed pages are marked.
     let isGone: Bool
     /// The first stored length in seconds.
     let lengthSeconds: Int?
@@ -22,11 +25,11 @@ nonisolated struct WorksUploadItem: Equatable, Identifiable, Sendable {
         cover = state?.cover
         let videos = state?.videos ?? []
         let gone = Set(videos.filter(Self.isGone).map { StoredVideoKey(source: $0.source, id: $0.id) })
-        links = entry.videoIDs.links.map { link in
-            WorksUploadLink(link, isGone: gone.contains(StoredVideoKey(platform: link.platform, id: link.id)))
+        let links = WorksUploadLink.links(of: entry.videoIDs) { link in
+            gone.contains(StoredVideoKey(platform: link.platform, id: link.id))
         }
-        let youtube = videos.filter { $0.source == .youtube }
-        isGone = youtube.isEmpty == false && youtube.allSatisfy(Self.isGone)
+        self.links = links
+        isGone = links.isEmpty == false && links.allSatisfy(\.isGone)
         lengthSeconds = videos.lazy.compactMap(\.durationSeconds).first { $0 > 0 }
     }
 

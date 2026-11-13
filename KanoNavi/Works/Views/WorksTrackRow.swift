@@ -20,8 +20,8 @@ struct WorksTrackRow: View {
                     .font(.footnote)
                     .foregroundStyle(.secondary)
             }
-            if let links = track.listen?.links, links.isEmpty == false {
-                WorksWatchLinks(links: links.map { WorksUploadLink($0) }, title: track.title)
+            if let listen = track.listen, listen.isEmpty == false {
+                WorksWatchLinks(links: WorksUploadLink.links(of: listen), title: track.title)
                     .padding(.top, 2)
             }
         }

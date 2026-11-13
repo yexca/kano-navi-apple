@@ -9,10 +9,10 @@ struct WorksParticipationMarks: View {
 
     var body: some View {
         FlowLayout(spacing: 4) {
-            ForEach(work.roles, id: \.self) { role in
+            ForEach(work.roles.uniqued(), id: \.self) { role in
                 ComponentChip(title: WorksCodeLabels.role(role), tint: .pink)
             }
-            ForEach(work.forms, id: \.self) { form in
+            ForEach(work.forms.uniqued(), id: \.self) { form in
                 ComponentChip(title: WorksCodeLabels.form(form), tint: .secondary)
             }
             if let unit = work.unit, unit.isEmpty == false {
