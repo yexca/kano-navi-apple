@@ -60,6 +60,8 @@ struct LineBlogArticleContent: View {
         }
         .refreshable {
             await reload()
+            // Tries again the pictographs that could not be loaded.
+            await pictographs.load(layout.pictographs, with: loader, displayScale: displayScale)
         }
         .task(id: layout.pictographs) {
             await pictographs.load(layout.pictographs, with: loader, displayScale: displayScale)
