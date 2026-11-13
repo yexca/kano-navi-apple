@@ -169,56 +169,8 @@
         }
       }
     },
-    "moreComingLater": {
-      "comment": "Shown beside a More row whose screen is not available yet.",
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Coming later"
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "準備中"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "敬请期待"
-          }
-        }
-      }
-    },
-    "moreComingLaterHeader": {
-      "comment": "Header of the More rows whose screens are not available yet.",
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Coming Later"
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "今後追加予定"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "即将推出"
-          }
-        }
-      }
-    },
     "moreJourney": {
-      "comment": "Row for the Journey screen (a timeline of milestones), not available yet.",
+      "comment": "Row and screen title for the Journey screen (a timeline of milestones).",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -242,7 +194,7 @@
       }
     },
     "moreLineBlog": {
-      "comment": "Row for the archive of LINE BLOG posts, not available yet. LINE BLOG is a product name.",
+      "comment": "Row and screen title for the archive of LINE BLOG posts. LINE BLOG is a product name.",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -290,7 +242,7 @@
       }
     },
     "moreWorks": {
-      "comment": "Row for the Works screen (videos and releases), not available yet.",
+      "comment": "Row and screen title for the Works screen (the discography).",
       "extractionState": "manual",
       "localizations": {
         "en": {
