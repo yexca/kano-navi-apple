@@ -330,7 +330,61 @@ Posts next; Works, Journey and LINE BLOG last.
 
 ### Journey
 
-Opens from More and shows a placeholder.
+Kano's public milestones and their images, from `/api/journey`, read as one
+document through `DocumentModel` (saved-copy and failure notices, pull to
+refresh). A segmented control switches between the timeline and the gallery;
+both start with the identity cards (All, then each branch with its portrait,
+name, "since" year and its milestone or image count), which filter both
+views. A branch without a portrait shows a person symbol in its tone's ring
+instead; the selected card is outlined and carries a check mark. Tapping the
+selected card shows all again.
+
+- **Timeline.** Milestones read oldest first, as the story runs, under a
+  sticky header per year with its count; within a year they keep the API's
+  order. The toolbar's Jump to Year menu offers Latest first, then every
+  year shown. A row shows a marker with the kind's symbol on a line in the
+  branch's tone, the date at its stored precision (a year, `Sep` or `Sep 7`
+  within the year; a `dateEnd` as a range; the `dateNote` after it), the
+  branch's name, the kind, the title and up to three lines of detail in the
+  content language, and up to three cropped thumbnails with "+N". A
+  highlight has a filled marker, a larger title, a tinted card and "Key
+  milestone". The list ends with "The story continues", the
+  hand-curation note, the image rights notice and the date the data was
+  checked through.
+- **Milestone page.** A row opens the full date with its year, the whole
+  detail, every image at its own shape (tall ones capped) with what it shows,
+  its date and its source link, then Source and Links: the source page by its
+  site, or "Based on a third-party archive of the official stream" when there
+  is none, and the further links by their worded labels. An image opens the
+  viewer over the milestone's images. Whoever presents the Journey may set
+  `journeyOpenRelease` in the environment; a milestone with a `releaseId`
+  then offers View in Works. Nothing sets it yet.
+- **Gallery.** Every image once: each milestone's images in timeline order
+  (catalogued images, then release covers), then the gallery-only images; an
+  image listed again keeps its first place. A branch shows the images that
+  list it in `branches`. The image-type filter (artwork, models,
+  merchandise, video frames, covers, then any new category) counts the
+  chosen identity's images. Thumbnails are squares cropped around `focus`; a
+  cancelled release's cover carries a mark. A thumbnail opens the viewer over
+  the filtered images.
+- **Viewer caption.** What the image shows, with Release cancelled and
+  Third-party file marks; the title (a cover's caption under it); the date
+  labelled with what it is (`dateKind`), or "Date unverified"; who published
+  the file (`sourceKind`); the recorded creator, the frame time and a cover's
+  scan or photo credit; the publisher's credit line as written; the
+  provenance note; and the links to the source page, the file or the video
+  at that moment, and the original stream. The links stay when the file is
+  unavailable.
+- **Codes.** Kinds, link labels, categories, date kinds, source kinds,
+  notes and cover credit roles are worded in `Journey.xcstrings`, after the
+  web board's wording. An unknown kind reads "Milestone", an unknown link
+  "Related page", an unknown category "Other images", an unknown date kind
+  "Date" and an unknown source kind "Other source"; an unknown note is left
+  out, since a note is a sentence about one image.
+- **Tones.** `honey`, `leaf`, `berry`, `lavender` and `sky` are colours in
+  `JourneyColors.xcassets` with light and dark values (the light ones
+  darkened from the web board's to reach 4.5:1 on white); an unknown tone is
+  the secondary colour. A tone always accompanies the branch's name.
 
 ### Works
 
