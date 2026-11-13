@@ -1,19 +1,16 @@
+import KanoNaviCore
 import SwiftUI
 
-/// The LINE BLOG archive screen the More tab opens. See `docs/design.md`.
+/// The LINE BLOG archive screen the More tab opens: the list of recovered
+/// articles, which leads to the reader and each article's comments. See
+/// `docs/design.md`.
 struct LineBlogView: View {
+    @Environment(\.services) private var services
+
     var body: some View {
-        ContentUnavailableView {
-            Label {
-                Text(.rootPlaceholderTitle)
-            } icon: {
-                Image(systemName: "hammer")
-            }
-        } description: {
-            Text(.rootPlaceholderMessage)
+        if let client = services?.client {
+            LineBlogArchive(client: client)
         }
-        .navigationTitle(.More.moreLineBlog)
-        .navigationBarTitleDisplayMode(.inline)
     }
 }
 
