@@ -406,7 +406,9 @@ it with the screens it opens; Uploads adds `/api/works/upload-list` and
   becomes rows.
 - **Release.** `WorksReleaseScreen(releaseID:)` loads the Works document
   itself, so any screen can push it, and says Release Not Found for an ID
-  the collection does not hold. It shows the first cover large and the
+  the collection does not hold: only once the read has ended, since the
+  cached copy may be older than the link, and with the notice when that
+  read failed. It shows the first cover large and the
   others as a strip, title, date and marks, label and catalog number, the
   tracks every edition shares by disc (credits, note, and watch links from
   `listen`), disc photos, then a section per edition, store bonuses and the
@@ -492,8 +494,9 @@ notices and pull to refresh.
     is a link under it.
   - A video shows its cover with a play button when the archive holds a
     copy. Play opens the same-host file with AVKit, sizes the player from
-    the stream and plays in place; it pauses when scrolled out of view. A copy
-    that cannot be opened says so. Without a copy the cover stands alone
+    the stream and plays in place, with sound even when the ring switch is
+    off; it pauses when scrolled out of view, and a copy still opening
+    then does not start. A copy that cannot be opened says so. Without a copy the cover stands alone
     with a note. The YouTube page and its archived capture are links under
     the video and are never loaded. The app asks the system for its VP9
     decoder, which exists from iOS 26.2; a VP9 or AV1 copy on a system
