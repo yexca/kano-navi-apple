@@ -14,7 +14,7 @@ struct WorksReleasePage: View {
             } else {
                 WorksNotFoundView(
                     title: .Works.releaseNotFoundTitle, message: .Works.releaseNotFoundMessage,
-                    reload: model.reload)
+                    isLoading: model.phase == .loading, notice: model.notice, reload: model.reload)
             }
         }
         .navigationBarTitleDisplayMode(.inline)

@@ -15,6 +15,11 @@ struct WorksUploadsScreen: View {
     @State private var order = WorksOrder.newestFirst
     @State private var query = ""
 
+    /// Whether the query filters the list: one of spaces alone does not.
+    private var isSearching: Bool {
+        query.contains { $0.isWhitespace == false }
+    }
+
     init(client: APIClient) {
         _list = State(initialValue: DocumentModel(client: client, request: WorksUploadListRequest()))
         _stored = State(initialValue: DocumentModel(client: client, request: WorksUploadsRequest()))
@@ -24,7 +29,7 @@ struct WorksUploadsScreen: View {
         DocumentView(model: list) { uploads in
             WorksUploadsList(
                 catalog: WorksUploadCatalog(list: uploads, stored: stored.value).searching(query),
-                recent: query.isEmpty ? WorksRecentUploads(stored.value) : nil,
+                recent: isSearching ? nil : WorksRecentUploads(stored.value),
                 updatedAt: uploads.updatedAt, kind: $kind, order: order, listNotice: list.notice,
                 storedNotice: stored.notice, reload: reload)
         }
