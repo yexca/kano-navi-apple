@@ -450,7 +450,75 @@ it with the screens it opens; Uploads adds `/api/works/upload-list` and
 
 ### LINE BLOG
 
-Opens from More and shows a placeholder.
+Opens from More: the archive of Kano's LINE BLOG, recovered from web archive
+captures after the service closed. It has three screens, each one
+[single document](#single-documents) with its saved-copy and failure
+notices and pull to refresh.
+
+- **Article list** (`/api/lineblog`). An introduction says what the archive
+  is, carries the rights notice and links the blog's original address. The
+  articles follow in the service's order, newest first, under their Japan
+  month with its count. A row shows the first picture, the title in the
+  content language (the Japanese original when that language has none), the
+  JST time and the number of archived comments. The toolbar's Jump to Month
+  menu lists the years and, inside each, its months with their counts, and
+  scrolls the list there.
+- **Reader** (`/api/lineblog/posts/{id}`). The title as written, the JST
+  time, then the blocks in reading order in a column no wider than 640
+  points. The article is laid out whole, not in a lazy stack, so every
+  block has its real height from the start; a picture is fetched once it
+  scrolls into view, with a box of its shape holding its place until then:
+  - A paragraph is one selectable text. Links inside it are tappable and
+    listed for VoiceOver: a link with an `articleId` pushes that article,
+    an `http` or `https` address opens outside, and any other address is
+    plain text. A pictograph (`emoji`) is an image run of the text, scaled
+    with Dynamic Type to sit inside the line; the article's pictographs are
+    loaded up front and a full-width space holds each place meanwhile. One
+    that cannot be shown is replaced by its `alt`.
+  - Pictures that stand between text split the paragraph into text and
+    rows of figures. One picture is drawn whole, no wider than the blog
+    showed it and at most 520 points tall; several share a two-column grid
+    of square thumbnails. A picture opens the [image viewer](#image-viewer),
+    which pages through all of the article's archived pictures and captions
+    each with its `alt`, its recovery note and links to where its file was
+    recovered from and to the page it linked. A `recovery` code is worded
+    under the row (stand-in, from the embedded tweet, or a neutral note for
+    an unknown code). A picture the archive never captured says so and
+    links its original address.
+  - A quote is set off with a bar, a rule is a divider, and a link card
+    shows its picture, title, summary and host: a card with an `articleId`
+    pushes that article, any other opens outside, and its archived capture
+    is a link under it.
+  - A video shows its cover with a play button when the archive holds a
+    copy. Play opens the same-host file with AVKit, sizes the player from
+    the stream and plays in place; it pauses when scrolled out of view. A copy
+    that cannot be opened says so. Without a copy the cover stands alone
+    with a note. The YouTube page and its archived capture are links under
+    the video and are never loaded. The app asks the system for its VP9
+    decoder, which exists from iOS 26.2; a VP9 or AV1 copy on a system
+    that cannot decode it shows the cannot-be-played note.
+  - Translations follow the content language. Japanese shows none. Chinese
+    or English shows that language's translation after each paragraph, with
+    a bar beside it and "Machine translation" as its VoiceOver value, the
+    translated title under the title, and a note that translations are
+    machine translations. The toolbar's Show Translation switch turns them
+    off for the article on screen. A translation is text: pictures in it
+    are left out.
+  - The article ends with the link to its comments and their count from the
+    article list (an article known to have none says so), Older Article and
+    Newer Article with the neighbour's title (`previousId` is older,
+    `nextId` newer), which swap the article in place so Back returns to
+    where the reader was opened, and the original address and archived
+    capture as provenance.
+  - An article number the archive does not have (404, or a number that is
+    not an article number) shows Article Not Found.
+- **Comments** (`/api/lineblog/posts/{id}/comments`). Under a note that
+  they are what an archived copy of the page preserved and the rights
+  notice, each comment shows its number, the name its writer gave, the JST
+  time, its rating and its text as written, selectable, newest first. A
+  rating is the old form's stars or face with the value in figures beside
+  it (`4/5`), read by VoiceOver as one sentence; an unknown kind shows the
+  figures alone. An article without comments says so.
 
 ## Widgets
 
