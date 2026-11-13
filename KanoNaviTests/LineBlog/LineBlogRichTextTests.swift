@@ -46,6 +46,17 @@ struct LineBlogRichTextTests {
         #expect(LineBlogRichText(runs: [.text("あ", link: nil)]).isBlank == false)
     }
 
+    @Test func aPictographInsideALinkIsKnown() {
+        let lost = LineBlogPictograph(source: nil, alt: "音符")
+
+        #expect(LineBlogRichText(runs: [.pictograph(pictograph, link: target)]).hasLinkedPictograph)
+        #expect(LineBlogRichText(runs: [.pictograph(pictograph, link: nil)]).hasLinkedPictograph == false)
+        #expect(LineBlogRichText(runs: [.text("あ", link: target)]).hasLinkedPictograph == false)
+        #expect(
+            LineBlogRichText(runs: [.pictograph(lost, link: target)]).hasLinkedPictograph == false,
+            "a pictograph without a file is drawn as its linked description")
+    }
+
     @Test func plainTextReadsAPictographAsItsDescription() {
         let silent = LineBlogPictograph(source: LineBlogFixtures.source("star.png"), alt: nil)
         let text = LineBlogRichText(runs: [

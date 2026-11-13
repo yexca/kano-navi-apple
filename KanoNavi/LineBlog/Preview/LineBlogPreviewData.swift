@@ -16,6 +16,27 @@
             try? JSONDecoder.kanoNavi().decode(LineBlogPostResponse.self, from: Data(json.utf8))
         }()
 
+        /// An article whose paragraphs have no translation but whose title
+        /// has an English one: the reader still offers its switch.
+        static let titleOnlyResponse: LineBlogPostResponse? = {
+            let article = """
+                {
+                  "updatedAt": "2017-03-09", "previousId": null, "nextId": null,
+                  "post": {
+                    "id": "1003", "published": "2017-03-10T03:00:00.000Z",
+                    "title": {"ja": "題名だけ翻訳のある記事", "zh-CN": null, "en": "Only the title is translated"},
+                    "url": "https://blog.example.com/archives/1003.html",
+                    "archiveUrl": "https://archive.example.com/blog/1003",
+                    "blocks": [
+                      {"type": "paragraph", "content": [{"type": "text", "text": "本文には翻訳がありません。"}],
+                       "translations": {"zh-CN": null, "en": null}}
+                    ]
+                  }
+                }
+                """
+            return try? JSONDecoder.kanoNavi().decode(LineBlogPostResponse.self, from: Data(article.utf8))
+        }()
+
         /// The article list's entries for the preview article and its
         /// neighbours.
         static let summaries: [LineBlogPostSummary] = {
@@ -37,10 +58,14 @@
         }()
 
         /// A loader that answers every file with a flat-color picture; a
-        /// name containing `missing` is a file the server does not have.
+        /// name containing `missing` is a file the server does not have,
+        /// and one containing `failed` a fetch that fails.
         static let loader = MediaImageLoader { url in
             if url.lastPathComponent.contains("missing") {
                 throw MediaImageError.unavailable
+            }
+            if url.lastPathComponent.contains("failed") {
+                throw MediaImageError.failed
             }
             return picture(seed: url.lastPathComponent)
         }
@@ -128,6 +153,9 @@
                      {"type": "text", "text": "、お店のページは"},
                      {"type": "link", "href": "https://shop.example.com/item", "articleId": null,
                       "content": [{"type": "text", "text": "こちら"}, \(pictograph("glyph1"))]},
+                     {"type": "text", "text": "です。絵文字だけのリンクは"},
+                     {"type": "link", "href": "https://blog.example.com/archives/1002.html", "articleId": "1002",
+                      "content": [\(pictograph("glyph2"))]},
                      {"type": "text", "text": "です。\\n二行目です。"}
                    ],
                    "translations": {
@@ -144,7 +172,7 @@
                   {"type": "paragraph",
                    "content": [
                      \(image("photo2", recovery: "tweet")), \(image("photo3", recovery: "tweet")),
-                     \(image("photo4", recovery: "tweet")), \(image("missing", recovery: "tweet"))
+                     \(image("failed", recovery: "tweet")), \(image("missing", recovery: "tweet"))
                    ],
                    "translations": null},
                   {"type": "paragraph",

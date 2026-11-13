@@ -5,9 +5,10 @@ import SwiftUI
 /// A paragraph is a single `Text`, so the system's text layout wraps it,
 /// selects it and reads it as one piece, and long Japanese text with many
 /// pictographs costs one layout. Text runs are attributed strings, whose
-/// links the system makes tappable and lists for VoiceOver; a pictograph
-/// is an image run between them, scaled to the text's size and lowered
-/// onto its line the way an emoji sits.
+/// links the system makes tappable and lists for VoiceOver, underlined so
+/// they are not marked by colour alone; a pictograph is an image run
+/// between them, scaled to the text's size and lowered onto its line the
+/// way an emoji sits.
 enum LineBlogTextBuilder {
     /// How far below the baseline a pictograph reaches, as a share of its
     /// height: about an emoji's descent.
@@ -37,7 +38,11 @@ enum LineBlogTextBuilder {
             case .pictograph(let pictograph, let link):
                 if let url = pictograph.source?.url, let image = images[url], image.height > 0 {
                     flush()
-                    pieces.append(glyph(image, alt: pictograph.alt, height: glyphHeight))
+                    if let link {
+                        pieces.append(linkedGlyph(image, link: link))
+                    } else {
+                        pieces.append(glyph(image, alt: pictograph.alt, height: glyphHeight))
+                    }
                 } else if let url = pictograph.source?.url, unavailable.contains(url) == false {
                     // Still loading: a full-width space holds its place.
                     pending += attributed("\u{3000}", link: link)
@@ -54,6 +59,7 @@ enum LineBlogTextBuilder {
         var part = AttributedString(string)
         if let link {
             part.link = link.url
+            part.underlineStyle = .single
         }
         return part
     }
@@ -67,6 +73,16 @@ enum LineBlogTextBuilder {
                 Image(decorative: image, scale: scale)
             }
         return Text(picture.interpolation(.high)).baselineOffset(-height * descent)
+    }
+
+    /// A pictograph inside a link. An image run cannot carry a link, so the
+    /// run is a linked full-width space, which the system makes tappable
+    /// like any linked text, and `LineBlogLinkedPictographRenderer` draws
+    /// the pictograph over it. It is one character wide, a little smaller
+    /// than a pictograph outside a link.
+    private static func linkedGlyph(_ image: CGImage, link: LineBlogLinkTarget) -> Text {
+        Text(attributed("\u{3000}", link: link))
+            .customAttribute(LineBlogLinkedPictographAttribute(image: image))
     }
 
     /// The pieces as one text. The interpolation is built by hand, so the

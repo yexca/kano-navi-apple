@@ -1,7 +1,8 @@
 import SwiftUI
 
 /// A piece of an article's running text: selectable, with tappable links
-/// and its pictographs on the line at text size.
+/// and its pictographs on the line at text size. Text with a pictograph
+/// inside a link is the exception: it is not selectable.
 struct LineBlogTextView: View {
     let text: LineBlogRichText
     let style: LineBlogTextStyle
@@ -18,7 +19,7 @@ struct LineBlogTextView: View {
         // Text without pictographs does not read the store, so it is not
         // drawn again when pictographs arrive.
         let hasPictographs = text.pictographSources.isEmpty == false
-        LineBlogTextBuilder.text(
+        let content = LineBlogTextBuilder.text(
             text, images: hasPictographs ? pictographs.images : [:],
             unavailable: hasPictographs ? pictographs.unavailable : [],
             glyphHeight: style == .original ? originalGlyph : translationGlyph
@@ -26,9 +27,19 @@ struct LineBlogTextView: View {
         .font(style == .original ? .body : .callout)
         .foregroundStyle(style == .original ? .primary : .secondary)
         .lineSpacing(lineSpacing)
-        .textSelection(.enabled)
         .frame(maxWidth: .infinity, alignment: .leading)
-        // Pictographs without a description alone leave nothing to read.
-        .accessibilityHidden(text.plainText.allSatisfy(\.isWhitespace))
+        // Pictographs without a description alone leave nothing to read,
+        // unless one of them is a link.
+        .accessibilityHidden(text.plainText.allSatisfy(\.isWhitespace) && text.hasLinkedPictograph == false)
+
+        // Only text that holds a pictograph inside a link is drawn by the
+        // renderer; all other text is left to the system and selectable.
+        // Selectable text is not drawn through a renderer, so that one
+        // paragraph gives up selection to keep its pictograph a link.
+        if text.hasLinkedPictograph {
+            content.textRenderer(LineBlogLinkedPictographRenderer())
+        } else {
+            content.textSelection(.enabled)
+        }
     }
 }

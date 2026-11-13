@@ -55,6 +55,17 @@ nonisolated struct LineBlogRichText: Hashable, Sendable {
         }
     }
 
+    /// Whether a pictograph stands inside a link, where it has to stay
+    /// tappable.
+    var hasLinkedPictograph: Bool {
+        runs.contains { run in
+            if case .pictograph(let pictograph, let link) = run {
+                return link != nil && pictograph.source != nil
+            }
+            return false
+        }
+    }
+
     /// This text without the spaces and line breaks at its two ends, which
     /// the blog's markup leaves around pictures.
     func trimmed() -> LineBlogRichText {
