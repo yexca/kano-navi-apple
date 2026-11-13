@@ -11,19 +11,7 @@ struct ArchiveStatusNotice: View {
     @Environment(\.locale) private var locale
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            Label {
-                Text(message)
-            } icon: {
-                Image(systemName: isSaved ? "clock.arrow.circlepath" : "exclamationmark.triangle.fill")
-                    .foregroundStyle(isSaved ? AnyShapeStyle(.secondary) : AnyShapeStyle(.orange))
-            }
-            .font(.subheadline)
-            Button(.Archive.retry, systemImage: "arrow.clockwise", action: retry)
-                .font(.subheadline.weight(.semibold))
-                .buttonStyle(.borderless)
-        }
-        .accessibilityElement(children: .contain)
+        StatusNotice(message: message, isSavedCopy: isSaved, retryTitle: .Archive.retry, retry: retry)
     }
 
     private var isSaved: Bool {
