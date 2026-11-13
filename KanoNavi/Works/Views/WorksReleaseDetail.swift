@@ -35,11 +35,12 @@ struct WorksReleaseDetail: View {
                 title: .Works.discPhotos, images: WorksGallery.discPhotos(of: release), open: open)
 
             ForEach(WorksEditionSummary.summaries(of: release)) { summary in
-                WorksEditionSection(summary: summary, open: open)
+                WorksEditionSection(summary: summary, releaseTitle: release.title, open: open)
             }
 
             WorksStoreBonusSection(
-                bonuses: release.storeBonuses, isForAnyEdition: release.editions.isEmpty == false, open: open)
+                bonuses: release.storeBonuses, isForAnyEdition: release.editions.isEmpty == false,
+                releaseTitle: release.title, open: open)
 
             WorksStoreSection(listings: release.stores)
         }

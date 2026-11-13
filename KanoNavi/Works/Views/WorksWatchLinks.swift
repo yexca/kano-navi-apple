@@ -4,7 +4,9 @@ import SwiftUI
 
 /// The pages a recording can be watched on, as small buttons in the web
 /// board's order: niconico, YouTube, members-only YouTube, Bilibili. Each
-/// opens in the browser; the app never loads the page.
+/// opens in the browser; the app never loads the page. A page the stored
+/// data marks as removed or private says so in its title and keeps its
+/// link, since the page itself tells the reader more.
 struct WorksWatchLinks: View {
     let links: [WorksUploadLink]
     /// The song or track, for VoiceOver.
@@ -19,10 +21,9 @@ struct WorksWatchLinks: View {
                     openURL(item.link.url)
                 } label: {
                     Label {
-                        Text(Self.name(for: item.link))
-                            .strikethrough(item.isGone)
+                        Text(Self.title(for: item))
                     } icon: {
-                        Image(systemName: Self.symbol(for: item.link))
+                        Image(systemName: item.isGone ? "eye.slash" : Self.symbol(for: item.link))
                     }
                 }
                 .buttonStyle(.compactLink)
@@ -32,7 +33,14 @@ struct WorksWatchLinks: View {
         .font(.subheadline)
     }
 
-    /// The button's title: the platform, marked when only channel members
+    /// The button's title: the page's name, and that it cannot be watched
+    /// when the stored data says so.
+    nonisolated static func title(for item: WorksUploadLink) -> LocalizedStringResource {
+        item.isGone
+            ? .Works.watchUnavailable(String(localized: name(for: item.link))) : name(for: item.link)
+    }
+
+    /// The page's name: the platform, marked when only channel members
     /// can watch.
     nonisolated static func name(for link: PlatformVideoLink) -> LocalizedStringResource {
         let platform = String(localized: WorksCodeLabels.platform(link.platform))

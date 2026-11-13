@@ -442,10 +442,15 @@ it with the screens it opens; Uploads adds `/api/works/upload-list` and
   compilation's songs folded, and a watch button per platform in the order
   niconico, YouTube, members-only YouTube (marked), Bilibili. With Chinese
   as the content language it also shows the upload's title on Bilibili.
-  - Stored data adds the cover, the length, and a No Longer Watchable mark
-    when every stored YouTube video of the upload is removed or private.
-    Rows keep room for covers only when the join gave at least one, and
-    show from the list alone when it gave none.
+  - Stored data adds the cover and the length, which VoiceOver reads with
+    the row. A watch page whose stored video is removed or private says
+    Unavailable in its button and keeps its link. The row carries a No
+    Longer Watchable mark only when every one of its watch pages is such a
+    video: a page the service stores nothing about, such as one on
+    niconico, may still be there. Rows keep room for covers only when one
+    of the rows shown, after the search and the kind filter, has a cover.
+  - A search that finds nothing shows the system's no-results view; a kind
+    or a collection without uploads says so in its own words.
   - Above the list, Newer Uploads shows `recent` (three until expanded)
     with titles in the content language, JST time and platform links, and
     says when `recentTotal` exceeds what was sent.

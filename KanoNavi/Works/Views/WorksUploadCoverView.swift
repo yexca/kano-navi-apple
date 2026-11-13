@@ -1,11 +1,10 @@
 import KanoNaviCore
 import SwiftUI
 
-/// An upload's stored cover in a 16:9 frame with its length in the corner,
-/// or a quiet play mark when this upload has none. Decorative.
+/// An upload's stored cover filling a 16:9 frame, or a quiet play mark when
+/// this upload has none. Decorative: the row's words say everything.
 struct WorksUploadCoverView: View {
     let cover: WorksUploadCover?
-    var lengthSeconds: Int?
 
     var body: some View {
         Rectangle()
@@ -21,18 +20,6 @@ struct WorksUploadCoverView: View {
                     Image(systemName: "play.rectangle")
                         .font(.title2)
                         .foregroundStyle(.tertiary)
-                }
-            }
-            .overlay(alignment: .bottomTrailing) {
-                if let length = WorksDateFormat.length(seconds: lengthSeconds) {
-                    Text(verbatim: length)
-                        .font(.caption2.weight(.semibold))
-                        .monospacedDigit()
-                        .foregroundStyle(.white)
-                        .padding(.horizontal, 4)
-                        .padding(.vertical, 1)
-                        .background(.black.opacity(0.7), in: .rect(cornerRadius: 4))
-                        .padding(4)
                 }
             }
             .clipShape(.rect(cornerRadius: 8))

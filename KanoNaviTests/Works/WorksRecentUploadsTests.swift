@@ -91,4 +91,17 @@ struct WorksRecentUploadsTests {
             ])
         #expect(video.pageLinks.map(\.destination) == [.platform(.youtube), .platform(.bilibili)])
     }
+
+    @MainActor @Test func alternatesEqualToEachOtherShowOnce() throws {
+        let alternate: [String: Any] = ["source": "bilibili", "url": "https://example.com/bili/n1"]
+        let stored = try WorksFixtures.stored(recent: [
+            WorksFixtures.recent(id: "n1", alternates: [alternate, alternate])
+        ])
+        let video = try #require(WorksRecentUploads(stored)?.videos.first)
+
+        #expect(
+            video.pageLinks.map(\.url.absoluteString) == [
+                "https://example.com/watch/n1", "https://example.com/bili/n1",
+            ])
+    }
 }
