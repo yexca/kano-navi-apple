@@ -6,6 +6,8 @@ import SwiftUI
 /// when that differs from the shared one, its discs and its store pages.
 struct WorksEditionSection: View {
     let summary: WorksEditionSummary
+    /// The release's title, read for an uncaptioned image of an unnamed edition.
+    let releaseTitle: String
     let open: (WorksImage) -> Void
 
     @ContentLocaleSetting private var contentLocale
@@ -21,13 +23,13 @@ struct WorksEditionSection: View {
                 WorksFactRow(fact: fact)
             }
             if edition.covers.isEmpty == false {
-                WorksImageStrip(images: edition.covers, fallbackTitle: name ?? "", open: open)
+                WorksImageStrip(images: edition.covers, fallbackTitle: name ?? releaseTitle, open: open)
             }
             if edition.bonuses.isEmpty == false || edition.bonusImages.isEmpty == false {
                 WorksPackageBonuses(bonuses: edition.bonuses, images: edition.bonusImages, open: open)
             }
             ForEach(edition.storeBonuses.enumerated(), id: \.offset) { _, bonus in
-                WorksStoreBonusRow(bonus: bonus, open: open)
+                WorksStoreBonusRow(bonus: bonus, fallbackTitle: name ?? releaseTitle, open: open)
             }
             if let tracks = summary.tracks {
                 DisclosureGroup {
@@ -38,7 +40,8 @@ struct WorksEditionSection: View {
             }
             if summary.discs.isEmpty == false {
                 WorksLabeledStrip(
-                    title: .Works.discPhotos, images: summary.discs.map(\.image), fallbackTitle: name ?? "",
+                    title: .Works.discPhotos, images: summary.discs.map(\.image),
+                    fallbackTitle: name ?? releaseTitle,
                     open: open)
             }
             WorksStoreRows(listings: edition.stores)

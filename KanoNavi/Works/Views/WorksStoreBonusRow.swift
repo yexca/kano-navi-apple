@@ -5,6 +5,8 @@ import SwiftUI
 /// and its pictures.
 struct WorksStoreBonusRow: View {
     let bonus: WorksStoreBonus
+    /// Read for an uncaptioned image when the item has no name either.
+    let fallbackTitle: String
     let open: (WorksImage) -> Void
 
     @ContentLocaleSetting private var contentLocale
@@ -21,7 +23,8 @@ struct WorksStoreBonusRow: View {
             WorksText(bonus.item)
             if bonus.images.isEmpty == false {
                 WorksImageStrip(
-                    images: bonus.images, fallbackTitle: bonus.item.resolved(for: contentLocale)?.text ?? "",
+                    images: bonus.images,
+                    fallbackTitle: bonus.item.resolved(for: contentLocale)?.text ?? fallbackTitle,
                     open: open
                 )
                 .padding(.top, 2)
