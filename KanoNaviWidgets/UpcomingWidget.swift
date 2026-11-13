@@ -4,7 +4,7 @@ import WidgetKit
 /// The calendar widget: what happens next and when, on the Home Screen and
 /// the Lock Screen. See `docs/design.md`.
 struct UpcomingWidget: Widget {
-    static let kind = "net.yexca.kanonavi.upcoming"
+    static let kind = "com.yexca.kanonavi.upcoming"
 
     var body: some WidgetConfiguration {
         AppIntentConfiguration(
