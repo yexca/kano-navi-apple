@@ -190,7 +190,9 @@ def main() -> int:
     add_video("SYNTHTALK01", "youtube", "Synthetic upload: Talk", now_dt - dt.timedelta(days=4), None, "upload", tag="talk")
     add_video("SYNTHSHORT1", "youtube", "Synthetic Short: Hello", now_dt - dt.timedelta(days=1, hours=3), None, "upload", short=1)
     add_video("SYNTHMEMB01", "youtube", "Synthetic members stream", None, now_dt + dt.timedelta(days=1, hours=2), "stream", upcoming=1, live_status="upcoming", availability="members")
-    add_video("SYNTHUPLD01", "youtube", "Synthetic upload: Video", now_dt - dt.timedelta(days=5), None, "upload", tag="video")
+    # An upload without a content tag: the service stores only game, talk and
+    # song as video tags, and counts everything else as `other`.
+    add_video("SYNTHUPLD01", "youtube", "Synthetic upload: Video", now_dt - dt.timedelta(days=5), None, "upload")
     add_video("SYNTHBILI01", "bilibili", "Synthetic upload: Song", now_dt - dt.timedelta(days=2, minutes=5), None, "upload", tag="song", merged_into="SYNTHSONG01")
     for i, video in enumerate(videos):
         conn.execute(
