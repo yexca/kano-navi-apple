@@ -1417,6 +1417,54 @@
         }
       }
     },
+    "milestoneMissingMessage" : {
+      "comment" : "Explanation on a milestone's page when a reload no longer lists that milestone.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This milestone is no longer in the Journey. Go back to see the current timeline."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "この出来事は今のあゆみに含まれていません。戻って最新のタイムラインをご覧ください。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "此节点已不在当前的历程中。请返回查看最新的时间线。"
+          }
+        }
+      }
+    },
+    "milestoneMissingTitle" : {
+      "comment" : "Title on a milestone's page when a reload no longer lists that milestone.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Milestone Not Found"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "出来事が見つかりません"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "找不到此节点"
+          }
+        }
+      }
+    },
     "modeGallery" : {
       "comment" : "Segment showing every Journey image as a grid.",
       "extractionState" : "manual",

@@ -13,7 +13,15 @@ struct JourneyDestinationView: View {
                 JourneyMilestoneDetail(
                     milestone: milestone, branch: journey.branches.first { $0.id == milestone.branch })
             } else {
-                ContentUnavailableView(.Journey.timelineEmpty, systemImage: "calendar")
+                ContentUnavailableView {
+                    Label {
+                        Text(.Journey.milestoneMissingTitle)
+                    } icon: {
+                        Image(systemName: "calendar.badge.exclamationmark")
+                    }
+                } description: {
+                    Text(.Journey.milestoneMissingMessage)
+                }
             }
         }
     }

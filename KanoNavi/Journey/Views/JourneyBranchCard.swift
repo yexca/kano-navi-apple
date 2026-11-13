@@ -29,6 +29,7 @@ struct JourneyBranchCard: View {
                                 .foregroundStyle(.white, branch == nil ? Color.accentColor : tone.color)
                                 .font(.title3)
                                 .background(Circle().fill(.background))
+                                .accessibilityHidden(true)
                         }
                     }
                 name

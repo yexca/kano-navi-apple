@@ -24,7 +24,9 @@ struct JourneyMilestoneLinks: View {
                 }
                 .foregroundStyle(.secondary)
             }
-            ForEach(milestone.links, id: \.url) { link in
+            // A milestone may list one address under two labels, so the
+            // links are keyed by their place in the milestone's fixed list.
+            ForEach(milestone.links.enumerated(), id: \.offset) { _, link in
                 Link(destination: link.url) {
                     Label {
                         Text(JourneyLabels.link(link.label))
