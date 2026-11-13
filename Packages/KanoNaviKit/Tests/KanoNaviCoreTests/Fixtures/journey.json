@@ -1,0 +1,88 @@
+{
+  "updatedAt": "2026-11-07",
+  "branches": [
+    {
+      "id": "singer",
+      "tone": "honey",
+      "since": "2010",
+      "label": {"ja": "歌い手", "zh-CN": null, "en": "Singer"},
+      "portrait": {
+        "origin": "fixed", "id": "portrait-singer", "url": "/media/journey/portrait.jpg",
+        "width": 800, "height": 1000, "mimeType": "image/jpeg", "branches": ["singer"],
+        "category": "artwork", "title": {"ja": "肖像", "zh-CN": "肖像", "en": "Portrait"},
+        "date": "2010-03-28", "dateKind": "post", "sourceKind": "artist", "note": "artwork",
+        "focus": "50% 0%", "credit": null, "creator": "Synthetic Artist", "frameTime": null,
+        "sourcePage": "https://social.example.com/artist/1", "sourceUrl": "https://cdn.example.com/portrait.jpg",
+        "originalStream": null, "releaseId": null, "cancelled": null, "cover": null
+      }
+    }
+  ],
+  "milestones": [
+    {
+      "id": "start", "date": "2010", "datePrecision": "year", "dateEnd": null, "dateNote": null,
+      "branch": "singer", "kind": "start", "highlight": true,
+      "title": {"ja": "活動開始", "zh-CN": "开始活动", "en": "First steps"}, "detail": null,
+      "sourceUrl": null,
+      "links": [
+        {"url": "https://agency.example.com/news/1", "label": "agency"},
+        {"url": "https://other.example.com/page", "label": "newsletter"}
+      ],
+      "releaseId": null, "media": []
+    },
+    {
+      "id": "summer-event", "date": "2012-08", "datePrecision": "month", "dateEnd": null,
+      "dateNote": "C82", "branch": "singer", "kind": "stream", "highlight": false,
+      "title": {"ja": "配信", "zh-CN": null, "en": null},
+      "detail": {"ja": "詳細", "zh-CN": "", "en": "Detail"},
+      "sourceUrl": "https://video.example.com/watch/1", "links": [], "releaseId": null,
+      "media": [
+        {
+          "origin": "fixed", "id": "frame-1", "url": "/media/journey/frame.png",
+          "width": 1920, "height": 1080, "mimeType": "image/png", "branches": ["singer", "mahoro"],
+          "category": "frame", "title": {"ja": "配信の一場面", "zh-CN": null, "en": "Stream frame"},
+          "date": null, "dateKind": "stream", "sourceKind": "streamArchive", "note": null,
+          "focus": null, "credit": "© Synthetic Studio", "creator": null, "frameTime": "01:05:00",
+          "sourcePage": null, "sourceUrl": null,
+          "originalStream": "https://video.example.com/watch/1?t=3900",
+          "releaseId": null, "cancelled": null, "cover": null
+        }
+      ]
+    },
+    {
+      "id": "first-single", "date": "2016-09-07", "datePrecision": "day", "dateEnd": "2016-09-30",
+      "dateNote": null, "branch": "singer", "kind": "release", "highlight": false,
+      "title": {"ja": "シングル発売", "zh-CN": "单曲发行", "en": "Single release"},
+      "detail": {"ja": "二種類のジャケット。", "zh-CN": "两种封面。", "en": "Two covers."},
+      "sourceUrl": "https://label.example.com/release/1", "links": [],
+      "releaseId": "2016-09-07-abc123",
+      "media": [
+        {
+          "origin": "release", "id": "2016-09-07-abc123/cover.jpg", "url": "/media/works/cover.jpg",
+          "width": 600, "height": 600, "mimeType": "image/jpeg", "branches": ["singer"],
+          "category": "cover", "title": {"ja": "Synthetic Single", "zh-CN": "Synthetic Single", "en": "Synthetic Single"},
+          "date": "2016-09-07", "dateKind": "release", "sourceKind": "officialCover", "note": "cover",
+          "focus": null, "credit": null, "creator": null, "frameTime": null,
+          "sourcePage": "https://label.example.com/release/1/cover", "sourceUrl": null,
+          "originalStream": null, "releaseId": "2016-09-07-abc123", "cancelled": false,
+          "cover": {
+            "url": "/media/works/cover.jpg", "width": 600, "height": 600, "mimeType": "image/jpeg",
+            "caption": {"ja": "ジャケット", "zh-CN": "封面", "en": "Cover"},
+            "sourceUrl": "https://label.example.com/release/1/cover", "sourceLabel": null,
+            "credit": null, "thirdParty": false
+          }
+        }
+      ]
+    }
+  ],
+  "galleryOnly": [
+    {
+      "origin": "sticker", "id": "gallery-1", "url": "/media/journey/gallery.jpg",
+      "width": 400, "height": 400, "mimeType": "image/jpeg", "branches": ["singer"],
+      "category": "poster", "title": {"ja": "ポスター", "zh-CN": "海报", "en": "Poster"},
+      "date": "2020-01-01", "dateKind": "printing", "sourceKind": "museum", "note": "newNote",
+      "focus": null, "credit": null, "creator": null, "frameTime": null,
+      "sourcePage": "https://shop.example.com/item/1", "sourceUrl": "https://shop.example.com/item/1.jpg",
+      "originalStream": null, "releaseId": null, "cancelled": null, "cover": null
+    }
+  ]
+}

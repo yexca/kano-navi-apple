@@ -1,0 +1,16 @@
+{
+  "updatedAt": "2026-11-07",
+  "uploads": [
+    {
+      "id": "2010-03-28-ddd444", "date": "2010-03-28", "song": "Synthetic Cover", "originalArtist": "",
+      "kind": "cover", "with": "", "niconico": "sm10", "youtube": [], "youtubeMembers": [],
+      "bilibili": null, "bilibiliTitle": "", "albums": [], "tracks": []
+    },
+    {
+      "id": "2022-04-05-eee555", "date": "2022-04-05", "song": "Synthetic Medley",
+      "originalArtist": "Various", "kind": "medley", "with": "A Friend", "niconico": null,
+      "youtube": ["yt1", "bad id"], "youtubeMembers": ["ytm1"], "bilibili": "BV2yy",
+      "bilibiliTitle": "合集", "albums": ["Synthetic Album (2022)"], "tracks": ["Song A", "Song B"]
+    }
+  ]
+}

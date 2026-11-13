@@ -51,19 +51,37 @@ shows the exact JSON shapes and closed code sets.
   the service needs an update. There is no local fallback derivation.
 - Closed code sets decode into Swift enums with an `unknown(String)` case, so
   a new server code degrades to a neutral label instead of failing the whole
-  response. Open strings (such as `typeCode`) stay strings with a label table
-  and a neutral fallback.
+  response. Open strings (such as `typeCode`, a milestone `kind` or a store
+  `platform`) stay strings with a label table and a neutral fallback. A LINE
+  BLOG block or inline of an unknown `type` decodes as an unknown case and the
+  rest of the article still shows.
 - Timestamps decode as ISO 8601 with and without fractional seconds. Japan
   dates (`YYYY-MM-DD`) decode into a `JapanDate` value, not `Date`.
+- A Journey milestone `date` keeps its stored precision (`YYYY`, `YYYY-MM` or
+  `YYYY-MM-DD`, matching `datePrecision`) in a `JourneyDate`; it is never
+  widened to a guessed day, and `dateEnd` is a `JapanDate`.
+- The archive reads (Journey, Works, LINE BLOG) give text as
+  `{"ja", "zh-CN", "en"}` objects with `null` for a missing language. The app
+  shows the content language when it has text (an empty string counts as
+  missing), otherwise English, then Japanese, then Chinese; LINE BLOG text,
+  written in Japanese, falls back to Japanese first. Release titles, names
+  and upload fields are plain strings shown as written.
 - Relative media URLs (`/media/...`) resolve against the API base URL.
-  External links (X, YouTube, Bilibili pages) are only ever opened for the
-  user with `openURL`; the app never fetches them.
+  Third-party addresses (provenance such as `sourceUrl`, `sourcePage`,
+  `archiveUrl`, `watchUrl`, link `href`s, and external pages on X, YouTube
+  and Bilibili) are never resolved against the service or fetched; they are
+  only opened for the user with `openURL`. Watch pages for Works platform IDs
+  are built in the app, as the web board builds them.
 - `/api/health`'s `lastSync.message` is not displayed; only `status` is.
 
 Endpoints the app uses: `/api/dashboard?days=7`, `/api/dashboard/revision`,
 `/api/calendar`, `/api/posts`, `/api/posts/months`, `/api/videos`,
-`/api/videos/months`, `/api/works/uploads`, `/api/calendar.ics` (as a
-subscription link only).
+`/api/videos/months`, `/api/works`, `/api/works/upload-list`,
+`/api/works/uploads`, `/api/journey`, `/api/lineblog`,
+`/api/lineblog/posts/{id}`, `/api/lineblog/posts/{id}/comments`,
+`/api/calendar.ics` (as a subscription link only). The Journey, Works and
+LINE BLOG reads carry no `revision`; they revalidate through their ETag
+alone.
 
 ## Networking, Caching and Refresh
 

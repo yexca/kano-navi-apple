@@ -1,0 +1,153 @@
+{
+  "updatedAt": "2026-11-07",
+  "summary": {"personal": 2, "participation": 1, "uploads": 2, "firstYear": 2010, "lastYear": 2026},
+  "personal": [
+    {
+      "id": "2011-01-16-aaa111", "date": "2011-01-16", "title": "Synthetic Album", "format": "doujin",
+      "digital": false, "cancelled": false, "unit": null,
+      "label": {"ja": "Synthetic Label", "zh-CN": "Synthetic Label", "en": "Synthetic Label"},
+      "catalog": null,
+      "covers": [
+        {
+          "url": "/media/works/album.jpg", "width": 600, "height": 600, "mimeType": "image/jpeg",
+          "caption": {"ja": "ジャケット", "zh-CN": "专辑封面", "en": "Album cover"},
+          "sourceUrl": "https://db.example.com/release/1", "sourceLabel": null, "credit": null,
+          "thirdParty": true
+        }
+      ],
+      "disc": {
+        "url": "/media/works/disc.jpg", "width": 600, "height": 600, "mimeType": "image/jpeg",
+        "caption": {"ja": "盤面", "zh-CN": "盘面", "en": "Disc"}, "sourceUrl": null, "sourceLabel": null,
+        "credit": {"role": "scan", "name": "Synthetic Scanner", "url": "https://people.example.com/scanner"},
+        "thirdParty": false
+      },
+      "printedDisc": true,
+      "cutout": {
+        "url": "/media/works/cutout.png", "width": 300, "height": 500, "mimeType": "image/png",
+        "caption": null, "sourceUrl": null, "sourceLabel": null, "credit": null, "thirdParty": null
+      },
+      "tracks": [
+        {
+          "disc": 1, "discLabel": null, "no": 1, "title": "Synthetic Song",
+          "credit": {"ja": "原曲: Someone", "zh-CN": "原曲: Someone", "en": "Original: Someone"},
+          "note": {"ja": "カバー", "zh-CN": "翻唱", "en": "Cover"},
+          "listen": null
+        }
+      ],
+      "discs": [],
+      "editions": [],
+      "storeBonuses": [],
+      "stores": []
+    },
+    {
+      "id": "2017-04-05-bbb222", "date": "2017-04-05", "title": "Synthetic Single", "format": "maxi",
+      "digital": true, "cancelled": false, "unit": "Synthetic Unit",
+      "label": {"ja": "レーベル", "zh-CN": "厂牌", "en": "Label"},
+      "catalog": {"ja": "SYN-0001", "zh-CN": "SYN-0001", "en": "SYN-0001"},
+      "covers": [], "disc": null, "printedDisc": false, "cutout": null,
+      "tracks": [
+        {
+          "disc": 1, "discLabel": {"ja": "ディスク1", "zh-CN": "碟1", "en": "Disc 1"}, "no": 1,
+          "title": "Lead Song", "credit": null, "note": null,
+          "listen": {"niconico": "sm100", "youtube": ["yt-AAA_1"], "youtubeMembers": ["ytMembers2"], "bilibili": "BV1xx"}
+        }
+      ],
+      "discs": [
+        {
+          "disc": 1,
+          "image": {
+            "url": "/media/works/disc1.jpg", "width": 500, "height": 500, "mimeType": "image/jpeg",
+            "caption": {"ja": "盤面", "zh-CN": "盘面", "en": "Disc"}, "sourceUrl": null,
+            "sourceLabel": "Synthetic Database", "credit": {"role": "photo", "name": null, "url": null},
+            "thirdParty": true
+          }
+        }
+      ],
+      "editions": [
+        {
+          "name": {"ja": "初回限定盤", "zh-CN": "初回限定盘", "en": "Limited edition"},
+          "catalog": {"ja": "SYN-0001", "zh-CN": "SYN-0001", "en": "SYN-0001"},
+          "price": {"ja": "¥1,800", "zh-CN": "1,800日元", "en": "¥1,800"},
+          "format": {"ja": "CD+DVD", "zh-CN": "CD+DVD", "en": "CD+DVD"},
+          "packaging": null, "date": "2017-05-01", "cancelled": false, "jan": "",
+          "covers": [
+            {
+              "url": "/media/works/limited.jpg", "width": 700, "height": 700, "mimeType": "image/jpeg",
+              "caption": {"ja": "ジャケット", "zh-CN": "封面", "en": "Cover"},
+              "sourceUrl": "https://label.example.com/limited", "sourceLabel": null, "credit": null,
+              "thirdParty": false
+            }
+          ],
+          "bonuses": [{"ja": "ステッカー", "zh-CN": "贴纸", "en": "Sticker"}],
+          "bonusImages": [
+            {
+              "url": "/media/works/sticker.png", "width": 200, "height": 200, "mimeType": "image/png",
+              "caption": {"ja": "特典", "zh-CN": "特典", "en": "Bonus"}, "sourceUrl": "https://label.example.com/bonus",
+              "sourceLabel": null, "credit": {"role": "fan", "name": "A Fan", "url": null}, "thirdParty": true
+            }
+          ],
+          "storeBonuses": [
+            {
+              "store": {"ja": "ショップA", "zh-CN": "商店A", "en": "Shop A"},
+              "item": {"ja": "ブロマイド", "zh-CN": "照片", "en": "Photo card"},
+              "images": [
+                {
+                  "url": "/media/works/card.jpg", "width": 300, "height": 400, "mimeType": "image/jpeg",
+                  "caption": {"ja": "ブロマイド", "zh-CN": "照片", "en": "Photo card"},
+                  "sourceUrl": "https://shop.example.com/a", "sourceLabel": null, "credit": null,
+                  "thirdParty": true
+                }
+              ]
+            }
+          ],
+          "stores": [
+            {
+              "item": null,
+              "links": [
+                {"platform": "apple_music", "url": "https://music.example.com/album/1", "hiRes": false},
+                {"platform": "mora", "url": "https://store.example.com/album/1", "hiRes": true}
+              ]
+            },
+            {
+              "item": {"ja": "インスト", "zh-CN": "伴奏", "en": "Instrumental"},
+              "links": [{"platform": "spotify", "url": "https://stream.example.com/album/2", "hiRes": false}]
+            }
+          ],
+          "tracks": [
+            {
+              "disc": 1, "discLabel": null, "no": 1, "title": "Lead Song", "credit": null, "note": null,
+              "listen": {"niconico": null, "youtube": [], "youtubeMembers": [], "bilibili": null}
+            },
+            {
+              "disc": 2, "discLabel": {"ja": "DVD", "zh-CN": "DVD", "en": "DVD"}, "no": 1,
+              "title": "Music Video", "credit": null, "note": null, "listen": null
+            }
+          ],
+          "discs": [],
+          "printedDisc": false
+        }
+      ],
+      "storeBonuses": [],
+      "stores": [
+        {"item": null, "links": [{"platform": "new_store", "url": "https://store.example.com/3", "hiRes": false}]}
+      ]
+    }
+  ],
+  "participation": [
+    {
+      "id": "2010-10-20-ccc333", "date": "2010-10-20", "title": "Synthetic Compilation",
+      "roles": ["vocal", "dance"], "forms": ["digital", "newForm"], "unit": null,
+      "label": "Compilation Label", "event": "", "catalog": "",
+      "sourceUrl": "https://db.example.com/release/3",
+      "cover": {
+        "url": "/media/works/compilation.jpg", "width": 1400, "height": 1400, "mimeType": "image/jpeg",
+        "caption": null, "sourceUrl": "https://store.example.com/compilation", "sourceLabel": "Synthetic Store",
+        "credit": null, "thirdParty": true
+      },
+      "tracks": [
+        {"disc": 1, "no": 1, "title": "Other Song", "credit": "Someone feat. Another", "kano": false, "kanoCredits": []},
+        {"disc": 1, "no": 2, "title": "Her Song", "credit": "Someone feat. Kano", "kano": true, "kanoCredits": ["lyrics", "mixing"]}
+      ]
+    }
+  ]
+}

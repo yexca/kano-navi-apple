@@ -1,0 +1,12 @@
+{
+  "updatedAt": "2019-11-18",
+  "post": {
+    "id": "100", "published": "2015-10-08T10:28:06.000Z",
+    "title": {"ja": "はじめまして", "zh-CN": null, "en": null},
+    "url": "https://blog.example.com/kano/archives/100.html",
+    "archiveUrl": "https://archive.example.org/web/2015/https://blog.example.com/kano/archives/100.html",
+    "blocks": [{"type": "paragraph", "content": [{"type": "text", "text": "最初"}], "translations": {"zh-CN": null, "en": null}}]
+  },
+  "previousId": null,
+  "nextId": "200"
+}
