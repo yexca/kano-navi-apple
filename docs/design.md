@@ -334,7 +334,65 @@ Opens from More and shows a placeholder.
 
 ### Works
 
-Opens from More and shows a placeholder.
+Opens from More. It reads `/api/works` once as a single document and shares
+it with the screens it opens; Uploads adds `/api/works/upload-list` and
+`/api/works/uploads`. Each read loads on appear and on pull to refresh.
+
+- **Entry.** The years the collection spans, the three ways in with their
+  counts (Own Releases, Featured On, Uploads), the covers of the eight
+  newest releases in a row that scrolls sideways, and the date the
+  collection was checked through.
+- **Own Releases.** Covers in a grid by Japan year, newest first, with a
+  format filter (All, Album, Single, EP, Doujin, and Other for a format the
+  app does not name) and its counts. A card shows the first cover, the
+  title, the date and marks for format, digital, unit and cancelled
+  (struck through); a release without a cover draws a disc mark. A toolbar
+  menu switches to oldest first. At accessibility text sizes the grid
+  becomes rows.
+- **Release.** `WorksReleaseScreen(releaseID:)` loads the Works document
+  itself, so any screen can push it, and says Release Not Found for an ID
+  the collection does not hold. It shows the first cover large and the
+  others as a strip, title, date and marks, label and catalog number, the
+  tracks every edition shares by disc (credits, note, and watch links from
+  `listen`), disc photos, then a section per edition, store bonuses and the
+  streaming and download stores with a Hi-Res mark.
+  - An edition shows what the record states for it: catalog number, price,
+    format, packaging, its own date, JAN, its covers, what is in the
+    package with pictures, and its store bonuses and stores. Its track list
+    shows, folded, only when it differs from the shared one, and its disc
+    photos only when they differ from the release's.
+  - Every image opens the shared viewer over all of the release's
+    pictures; a file several places show is one picture. The caption gives
+    the image's caption (the title without one), the requested credit
+    linked to the contributor's page, whether the file is the publisher's
+    or a third party's, and the source page as a link or the site's name.
+- **Featured On.** The participation works by year with cover, date, role
+  and form chips and the unit. A work shows its cover, label, event and
+  catalog number as written (an empty one is left out), the tracks Kano
+  took part in with her further credits, the full track list folded below
+  when it holds more than those, and a link to the page the record follows.
+- **Uploads.** The upload list joined with `/api/works/uploads` by upload
+  ID, by year, newest first, with a kind filter and its counts and a search
+  over song, original artist, collaborators, albums, a compilation's songs
+  and the Bilibili title. A row shows the song, the original artist and
+  collaborators, date and kind, the albums that include the recording, a
+  compilation's songs folded, and a watch button per platform in the order
+  niconico, YouTube, members-only YouTube (marked), Bilibili. With Chinese
+  as the content language it also shows the upload's title on Bilibili.
+  - Stored data adds the cover, the length, and a No Longer Watchable mark
+    when every stored YouTube video of the upload is removed or private.
+    Rows keep room for covers only when the join gave at least one, and
+    show from the list alone when it gave none.
+  - Above the list, Newer Uploads shows `recent` (three until expanded)
+    with titles in the content language, JST time and platform links, and
+    says when `recentTotal` exceeds what was sent.
+  - The list is the screen's document. When only `/api/works/uploads`
+    fails, the list stays and a notice says covers and newer uploads could
+    not be loaded, or are the saved copy, with Try Again.
+- Codes (formats, roles, forms, credits, upload kinds, store platforms,
+  image credit roles, the reason a newer upload is listed) are worded in
+  `Works.xcstrings`; an unknown code gets a neutral label. Dates are Japan
+  dates shown with their year.
 
 ### LINE BLOG
 
