@@ -45,7 +45,7 @@ struct LineBlogLinkTargetTests {
     }
 
     @Test(arguments: [
-        LineBlogLinkTarget.article(id: "13162309"),
+        LineBlogLinkTarget.article(id: "40044004"),
         LineBlogLinkTarget.outside(URL(string: "https://example.com/page?x=1")!),
     ])
     func addressCarriedInTextReadsBackAsTheSameTarget(target: LineBlogLinkTarget) {

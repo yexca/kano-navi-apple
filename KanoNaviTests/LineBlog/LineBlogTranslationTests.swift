@@ -50,20 +50,20 @@ struct LineBlogTranslationTests {
     // MARK: Titles
 
     @Test func readerTitleIsTheJapaneseOriginalWithTheTranslationUnderIt() {
-        let title = LocalizedText(ja: "春の服", zhCN: "春天的衣服", en: "Spring Clothes")
+        let title = LocalizedText(ja: "合成の題名", zhCN: "合成标题", en: "Synthetic Title")
 
         #expect(LineBlogTitle(title, translation: .en) == LineBlogTitle(title, translation: .en))
-        #expect(LineBlogTitle(title, translation: .en).original == "春の服")
-        #expect(LineBlogTitle(title, translation: .en).translated == "Spring Clothes")
-        #expect(LineBlogTitle(title, translation: .zhHans).translated == "春天的衣服")
+        #expect(LineBlogTitle(title, translation: .en).original == "合成の題名")
+        #expect(LineBlogTitle(title, translation: .en).translated == "Synthetic Title")
+        #expect(LineBlogTitle(title, translation: .zhHans).translated == "合成标题")
         #expect(LineBlogTitle(title, translation: nil).translated == nil)
     }
 
     @Test func translatedTitleIsLeftOutWhenMissingOrTheSame() {
         #expect(
-            LineBlogTitle(LocalizedText(ja: "🌊🐄", zhCN: nil, en: "🌊🐄"), translation: .en).translated == nil)
+            LineBlogTitle(LocalizedText(ja: "🎈🎈", zhCN: nil, en: "🎈🎈"), translation: .en).translated == nil)
         #expect(
-            LineBlogTitle(LocalizedText(ja: "春", zhCN: "", en: "Spring"), translation: .zhHans).translated
+            LineBlogTitle(LocalizedText(ja: "題名", zhCN: "", en: "Title"), translation: .zhHans).translated
                 == nil)
     }
 
@@ -75,10 +75,10 @@ struct LineBlogTranslationTests {
     }
 
     @Test(arguments: [
-        (ContentLocale.ja, "春の服"), (.en, "Spring Clothes"), (.zhHans, "春の服"),
+        (ContentLocale.ja, "合成の題名"), (.en, "Synthetic Title"), (.zhHans, "合成の題名"),
     ])
     func listTitleIsInTheContentLanguageOrElseTheJapaneseOriginal(locale: ContentLocale, expected: String) {
-        let title = LocalizedText(ja: "春の服", zhCN: nil, en: "Spring Clothes")
+        let title = LocalizedText(ja: "合成の題名", zhCN: nil, en: "Synthetic Title")
 
         #expect(LineBlogTitle.listTitle(title, locale: locale) == expected)
     }
