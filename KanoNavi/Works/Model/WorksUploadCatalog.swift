@@ -21,10 +21,11 @@ nonisolated struct WorksUploadCatalog: Equatable, Sendable {
         self.items = items
     }
 
-    /// Whether rows keep room for a cover: only when the join gave at least
-    /// one, so a list without stored data is not a column of empty frames.
-    var showsCovers: Bool {
-        items.contains { $0.cover != nil }
+    /// Whether the rows shown for `kind` keep room for a cover: only when
+    /// one of those rows has a cover, so a list without stored data, or a
+    /// kind without any, is not a column of empty frames.
+    func showsCovers(kind: String?) -> Bool {
+        shown(kind: kind).contains { $0.cover != nil }
     }
 
     /// The uploads that answer a search; all of them for an empty query.
@@ -45,7 +46,11 @@ nonisolated struct WorksUploadCatalog: Equatable, Sendable {
 
     /// The uploads of `kind` (`nil` for all) by year, in `order`.
     func groups(kind: String?, order: WorksOrder) -> [WorksYearGroup<WorksUploadItem>] {
-        let shown = items.filter { Self.filter.matches($0.entry.kind.rawValue, selection: kind) }
-        return WorksYearGroup.groups(of: shown, order: order, date: \.entry.date)
+        WorksYearGroup.groups(of: shown(kind: kind), order: order, date: \.entry.date)
+    }
+
+    /// The uploads of `kind` (`nil` for all) in the collection's order.
+    private func shown(kind: String?) -> [WorksUploadItem] {
+        items.filter { Self.filter.matches($0.entry.kind.rawValue, selection: kind) }
     }
 }

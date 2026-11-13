@@ -3,7 +3,8 @@ import KanoNaviCore
 import SwiftUI
 
 /// An upload's words: the song, the original artist and collaborators, its
-/// date, kind and marks, and for Chinese readers its title on Bilibili.
+/// date, length, kind and marks, and for Chinese readers its title on
+/// Bilibili. VoiceOver reads them as one element.
 struct WorksUploadDetails: View {
     let item: WorksUploadItem
 
@@ -32,10 +33,24 @@ struct WorksUploadDetails: View {
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
             }
-            Text(verbatim: WorksDateFormat.date(entry.date, locale: locale))
-                .font(.footnote)
-                .monospacedDigit()
-                .foregroundStyle(.secondary)
+            FlowLayout(spacing: 8) {
+                Text(verbatim: WorksDateFormat.date(entry.date, locale: locale))
+                if let length = WorksDateFormat.length(seconds: item.lengthSeconds),
+                    let spoken = WorksDateFormat.spokenLength(seconds: item.lengthSeconds, locale: locale)
+                {
+                    Label {
+                        Text(verbatim: length)
+                    } icon: {
+                        Image(systemName: "clock")
+                    }
+                    .labelStyle(.titleAndIcon)
+                    .accessibilityElement(children: .ignore)
+                    .accessibilityLabel(Text(.Works.uploadLengthSpoken(spoken)))
+                }
+            }
+            .font(.footnote)
+            .monospacedDigit()
+            .foregroundStyle(.secondary)
             FlowLayout(spacing: 4) {
                 ComponentChip(title: WorksCodeLabels.uploadKind(entry.kind), tint: .secondary)
                 if item.hasMembersOnlyVideo {

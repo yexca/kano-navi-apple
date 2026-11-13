@@ -10,6 +10,8 @@ struct WorksUploadsList: View {
     let updatedAt: JapanDate
     @Binding var kind: String?
     let order: WorksOrder
+    /// Whether a search query narrows the catalog.
+    let isSearching: Bool
     let listNotice: DocumentNotice?
     /// Why the covers and newer videos are not a fresh read.
     let storedNotice: DocumentNotice?
@@ -19,7 +21,7 @@ struct WorksUploadsList: View {
 
     var body: some View {
         let groups = catalog.groups(kind: kind, order: order)
-        let showsCovers = catalog.showsCovers
+        let showsCovers = catalog.showsCovers(kind: kind)
         List {
             if listNotice != nil || storedNotice != nil {
                 Section {
@@ -55,8 +57,10 @@ struct WorksUploadsList: View {
             }
 
             Section {
-                if groups.isEmpty {
-                    ContentUnavailableView.search
+                if let empty = WorksUploadsEmptyState(
+                    isEmpty: groups.isEmpty, isSearching: isSearching, kind: kind)
+                {
+                    WorksUploadsEmptyView(state: empty)
                 }
             } footer: {
                 Text(.Works.uploadsUpdatedThrough(WorksDateFormat.date(updatedAt, locale: locale)))
@@ -75,7 +79,7 @@ struct WorksUploadsList: View {
             catalog: WorksUploadCatalog(list: WorksPreviewData.uploadList, stored: WorksPreviewData.uploads),
             recent: WorksRecentUploads(WorksPreviewData.uploads),
             updatedAt: WorksPreviewData.uploadList.updatedAt,
-            kind: $kind, order: .newestFirst, listNotice: nil, storedNotice: .loadFailed
+            kind: $kind, order: .newestFirst, isSearching: false, listNotice: nil, storedNotice: .loadFailed
         ) {}
     }
     .environment(\.mediaImageLoader, WorksPreviewData.imageLoader)

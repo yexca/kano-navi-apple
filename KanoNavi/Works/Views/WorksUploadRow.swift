@@ -7,7 +7,7 @@ import SwiftUI
 /// sizes the cover sits above the text.
 struct WorksUploadRow: View {
     let item: WorksUploadItem
-    /// Whether the list keeps room for covers; see `WorksUploadCatalog.showsCovers`.
+    /// Whether the list keeps room for covers; see `WorksUploadCatalog.showsCovers(kind:)`.
     let showsCover: Bool
 
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
@@ -15,13 +15,13 @@ struct WorksUploadRow: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             if showsCover, dynamicTypeSize.isAccessibilitySize {
-                WorksUploadCoverView(cover: item.cover, lengthSeconds: item.lengthSeconds)
+                WorksUploadCoverView(cover: item.cover)
                     .frame(maxWidth: 320)
                 WorksUploadDetails(item: item)
             } else {
                 HStack(alignment: .top, spacing: 12) {
                     if showsCover {
-                        WorksUploadCoverView(cover: item.cover, lengthSeconds: item.lengthSeconds)
+                        WorksUploadCoverView(cover: item.cover)
                             .frame(width: 112)
                     }
                     WorksUploadDetails(item: item)

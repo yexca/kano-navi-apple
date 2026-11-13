@@ -30,7 +30,8 @@ struct WorksUploadsScreen: View {
             WorksUploadsList(
                 catalog: WorksUploadCatalog(list: uploads, stored: stored.value).searching(query),
                 recent: isSearching ? nil : WorksRecentUploads(stored.value),
-                updatedAt: uploads.updatedAt, kind: $kind, order: order, listNotice: list.notice,
+                updatedAt: uploads.updatedAt, kind: $kind, order: order, isSearching: isSearching,
+                listNotice: list.notice,
                 storedNotice: stored.notice, reload: reload)
         }
         .task {
