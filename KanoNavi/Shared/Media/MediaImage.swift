@@ -58,8 +58,7 @@ struct MediaImage: View {
     }
 
     var body: some View {
-        Color.clear
-            .aspectRatio(mode == .fit ? aspectRatio : nil, contentMode: .fit)
+        box
             .overlay {
                 MediaImagePicture(image: phase.image, mode: mode, anchor: anchor)
                     .accessibilityElement(children: .ignore)
@@ -83,6 +82,17 @@ struct MediaImage: View {
             .task(id: MediaImageLoadID(request: request, attempt: attempt)) {
                 await load()
             }
+    }
+
+    /// The space the image is drawn in: the picture's own shape when
+    /// fitted, the whole frame the caller gives when filling. (An
+    /// `aspectRatio` without a ratio would hold the fill box to a square.)
+    @ViewBuilder private var box: some View {
+        if mode == .fit {
+            Color.clear.aspectRatio(aspectRatio, contentMode: .fit)
+        } else {
+            Color.clear
+        }
     }
 
     /// Width over height of the box a fitted image holds.
