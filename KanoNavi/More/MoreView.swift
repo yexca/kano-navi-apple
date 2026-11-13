@@ -1,10 +1,13 @@
 import SwiftUI
 
 /// The More tab: the Journey, Works and LINE BLOG archive screens, Settings
-/// and About. See `docs/design.md`.
+/// and About. A Journey milestone with a release opens that release's Works
+/// screen on the same stack. See `docs/design.md`.
 struct MoreView: View {
+    @State private var path = NavigationPath()
+
     var body: some View {
-        NavigationStack {
+        NavigationStack(path: $path) {
             List {
                 Section {
                     row(
@@ -24,12 +27,18 @@ struct MoreView: View {
                 switch destination {
                 case .journey: JourneyView()
                 case .works: WorksView()
+                case .worksRelease(let releaseID): WorksReleaseScreen(releaseID: releaseID)
                 case .lineBlog: LineBlogView()
                 case .settings: SettingsView()
                 case .about: AboutView()
                 }
             }
         }
+        .environment(
+            \.journeyOpenRelease,
+            JourneyOpenRelease { releaseID in
+                path.append(MoreDestination.worksRelease(releaseID))
+            })
     }
 
     private func row(

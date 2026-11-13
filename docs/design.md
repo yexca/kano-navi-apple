@@ -356,9 +356,10 @@ selected card shows all again.
   its date and its source link, then Source and Links: the source page by its
   site, or "Based on a third-party archive of the official stream" when there
   is none, and the further links by their worded labels. An image opens the
-  viewer over the milestone's images. Whoever presents the Journey may set
-  `journeyOpenRelease` in the environment; a milestone with a `releaseId`
-  then offers View in Works. Nothing sets it yet.
+  viewer over the milestone's images. A milestone with a `releaseId` offers
+  View in Works, which pushes that release's Works screen onto the More
+  tab's stack: the Journey calls `journeyOpenRelease` from the environment,
+  which the More tab sets, and shows no button where nothing sets it.
 - **Gallery.** Every image once: each milestone's images in timeline order
   (catalogued images, then release covers), then the gallery-only images; an
   image listed again keeps its first place. A branch shows the images that
