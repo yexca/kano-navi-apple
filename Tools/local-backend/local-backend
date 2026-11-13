@@ -182,6 +182,36 @@ PY
 	wait_for_http "https://localhost:$HTTPS_PORT/api/health" "$CA_CERT"
 }
 
+# Journey, Works and LINE BLOG media are runtime data of the kano-navi
+# checkout. The server only reads the three folders, so each one that exists
+# there is linked into the isolated data root. The prebuilt smaller copies are
+# copied instead, because the server may add to its variants cache.
+link_archive_media() {
+	local name source target linked=""
+	for name in journey works lineblog; do
+		source="$KANO_CHECKOUT/data/$name"
+		target="$DATA_ROOT/$name"
+		if [ -d "$source" ]; then
+			if [ -L "$target" ] || [ ! -e "$target" ]; then
+				ln -sfn "$(cd "$source" && pwd)" "$target"
+				linked="$linked $name"
+			fi
+		elif [ -L "$target" ]; then
+			unlink "$target"
+		fi
+	done
+	source="$KANO_CHECKOUT/data/cache/variants"
+	if [ -d "$source" ]; then
+		mkdir -p "$DATA_ROOT/cache/variants"
+		rsync -a --ignore-existing "$source/" "$DATA_ROOT/cache/variants/"
+	fi
+	if [ -n "$linked" ]; then
+		echo "Archive media:$linked"
+	else
+		echo "Archive media: none in $KANO_CHECKOUT/data (media URLs answer 404)"
+	fi
+}
+
 start() {
 	local needs_seed=0
 	[ ! -f "$DB_PATH" ] && needs_seed=1
@@ -195,6 +225,7 @@ start() {
 	# files exist on a first boot, and can clear stale metadata on later boots.
 	# Repair the two local files after the owner process is ready.
 	python3 "$TOOL_DIR/seed/seed.py" "$DB_PATH" "$DATA_ROOT" --repair-profile
+	link_archive_media
 	start_proxy
 	echo "Local Kano Navi backend: https://localhost:$HTTPS_PORT"
 	echo "CA certificate: $CA_CERT"
@@ -338,12 +369,13 @@ unconfigure_app() {
 }
 
 usage() {
-	echo "usage: local-backend {start|stop|status|logs|reseed|trust-simulators [simulator...]|configure-app|unconfigure-app}" >&2
+	echo "usage: local-backend {start|stop|restart|status|logs|reseed|trust-simulators [simulator...]|configure-app|unconfigure-app}" >&2
 }
 
 case "${1:-}" in
 	start) start ;;
 	stop) stop ;;
+	restart) stop; start ;;
 	status) status ;;
 	logs) logs ;;
 	reseed) reseed ;;
