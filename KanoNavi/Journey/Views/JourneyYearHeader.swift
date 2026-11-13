@@ -29,5 +29,6 @@ struct JourneyYearHeader: View {
         .background(.bar)
         .accessibilityElement(children: .combine)
         .accessibilityAddTraits(.isHeader)
+        .accessibilityIdentifier("journey.year.\(year)")
     }
 }

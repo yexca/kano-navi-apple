@@ -9,6 +9,9 @@ struct JourneyTimelineList: View {
     let notice: DocumentNotice?
     let reload: () async -> Void
 
+    /// The year header a jump is heading for, until the scroll settles.
+    @State private var pendingJump: JourneyYearAnchor?
+
     var body: some View {
         let groups = JourneyTimeline.groups(journey.milestones, branch: branch)
         ScrollViewReader { proxy in
@@ -33,7 +36,7 @@ struct JourneyTimelineList: View {
                             }
                         } header: {
                             JourneyYearHeader(year: group.year, count: group.milestones.count)
-                                .id(group.year)
+                                .id(JourneyYearAnchor(year: group.year))
                         }
                     }
 
@@ -48,6 +51,9 @@ struct JourneyTimelineList: View {
             .refreshable {
                 await reload()
             }
+            .onScrollPhaseChange { _, phase in
+                settleJump(in: phase, with: proxy)
+            }
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     JourneyYearMenu(years: groups.map(\.year)) { year in
@@ -58,17 +64,32 @@ struct JourneyTimelineList: View {
         }
     }
 
-    /// Scrolls a year's header to the top. The lazy stack only estimates
-    /// the rows it has not drawn yet, so the first scroll can stop short of
-    /// a distant year; a second one, once those rows are measured, lands on
-    /// it.
+    /// Scrolls a year's header to the top.
     private func jump(to year: Int, with proxy: ScrollViewProxy) {
-        proxy.scrollTo(year, anchor: .top)
-        Task {
-            try? await Task.sleep(for: .milliseconds(120))
+        let anchor = JourneyYearAnchor(year: year)
+        pendingJump = anchor
+        withAnimation {
+            proxy.scrollTo(anchor, anchor: .top)
+        }
+    }
+
+    /// Finishes a jump. The lazy stack places rows it has not measured yet
+    /// by an estimate, so a jump into an unread part of the list can stop
+    /// short; once that scroll settles, the rows around the target are
+    /// measured and one more scroll lands on the header. Touching the list
+    /// drops the pending jump.
+    private func settleJump(in phase: ScrollPhase, with proxy: ScrollViewProxy) {
+        switch phase {
+        case .interacting:
+            pendingJump = nil
+        case .idle:
+            guard let anchor = pendingJump else { return }
+            pendingJump = nil
             withAnimation {
-                proxy.scrollTo(year, anchor: .top)
+                proxy.scrollTo(anchor, anchor: .top)
             }
+        default:
+            break
         }
     }
 }

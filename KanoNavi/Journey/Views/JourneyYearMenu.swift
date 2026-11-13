@@ -21,6 +21,7 @@ struct JourneyYearMenu: View {
                 } label: {
                     Text(verbatim: String(year))
                 }
+                .accessibilityIdentifier("journey.jump.\(year)")
             }
         } label: {
             Label {
