@@ -1,5 +1,7 @@
 # Machine-specific agent notes (see AGENTS.md).
 AGENTS.local.md
+# Local working notes and hand-over drafts.
+/notes/
 Config/Local.xcconfig
 
 # Xcode per-user state and build output.
