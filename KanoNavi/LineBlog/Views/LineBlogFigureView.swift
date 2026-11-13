@@ -1,7 +1,7 @@
 import SwiftUI
 
-/// One picture of a row: a button that opens it in the viewer, or the box
-/// for a picture the archive never captured.
+/// One picture of a row: an archived picture, which opens in the viewer
+/// once it has loaded, or the box for a picture the archive never captured.
 struct LineBlogFigureView: View {
     let figure: LineBlogFigure
     /// A square thumbnail in a grid, instead of the whole picture.
@@ -15,17 +15,8 @@ struct LineBlogFigureView: View {
     var body: some View {
         switch figure {
         case .picture(let picture):
-            Button {
-                open(picture)
-            } label: {
-                LineBlogDeferredPicture(source: picture.source, isThumbnail: isThumbnail)
-                    .frame(maxWidth: isThumbnail ? .infinity : maximumWidth(of: picture))
-            }
-            .buttonStyle(.plain)
-            .clipShape(.rect(cornerRadius: 8))
-            .accessibilityLabel(LineBlogPictureLabel.text(for: picture))
-            .accessibilityAddTraits(.isImage)
-            .accessibilityHint(Text(.LineBlog.openPictureHint))
+            LineBlogFigurePicture(picture: picture, isThumbnail: isThumbnail, open: open)
+                .frame(maxWidth: isThumbnail ? .infinity : maximumWidth(of: picture))
         case .uncaptured(let picture):
             LineBlogUncapturedPictureView(picture: picture)
         }

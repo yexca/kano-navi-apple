@@ -9,6 +9,7 @@ struct LineBlogVideoView: View {
     let video: LineBlogVideoEmbed
 
     @State private var playback = LineBlogVideoPlayback()
+    @Environment(\.lineBlogVideoCoordinator) private var coordinator
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -58,6 +59,6 @@ struct LineBlogVideoView: View {
 
     private func play() {
         guard let file = video.file else { return }
-        Task { await playback.play(file) }
+        Task { await playback.play(file, with: coordinator) }
     }
 }

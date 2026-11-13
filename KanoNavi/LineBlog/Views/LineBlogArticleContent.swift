@@ -93,6 +93,18 @@ struct LineBlogArticleContent: View {
         }
     }
 
+    #Preview("Only the title is translated") {
+        if let response = LineBlogPreviewData.titleOnlyResponse {
+            NavigationStack {
+                LineBlogArticleContent(
+                    response: response, layout: LineBlogArticleLayout(article: response.post),
+                    translation: .en,
+                    summaries: [], notice: nil, reload: {}, show: { _ in })
+            }
+            .environment(\.mediaImageLoader, LineBlogPreviewData.loader)
+        }
+    }
+
     #Preview("Saved copy, no translations") {
         if let response = LineBlogPreviewData.response {
             NavigationStack {

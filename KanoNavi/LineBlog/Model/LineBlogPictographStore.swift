@@ -10,6 +10,12 @@ import Observation
 /// store loads every pictograph of the article through the shared image
 /// loader and publishes them a few at a time, so a paragraph is laid out
 /// again once or twice, not once per file.
+///
+/// A file the server does not have is unavailable at once, and its `alt`
+/// is drawn in its place. A fetch that merely failed is tried once more
+/// after a moment and only then counted as unavailable; meanwhile its
+/// place stays empty. Loading again, as pull to refresh does, tries every
+/// file not held yet.
 @Observable
 final class LineBlogPictographStore {
     /// The decoded pictographs, by file address.
@@ -23,58 +29,102 @@ final class LineBlogPictographStore {
     /// How long results gather before the text is drawn again.
     private static let publishInterval = Duration.milliseconds(120)
 
+    /// How long after a failed fetch the file is tried once more.
+    private let retryDelay: Duration
+
+    init(retryDelay: Duration = .seconds(2)) {
+        self.retryDelay = retryDelay
+    }
+
+    /// How one file's load ended.
+    private enum Outcome: Sendable {
+        case loaded(CGImage)
+        /// The server does not have the file, or it is not an image.
+        case unavailable
+        /// The fetch failed; trying again may work.
+        case failed
+        case cancelled
+    }
+
     /// Loads the files not held yet. Returns when all have been tried, or
     /// when the calling task is cancelled.
     func load(_ sources: [MediaImageSource], with loader: MediaImageLoader, displayScale: CGFloat) async {
         let missing = sources.filter { images[$0.url] == nil }
         guard missing.isEmpty == false else { return }
-        let size = CGSize(width: Self.boxSide, height: Self.boxSide)
 
+        let failed = await fetch(missing, with: loader, displayScale: displayScale, isLastTry: false)
+        guard failed.isEmpty == false else { return }
+        try? await Task.sleep(for: retryDelay)
+        guard Task.isCancelled == false else { return }
+        _ = await fetch(failed, with: loader, displayScale: displayScale, isLastTry: true)
+    }
+
+    /// Fetches `sources` and publishes what arrives. Returns the files
+    /// whose fetch failed and is worth another try; on the last try those
+    /// become unavailable instead.
+    private func fetch(
+        _ sources: [MediaImageSource], with loader: MediaImageLoader, displayScale: CGFloat, isLastTry: Bool
+    ) async -> [MediaImageSource] {
+        let size = CGSize(width: Self.boxSide, height: Self.boxSide)
         var loaded: [URL: CGImage] = [:]
-        var failed: Set<URL> = []
-        for source in missing {
+        var missing: Set<URL> = []
+        var failed: [MediaImageSource] = []
+        var pending: [(MediaImageSource, MediaImageRequest)] = []
+
+        for source in sources {
             let request = MediaImageRequest(
                 source: source, size: size, displayScale: displayScale, mode: .fit)
             if let image = loader.memory.image(for: request) {
                 loaded[source.url] = image
+            } else {
+                pending.append((source, request))
             }
         }
-        publish(&loaded, &failed)
+        publish(&loaded, &missing)
 
         let clock = ContinuousClock()
         var lastPublish = clock.now
-        await withTaskGroup(of: (URL, CGImage?).self) { group in
-            for source in missing where images[source.url] == nil {
-                let request = MediaImageRequest(
-                    source: source, size: size, displayScale: displayScale, mode: .fit)
+        await withTaskGroup(of: (MediaImageSource, Outcome).self) { group in
+            for (source, request) in pending {
                 group.addTask {
-                    (source.url, try? await loader.image(for: request))
+                    do {
+                        return (source, .loaded(try await loader.image(for: request)))
+                    } catch MediaImageError.unavailable {
+                        return (source, .unavailable)
+                    } catch is MediaImageError {
+                        return (source, .failed)
+                    } catch {
+                        return (source, .cancelled)
+                    }
                 }
             }
-            for await (url, image) in group {
-                if let image {
-                    loaded[url] = image
-                } else if Task.isCancelled == false {
-                    failed.insert(url)
+            for await (source, outcome) in group {
+                switch outcome {
+                case .loaded(let image): loaded[source.url] = image
+                case .unavailable: missing.insert(source.url)
+                case .failed where isLastTry: missing.insert(source.url)
+                case .failed: failed.append(source)
+                case .cancelled: break
                 }
                 if clock.now - lastPublish >= Self.publishInterval {
-                    publish(&loaded, &failed)
+                    publish(&loaded, &missing)
                     lastPublish = clock.now
                 }
             }
         }
-        publish(&loaded, &failed)
+        publish(&loaded, &missing)
+        return failed
     }
 
-    private func publish(_ loaded: inout [URL: CGImage], _ failed: inout Set<URL>) {
+    private func publish(_ loaded: inout [URL: CGImage], _ missing: inout Set<URL>) {
         if loaded.isEmpty == false {
             images.merge(loaded) { _, new in new }
             unavailable.subtract(loaded.keys)
             loaded = [:]
         }
-        if failed.isEmpty == false {
-            unavailable.formUnion(failed)
-            failed = []
+        if missing.isEmpty == false {
+            unavailable.formUnion(missing)
+            missing = []
         }
     }
 }

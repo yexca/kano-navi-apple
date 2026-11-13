@@ -482,13 +482,19 @@ notices and pull to refresh.
   points. The article is laid out whole, not in a lazy stack, so every
   block has its real height from the start; a picture is fetched once it
   scrolls into view, with a box of its shape holding its place until then:
-  - A paragraph is one selectable text. Links inside it are tappable and
-    listed for VoiceOver: a link with an `articleId` pushes that article,
-    an `http` or `https` address opens outside, and any other address is
-    plain text. A pictograph (`emoji`) is an image run of the text, scaled
-    with Dynamic Type to sit inside the line; the article's pictographs are
-    loaded up front and a full-width space holds each place meanwhile. One
-    that cannot be shown is replaced by its `alt`.
+  - A paragraph is one selectable text. Links inside it are underlined,
+    tappable and listed for VoiceOver: a link with an `articleId` pushes
+    that article, an `http` or `https` address opens outside, and any other
+    address is plain text. A pictograph (`emoji`) is an image run of the
+    text, scaled with Dynamic Type to sit inside the line; the article's
+    pictographs are loaded up front and a full-width space holds each place
+    meanwhile. A file the server does not have is replaced by its `alt`; a
+    fetch that merely failed is tried once more after two seconds before
+    its `alt` is shown, and pull to refresh tries every missing one again.
+    A pictograph inside a link is a linked full-width space with the
+    picture drawn over it by a text renderer, so it stays tappable when it
+    is all the link holds; a paragraph with one is not selectable, because
+    selectable text is not drawn through a renderer.
   - Pictures that stand between text split the paragraph into text and
     rows of figures. One picture is drawn whole, no wider than the blog
     showed it and at most 520 points tall; several share a two-column grid
@@ -497,8 +503,11 @@ notices and pull to refresh.
     each with its `alt`, its recovery note and links to where its file was
     recovered from and to the page it linked. A `recovery` code is worded
     under the row (stand-in, from the embedded tweet, or a neutral note for
-    an unknown code). A picture the archive never captured says so and
-    links its original address.
+    an unknown code). A picture is a button only once it has loaded: one the
+    server does not have says "Image unavailable" and one whose fetch failed
+    offers Try Again, neither opens the viewer, and VoiceOver reads the
+    state as the picture's value and reaches the button. A picture the
+    archive never captured says so and links its original address.
   - A quote is set off with a bar, a rule is a divider, and a link card
     shows its picture, title, summary and host: a card with an `articleId`
     pushes that article, any other opens outside, and its archived capture
@@ -507,7 +516,12 @@ notices and pull to refresh.
     copy. Play opens the same-host file with AVKit, sizes the player from
     the stream and plays in place, with sound even when the ring switch is
     off; it pauses when scrolled out of view, and a copy still opening
-    then does not start. A copy that cannot be opened says so. Without a copy the cover stands alone
+    then does not start. One video plays at a time: starting one pauses the
+    one that plays, also when it is resumed from the player's own controls.
+    When none plays any more, the audio session is deactivated off the main
+    actor after 0.4 seconds, notifying other apps so interrupted music
+    carries on; the `playback` category stays for the next video. A copy
+    that cannot be opened says so. Without a copy the cover stands alone
     with a note. The YouTube page and its archived capture are links under
     the video and are never loaded. The app asks the system for its VP9
     decoder, which exists from iOS 26.2; a VP9 or AV1 copy on a system
@@ -517,8 +531,10 @@ notices and pull to refresh.
     a bar beside it and "Machine translation" as its VoiceOver value, the
     translated title under the title, and a note that translations are
     machine translations. The toolbar's Show Translation switch turns them
-    off for the article on screen. A translation is text: pictures in it
-    are left out.
+    off for the article on screen. The switch and the note appear whenever
+    the article has anything in that language, a translated title alone
+    included, and neither appears when it has nothing. A translation is
+    text: pictures in it are left out.
   - The article ends with the link to its comments and their count from the
     article list (an article known to have none says so), Older Article and
     Newer Article with the neighbour's title (`previousId` is older,
