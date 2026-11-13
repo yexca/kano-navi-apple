@@ -11,6 +11,14 @@ nonisolated enum JourneyTone: Equatable {
     case sky
     case neutral
 
+    /// The opacity of the tone behind a branch tag and a selected identity
+    /// card. Tone text on it stays at 4.5:1 or more in both appearances,
+    /// also inside a highlighted row.
+    static let tagOpacity = 0.14
+
+    /// The opacity of the tone behind a highlighted timeline row.
+    static let highlightOpacity = 0.08
+
     init(code: String) {
         self =
             switch code {
@@ -23,15 +31,20 @@ nonisolated enum JourneyTone: Equatable {
             }
     }
 
+    /// The colour asset of a named tone; `nil` for `neutral`.
+    @MainActor var colorResource: ColorResource? {
+        switch self {
+        case .honey: .journeyHoney
+        case .leaf: .journeyLeaf
+        case .berry: .journeyBerry
+        case .lavender: .journeyLavender
+        case .sky: .journeySky
+        case .neutral: nil
+        }
+    }
+
     /// The tone for text, markers and strokes, in light and dark appearance.
     @MainActor var color: Color {
-        switch self {
-        case .honey: Color(.journeyHoney)
-        case .leaf: Color(.journeyLeaf)
-        case .berry: Color(.journeyBerry)
-        case .lavender: Color(.journeyLavender)
-        case .sky: Color(.journeySky)
-        case .neutral: .secondary
-        }
+        colorResource.map { Color($0) } ?? .secondary
     }
 }

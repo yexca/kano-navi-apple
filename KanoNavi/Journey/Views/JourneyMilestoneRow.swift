@@ -50,7 +50,7 @@ struct JourneyMilestoneRow: View {
         .background {
             if milestone.highlight {
                 RoundedRectangle(cornerRadius: 14)
-                    .fill(tone.color.opacity(0.08))
+                    .fill(tone.color.opacity(JourneyTone.highlightOpacity))
             }
         }
         .padding(.horizontal, 4)

@@ -72,7 +72,7 @@ struct JourneyBranchCard: View {
 
     private var background: AnyShapeStyle {
         if isSelected, let branch {
-            AnyShapeStyle(JourneyTone(code: branch.tone).color.opacity(0.14))
+            AnyShapeStyle(JourneyTone(code: branch.tone).color.opacity(JourneyTone.tagOpacity))
         } else {
             AnyShapeStyle(.fill.tertiary)
         }
