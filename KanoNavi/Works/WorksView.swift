@@ -1,24 +1,21 @@
+import KanoNaviCore
 import SwiftUI
 
-/// The Works screen the More tab opens. See `docs/design.md`.
+/// The Works screen the More tab opens: Kano's releases, the works she took
+/// part in and her uploads. See `docs/design.md`.
+///
+/// It is pushed inside the More tab's `NavigationStack` and registers the
+/// screens it opens itself.
 struct WorksView: View {
-    var body: some View {
-        ContentUnavailableView {
-            Label {
-                Text(.rootPlaceholderTitle)
-            } icon: {
-                Image(systemName: "hammer")
-            }
-        } description: {
-            Text(.rootPlaceholderMessage)
-        }
-        .navigationTitle(.More.moreWorks)
-        .navigationBarTitleDisplayMode(.inline)
-    }
-}
+    @Environment(\.services) private var services
 
-#Preview {
-    NavigationStack {
-        WorksView()
+    var body: some View {
+        ZStack {
+            if let services {
+                WorksHomeScreen(client: services.client)
+            }
+        }
+        .navigationTitle(.Works.title)
+        .navigationBarTitleDisplayMode(.inline)
     }
 }
