@@ -156,6 +156,42 @@ struct WorksCodeLabelsTests {
         #expect(WorksWatchLinks.symbol(for: open) != WorksWatchLinks.symbol(for: members))
     }
 
+    @Test func aGoneWatchLinkSaysSoInWords() throws {
+        let link = try #require(PlatformVideoLink(platform: .youtube, id: "abc"))
+        let gone = WorksUploadLink(link, isGone: true)
+        let there = WorksUploadLink(link)
+
+        #expect(resolved(WorksWatchLinks.title(for: there), "en") == "YouTube")
+        #expect(resolved(WorksWatchLinks.title(for: gone), "en") == "YouTube · Unavailable")
+        #expect(resolved(WorksWatchLinks.title(for: gone), "ja") == "YouTube · 視聴不可")
+        #expect(resolved(WorksWatchLinks.title(for: gone), "zh-Hans") == "YouTube · 无法观看")
+        #expect(
+            resolved(WorksWatchLinks.spokenLabel(for: gone, title: "Song"), "en").contains(
+                "no longer watchable"))
+    }
+
+    @Test func repeatedCodesAreListedOnce() throws {
+        let work = try WorksFixtures.participation(
+            id: "w", roles: ["vocal", "lyrics", "vocal", "mystery", "mystery"], forms: ["digital", "digital"])
+
+        #expect(work.roles.uniqued() == [.vocal, .lyrics, .unknown("mystery")])
+        #expect(work.forms.uniqued() == ["digital"])
+        #expect([WorksKanoCredit.lyrics, .other, .lyrics].uniqued() == [.lyrics, .other])
+    }
+
+    @Test func lengthsAreSpokenInWords() {
+        let english = Locale(identifier: "en_US")
+
+        #expect(WorksDateFormat.spokenLength(seconds: 245, locale: english) == "4 minutes, 5 seconds")
+        #expect(
+            WorksDateFormat.spokenLength(seconds: 7265, locale: english) == "2 hours, 1 minute, 5 seconds")
+        #expect(WorksDateFormat.spokenLength(seconds: nil, locale: english) == nil)
+        #expect(WorksDateFormat.spokenLength(seconds: 0, locale: english) == nil)
+        #expect(
+            resolved(.Works.uploadLengthSpoken("4 minutes, 5 seconds"), "en")
+                == "Length: 4 minutes, 5 seconds")
+    }
+
     @Test func countsArePluralizedAndDatesCarryTheirYear() {
         #expect(resolved(.Works.trackCount(1), "en") == "1 Track")
         #expect(resolved(.Works.trackCount(10), "en") == "10 Tracks")

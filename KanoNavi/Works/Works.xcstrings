@@ -3049,6 +3049,78 @@
         }
       }
     },
+    "uploadLengthSpoken": {
+      "comment": "VoiceOver reading of an upload’s video length. %@ is the length in words, such as “4 minutes, 5 seconds”.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Length: %@"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "長さ：%@"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "时长：%@"
+          }
+        }
+      }
+    },
+    "uploadsEmpty": {
+      "comment": "Shown on the Uploads screen when the collection lists no upload.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No Uploads Listed"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "投稿はありません"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "没有投稿"
+          }
+        }
+      }
+    },
+    "uploadsEmptyKind": {
+      "comment": "Shown on the Uploads screen when the chosen kind has no upload.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No Uploads of This Kind"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "この種類の投稿はありません"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "没有此类型的投稿"
+          }
+        }
+      }
+    },
     "uploadsSearchPrompt": {
       "comment": "Prompt of the search field on the Uploads screen.",
       "extractionState": "manual",
@@ -3098,7 +3170,7 @@
       }
     },
     "videoGone": {
-      "comment": "Mark on an upload whose videos were removed or made private.",
+      "comment": "Mark on an upload when every page it could be watched on was removed or made private.",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -3189,6 +3261,30 @@
           "stringUnit": {
             "state": "translated",
             "value": "在 %2$@ 观看：%1$@，已无法观看"
+          }
+        }
+      }
+    },
+    "watchUnavailable": {
+      "comment": "Title of a watch link whose video was removed or made private; the link still opens the page. %@ is the page’s name, such as YouTube.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ · Unavailable"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ · 視聴不可"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ · 无法观看"
           }
         }
       }
