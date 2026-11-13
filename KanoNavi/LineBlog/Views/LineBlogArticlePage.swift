@@ -33,15 +33,17 @@ struct LineBlogArticlePage: View {
         ZStack {
             if let response = model.value {
                 let layout = LineBlogArticleLayout(article: response.post)
+                let offersTranslation = LineBlogTranslationDisplay.isOffered(
+                    content: contentLocale, title: response.post.title, layout: layout)
                 LineBlogArticleContent(
                     response: response, layout: layout,
                     translation: LineBlogTranslationDisplay.locale(
-                        content: contentLocale, isOn: showsTranslations),
+                        content: contentLocale, isOffered: offersTranslation, isOn: showsTranslations),
                     summaries: index.value?.posts ?? [], notice: model.notice, reload: model.reload,
                     show: show
                 )
                 .toolbar {
-                    if contentLocale != .ja, layout.hasTranslation(in: contentLocale) {
+                    if offersTranslation {
                         ToolbarItem(placement: .primaryAction) {
                             Toggle(isOn: $showsTranslations) {
                                 Label {

@@ -9,13 +9,50 @@ struct LineBlogTranslationTests {
     typealias Fixtures = LineBlogFixtures
 
     @Test(arguments: [
-        (ContentLocale.ja, true, ContentLocale?.none), (.ja, false, nil), (.en, true, .en), (.en, false, nil),
-        (.zhHans, true, .zhHans), (.zhHans, false, nil),
+        (ContentLocale.en, true, true, ContentLocale?.some(.en)), (.en, true, false, nil),
+        (.en, false, true, nil),
+        (.zhHans, true, true, .zhHans), (.zhHans, true, false, nil), (.zhHans, false, true, nil),
+        (.ja, true, true, nil), (.ja, false, true, nil),
     ])
-    func translationFollowsTheContentLanguageUnlessJapaneseOrTurnedOff(
-        content: ContentLocale, isOn: Bool, expected: ContentLocale?
+    func translationShowsWhenOfferedAndNotTurnedOff(
+        content: ContentLocale, isOffered: Bool, isOn: Bool, expected: ContentLocale?
     ) {
-        #expect(LineBlogTranslationDisplay.locale(content: content, isOn: isOn) == expected)
+        #expect(
+            LineBlogTranslationDisplay.locale(content: content, isOffered: isOffered, isOn: isOn) == expected)
+    }
+
+    @Test func translationIsOfferedForATranslatedParagraph() throws {
+        let layout = try Fixtures.layout(
+            Fixtures.paragraph(Fixtures.text("本文"), english: [[Fixtures.text("Body")]]))
+        let title = LocalizedText(ja: "題名", zhCN: nil, en: nil)
+
+        #expect(LineBlogTranslationDisplay.isOffered(content: .en, title: title, layout: layout))
+        #expect(LineBlogTranslationDisplay.isOffered(content: .zhHans, title: title, layout: layout) == false)
+    }
+
+    @Test func translationIsOfferedForATranslatedTitleAlone() throws {
+        let layout = try Fixtures.layout(Fixtures.paragraph(Fixtures.text("署名")))
+        let title = LocalizedText(ja: "題名", zhCN: nil, en: "Title")
+
+        #expect(LineBlogTranslationDisplay.isOffered(content: .en, title: title, layout: layout))
+        #expect(
+            LineBlogTranslationDisplay.isOffered(content: .zhHans, title: title, layout: layout) == false,
+            "nothing in Chinese: no switch and no note")
+    }
+
+    @Test func translationIsNotOfferedWhenTheTitleOnlyRepeatsTheOriginal() throws {
+        let layout = try Fixtures.layout(Fixtures.paragraph(Fixtures.text("署名")))
+        let title = LocalizedText(ja: "🎈🎈", zhCN: nil, en: "🎈🎈")
+
+        #expect(LineBlogTranslationDisplay.isOffered(content: .en, title: title, layout: layout) == false)
+    }
+
+    @Test func japaneseIsNeverOfferedATranslation() throws {
+        let layout = try Fixtures.layout(
+            Fixtures.paragraph(Fixtures.text("本文"), english: [[Fixtures.text("Body")]]))
+        let title = LocalizedText(ja: "題名", zhCN: "标题", en: "Title")
+
+        #expect(LineBlogTranslationDisplay.isOffered(content: .ja, title: title, layout: layout) == false)
     }
 
     @Test func paragraphShowsTheTranslationOfTheChosenLanguageOnly() throws {
