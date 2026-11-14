@@ -53,13 +53,36 @@ final class ScheduleModel {
     var failure: (any Error)? { failures[displayedMonth] }
 
     /// Why the month on screen is not a fresh read, or `nil` when it is.
-    var notice: ScheduleNotice? {
-        if failure != nil {
-            return month == nil ? .loadFailed : .updateFailed
+    var notice: ScheduleNotice? { notice(for: displayedMonth) }
+
+    /// Why a month is not a fresh read, or `nil` when it is or has not been
+    /// read yet.
+    func notice(for month: JapanDate) -> ScheduleNotice? {
+        let result = months[month]
+        if failures[month] != nil {
+            return result == nil ? .loadFailed : .updateFailed
         }
-        guard let month, month.isStale else { return nil }
-        return .saved(fetchedAt: month.fetchedAt)
+        guard let result, result.isStale else { return nil }
+        return .saved(fetchedAt: result.fetchedAt)
     }
+
+    /// The months the screen can show, by their first day: five years back
+    /// and two years ahead of today, widened to reach the month on screen.
+    var browsableMonths: [JapanDate] {
+        let current = today.firstOfMonth
+        let first = min(current.addingMonths(-Self.monthsBack), displayedMonth)
+        let last = max(current.addingMonths(Self.monthsAhead), displayedMonth)
+        var months: [JapanDate] = []
+        var month = first
+        while month <= last {
+            months.append(month)
+            month = month.addingMonths(1)
+        }
+        return months
+    }
+
+    private static let monthsBack = 60
+    private static let monthsAhead = 24
 
     /// The number of entries the server counts on a date.
     func count(on date: JapanDate) -> Int {
@@ -81,11 +104,51 @@ final class ScheduleModel {
     }
 
     /// Shows the month `offset` months away and selects today in it, or its
-    /// first day.
+    /// first day. Swiping the List mode's month and its VoiceOver actions
+    /// page this way.
     func showMonth(offset: Int) {
-        let target = displayedMonth.addingMonths(offset)
+        showMonth(displayedMonth.addingMonths(offset))
+    }
+
+    /// Shows the month of `month` and selects today in it, or its first day.
+    /// The month already on screen keeps its selection.
+    func showMonth(_ month: JapanDate) {
+        let target = month.firstOfMonth
+        guard target != displayedMonth else { return }
         displayedMonth = target
         selectedDate = today.isInSameMonth(as: target) ? today : target
+    }
+
+    /// Shows today's month with today selected, for the month title.
+    func showToday() {
+        displayedMonth = today.firstOfMonth
+        selectedDate = today
+    }
+
+    /// Opens a day tapped in a grid mode: its month with the day selected,
+    /// in the mode that lists the day's entries.
+    func openDay(_ date: JapanDate) -> ScheduleMode {
+        displayedMonth = date.firstOfMonth
+        selectedDate = date
+        return .list
+    }
+
+    /// The months to read when `month` is in view: it first, then the month
+    /// after it and the month before it, leaving out those loaded or loading.
+    func monthsToLoad(around month: JapanDate) -> [JapanDate] {
+        let center = month.firstOfMonth
+        return [center, center.addingMonths(1), center.addingMonths(-1)].filter {
+            months[$0] == nil && inFlight[$0] == nil
+        }
+    }
+
+    /// Reads the months around `month` that are not loaded yet, together.
+    func loadMonths(around month: JapanDate) async {
+        await withTaskGroup(of: Void.self) { group in
+            for month in monthsToLoad(around: month) {
+                group.addTask { await self.load(month) }
+            }
+        }
     }
 
     /// Loads the month on screen unless it is loaded already.

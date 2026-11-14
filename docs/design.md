@@ -130,7 +130,8 @@ Every screen keeps what it shows and says where it came from:
   it says "Couldn't update the schedule. Showing the copy from <JST date and
   time>" with Try Again; a failed reload of entries already on screen, or a
   first load with nothing cached, says so with Try Again.
-- **Schedule** keeps the month grid and day list when a read fails. A month
+- **Schedule** keeps the months and day list when a read fails, and shows
+  each month's notice above it (List shows the month on screen). A month
   that comes from the cache because the service could not be read shows
   "Couldn't update the schedule. Showing the copy from <JST date and time>"
   with Try Again; a failed reload of a month already on screen, or a first
@@ -318,16 +319,49 @@ The app is a `TabView` with five tabs.
 
    Pull to refresh reloads the dashboard and then Coming Up's range; Coming
    Up also reloads whenever the dashboard is received.
-2. **Schedule** — a Monday-first month calendar of Japan dates with a mark per
-   day from `dayCounts`, and the selected day's entries below it. Day lists
-   come from each event's `view.calendarEntries`, not its `startsOn`, so a
-   sale is listed on its opening day and on its closing day with the matching
-   chip; within a day, entries without a time come first, then by start, ties
-   in server order. An entry opens a detail sheet: title, time in JST, state,
-   type and tag, platforms and links, Auto-detected or Confirmed (Confirmed
-   when `provenance` is `manual` or `manualLocked` is set, the board's rule),
-   sale window, and a link to the original announcement. The toolbar offers the calendar subscription
-   (`webcal://` link to `/api/calendar.ics` in the interface language).
+2. **Schedule** — Monday-first months of Japan dates, after the month view
+   of the iPhone Calendar app. The navigation bar has no title: its leading
+   item is the name of the month on screen ("November 2026"), large and bold,
+   and tapping it goes back to today (today's month, today selected; VoiceOver
+   reads the month with a Today hint and action). Its trailing items are the
+   mode menu and the calendar subscription menu (`webcal://` link to
+   `/api/calendar.ics` in the interface language, or share the HTTPS link).
+   - **Modes**: a menu of four, each with its symbol and the current one
+     checked; the menu's icon is the current mode's. The choice is kept on the
+     device (`AppSettings.scheduleModeKey`), and List is the default.
+     - **List**: one month with a mark on each day that has entries
+       (`dayCounts`), and the selected day's entries below it. Swiping the
+       grid pages to the month before or after it, which selects today in
+       today's month and the first day elsewhere; every day also has Previous
+       Month and Next Month VoiceOver actions.
+     - **Compact**, **Stacked** and **Details**: months scroll vertically one
+       after another under a pinned weekday row, each named above the column
+       of its first day, its weeks ruled, the days of the months beside it
+       left blank, and today in a filled circle. A day shows its entries as a
+       dot each (Compact), a bar each in taller cells (Stacked), or each
+       title on one line on a tint of its color (Details), and folds what
+       does not fit into "+n". The navigation bar names the month at the top,
+       and that month and the months on each side of it are read as it comes
+       into view. Tapping a day opens it in List. At accessibility text sizes
+       Stacked and Details use Compact's dots.
+   - **Colors** come from `view.typeCode`, defined once in `ScheduleTag`:
+     stream in the app's Berry, member purple, event orange, release blue,
+     video teal, sale green, and gray for no or an unknown code. Each has a
+     light and a dark shade that keeps Details text at 4.5:1 or more on its
+     tint. Done and cancelled entries keep their hue but fade; a cancelled
+     title is struck through. List's entry rows carry a thin bar of the same
+     color, and the type's name stays in words in the entry's chips.
+   - **Entries**: a day's entries come from each event's
+     `view.calendarEntries`, not its `startsOn`, so a sale is listed on its
+     opening day and on its closing day with the matching chip; within a
+     day, entries without a time come first, then by start, ties in server
+     order. An entry opens a detail sheet: title, time in JST, state, type
+     and tag, platforms and links, Auto-detected or Confirmed (Confirmed when
+     `provenance` is `manual` or `manualLocked` is set, the board's rule),
+     sale window, and a link to the original announcement.
+   - A widget or notification link to a date or an entry switches to List and
+     selects its day; an entry also opens its sheet. Pull to refresh reads
+     the month on screen again.
 3. **Posts** — the dashboard's posts in its order: the account (`@handle` on
    X; a Bilibili account by its platform, never its mid), JST time, text in
    the content language with Show Original, the ready images (up to four,
@@ -335,7 +369,7 @@ The app is a `TabView` with five tabs.
    quote says so and still links to it) and a link to the post: the X
    logo alone, or the Bilibili logo and name.
    A promoted related-account post carries an Agency Post chip. The title is
-   large, with a control at each end of the navigation bar, as on Schedule:
+   large, with a control at each end of the navigation bar:
    - **Filter** (leading): a menu whose icon fills while a filter is active.
      It narrows the posts on the device and lists, with checkmarks, All
      with a grid symbol, each of the dashboard's `xAccounts` as `@handle`
@@ -361,7 +395,7 @@ The app is a `TabView` with five tabs.
    everyone can watch (members, private, removed), the title in the content
    language, the JST time (scheduled start, else publication) and buttons for
    the video's page and its `alternates`. The title is large, with controls
-   at each end of the navigation bar, as on Schedule:
+   at each end of the navigation bar:
    - **Filters** (leading): two menus side by side, each choice with its
      icon and the current one with a checkmark. All has the same grid
      symbol here and in the Posts filter.
@@ -380,8 +414,8 @@ The app is a `TabView` with five tabs.
      nothing says so in one line. The filter lasts for the session.
    - **Month** (trailing, a calendar icon): a menu of Newest, then each
      month of `/api/videos/months`, newest first with its count. A month
-     starts the timeline at its last Japan date (`until`), as Schedule's
-     Today moves the calendar; Newest goes back to every video. Each start
+     starts the timeline at its last Japan date (`until`); Newest goes back
+     to every video. Each start
      keeps the pages read for it and shows them from the top.
 
    Pull to refresh reads the month index and the first page again.

@@ -13,6 +13,15 @@ nonisolated extension JapanDate {
         return JapanDate(year: index / 12, month: index % 12 + 1, day: 1)
     }
 
+    /// The Monday-first weeks that hold this date's month: its six-week grid
+    /// without the weeks wholly in the months around it.
+    var monthWeeks: [[JapanDate]] {
+        let dates = firstOfMonth.monthGrid
+        return stride(from: 0, to: dates.count, by: 7)
+            .map { Array(dates[$0..<min($0 + 7, dates.count)]) }
+            .filter { week in week.contains { $0.isInSameMonth(as: self) } }
+    }
+
     /// Whether this date falls in the same month as `other`.
     func isInSameMonth(as other: JapanDate) -> Bool {
         year == other.year && month == other.month
@@ -26,6 +35,11 @@ nonisolated extension JapanDate {
     /// The month and year, such as "November 2026", in the given locale.
     func monthTitle(locale: Locale) -> String {
         startInstant.formatted(Self.style(locale: locale).month(.wide).year())
+    }
+
+    /// The month alone, abbreviated, such as "Nov" or "11月".
+    func shortMonthTitle(locale: Locale) -> String {
+        startInstant.formatted(Self.style(locale: locale).month(.abbreviated))
     }
 
     /// The full date with its weekday, such as "Tuesday, November 10".

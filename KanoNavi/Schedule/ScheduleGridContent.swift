@@ -1,0 +1,94 @@
+import KanoNaviComponents
+import KanoNaviCore
+import SwiftUI
+
+/// The Compact, Stacked and Details modes: months scrolling vertically one
+/// after another under a pinned weekday row. The month at the top is the
+/// model's month, which names the navigation bar and is read with the months
+/// beside it as it comes into view.
+struct ScheduleGridContent: View {
+    let model: ScheduleModel
+    let style: ScheduleMode
+    let contentLanguage: ContentLanguage
+    let openDay: (JapanDate) -> Void
+
+    /// The month at the top of the scroll view, kept in step with the
+    /// model's month.
+    @State private var position: ScrollPosition
+    /// The month scrolling last brought to the top, so that showing it does
+    /// not scroll again.
+    @State private var scrolledMonth: JapanDate?
+    /// Whether the scroll view has landed on the month it opened on. Until
+    /// then, the months it passes do not count as the month in view.
+    @State private var hasLanded = false
+
+    init(
+        model: ScheduleModel, style: ScheduleMode, contentLanguage: ContentLanguage,
+        openDay: @escaping (JapanDate) -> Void
+    ) {
+        self.model = model
+        self.style = style
+        self.contentLanguage = contentLanguage
+        self.openDay = openDay
+        _position = State(initialValue: ScrollPosition(id: model.displayedMonth, anchor: .top))
+    }
+
+    var body: some View {
+        ScrollView {
+            LazyVStack(spacing: 0) {
+                ForEach(model.browsableMonths, id: \.self) { month in
+                    ScheduleGridMonth(
+                        month: month, model: model, style: style, contentLanguage: contentLanguage,
+                        openDay: openDay)
+                }
+            }
+            .scrollTargetLayout()
+        }
+        .scrollPosition($position, anchor: .top)
+        .task {
+            await land(on: model.displayedMonth)
+        }
+        // The month in view is the earliest one at least 40% on screen.
+        .onScrollTargetVisibilityChange(idType: JapanDate.self, threshold: 0.4) { months in
+            if hasLanded, let first = months.min() {
+                scrolledMonth = first
+                model.showMonth(first)
+            }
+        }
+        .onChange(of: style) {
+            // Cells change height with the style; keep the month in view.
+            Task { await land(on: model.displayedMonth) }
+        }
+        .onChange(of: model.displayedMonth) { _, month in
+            if month != scrolledMonth {
+                withAnimation {
+                    position.scrollTo(id: month, anchor: .top)
+                }
+            }
+        }
+        // Applied before the pinned row, so the row's content does not pick
+        // up its own refresh control.
+        .refreshable {
+            await model.refresh()
+        }
+        .safeAreaBar(edge: .top) {
+            ScheduleWeekdayRow()
+                .dynamicTypeSize(...DynamicTypeSize.xxxLarge)
+                .padding(.horizontal, 2)
+                .padding(.vertical, 6)
+        }
+    }
+
+    /// Scrolls to a month's top. The lazy stack places months it has not
+    /// measured by estimate, so the second pass, once the months around the
+    /// target are laid out, lands exactly.
+    private func land(on month: JapanDate) async {
+        hasLanded = false
+        for _ in 0..<2 {
+            position.scrollTo(id: month, anchor: .top)
+            await Task.yield()
+        }
+        scrolledMonth = month
+        hasLanded = true
+    }
+}
