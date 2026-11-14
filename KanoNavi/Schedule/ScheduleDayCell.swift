@@ -1,19 +1,20 @@
 import KanoNaviCore
 import SwiftUI
 
-/// One day of the month grid: its number, a mark when it has entries, a
-/// ring for today and a filled circle when selected.
+/// One day of the List mode's month: its number, a ring for today, a filled
+/// circle when selected, and its entries as dots in their tag colors (see
+/// ``ScheduleDayDots``), gray on the days of the months around it.
 struct ScheduleDayCell: View {
     let date: JapanDate
     let isInDisplayedMonth: Bool
     let isToday: Bool
     let isSelected: Bool
-    let entryCount: Int
+    let entries: [ScheduleDayEntry]
     let action: () -> Void
 
     @Environment(\.locale) private var locale
     @ScaledMetric(relativeTo: .body) private var circleSize = 36.0
-    @ScaledMetric(relativeTo: .body) private var markSize = 5.0
+    @ScaledMetric(relativeTo: .caption2) private var marksHeight = 13.0
 
     var body: some View {
         Button(action: action) {
@@ -32,9 +33,11 @@ struct ScheduleDayCell: View {
                             Circle().strokeBorder(.tint, lineWidth: 1.5)
                         }
                     }
-                Circle()
-                    .fill(entryCount > 0 ? AnyShapeStyle(markStyle) : AnyShapeStyle(.clear))
-                    .frame(width: markSize, height: markSize)
+                ScheduleDayDots(
+                    entries: entries, capacity: ScheduleMode.compact.markCapacity,
+                    isMuted: isInDisplayedMonth == false
+                )
+                .frame(height: marksHeight)
             }
             .frame(maxWidth: .infinity)
             .padding(.vertical, 2)
@@ -42,7 +45,9 @@ struct ScheduleDayCell: View {
         }
         .buttonStyle(.plain)
         .accessibilityLabel(accessibilityLabel)
-        .accessibilityValue(entryCount > 0 ? Text(.Schedule.dayEntryCount(entryCount)) : Text(verbatim: ""))
+        .accessibilityValue(
+            entries.isEmpty ? Text(verbatim: "") : Text(.Schedule.dayEntryCount(entries.count))
+        )
         .accessibilityAddTraits(isSelected ? .isSelected : [])
     }
 
@@ -56,10 +61,6 @@ struct ScheduleDayCell: View {
         } else {
             AnyShapeStyle(.tertiary)
         }
-    }
-
-    private var markStyle: AnyShapeStyle {
-        isInDisplayedMonth ? AnyShapeStyle(.tint) : AnyShapeStyle(.tertiary)
     }
 
     private var accessibilityLabel: Text {

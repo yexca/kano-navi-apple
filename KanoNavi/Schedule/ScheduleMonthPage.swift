@@ -1,8 +1,8 @@
 import KanoNaviCore
 import SwiftUI
 
-/// One month of the List mode: its six-week grid of Japan dates, with a mark
-/// on each day that has entries. Every day also offers VoiceOver actions for
+/// One month of the List mode: its six-week grid of Japan dates, with a dot
+/// per entry in its tag color. Every day also offers VoiceOver actions for
 /// the previous and next month, since swiping the grid pages by month.
 struct ScheduleMonthPage: View {
     let month: JapanDate
@@ -18,7 +18,7 @@ struct ScheduleMonthPage: View {
                             isInDisplayedMonth: date.isInSameMonth(as: month),
                             isToday: date == model.today,
                             isSelected: date == model.selectedDate,
-                            entryCount: model.count(on: date)
+                            entries: model.entries(on: date)
                         ) {
                             model.select(date)
                         }
