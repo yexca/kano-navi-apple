@@ -658,8 +658,8 @@ permission is requested only when the user turns on **Allow Notifications** in
 - Live state uses a red dot and the word "Live" (never color alone). Members
   entries carry a members chip. Cancelled and suspected cancellations are
   struck through or marked, with their state in words.
-- No official Kano Mahoro artwork, logos or branding. Media from the API is
-  shown as the API serves it.
+- No official logos or branding, and no artwork beyond the app icon, which is
+  the web board's avatar. Media from the API is shown as the API serves it.
 - Every screen works at the largest accessibility text size; rows wrap rather
   than truncate important times.
 

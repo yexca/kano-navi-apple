@@ -13,7 +13,8 @@ struct WorksReleasePage: View {
                 WorksReleaseDetail(release: release, notice: model.notice, reload: model.reload)
             } else {
                 WorksNotFoundView(
-                    title: .Works.releaseNotFoundTitle, isLoading: model.phase == .loading, notice: model.notice, reload: model.reload)
+                    title: .Works.releaseNotFoundTitle, isLoading: model.phase == .loading,
+                    notice: model.notice, reload: model.reload)
             }
         }
         .navigationBarTitleDisplayMode(.inline)
