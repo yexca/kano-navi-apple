@@ -4,7 +4,6 @@ import SwiftUI
 /// A release on the shelf: its cover over its title, date and marks.
 struct WorksReleaseCard: View {
     let release: WorksRelease
-    var showsMarks = true
 
     @Environment(\.locale) private var locale
 
@@ -19,11 +18,7 @@ struct WorksReleaseCard: View {
             Text(verbatim: WorksDateFormat.date(release.date, locale: locale))
                 .font(.footnote)
                 .foregroundStyle(.secondary)
-            if showsMarks {
-                WorksReleaseMarks(marks: WorksReleaseMark.marks(for: release))
-            } else if release.cancelled {
-                WorksReleaseMarks(marks: [.cancelled])
-            }
+            WorksReleaseMarks(marks: WorksReleaseMark.marks(for: release))
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .contentShape(.rect)

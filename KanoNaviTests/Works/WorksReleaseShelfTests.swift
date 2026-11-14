@@ -65,11 +65,6 @@ struct WorksReleaseShelfTests {
         #expect(options.map(\.count) == [5, 1, 2, 1, 1])
     }
 
-    @Test func latestAreTheNewestReleases() {
-        #expect(shelf.latest(2).map(\.id) == ["e", "d"])
-        #expect(shelf.latest(10).count == 5)
-    }
-
     @Test func marksLeadWithCancelledThenFormatDigitalAndUnit() throws {
         let release = try WorksFixtures.release(
             id: "x", date: "2022-10-07", format: "ep", digital: true, cancelled: true, unit: "Example Unit")

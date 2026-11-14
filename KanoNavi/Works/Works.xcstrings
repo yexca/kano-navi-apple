@@ -1597,26 +1597,26 @@
         }
       }
     },
-    "latestReleases": {
-      "comment": "Header over the row of the newest releases’ covers on the Works screen.",
+    "latestUploads": {
+      "comment": "Header over the row of the newest uploads’ covers on the Works screen.",
       "extractionState": "manual",
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Latest Releases"
+            "value": "Latest Uploads"
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "最新のリリース"
+            "value": "最近の投稿"
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "最新发行"
+            "value": "近期投稿"
           }
         }
       }
@@ -1665,6 +1665,30 @@
           "stringUnit": {
             "state": "translated",
             "value": "收录专辑：%@"
+          }
+        }
+      }
+    },
+    "onThisDay": {
+      "comment": "Header over the works that came out on today’s month and day in past years, on the Works screen.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "On This Day"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "今日は何の日"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "历史上的今天"
           }
         }
       }
@@ -3025,6 +3049,54 @@
         }
       }
     },
+    "watchHint": {
+      "comment": "VoiceOver hint on an upload card or row that opens its watch page. %@ is the platform, such as YouTube.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Opens %@."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ で開きます。"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "在 %@ 打开。"
+          }
+        }
+      }
+    },
+    "watchHintBrowser": {
+      "comment": "VoiceOver hint on an upload card or row that opens its watch page on a site the app does not name.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Opens in the browser."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ブラウザで開きます。"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "在浏览器中打开。"
+          }
+        }
+      }
+    },
     "watchMembersOnly": {
       "comment": "Title of a watch link only channel members can open. %@ is the platform, such as YouTube.",
       "extractionState": "manual",
@@ -3189,6 +3261,42 @@
           "stringUnit": {
             "state": "translated",
             "value": "%1$@ 年，%2$lld 件"
+          }
+        }
+      }
+    },
+    "yearsAgo": {
+      "comment": "How long ago a work of On This Day came out. %lld is the number of years, at least 1.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld year ago"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld years ago"
+                }
+              }
+            }
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld 年前"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld 年前"
           }
         }
       }

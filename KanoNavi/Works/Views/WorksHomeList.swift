@@ -3,18 +3,28 @@ import SwiftUI
 
 /// The Works entry's content: the way into releases, participation and
 /// uploads first, so they are in reach at any text size, then the newest
-/// releases. How current the collection is sits behind the info button.
+/// uploads and the works that came out on this day in past years. How
+/// current the collection is sits behind the info button.
 struct WorksHomeList: View {
     let works: WorksResponse
+    /// The upload list, or `nil` while its read has no value.
+    let uploadList: WorksUploadListResponse?
+    /// The stored covers and newer videos, or `nil` while that read has no value.
+    let storedUploads: WorksUploadsResponse?
     let notice: DocumentNotice?
     let reload: () async -> Void
+    /// The Japan date On This Day matches; today unless a preview sets it.
+    var today: JapanDate = .today
 
     @State private var isShowingInfo = false
 
-    /// How many of the newest releases the entry shows.
-    private static let latestCount = 8
+    /// How many of the newest uploads the entry shows.
+    private static let latestCount = 10
 
     var body: some View {
+        let uploads = WorksUploadCard.newestFirst(list: uploadList, stored: storedUploads)
+        let onThisDay = WorksOnThisDay(
+            releases: works.personal, participation: works.participation, uploads: uploads, today: today)
         List {
             if let notice {
                 Section {
@@ -38,13 +48,23 @@ struct WorksHomeList: View {
                 WorksSummaryHeader(summary: works.summary)
             }
 
-            Section {
-                WorksLatestShelf(
-                    releases: WorksReleaseShelf(releases: works.personal).latest(Self.latestCount)
-                )
-                .listRowInsets(EdgeInsets())
-            } header: {
-                Text(.Works.latestReleases)
+            if uploads.isEmpty == false {
+                Section {
+                    WorksLatestUploadsShelf(cards: Array(uploads.prefix(Self.latestCount)))
+                        .listRowInsets(EdgeInsets())
+                } header: {
+                    Text(.Works.latestUploads)
+                }
+            }
+
+            if onThisDay.entries.isEmpty == false {
+                Section {
+                    ForEach(onThisDay.entries) { entry in
+                        WorksOnThisDayRow(entry: entry)
+                    }
+                } header: {
+                    Text(.Works.onThisDay)
+                }
             }
         }
         .refreshable {
@@ -66,7 +86,10 @@ struct WorksHomeList: View {
 
 #Preview {
     NavigationStack {
-        WorksHomeList(works: WorksPreviewData.works, notice: nil) {}
+        WorksHomeList(
+            works: WorksPreviewData.works, uploadList: WorksPreviewData.uploadList,
+            storedUploads: WorksPreviewData.uploads, notice: nil, reload: {},
+            today: JapanDate(year: 2026, month: 5, day: 5))
     }
     .environment(\.mediaImageLoader, WorksPreviewData.imageLoader)
 }
