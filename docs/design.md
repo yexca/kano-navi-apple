@@ -350,8 +350,10 @@ The app is a `TabView` with five tabs.
      month's counts.
 4. **Videos** — one timeline of every dated video, newest first, read from
    `/api/videos` in its `until` form and paged as the list scrolls, 50 videos
-   a page. Reservations and live streams are dated in the future or now, so
-   they come first. The videos are grouped under their Japan month. A row
+   a page. The videos are grouped under their Japan month, after an On Air
+   section that leads the newest timeline with the videos whose phase is
+   `live` or `started`, ahead of reservations dated later; a timeline
+   started at a chosen month has no On Air section. A row
    shows the cover with its length, a status chip from `view.phase` (live,
    upcoming, started, cancelled) or else the `view.formCode` chip (a Short,
    by its form or `isShort`, says Short), the tag, availability when not

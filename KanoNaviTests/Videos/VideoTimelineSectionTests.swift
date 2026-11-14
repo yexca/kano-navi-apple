@@ -49,11 +49,35 @@ struct VideoTimelineSectionTests {
         #expect(sections.map { $0.cards.map(\.id) } == [["N1", "U"]])
     }
 
-    private func card(_ id: String, scheduledAt: String? = nil, publishedAt: String? = nil) throws
-        -> VideoCard
-    {
+    @Test func videosOnAirLeadAheadOfLaterReservations() throws {
+        let cards = try [
+            card("U1", phase: "upcoming", scheduledAt: "2026-11-15T10:00:00Z"),
+            card("S1", phase: "started", scheduledAt: "2026-11-14T08:00:00Z"),
+            card("L1", phase: "live", scheduledAt: "2026-11-14T07:00:00Z"),
+            card("P1", publishedAt: "2026-11-10T10:00:00Z"),
+        ]
+
+        let lifted = VideoTimelineSection.grouping(cards, liftsOnAir: true)
+        let plain = VideoTimelineSection.grouping(cards)
+
+        #expect(lifted.map(\.id) == ["on-air", "2026-11"])
+        #expect(lifted.map { $0.cards.map(\.id) } == [["S1", "L1"], ["U1", "P1"]])
+        #expect(plain.map(\.id) == ["2026-11"])
+        #expect(plain.flatMap(\.cards).map(\.id) == ["U1", "S1", "L1", "P1"])
+    }
+
+    @Test func noVideoOnAirAddsNoSection() throws {
+        let sections = VideoTimelineSection.grouping(
+            [try card("P1", publishedAt: "2026-11-10T10:00:00Z")], liftsOnAir: true)
+
+        #expect(sections.map(\.id) == ["2026-11"])
+    }
+
+    private func card(
+        _ id: String, phase: String = "past", scheduledAt: String? = nil, publishedAt: String? = nil
+    ) throws -> VideoCard {
         VideoCard(
             video: try VideoFixtures.video(
-                VideoFixtures.json(id: id, scheduledAt: scheduledAt, publishedAt: publishedAt)))
+                VideoFixtures.json(id: id, phase: phase, scheduledAt: scheduledAt, publishedAt: publishedAt)))
     }
 }

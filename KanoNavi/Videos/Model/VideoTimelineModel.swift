@@ -61,9 +61,11 @@ final class VideoTimelineModel {
         (loadedCards[start] ?? []).compactMap(filter.apply)
     }
 
-    /// The shown videos by Japan month.
+    /// The shown videos by Japan month, after the videos on air.
     var sections: [VideoTimelineSection] {
-        VideoTimelineSection.grouping(cards)
+        // Only the newest timeline reaches the present, so only it leads
+        // with the videos on air.
+        VideoTimelineSection.grouping(cards, liftsOnAir: start == nil)
     }
 
     /// Whether the first page of the timeline on screen is loading.

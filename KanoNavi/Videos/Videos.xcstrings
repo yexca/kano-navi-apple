@@ -169,6 +169,30 @@
         }
       }
     },
+    "onAir": {
+      "comment": "Header of the section at the top of the video timeline that lists the videos live or past their start now.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "On Air"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "配信中"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "正在直播"
+          }
+        }
+      }
+    },
     "platform": {
       "comment": "Heading of the platform choices in the Videos filter menu.",
       "extractionState": "manual",

@@ -17,7 +17,9 @@ struct VideoTimelineItems: View {
                         VideoRow(card: card)
                     }
                 } header: {
-                    if let month = section.month {
+                    if section.isOnAir {
+                        Text(.Videos.onAir)
+                    } else if let month = section.month {
                         Text(verbatim: month.title(locale: locale))
                     }
                 }
