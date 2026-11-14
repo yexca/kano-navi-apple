@@ -1,4 +1,4 @@
-/// One account the post archive's filter offers.
+/// One account the post timeline's filter offers.
 struct PostFilterAccount: Equatable {
     /// The handle or mid the API's `account` parameter takes.
     var code: String

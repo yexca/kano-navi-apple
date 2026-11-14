@@ -49,26 +49,26 @@
         }
       }
     },
-    "loadFailed": {
-      "comment": "Notice when an archive month could not be loaded and nothing is on screen.",
+    "jumpToMonth": {
+      "comment": "Name of the toolbar button and the title of the month grid that starts the Posts or Videos timeline at a chosen month.",
       "extractionState": "manual",
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Couldn’t load this month."
+            "value": "Jump to Month"
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "この月を読み込めませんでした。"
+            "value": "月を選ぶ"
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "无法加载这个月的内容。"
+            "value": "选择月份"
           }
         }
       }
@@ -145,50 +145,98 @@
         }
       }
     },
-    "month": {
-      "comment": "Label of the menu that chooses the archive month.",
+    "monthPostCount": {
+      "comment": "VoiceOver value of a month in the Posts month grid. %lld is the number of posts in that month.",
       "extractionState": "manual",
       "localizations": {
         "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Month"
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld post"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld posts"
+                }
+              }
+            }
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "月"
+            "value": "%lld 件のポスト"
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "月份"
+            "value": "%lld 条动态"
           }
         }
       }
     },
-    "monthWithCount": {
-      "comment": "One choice of the archive month menu. %1$@ is the month and year, such as “November 2026”; %2$lld is the number of stored items in it.",
+    "monthVideoCount": {
+      "comment": "VoiceOver value of a month in the Videos month grid. %lld is the number of videos in that month.",
       "extractionState": "manual",
       "localizations": {
         "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%1$@ (%2$lld)"
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld video"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld videos"
+                }
+              }
+            }
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "%1$@（%2$lld）"
+            "value": "%lld 本の動画"
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "%1$@（%2$lld）"
+            "value": "%lld 个视频"
+          }
+        }
+      }
+    },
+    "newest": {
+      "comment": "First choice of the month grid: the timeline from its newest item.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Newest"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "最新"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "最新"
           }
         }
       }
@@ -213,54 +261,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "重试"
-          }
-        }
-      }
-    },
-    "savedCopy": {
-      "comment": "Notice when the service could not be read and the archive month shown is the copy saved on this device. %@ is when that copy was read from the service, in Japan time with JST, such as “Tue, Nov 10 11:20 JST”.",
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Couldn’t update this month. Showing the copy from %@."
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "この月を更新できませんでした。%@ 時点の内容を表示しています。"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "无法更新这个月的内容。正在显示截至 %@ 的内容。"
-          }
-        }
-      }
-    },
-    "updateFailed": {
-      "comment": "Notice when reloading an archive month failed; the items loaded earlier stay on screen.",
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Couldn’t update this month. Showing what was loaded before."
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "この月を更新できませんでした。前に読み込んだ内容を表示しています。"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "无法更新这个月的内容。正在显示之前加载的内容。"
           }
         }
       }

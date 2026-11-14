@@ -17,6 +17,9 @@ nonisolated struct ArchivePage<Item: Sendable>: Sendable {
     var isFromCache: Bool
     /// When the page was fetched from the service.
     var fetchedAt: Date
+    /// The service's data revision the page was read at, or `nil` when the
+    /// caller does not compare revisions.
+    var revision: Int?
 }
 
 extension ArchivePage: Equatable where Item: Equatable {}

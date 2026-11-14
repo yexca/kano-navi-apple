@@ -6,27 +6,25 @@ import Testing
 /// The Videos, Posts and Archive tables resolve in every interface language.
 struct MediaStringsTests {
     @Test func tablesResolveInEachLanguage() {
-        #expect(resolved(.Videos.newest, "en") == "Newest")
-        #expect(resolved(.Videos.jumpToMonth, "ja") == "月を選ぶ")
+        #expect(resolved(.Archive.newest, "en") == "Newest")
+        #expect(resolved(.Archive.jumpToMonth, "ja") == "月を選ぶ")
         #expect(resolved(.Posts.agencyPost, "zh-Hans") == "事务所动态")
         #expect(resolved(.Archive.all, "ja") == "すべて")
     }
 
     @Test func countsArePluralized() {
-        #expect(resolved(.Posts.postCount(1), "en") == "1 Post")
-        #expect(resolved(.Posts.postCount(4), "ja") == "4 件")
+        #expect(resolved(.Archive.monthPostCount(1), "en") == "1 post")
+        #expect(resolved(.Archive.monthPostCount(4), "en") == "4 posts")
+        #expect(resolved(.Archive.monthVideoCount(1), "en") == "1 video")
+        #expect(resolved(.Archive.monthVideoCount(4), "zh-Hans") == "4 个视频")
     }
 
-    @Test func savedNoticeNamesWhenTheCopyWasRead() {
+    @Test func postNoticeNamesWhenTheCopyWasRead() {
         let time = "Tue, Nov 10 11:20 JST"
         #expect(
-            resolved(.Archive.savedCopy(time), "en")
-                == "Couldn’t update this month. Showing the copy from \(time).")
-        #expect(resolved(.Archive.savedCopy(time), "zh-Hans").contains("截至 \(time)"))
-    }
-
-    @Test func monthChoiceShowsItsCount() {
-        #expect(resolved(.Archive.monthWithCount("November 2026", 10), "en") == "November 2026 (10)")
+            resolved(.Posts.timelineSavedCopy(time), "en")
+                == "Couldn’t update posts. Showing the copy from \(time).")
+        #expect(resolved(.Posts.timelineSavedCopy(time), "zh-Hans").contains("截至 \(time)"))
     }
 
     @Test func filterChoiceShowsItsCount() {

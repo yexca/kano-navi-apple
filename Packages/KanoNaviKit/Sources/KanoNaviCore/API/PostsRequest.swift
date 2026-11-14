@@ -1,5 +1,7 @@
 import Foundation
 
+/// `GET /api/posts`: a range of the post archive, or the post timeline
+/// newest first, optionally on or before `until`, for one account.
 public struct PostsRequest: APIRequest {
     public typealias Response = PostArchivePage
     public let from: JapanDate?
@@ -30,13 +32,15 @@ public struct PostsRequest: APIRequest {
         self.pageSize = pageSize
         self.account = account
     }
+    /// A range of at most 42 Japan dates (`from` and `to`) reads part of the
+    /// archive; without one, `until` (or nothing, for the newest post) reads
+    /// the timeline. The two forms do not mix.
     public func validate() throws {
         if let from, let to {
-            guard from <= to, from.addingDays(41) >= to else {
+            guard from <= to, from.addingDays(41) >= to, until == nil else {
                 throw RequestValidationError.invalidDateRange
             }
-            guard until == nil else { throw RequestValidationError.invalidDateRange }
-        } else if from != nil || to != nil || (until != nil && (from != nil || to != nil)) {
+        } else if from != nil || to != nil {
             throw RequestValidationError.invalidDateRange
         }
         guard page > 0 else { throw RequestValidationError.invalidPage }

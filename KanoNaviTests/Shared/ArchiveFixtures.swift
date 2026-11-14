@@ -3,8 +3,8 @@ import KanoNaviCore
 
 @testable import KanoNavi
 
-/// Synthetic archive months and pages of string items, for the archive model
-/// tests.
+/// Synthetic archive months and pages of string items, for the timeline
+/// model tests.
 enum ArchiveFixtures {
     static let november = ArchiveMonthKey(containing: JapanDate(year: 2026, month: 11, day: 1))
     static let october = ArchiveMonthKey(containing: JapanDate(year: 2026, month: 10, day: 1))
@@ -27,11 +27,5 @@ enum ArchiveFixtures {
         ArchivePage(
             items: items, page: page, hasNext: hasNext, total: total ?? items.count, counts: counts,
             isFromCache: isFromCache, fetchedAt: fetchedAt ?? (isFromCache ? cachedAt : Self.fetchedAt))
-    }
-
-    static func query(_ month: ArchiveMonthKey = november, filter: String? = nil, page: Int = 1)
-        -> ArchiveQuery
-    {
-        ArchiveQuery(month: month, filter: filter, page: page)
     }
 }

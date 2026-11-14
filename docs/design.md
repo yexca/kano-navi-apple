@@ -152,13 +152,14 @@ Every screen keeps what it shows and says where it came from:
   "Couldn't update the schedule. Showing the copy from <JST date and time>"
   with Try Again; a failed reload of a month already on screen, or a first
   load with nothing cached, says so with Try Again.
-- **Posts** shows the recent posts, which come from the dashboard, with the
-  same capsule and failure banner as Now. The post archive keeps the month on screen when a read
-  fails. A month read from the cache because the service could not be read
-  shows "Couldn't update this month. Showing the copy from <JST date and
-  time>" with Try Again; a failed reload of a month already on screen, a
-  first load with nothing cached, and a failed next page (at the end of the
-  list) each say so with Try Again.
+- **Posts** shows the newest page cached on this device on its first
+  frame, read at once when the tab is first built, and then reads it again;
+  "Loading…" appears only when nothing is cached. It keeps the timeline on
+  screen when a read fails. A first page read from the cache because the
+  service could not be read says "Couldn't update posts. Showing the copy
+  from <JST date and time>" with Try Again; a failed reload of posts already
+  on screen, a first load with nothing cached, and a failed next page (at the
+  end of the list) each say so in the same way.
 - **Videos** shows the newest page cached on this device on its first
   frame, read at once when the tab is first built, and then reads it again;
   "Loading…" appears only when nothing is cached. It keeps the timeline on
@@ -222,8 +223,8 @@ original's pixel size.
   cache on the main actor and draws a hit in the same frame as its box. A
   screen shown at launch sets `\.mediaImageDecodesCachedFilesAtOnce`, and
   its images also decode a file the disk cache holds at that moment; the
-  Now board, the recent posts and the video timeline do, the Journey,
-  Works, LINE BLOG and post archive lists do not. An image that has to load
+  Now board and the post and video timelines do, the Journey, Works and
+  LINE BLOG lists do not. An image that has to load
   fades in over a placeholder of its final size.
 - **States.** A file the server does not have (404 `media_not_found`) or
   that is not an image draws "Image unavailable"; a failed fetch draws a Try
@@ -270,9 +271,8 @@ or its comments. It is generic over an `APIRequest` and built on
   Again. With nothing to show, `DocumentUnavailableView` gives the reason
   (offline, the service's error status, unreadable data, update needed) with
   Try Again. `DocumentView` puts the two together for a screen.
-- `StatusNotice` is the notice's layout; the post archive words it through
-  `ArchiveStatusNotice` and the video timeline through
-  `VideoTimelineStatusNotice`.
+- `StatusNotice` is the notice's layout; the post and video timelines word
+  it through `PostTimelineStatusNotice` and `VideoTimelineStatusNotice`.
 
 ## Language
 
@@ -303,7 +303,7 @@ On a wide iPad window, screens for reading keep their content in a centred
 column instead of stretching across the window: `readableContentWidth()`
 (`Shared/`) pads the sides of a list or scroll view when it is wider than
 672 pt, a width that grows with the text size. These are the Now board, the
-recent and archived posts, the video timeline, an entry's details, the
+post and video timelines, an entry's details, the
 Journey timeline and milestones, the Works release and participation pages,
 and LINE BLOG articles and comments. Lists of rows such as More, Works and
 the LINE BLOG index, grids, the Schedule months and the image viewer use the
@@ -472,8 +472,17 @@ orientation; every screen adapts to its width.
      months are marked out of date, to be read again when shown; what is on
      screen, the selection and the scroll position stay until each read
      returns.
-3. **Posts** — the dashboard's posts in its order, each in its own grouped
-   card. A card's header leads with the account's round avatar, then the
+3. **Posts** — one timeline of every post, newest first, read from
+   `/api/posts` in its `until` form (see
+   [Bounded Public Archives](https://github.com/yexca/kano-navi/blob/main/docs/architecture/public-api.md#bounded-public-archives))
+   and paged as the list scrolls, 50 posts a page. Each post is its own card,
+   drawn on the grouped background as an inset grouped list draws a section.
+   The posts are grouped under their Japan month. The navigation subtitle
+   names the month of the topmost post not yet under the navigation bar,
+   abbreviated at accessibility text sizes; the first month has no header of
+   its own, and each later one opens with its name in bold, which scrolls
+   with the posts as the divider between months.
+   A card's header leads with the account's round avatar, then the
    account (`@handle` on X; a Bilibili account by its platform, never its
    mid) over the JST time, and ends with a small link to the post in its
    top-right corner: the X logo alone, or the Bilibili logo and name, which
@@ -482,27 +491,42 @@ orientation; every screen adapts to its width.
    four, "+N" for the rest) and the quoted post nested in it (a deleted or
    withheld quote says so and still links to it). At accessibility text
    sizes the account and time move under the avatar and the link.
-   The avatar resolves from the response's `accountAvatars` the way the
+   The avatar resolves from the page's `accountAvatars` the way the
    board's [post cards](https://github.com/yexca/kano-navi/blob/main/docs/architecture/frontend.md)
    do: the account's cached avatar, the handle's initial for a hidden one,
    and without an entry the profile avatar for Kano's own posts and the
    initial for a promoted one (a person symbol when there is no X handle to
-   take it from). The archive uses its page's map, else the dashboard's.
-   A promoted related-account post carries an Agency Post chip. The title is
-   large, with a control at each end of the navigation bar:
+   take it from). An account the page names no avatar for takes the
+   dashboard's entry. A promoted related-account post carries an Agency Post
+   chip. The title is large, with a control at each end of the navigation
+   bar:
    - **Filter** (leading): a menu whose icon fills while a filter is active.
-     It narrows the posts on the device and lists, with checkmarks, All
-     with a grid symbol, each of the dashboard's `xAccounts` as `@handle`
-     with the X logo (compared without case), then one Bilibili choice with
-     its logo for all its
-     `bilibiliAccounts`, each with its count among the recent posts. A post
-     by another account, such as the agency's, shows only under All. The
-     menu is left out when there are no posts, and a choice without posts
-     says so in one line.
-   - **Past Posts** (trailing, a clock icon) opens the month archive. Its
-     account filter is the same menu at the trailing end of its navigation
-     bar: the dashboard's `xAccounts`, then its `bilibiliAccounts`, with the
-     month's counts.
+     It lists, with checkmarks, All with a grid symbol, each of the
+     dashboard's `xAccounts` as `@handle` with the X logo, then each of its
+     `bilibiliAccounts` as Bilibili with its logo (the accounts the timeline
+     counts, without a snapshot). A choice is the API's `account`, so each
+     account is a timeline of its own. Each choice shows its count from the
+     page's `accountCounts`, which count every post the timeline pages
+     through whatever the account (keys are lowercase handles); All shows
+     the timeline's total. A post by another account, such as the agency's,
+     shows only under All. A choice without posts says so in one line, and
+     an account the board no longer follows shows every post again.
+   - **Month** (trailing): the [month picker](#month-picker) over
+     `/api/posts/months`. A month starts the timeline at its last Japan date
+     (`until`); Newest goes back to every post.
+
+   Each start and account keeps the pages read for it and shows them from
+   the top. The pages are offsets into the list, so a post added or removed
+   moves the posts after it from one page to the next: a page is appended
+   without the posts already listed. When the dashboard's revision changes,
+   or a page was read at another revision than the first page it joins, the
+   pages loaded for the timeline on screen are read again from the first
+   (as many as were loaded) and replace it at once, without repeating a
+   post; the other timelines read at an older revision are read again when
+   shown. What is on screen stays until those reads return, and the post at
+   the top of the screen stays in place while posts are added or removed
+   above it; at the very top of the list, new posts show above. Pull to
+   refresh reads the month index and the loaded pages again.
 4. **Videos** — one timeline of every dated video, newest first, read from
    `/api/videos` in its `until` form and paged as the list scrolls, 50 videos
    a page. The videos are grouped under their Japan month, after an On Air
@@ -555,11 +579,10 @@ orientation; every screen adapts to its width.
      the device to the pages read, and reads further pages while it shows
      fewer than ten videos, until the timeline ends. A filter that matches
      nothing says so in one line. The filter lasts for the session.
-   - **Month** (trailing, a calendar icon): a menu of Newest, then each
-     month of `/api/videos/months`, newest first with its count. A month
-     starts the timeline at its last Japan date (`until`); Newest goes back
-     to every video. Each start
-     keeps the pages read for it and shows them from the top.
+   - **Month** (trailing): the [month picker](#month-picker) over
+     `/api/videos/months`. A month starts the timeline at its last Japan
+     date (`until`); Newest goes back to every video. Each start keeps the
+     pages read for it and shows them from the top.
 
    Pull to refresh reads the month index and the first page again.
 5. **More** — Journey, Works and the LINE BLOG archive, each described
@@ -571,15 +594,23 @@ orientation; every screen adapts to its width.
    with (Claude Opus 5.5, Gemini 4 Carbon, Claude Fable 5.2) and shows the
    version.
 
-The post archive reads its month index (`/api/posts/months`) and shows one
-Japan month at a time, newest first, from its first to its last date, 20
-posts per page; the next page is read when the list reaches its end. A month
-menu above the list chooses the month. The account filter's counts come from
-the page's `accountCounts`, which count the whole month whatever the filter
-(keys are lowercase handles); All is their sum.
-
 Delivery order: Now, Schedule, widgets, Settings and About first; Videos and
 Posts next; Works, Journey and LINE BLOG last.
+
+### Month Picker
+
+The Posts and Videos timelines start at a month chosen with the same picker:
+a calendar button at the trailing end of the navigation bar (with a check
+mark while a month is chosen) opens a grid of months, as a sheet of medium
+or large height on iPhone and a popover on iPad. Newest leads it and goes
+back to the newest item. Below, each year from the current Japan year back
+to the year of the oldest month in the index has its twelve months, four to
+a row, or two at accessibility text sizes. A month that holds items and is
+not after the current Japan month shows its count and can be chosen; the
+others are dimmed and cannot. The chosen month is filled with the tint and
+scrolled into view when the grid opens; choosing closes it. VoiceOver reads
+the button's value as the chosen month or Newest, and each month as its
+name and year with its count ("12 posts"), dimmed when it cannot be chosen.
 
 ### Journey
 

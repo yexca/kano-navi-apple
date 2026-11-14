@@ -80,7 +80,7 @@ struct VideoTimelineSectionTests {
                 card("N1", publishedAt: "2026-11-10T10:00:00Z"),
                 card("O1", publishedAt: "2026-10-05T10:00:00Z"),
             ], liftsOnAir: true)
-        let slot = { (section: String, card: String) in VideoTimelineSlot(sectionID: section, cardID: card) }
+        let slot = { (section: String, card: String) in TimelineSlot(sectionID: section, itemID: card) }
 
         #expect(
             VideoTimelineSection.topID(of: sections, visible: [slot("2026-10", "O1"), slot("2026-11", "N1")])

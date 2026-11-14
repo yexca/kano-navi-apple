@@ -1,56 +1,35 @@
 import KanoNaviCore
 import SwiftUI
 
-/// The Posts tab: the dashboard's recent posts, with the account filter at
-/// the leading end of the navigation bar and Past Posts, the month archive,
-/// at its trailing end. See `docs/design.md`.
+/// The Posts tab: one timeline of every post, newest first, with the account
+/// filter at the leading end of the navigation bar and the month picker at
+/// its trailing end. See `docs/design.md`.
 ///
-/// `RootView` starts and stops the dashboard store with the scene; this view
-/// only reads it and refreshes it on demand.
+/// The dashboard gives the accounts the filter offers, the avatars a page
+/// leaves out and the data revision that makes the timeline read its pages
+/// again. `RootView` starts and stops the dashboard store with the scene;
+/// this view only reads it.
 struct PostsView: View {
     @Environment(DashboardStore.self) private var dashboard
     @Environment(\.services) private var services
 
     var body: some View {
         NavigationStack {
-            content
-                .navigationTitle(.tabPosts)
-                .toolbar {
-                    if services != nil {
-                        ToolbarItem(placement: .primaryAction) {
-                            NavigationLink(value: PostsDestination.archive) {
-                                Label {
-                                    Text(.Posts.pastPosts)
-                                } icon: {
-                                    Image(systemName: "clock.arrow.circlepath")
-                                }
-                            }
-                            .accessibilityIdentifier("posts.archive")
-                        }
-                    }
-                }
-                .navigationDestination(for: PostsDestination.self) { _ in
-                    if let services {
-                        PostArchiveScreen(
-                            client: services.client, meta: dashboard.snapshot?.meta,
-                            accountAvatars: dashboard.snapshot?.accountAvatars,
-                            profileAvatarURL: dashboard.snapshot?.profile.avatarURL)
-                    }
-                }
-        }
-    }
-
-    @ViewBuilder
-    private var content: some View {
-        if let snapshot = dashboard.snapshot {
-            PostsList(snapshot: snapshot, dashboard: dashboard)
-        } else {
-            DashboardUnavailableView(dashboard: dashboard) {}
+            if let services {
+                let snapshot = dashboard.snapshot
+                let avatars = PostAvatarFallback(
+                    accountAvatars: snapshot?.accountAvatars, profileAvatarURL: snapshot?.profile.avatarURL)
+                PostTimelineScreen(
+                    client: services.client, meta: snapshot?.meta, revision: snapshot?.meta.revision,
+                    avatarFallback: avatars)
+            }
         }
     }
 }
 
 #Preview {
+    let client = APIClient(configuration: .main, cache: MemoryResponseCache())
     PostsView()
-        .environment(DashboardStore(client: APIClient(configuration: .main, cache: MemoryResponseCache())))
+        .environment(DashboardStore(client: client))
+        .environment(\.services, AppServices(client: client, calendar: CalendarReader(client: client)))
 }

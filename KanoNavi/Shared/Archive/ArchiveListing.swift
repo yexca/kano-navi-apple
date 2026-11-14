@@ -14,6 +14,12 @@ nonisolated struct ArchiveListing<Item: Sendable>: Sendable {
     /// Changes whenever the first page is read again, so a later page read
     /// for an earlier listing is not appended to a newer one.
     var generation: Int
+    /// The service's data revision of the first page.
+    var revision: Int?
+    /// `true` once a page read at another revision than the first page has
+    /// been appended: the pages are offsets into the list, so a record added
+    /// or removed in between may have moved records past the loaded pages.
+    var isMixed = false
 
     init(firstPage: ArchivePage<Item>, generation: Int) {
         items = firstPage.items
@@ -23,6 +29,7 @@ nonisolated struct ArchiveListing<Item: Sendable>: Sendable {
         isFromCache = firstPage.isFromCache
         fetchedAt = firstPage.fetchedAt
         self.generation = generation
+        revision = firstPage.revision
     }
 
     /// Appends the next page, leaving out items already listed (a record can
@@ -37,5 +44,8 @@ nonisolated struct ArchiveListing<Item: Sendable>: Sendable {
             isFromCache = true
         }
         fetchedAt = min(fetchedAt, next.fetchedAt)
+        if next.revision != revision {
+            isMixed = true
+        }
     }
 }
