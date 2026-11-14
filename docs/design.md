@@ -257,7 +257,19 @@ or its comments. It is generic over an `APIRequest` and built on
 
 The app is a `TabView` with five tabs.
 
-1. **Now** — from top to bottom:
+1. **Now** — from top to bottom (below the saved-copy or failure notice,
+   when there is one):
+   - The profile card, as on the web board: the profile banner cropped to
+     128 pt with its top third in view (a soft fill without one), the
+     84 pt round avatar rising halfway over it in a ring of the card's color
+     (a neutral circle without one), the display name with the romanized
+     name small and uppercase under it, and the links. The links are an X
+     logo with "@handle" for each X account in `resources` (an
+     `https://x.com/<handle>` or `twitter.com` page; the profile's `xUrl`
+     when there is none), then YouTube from the profile's `youtubeUrl` and
+     Bilibili from the first `bilibili.com` resource, each with its logo and
+     name. The images are decorative; VoiceOver reads the display name once
+     as a heading.
    - The spotlight ticket (live now, or next up, with a countdown and its
      platform links), and Bilibili `liveNow` on its own card when the
      spotlight does not show it.
