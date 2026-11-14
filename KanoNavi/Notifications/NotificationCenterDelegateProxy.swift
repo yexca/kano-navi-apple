@@ -31,12 +31,9 @@ nonisolated final class NotificationCenterDelegateProxy: NSObject, UNUserNotific
         didReceive response: UNNotificationResponse,
         withCompletionHandler completionHandler: @escaping () -> Void
     ) {
-        let rawURL =
-            response.notification.request.content.userInfo[NotificationUserInfoKey.routeURL] as? String
+        let route = NotificationRoute(userInfo: response.notification.request.content.userInfo)
         completionHandler()
-        guard let rawURL, let url = URL(string: rawURL), let route = NotificationRoute(url: url) else {
-            return
-        }
+        guard let route else { return }
         let handler = onOpenRoute
         Task { @MainActor in
             handler(route)

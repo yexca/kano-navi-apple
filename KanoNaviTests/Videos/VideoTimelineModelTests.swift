@@ -192,6 +192,36 @@ struct VideoTimelineModelTests {
         #expect(model.notice == .saved(fetchedAt: F.cachedAt))
     }
 
+    @Test func cachedNewestPageIsThereBeforeTheFirstRead() async throws {
+        let stub = StubVideoTimelineLoader(pages: [Self.query(): [.success(try Self.page(["N0", "N1"]))]])
+        let model = VideoTimelineModel(
+            months: { try await stub.months() }, page: { query in try await stub.page(query) },
+            cachedFirstPage: try Self.page(["N1"], isFromCache: true))
+
+        #expect(model.cards.map(\.id) == ["N1"])
+        #expect(model.notice == nil)
+
+        await model.loadIfNeeded()
+
+        #expect(await stub.pageRequests == [Self.query()])
+        #expect(model.cards.map(\.id) == ["N0", "N1"])
+        #expect(model.notice == nil)
+    }
+
+    @Test func cachedNewestPageIsCalledTheSavedCopyOnlyWhenTheReadFallsBack() async throws {
+        let stub = StubVideoTimelineLoader(
+            pages: [Self.query(): [.success(try Self.page(["N1"], isFromCache: true))]])
+        let model = VideoTimelineModel(
+            months: { try await stub.months() }, page: { query in try await stub.page(query) },
+            cachedFirstPage: try Self.page(["N1"], isFromCache: true))
+
+        #expect(model.notice == nil)
+
+        await model.loadIfNeeded()
+
+        #expect(model.notice == .saved(fetchedAt: F.cachedAt))
+    }
+
     @Test func refreshStartsAgainFromTheFirstPage() async throws {
         let stub = StubVideoTimelineLoader(
             pages: [

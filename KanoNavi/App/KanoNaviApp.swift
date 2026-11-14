@@ -3,6 +3,7 @@ import SwiftUI
 
 @main
 struct KanoNaviApp: App {
+    @UIApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
     private let services: AppServices
     @State private var dashboard: DashboardStore
     @State private var router: AppRouter
@@ -26,6 +27,9 @@ struct KanoNaviApp: App {
             initialValue: DashboardStore(client: services.client, stream: stream)
         )
         _notifications = State(initialValue: notifications)
+        // The delegate seeds the router from the launch's URL or notification
+        // while the first scene is configured, before anything is drawn.
+        appDelegate.router = router
     }
 
     var body: some Scene {

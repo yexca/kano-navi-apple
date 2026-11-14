@@ -11,6 +11,10 @@ final class AppRouter {
     var selectedTab = AppTab.now
     var scheduleFocus: ScheduleFocus?
     var moreDestination: MoreDestination?
+    /// The route a launch opened before its first frame. SwiftUI or the
+    /// notification delegate delivers it again afterwards; that one delivery
+    /// is skipped, so a focus is not applied twice.
+    @ObservationIgnored private var launchRoute: NotificationRoute?
 
     /// Applies a `kanonavi://` URL. Returns `false` for any other URL.
     @discardableResult
@@ -20,7 +24,25 @@ final class AppRouter {
         return true
     }
 
+    /// Applies the route a launch asks for, before the first frame, and
+    /// skips its later delivery once.
+    func openAtLaunch(_ route: NotificationRoute) {
+        launchRoute = nil
+        open(route)
+        launchRoute = route
+    }
+
+    /// Stops waiting for the launch route's later delivery, once the app
+    /// leaves the screen, so a later tap on the same target is applied.
+    func forgetLaunchRoute() {
+        launchRoute = nil
+    }
+
     func open(_ route: NotificationRoute) {
+        if let launchRoute, launchRoute == route {
+            self.launchRoute = nil
+            return
+        }
         switch route {
         case .now:
             selectedTab = .now

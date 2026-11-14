@@ -159,8 +159,11 @@ Every screen keeps what it shows and says where it came from:
   time>" with Try Again; a failed reload of a month already on screen, a
   first load with nothing cached, and a failed next page (at the end of the
   list) each say so with Try Again.
-- **Videos** keeps the timeline on screen when a read fails. A first page
-  read from the cache says "Couldn't update videos. Showing the copy from
+- **Videos** shows the newest page cached on this device on its first
+  frame, read at once when the tab is first built, and then reads it again;
+  "Loading…" appears only when nothing is cached. It keeps the timeline on
+  screen when a read fails. A first page read from the cache because the
+  service could not be read says "Couldn't update videos. Showing the copy from
   <JST date and time>" with Try Again; a failed reload of videos already on
   screen, a first load with nothing cached, and a failed next page each say
   so in the same way.
@@ -182,8 +185,9 @@ page or month index.
 
 The Journey, Works and LINE BLOG screens share three pieces in
 `KanoNavi/Shared/`: image loading, a full-screen image viewer and the loading
-of a read that is one whole document. The Now board draws its profile
-images and covers with the same image loading.
+of a read that is one whole document. Every image the app draws from the
+API, including the Now board's profile images and covers, video covers and
+post images, goes through the same image loading.
 
 ### Images
 
@@ -215,7 +219,8 @@ original's pixel size.
   cache on the main actor and draws a hit in the same frame as its box. A
   screen shown at launch sets `\.mediaImageDecodesCachedFilesAtOnce`, and
   its images also decode a file the disk cache holds at that moment; the
-  Now board does, a long archive list does not. An image that has to load
+  Now board, the recent posts and the video timeline do, the Journey,
+  Works, LINE BLOG and post archive lists do not. An image that has to load
   fades in over a placeholder of its final size.
 - **States.** A file the server does not have (404 `media_not_found`) or
   that is not an image draws "Image unavailable"; a failed fetch draws a Try
@@ -836,7 +841,14 @@ permission is requested only when the user turns on **Allow Notifications** in
   routed by `AppRouter`: `kanonavi://now`, `kanonavi://posts`,
   `kanonavi://videos`, `kanonavi://event/<id>`,
   `kanonavi://schedule?date=<YYYY-MM-DD>`, and
-  `kanonavi://settings/notifications`.
+  `kanonavi://settings/notifications`. A link or notification that launches
+  the app reaches SwiftUI only after the first frame, so `AppDelegate` reads
+  the target from the scene's connection options (its URL contexts, or the
+  tapped notification's `routeURL`) while the scene is configured and seeds
+  the router; the first frame is already the target tab with its focus. The
+  router skips the later delivery of that same target once, and forgets it
+  when the app goes to the background. A link or notification while the app
+  runs goes through `onOpenURL` and the notification delegate.
 
 ## Widgets
 

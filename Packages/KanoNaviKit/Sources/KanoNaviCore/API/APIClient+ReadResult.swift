@@ -7,6 +7,16 @@ extension APIClient {
     ///
     /// Cancellation and an invalid request are never answered from the
     /// cache: they throw `APIError.cancelled` and the validation error.
+    /// The cached response of a request, marked `isFromCache` with its fetch
+    /// time, read on the caller's thread without waiting, so a screen can
+    /// show it on its first frame; `nil` when the cache has nothing readable
+    /// it can answer at once. See `ResponseCache.loadImmediately(key:)`.
+    public func cachedResultImmediately<R: APIRequest>(_ request: R) -> ReadResult<R.Response>? {
+        cachedValueImmediately(request).map {
+            ReadResult(value: $0.value, isFromCache: true, fetchedAt: $0.fetchedAt)
+        }
+    }
+
     public func readResult<R: APIRequest>(_ request: R) async throws -> ReadResult<R.Response> {
         do {
             let value = try await send(request)
