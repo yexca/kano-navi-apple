@@ -26,7 +26,7 @@ final class LaunchTests: XCTestCase {
         }
         XCTAssertEqual(ordered, labels)
 
-        app.tabButton("Schedule").tap()
+        app.selectTab("Schedule")
         // The Schedule bar's title is the month on screen; Today is its own.
         XCTAssertTrue(app.buttons["Today"].waitForExistence(timeout: 5))
         XCTAssertTrue(app.tabButton("Schedule").isSelected)
