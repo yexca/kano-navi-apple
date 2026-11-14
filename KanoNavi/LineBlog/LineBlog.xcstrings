@@ -194,25 +194,25 @@
       }
     },
     "commentsNone": {
-      "comment": "Shown for an article without archived comments.",
+      "comment": "Shown at the end of an article without archived comments.",
       "extractionState": "manual",
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "No comments were archived for this article."
+            "value": "No archived comments"
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "この記事のコメントは保存されていません。"
+            "value": "保存されたコメントなし"
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "这篇文章没有存档的评论。"
+            "value": "无存档评论"
           }
         }
       }
@@ -242,31 +242,55 @@
       }
     },
     "commentsNote": {
-      "comment": "Note above an article's comments.",
+      "comment": "Line in the LINE BLOG info sheet about the archived comments.",
       "extractionState": "manual",
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "These are the comments an archived copy of the article’s page preserved, in their original Japanese. Later comments are missing."
+            "value": "Comments are what an archived copy of each page preserved, in their original Japanese; later ones are missing."
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "保存ページに残っていたコメントです。それより後に書かれたコメントは含まれていません。"
+            "value": "コメントは保存ページに残っていたもので、それより後に書かれたものは含まれていません。"
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "这些是网页存档中保留下来的评论，保持日文原文。存档之后的评论没有收录。"
+            "value": "评论是各页面存档中保留下来的，保持日文原文；存档之后的评论没有收录。"
+          }
+        }
+      }
+    },
+    "info": {
+      "comment": "Title of the LINE BLOG info button and the sheet it opens: what the archive is and whose its contents are.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "About This Archive"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "このアーカイブについて"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "关于本存档"
           }
         }
       }
     },
     "introBody": {
-      "comment": "Introduction above the article list. LINE BLOG is the closed blogging service; Kano is the singer.",
+      "comment": "First line of the LINE BLOG info sheet. LINE BLOG is the closed blogging service; Kano is the singer.",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -381,30 +405,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "较新的文章"
-          }
-        }
-      }
-    },
-    "notFoundMessage": {
-      "comment": "Message shown for an article number the archive does not have.",
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "This archive has no article at this address."
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "このアーカイブに、この記事はありません。"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "本存档中没有这篇文章。"
           }
         }
       }
@@ -584,19 +584,19 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "This picture was not archived."
+            "value": "Picture not archived"
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "この画像は保存されていません。"
+            "value": "画像は未保存"
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "这张图片没有被存档。"
+            "value": "图片未存档"
           }
         }
       }
@@ -752,19 +752,19 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "This picture was added after the archive was recovered."
+            "value": "Added after recovery"
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "アーカイブの復元後に追加された画像です。"
+            "value": "復元後に追加"
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "这张图片是在存档恢复之后补充的。"
+            "value": "恢复后补充"
           }
         }
       }
@@ -776,19 +776,19 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Stand-in: the original was not archived. This is the same official picture as published elsewhere."
+            "value": "Stand-in for a lost original"
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "代替画像：元の画像は保存されていないため、別の場所で公開された同じ公式画像を表示しています。"
+            "value": "代替画像（元画像は未保存）"
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "替代图：原图没有存档，这里是在别处公开的同一张官方图片。"
+            "value": "替代图（原图未存档）"
           }
         }
       }
@@ -800,25 +800,25 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Picture from the tweet embedded in the article."
+            "value": "From the embedded tweet"
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "記事に埋め込まれていたツイートの画像です。"
+            "value": "埋め込みツイートの画像"
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "文章中嵌入的推文里的图片。"
+            "value": "来自嵌入的推文"
           }
         }
       }
     },
     "rightsNotice": {
-      "comment": "Rights notice of the LINE BLOG archive, shown above the article list and above an article's comments.",
+      "comment": "Rights notice of the LINE BLOG archive, at the foot of its info sheet.",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -861,30 +861,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "来源"
-          }
-        }
-      }
-    },
-    "sourcesNote": {
-      "comment": "Note under an article's provenance links.",
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Many original addresses no longer open."
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "元のアドレスの多くは、現在は開けません。"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "许多原地址现已无法打开。"
           }
         }
       }
@@ -933,30 +909,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "%1$@（%2$lld）"
-          }
-        }
-      }
-    },
-    "translationNote": {
-      "comment": "Note under an article's title while translations are shown.",
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Translations are machine translations of the Japanese text."
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "翻訳は日本語の原文を機械翻訳したものです。"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "译文由日文原文机器翻译而成。"
           }
         }
       }
@@ -1016,19 +968,19 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "No copy of this video was archived."
+            "value": "Video not archived"
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "この動画のコピーは保存されていません。"
+            "value": "動画は未保存"
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "这段视频没有存档副本。"
+            "value": "视频未存档"
           }
         }
       }
@@ -1064,19 +1016,19 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "The archived copy of this video can’t be played."
+            "value": "Can’t play this video"
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "この動画の保存ファイルを再生できません。"
+            "value": "この動画を再生できません"
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "无法播放这段视频的存档文件。"
+            "value": "无法播放此视频"
           }
         }
       }

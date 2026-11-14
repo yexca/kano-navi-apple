@@ -49,30 +49,6 @@
         }
       }
     },
-    "areaParticipationDetail": {
-      "comment": "Second line of the Featured On row.",
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Works by others with her voice or words"
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "歌唱や作詞で参加した作品"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "参与演唱或作词的作品"
-          }
-        }
-      }
-    },
     "areaReleases": {
       "comment": "Row and screen title: releases under Kano’s own name.",
       "extractionState": "manual",
@@ -93,30 +69,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "个人作品"
-          }
-        }
-      }
-    },
-    "areaReleasesDetail": {
-      "comment": "Second line of the Own Releases row.",
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Albums, singles and doujin releases"
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "アルバム、シングル、同人作品"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "专辑、单曲与同人作品"
           }
         }
       }
@@ -145,30 +97,6 @@
         }
       }
     },
-    "areaUploadsDetail": {
-      "comment": "Second line of the Uploads row. niconico, YouTube and bilibili are site names.",
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Songs posted on niconico, YouTube and bilibili"
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "niconico・YouTube・bilibili に投稿した歌"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "投稿到 niconico、YouTube 和 bilibili 的歌"
-          }
-        }
-      }
-    },
     "cancelled": {
       "comment": "Mark on a release or edition that was announced and then withdrawn.",
       "extractionState": "manual",
@@ -189,6 +117,30 @@
           "stringUnit": {
             "state": "translated",
             "value": "发售中止"
+          }
+        }
+      }
+    },
+    "coveredThrough": {
+      "comment": "Label in the Works info sheet beside the Japan date the collection covers works through, such as “Nov 7, 2026”.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Covers works through"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "収録時点"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "收录截至"
           }
         }
       }
@@ -386,7 +338,7 @@
       }
     },
     "disclaimer": {
-      "comment": "Footer of the Works screen: the app is unofficial and where the cover images come from.",
+      "comment": "Footer of the Works info sheet: the app is unofficial and where the cover images come from.",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -1381,6 +1333,30 @@
         }
       }
     },
+    "info": {
+      "comment": "Title of the Works info button and the sheet it opens: how current the collection is and whose its covers are.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "About Works"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "作品について"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "关于作品"
+          }
+        }
+      }
+    },
     "kanoTrack": {
       "comment": "Mark on a track of someone else’s work that Kano took part in.",
       "extractionState": "manual",
@@ -1885,30 +1861,6 @@
         }
       }
     },
-    "recentLimit": {
-      "comment": "Says the service sent only part of the newer uploads. %lld is how many it sent.",
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Only the newest %lld are shown."
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "最新の %lld 本だけを表示しています。"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "仅显示最新的 %lld 个。"
-          }
-        }
-      }
-    },
     "recentOriginAuto": {
       "comment": "Why a newer upload is listed, code `auto`: the service recognised it as a song upload.",
       "extractionState": "manual",
@@ -2097,30 +2049,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "资料来源：%@"
-          }
-        }
-      }
-    },
-    "releaseNotFoundMessage": {
-      "comment": "Explains the Release Not Found state.",
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "The collection has no release with this ID. It may have been renamed or removed."
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "この ID の作品はコレクションにありません。名前の変更または削除の可能性があります。"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "作品集中没有这个 ID 的作品，可能已改名或移除。"
           }
         }
       }
@@ -2732,19 +2660,19 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Couldn’t load covers and newer uploads. The list is shown without them."
+            "value": "Couldn’t load covers and newer uploads."
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "サムネイルと新しい投稿を読み込めませんでした。一覧のみを表示しています。"
+            "value": "サムネイルと新しい投稿を読み込めませんでした。"
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "无法载入封面和最新投稿，仅显示列表。"
+            "value": "无法载入封面和最新投稿。"
           }
         }
       }
@@ -2756,19 +2684,19 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Couldn’t update covers and newer uploads. Showing the copy from %@."
+            "value": "Saved covers and newer uploads from %@"
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "サムネイルと新しい投稿を更新できませんでした。%@ 時点の内容を表示しています。"
+            "value": "%@ 時点のサムネイルと新しい投稿を表示中"
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "无法更新封面和最新投稿。正在显示截至 %@ 的内容。"
+            "value": "正在显示截至 %@ 的封面和最新投稿"
           }
         }
       }
@@ -2780,19 +2708,19 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Couldn’t update covers and newer uploads. Showing what was loaded before."
+            "value": "Couldn’t update covers and newer uploads."
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "サムネイルと新しい投稿を更新できませんでした。前回読み込んだ内容を表示しています。"
+            "value": "サムネイルと新しい投稿を更新できませんでした。"
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "无法更新封面和最新投稿。正在显示之前载入的内容。"
+            "value": "无法更新封面和最新投稿。"
           }
         }
       }
@@ -2817,30 +2745,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "收听平台"
-          }
-        }
-      }
-    },
-    "summaryLead": {
-      "comment": "One sentence under the years on the Works screen saying what the collection gathers.",
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Releases under Kano’s own name, works carrying her voice and words, and the songs she posted online."
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "鹿乃名義の作品、歌声や詞を届けた参加作品、ネットに投稿してきた歌をまとめています。"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "鹿乃名义发行的作品、参与演唱或作词的作品，以及这些年投稿到网上的歌。"
           }
         }
       }
@@ -2960,43 +2864,19 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "No track list recorded."
+            "value": "No track list"
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "収録曲は未登録です。"
+            "value": "収録曲なし"
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "曲目未收录。"
-          }
-        }
-      }
-    },
-    "tracksShared": {
-      "comment": "Footer of a release’s track list when the release has editions.",
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "The tracks every edition shares. An edition with a different list shows its own below."
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "全形態に共通の収録曲です。収録曲が異なる形態は、下に個別の一覧があります。"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "各版本共有的曲目。曲目不同的版本在下方单独列出。"
+            "value": "暂无曲目"
           }
         }
       }
@@ -3021,30 +2901,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "组合：%@"
-          }
-        }
-      }
-    },
-    "updatedThrough": {
-      "comment": "Says how current the Works collection is. %@ is a Japan date with its year, such as “Nov 7, 2026”.",
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "This list covers works through %@."
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%@までの作品を収録しています。"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "收录至 %@。"
           }
         }
       }
@@ -3141,30 +2997,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "曲名、原作者或合作者"
-          }
-        }
-      }
-    },
-    "uploadsUpdatedThrough": {
-      "comment": "Footer of the upload list. %@ is a Japan date with its year.",
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "This list covers uploads through %@."
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%@までの投稿を収録しています。"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "收录至 %@ 的投稿。"
           }
         }
       }
@@ -3309,30 +3141,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "合作 %@"
-          }
-        }
-      }
-    },
-    "workNotFoundMessage": {
-      "comment": "Explains the Work Not Found state.",
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "The collection has no work with this ID. It may have been renamed or removed."
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "この ID の作品はコレクションにありません。名前の変更または削除の可能性があります。"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "作品集中没有这个 ID 的作品，可能已改名或移除。"
           }
         }
       }

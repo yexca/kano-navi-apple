@@ -5,7 +5,6 @@ import SwiftUI
 /// has editions these are the tracks every edition shares.
 struct WorksReleaseTrackSection: View {
     let tracks: [WorksTrack]
-    let hasEditions: Bool
 
     var body: some View {
         Section {
@@ -17,10 +16,6 @@ struct WorksReleaseTrackSection: View {
             }
         } header: {
             Text(.Works.trackCount(tracks.count))
-        } footer: {
-            if hasEditions, tracks.isEmpty == false {
-                Text(.Works.tracksShared)
-            }
         }
     }
 }

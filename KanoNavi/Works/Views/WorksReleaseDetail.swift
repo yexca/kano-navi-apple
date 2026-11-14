@@ -29,7 +29,7 @@ struct WorksReleaseDetail: View {
                 }
             }
 
-            WorksReleaseTrackSection(tracks: release.tracks, hasEditions: release.editions.isEmpty == false)
+            WorksReleaseTrackSection(tracks: release.tracks)
 
             WorksImageSection(
                 title: .Works.discPhotos, images: WorksGallery.discPhotos(of: release), open: open)

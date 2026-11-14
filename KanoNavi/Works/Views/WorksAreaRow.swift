@@ -6,7 +6,6 @@ import SwiftUI
 struct WorksAreaRow: View {
     let destination: WorksDestination
     let title: LocalizedStringResource
-    let detail: LocalizedStringResource
     let systemImage: String
     let count: Int
     /// Names the row for UI tests.
@@ -23,18 +22,10 @@ struct WorksAreaRow: View {
                         Text(count, format: .number)
                             .monospacedDigit()
                             .foregroundStyle(.secondary)
-                        Text(detail)
-                            .font(.footnote)
-                            .foregroundStyle(.secondary)
                     }
                 } else {
                     Label {
-                        VStack(alignment: .leading, spacing: 2) {
-                            Text(title)
-                            Text(detail)
-                                .font(.footnote)
-                                .foregroundStyle(.secondary)
-                        }
+                        Text(title)
                     } icon: {
                         Image(systemName: systemImage)
                     }

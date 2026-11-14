@@ -30,9 +30,4 @@ nonisolated struct WorksRecentUploads: Equatable, Sendable {
     var collapsedCount: Int {
         max(videos.count - Self.collapsedLimit, 0)
     }
-
-    /// How many videos the service counted but did not send.
-    var unlistedCount: Int {
-        total - videos.count
-    }
 }

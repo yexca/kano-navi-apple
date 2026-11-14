@@ -9,6 +9,7 @@ struct LineBlogIndexList: View {
     let reload: () async -> Void
 
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @State private var isShowingInfo = false
 
     var body: some View {
         ScrollViewReader { proxy in
@@ -17,10 +18,6 @@ struct LineBlogIndexList: View {
                     Section {
                         DocumentStatusNotice(notice: notice, reload: reload)
                     }
-                }
-
-                Section {
-                    LineBlogIndexIntro(originalBlogURL: index.originalBlogURL)
                 }
 
                 ForEach(listing.months) { month in
@@ -45,6 +42,15 @@ struct LineBlogIndexList: View {
                         jump(to: month, with: proxy)
                     }
                 }
+                ToolbarItem(placement: .primaryAction) {
+                    Button(.LineBlog.info, systemImage: "info.circle") {
+                        isShowingInfo = true
+                    }
+                    .accessibilityIdentifier("lineblog.info")
+                }
+            }
+            .sheet(isPresented: $isShowingInfo) {
+                LineBlogInfoSheet(originalBlogURL: index.originalBlogURL)
             }
         }
     }

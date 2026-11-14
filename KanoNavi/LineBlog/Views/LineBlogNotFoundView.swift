@@ -9,8 +9,6 @@ struct LineBlogNotFoundView: View {
             } icon: {
                 Image(systemName: "doc.questionmark")
             }
-        } description: {
-            Text(.LineBlog.notFoundMessage)
         }
     }
 }
