@@ -3,7 +3,7 @@ import KanoNaviCore
 import SwiftUI
 
 /// One day of a vertically scrolling month: a hairline above, its number
-/// (gray on weekends, white in a tint circle for today), and its entries in
+/// (gray on weekends, in the tint for today), and its entries in
 /// the tag colors, as dots (Compact), bars (Stacked) or one-line titles
 /// (Details), with "+n" past what fits. Tapping it opens the day in the List
 /// mode. Takes plain values and compares equal without its action.
@@ -35,11 +35,6 @@ struct ScheduleGridDayCell: View, Equatable {
                     .minimumScaleFactor(0.6)
                     .foregroundStyle(numberStyle)
                     .frame(width: circleSize, height: circleSize)
-                    .background {
-                        if isToday {
-                            Circle().fill(.tint)
-                        }
-                    }
                 content
             }
             .frame(
@@ -60,7 +55,7 @@ struct ScheduleGridDayCell: View, Equatable {
 
     private var numberStyle: AnyShapeStyle {
         if isToday {
-            AnyShapeStyle(.white)
+            AnyShapeStyle(.tint)
         } else if date.isWeekend {
             AnyShapeStyle(.secondary)
         } else {

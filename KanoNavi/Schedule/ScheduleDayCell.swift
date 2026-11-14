@@ -3,8 +3,8 @@ import SwiftUI
 
 /// One day of the List mode's month, as in Calendar: a hairline above, its
 /// number (gray on weekends, in the tint for today), a filled circle when
-/// selected (the tint for today, else the primary color), and a dot per
-/// entry in its tag color. Takes plain values and compares equal without
+/// selected (the tint for today, else the primary color), and a capsule
+/// split into the tag colors of its entries. Takes plain values and compares equal without
 /// its action, so selecting a day redraws only the days that change.
 struct ScheduleDayCell: View, Equatable {
     let date: JapanDate
@@ -14,8 +14,7 @@ struct ScheduleDayCell: View, Equatable {
     let action: () -> Void
 
     @Environment(\.locale) private var locale
-    @ScaledMetric(relativeTo: .body) private var circleSize = 34.0
-    @ScaledMetric(relativeTo: .caption2) private var marksHeight = 12.0
+    @ScaledMetric(relativeTo: .body) private var circleSize = 30.0
 
     nonisolated static func == (lhs: Self, rhs: Self) -> Bool {
         lhs.date == rhs.date && lhs.isToday == rhs.isToday && lhs.isSelected == rhs.isSelected
@@ -24,7 +23,7 @@ struct ScheduleDayCell: View, Equatable {
 
     var body: some View {
         Button(action: action) {
-            VStack(spacing: 2) {
+            VStack(spacing: 3) {
                 Text(date.day, format: .number)
                     .font(.title3.weight(.semibold))
                     .monospacedDigit()
@@ -37,12 +36,11 @@ struct ScheduleDayCell: View, Equatable {
                             Circle().fill(isToday ? AnyShapeStyle(.tint) : AnyShapeStyle(.primary))
                         }
                     }
-                ScheduleDayDots(marks: marks, capacity: ScheduleMode.compact.markCapacity)
-                    .frame(height: marksHeight)
+                ScheduleDayCapsule(segments: ScheduleDaySegments.segments(of: marks))
             }
             .frame(maxWidth: .infinity)
             .padding(.top, 4)
-            .padding(.bottom, 2)
+            .padding(.bottom, 3)
             .overlay(alignment: .top) {
                 ScheduleHairline()
             }
