@@ -5,4 +5,6 @@ nonisolated enum AppSettings {
     static let contentLanguageKey = "contentLanguage"
     /// JSON-encoded `NotificationPreferences`.
     static let notificationPreferencesKey = "notificationPreferences"
+    /// The Schedule tab's mode, a `ScheduleMode` raw value; `list` by default.
+    static let scheduleModeKey = "scheduleMode"
 }

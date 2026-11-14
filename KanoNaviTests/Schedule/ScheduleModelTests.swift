@@ -244,4 +244,100 @@ struct ScheduleModelTests {
         #expect(found == nil)
         #expect(model.selectedDate == ScheduleFixtures.today)
     }
+
+    @Test func swipingToAMonthSelectsTodayOrItsFirstDay() {
+        let model = model(StubMonthLoader([:]))
+
+        model.showMonth(JapanDate(year: 2027, month: 2, day: 18))
+        #expect(model.displayedMonth == JapanDate(year: 2027, month: 2, day: 1))
+        #expect(model.selectedDate == JapanDate(year: 2027, month: 2, day: 1))
+
+        model.showMonth(november)
+        #expect(model.displayedMonth == november)
+        #expect(model.selectedDate == ScheduleFixtures.today)
+    }
+
+    @Test func swipingToTheMonthOnScreenKeepsTheSelection() {
+        let model = model(StubMonthLoader([:]))
+        let chosen = JapanDate(year: 2026, month: 11, day: 24)
+        model.select(chosen)
+
+        model.showMonth(november)
+
+        #expect(model.selectedDate == chosen)
+    }
+
+    @Test func monthTitleReturnsToToday() {
+        let model = model(StubMonthLoader([:]))
+        model.showMonth(offset: 3)
+        model.select(JapanDate(year: 2027, month: 2, day: 9))
+
+        model.showToday()
+
+        #expect(model.displayedMonth == november)
+        #expect(model.selectedDate == ScheduleFixtures.today)
+    }
+
+    @Test func tappingADayInAGridOpensItInList() {
+        let model = model(StubMonthLoader([:]))
+        let tapped = JapanDate(year: 2026, month: 12, day: 3)
+
+        let mode = model.openDay(tapped)
+
+        #expect(mode == .list)
+        #expect(model.displayedMonth == december)
+        #expect(model.selectedDate == tapped)
+    }
+
+    @Test func gridAsksForTheMonthInViewThenTheMonthsBesideIt() {
+        let model = model(StubMonthLoader([:]))
+
+        #expect(
+            model.monthsToLoad(around: JapanDate(year: 2027, month: 1, day: 15)) == [
+                JapanDate(year: 2027, month: 1, day: 1), JapanDate(year: 2027, month: 2, day: 1), december,
+            ])
+    }
+
+    @Test func gridLoadsOnlyTheMonthsNotLoadedYet() async {
+        let october = JapanDate(year: 2026, month: 10, day: 1)
+        let stub = StubMonthLoader([
+            october: [.success(ScheduleFixtures.month(containing: october, events: []))],
+            november: [.success(ScheduleFixtures.month(containing: november, events: []))],
+            december: [.success(ScheduleFixtures.month(containing: december, events: []))],
+        ])
+        let model = model(stub)
+        await model.loadIfNeeded()
+
+        #expect(model.monthsToLoad(around: december) == [december, JapanDate(year: 2027, month: 1, day: 1)])
+
+        await model.loadMonths(around: november)
+
+        #expect(Set(await stub.requests) == [november, december, october])
+        #expect(await stub.requests.count == 3)
+        #expect(model.monthsToLoad(around: november).isEmpty)
+    }
+
+    @Test func eachMonthHasItsOwnNotice() async {
+        let good = ScheduleFixtures.month(containing: november, events: [])
+        let model = model(StubMonthLoader([november: [.success(good)]]))
+
+        await model.loadMonths(around: november)
+
+        #expect(model.notice(for: november) == nil)
+        #expect(model.notice(for: december) == .loadFailed)
+        #expect(model.notice(for: JapanDate(year: 2027, month: 6, day: 1)) == nil)
+    }
+
+    @Test func browsableMonthsReachAFarMonthOnScreen() {
+        let model = model(StubMonthLoader([:]))
+        let far = JapanDate(year: 2030, month: 4, day: 1)
+
+        #expect(model.browsableMonths.contains(november))
+        #expect(model.browsableMonths.contains(far) == false)
+
+        model.select(far)
+
+        #expect(model.browsableMonths.last == far)
+        #expect(model.browsableMonths == model.browsableMonths.sorted())
+    }
 }

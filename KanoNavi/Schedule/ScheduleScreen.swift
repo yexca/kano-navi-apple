@@ -2,15 +2,17 @@ import KanoNaviComponents
 import KanoNaviCore
 import SwiftUI
 
-/// The month calendar, the selected day's entries and the entry sheet.
+/// The Schedule tab: the month in one of four modes, the month's name as the
+/// navigation bar's leading item, and the entry sheet. See `docs/design.md`.
 struct ScheduleScreen: View {
     @State private var model: ScheduleModel
     @State private var presented: PresentedEvent?
     let feedURL: URL
 
     @Environment(AppRouter.self) private var router
-    @Environment(\.locale) private var locale
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @AppStorage(AppSettings.contentLanguageKey) private var contentLanguage: ContentLanguage = .system
+    @AppStorage(AppSettings.scheduleModeKey) private var mode = ScheduleMode.defaultMode
 
     init(loader: @escaping ScheduleModel.MonthLoader, feedURL: URL) {
         _model = State(initialValue: ScheduleModel(loader: loader))
@@ -19,80 +21,61 @@ struct ScheduleScreen: View {
 
     var body: some View {
         NavigationStack {
-            List {
-                if let notice = model.notice {
-                    Section {
-                        ScheduleStatusNotice(notice: notice) {
-                            Task { await model.refresh() }
-                        }
+            content
+                .toolbar {
+                    ToolbarItem(placement: .topBarLeading) {
+                        ScheduleMonthTitle(month: model.displayedMonth, showToday: model.showToday)
+                    }
+                    .sharedBackgroundVisibility(.hidden)
+                    ToolbarItem(placement: .primaryAction) {
+                        ScheduleModeMenu(mode: $mode)
+                    }
+                    ToolbarItem(placement: .primaryAction) {
+                        ScheduleSubscriptionMenu(feedURL: feedURL)
                     }
                 }
-                Section {
-                    ScheduleMonthCalendar(model: model)
-                        .listRowInsets(EdgeInsets(top: 12, leading: 8, bottom: 12, trailing: 8))
+                .navigationBarTitleDisplayMode(.inline)
+                .task(id: model.displayedMonth) {
+                    await model.loadMonths(around: model.displayedMonth)
                 }
-                Section {
-                    dayEntries
-                } header: {
-                    Text(verbatim: model.selectedDate.dayTitle(locale: locale))
+                .task(id: router.scheduleFocus) {
+                    await consumeFocus()
                 }
-            }
-            .listStyle(.insetGrouped)
-            .refreshable {
-                await model.refresh()
-            }
-            .navigationTitle(.tabSchedule)
-            .toolbar {
-                ToolbarItem(placement: .topBarLeading) {
-                    Button(.Schedule.today) {
-                        model.select(model.today)
-                    }
-                    .disabled(
-                        model.selectedDate == model.today && model.displayedMonth == model.today.firstOfMonth)
+                .sheet(item: $presented) { presented in
+                    ScheduleEventDetailView(event: presented.event)
                 }
-                ToolbarItem(placement: .primaryAction) {
-                    ScheduleSubscriptionMenu(feedURL: feedURL)
-                }
-            }
-            .task(id: model.displayedMonth) {
-                await model.loadIfNeeded()
-            }
-            .task(id: router.scheduleFocus) {
-                await consumeFocus()
-            }
-            .sheet(item: $presented) { presented in
-                ScheduleEventDetailView(event: presented.event)
-            }
         }
     }
 
     @ViewBuilder
-    private var dayEntries: some View {
-        let entries = model.entries(on: model.selectedDate)
-        if entries.isEmpty == false {
-            ForEach(entries) { item in
-                Button {
-                    presented = PresentedEvent(event: item.event)
-                } label: {
-                    EventRow(event: item.event, entry: item.entry, contentLanguage: contentLanguage)
-                }
-                .tint(.primary)
-            }
-        } else if model.month == nil, model.isLoading {
-            HStack(spacing: 8) {
-                ProgressView()
-                Text(.Schedule.loading)
-                    .foregroundStyle(.secondary)
-            }
-        } else if model.month != nil {
-            Text(.Schedule.noEntries)
-                .foregroundStyle(.secondary)
+    private var content: some View {
+        switch mode {
+        case .list:
+            ScheduleListContent(model: model, contentLanguage: contentLanguage, open: open)
+        case .compact, .stacked, .details:
+            ScheduleGridContent(
+                model: model, style: gridStyle, contentLanguage: contentLanguage, openDay: openDay)
         }
     }
 
-    /// Applies a deep link's focus once, then clears it.
+    /// The grid's cells: at accessibility text sizes Stacked and Details
+    /// fall back to Compact's dots, since titles and bars no longer fit.
+    private var gridStyle: ScheduleMode {
+        dynamicTypeSize.isAccessibilitySize ? .compact : mode
+    }
+
+    private func open(_ event: ScheduleEvent) {
+        presented = PresentedEvent(event: event)
+    }
+
+    private func openDay(_ date: JapanDate) {
+        mode = model.openDay(date)
+    }
+
+    /// Applies a deep link's focus once in the List mode, then clears it.
     private func consumeFocus() async {
         guard let focus = router.scheduleFocus else { return }
+        mode = .list
         switch focus {
         case .date(let date):
             model.select(date)
