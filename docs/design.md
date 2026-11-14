@@ -706,20 +706,35 @@ permission is requested only when the user turns on **Allow Notifications** in
 
 `KanoNaviWidgets` holds the calendar widgets, the app's one required feature.
 
-- **Upcoming** (`systemSmall`, `systemMedium`, `systemLarge`): small shows the
-  next entry with its JST time and a countdown, or the live entry; medium lists
-  the next entries grouped by Japan day; large shows the seven Japan days from
-  today, each with its entries or "No entries". At accessibility text sizes
-  medium and large list the next entries by day, each time above its title,
-  instead of a time column or seven rows.
+- **Upcoming** (`systemSmall`, `systemMedium`, `systemLarge`) leads with the
+  live entry, or else the next one that is not cancelled:
+  - Small shows a state capsule ("● Live" on red, or "Next"), a countdown to
+    an entry later today or the day of a later one, the title in up to three
+    lines and the large time with "JST", or "Ends" and the time a live entry
+    ends.
+  - Medium shows that lead entry as small does, then a divider and up to
+    three following entries, each with its day, time and title.
+  - Large shows a header with the avatar, "This Week" and the JST date range;
+    a strip of the seven Japan days from today, today filled and a dot under
+    each day with entries; a card for the lead entry; and the week's other
+    entries under compact day headings. Days without entries appear only in
+    the strip.
+  - At accessibility text sizes medium and large list the next entries by
+    day instead, each time above its title, under an "Upcoming" header.
 - **Lock Screen** (`accessoryRectangular`, `accessoryInline`): the next entry
   and its time. The rectangular layout has three fixed lines, so its text
   stops growing at the `xxxLarge` Dynamic Type size.
-- The widgets draw the live state, JST times and dates with the shared
-  `KanoNaviComponents` views and formatting. Sale, members and cancellation
-  marks stay widget-specific, compact one-word capsules, because the shared
-  chips (icon plus caption text) leave no room for titles in a one-line row at
-  large text sizes.
+- The Home Screen widgets use the board's Berry accent (`#DC4560`, `#FF7088`
+  in dark appearance) for times, the capsule and today, a cream-to-pink or
+  plum background, and the rounded system font. Berry parts are accented so
+  tinted and clear Home Screens keep the hierarchy; there the background is
+  removed and Berry becomes the primary style. The lead entry's time and its
+  state row stop growing at large text sizes so the title keeps its lines.
+- Unavailable, empty and cached states take one short line each.
+- The widgets draw JST times and dates, and the live state in lists, with the
+  shared `KanoNaviComponents` views and formatting. Sale, members and cancellation marks stay widget-specific,
+  compact one-word capsules, because the shared chips (icon plus caption
+  text) leave no room for titles in a one-line row at large text sizes.
 - The timeline provider reads `/api/calendar` for today through 13 days ahead
   (Japan dates) itself, so the widget needs no App Group. It caches the last
   good response in the extension's own container and shows it, marked stale,
@@ -729,9 +744,9 @@ permission is requested only when the user turns on **Allow Notifications** in
   minutes, whichever is sooner.
 - An `AppIntentConfiguration` parameter selects the content language, since
   the widget cannot read the app's settings without an App Group.
-- Tapping an entry opens `kanonavi://event/<id>`; tapping elsewhere opens
-  `kanonavi://schedule?date=<YYYY-MM-DD>`. The app routes both to the
-  Schedule tab.
+- Tapping an entry opens `kanonavi://event/<id>`; tapping a day in the strip
+  opens `kanonavi://schedule?date=<YYYY-MM-DD>` for that day, and tapping
+  elsewhere opens it for today. The app routes both to the Schedule tab.
 
 ## Visual Language
 
@@ -743,7 +758,9 @@ permission is requested only when the user turns on **Allow Notifications** in
   entries carry a members chip. Cancelled and suspected cancellations are
   struck through or marked, with their state in words.
 - No official logos or branding, and no artwork beyond the app icon, which is
-  the web board's avatar. Media from the API is shown as the API serves it.
+  the web board's avatar. The widget extension bundles its own small copy of
+  that artwork for the large widget's header. Media from the API is shown as
+  the API serves it.
 - Every screen works at the largest accessibility text size; rows wrap rather
   than truncate important times.
 
