@@ -349,24 +349,27 @@ Posts next; Works, Journey and LINE BLOG last.
 Kano's public milestones and their images, from `/api/journey`, read as one
 document through `DocumentModel` (saved-copy and failure notices, pull to
 refresh). A segmented switch in the toolbar, one symbol per mode, flips
-between the timeline and the gallery. Both start with one horizontally
-scrolling row of equal-height identity chips (All, then each branch with its
-portrait, name and its milestone or image count, which VoiceOver reads as
-words), which filter both views. A branch without a portrait shows a person
-symbol in its tone's ring instead; the selected chip is outlined and its
-portrait carries a check mark. Tapping the selected chip shows all again.
-Both end with one line, the date the data was checked through, whose info
-button opens the hand-curation note and the image rights notice.
+between the timeline and the gallery. Under the navigation bar, pinned in a
+`safeAreaBar` with a hard scroll edge so it stays while either view scrolls
+and through a switch of mode, sits one horizontally scrolling row of
+equal-height identity chips (All, then each branch with its portrait, name
+and its milestone or image count, which VoiceOver reads as words), which
+filter both views. A branch without a portrait shows a person symbol in its
+tone's ring instead; the selected chip is outlined and its portrait carries
+a check mark. Tapping the selected chip shows all again. A saved-copy or
+failure notice opens the scrolling content. Both views end with one line,
+the date the data was checked through, whose info button opens the
+hand-curation note and the image rights notice.
 
 - **Timeline.** Milestones read oldest first, as the story runs, under a
-  sticky header per year with its count; within a year they keep the API's
-  order. A row shows a marker with the kind's symbol on a line in the
-  branch's tone, the date at its stored precision (a year, `Sep` or `Sep 7`
-  within the year; a `dateEnd` as a range; the `dateNote` after it), the
-  branch's name, the kind, the title and up to three lines of detail in the
-  content language, and up to three cropped thumbnails with "+N". A
-  highlight has a filled marker, a larger title, a tinted card and "Key
-  milestone".
+  header per year with its count, which sticks under the identity chips;
+  within a year they keep the API's order. A row shows a marker with the
+  kind's symbol on a line in the branch's tone, the date at its stored
+  precision (a year, `Sep` or `Sep 7` within the year; a `dateEnd` as a range;
+  the `dateNote` after it), the branch's name, the kind, the title and up to
+  three lines of detail in the content language, and up to three cropped
+  thumbnails with "+N". A highlight has a filled marker, a larger title, a
+  tinted card and "Key milestone".
 - **Milestone page.** A row opens the full date with its year, the whole
   detail, every image at its own shape (tall ones capped) with what it shows,
   its date and its source link, then Source and Links: the source page by its
@@ -379,11 +382,11 @@ button opens the hand-curation note and the image rights notice.
 - **Gallery.** Every image once: each milestone's images in timeline order
   (catalogued images, then release covers), then the gallery-only images; an
   image listed again keeps its first place. A branch shows the images that
-  list it in `branches`. The image-type filter (artwork, models,
-  merchandise, video frames, covers, then any new category) counts the
-  chosen identity's images. Thumbnails are squares cropped around `focus`; a
-  cancelled release's cover carries a mark. A thumbnail opens the viewer over
-  the filtered images.
+  list it in `branches`. The image-type filter (artwork, models, merchandise,
+  video frames, covers, then any new category) scrolls with the images and
+  counts the chosen identity's images. Thumbnails are squares cropped around
+  `focus`; a cancelled release's cover carries a mark. A thumbnail opens the
+  viewer over the filtered images.
 - **A milestone that is gone.** When a reload no longer lists the
   milestone whose page is open, the page says "Milestone Not Found" in one
   line.

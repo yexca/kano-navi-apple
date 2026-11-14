@@ -6,7 +6,7 @@ import SwiftUI
 /// filtered images, with each one's provenance as the caption.
 struct JourneyGalleryGrid: View {
     let journey: JourneyResponse
-    @Binding var branch: String?
+    let branch: String?
     @Binding var category: String?
     let notice: DocumentNotice?
     let reload: () async -> Void
@@ -22,10 +22,9 @@ struct JourneyGalleryGrid: View {
         let tileSize: CGFloat = dynamicTypeSize.isAccessibilitySize ? 150 : 104
         ScrollView {
             LazyVStack(alignment: .leading, spacing: 12) {
-                JourneyListHeader(
-                    branches: journey.branches, branch: $branch, counts: gallery.branchCounts,
-                    total: gallery.items.count, countLabel: { .Journey.imageCount($0) }, notice: notice,
-                    reload: reload)
+                if let notice {
+                    JourneyNotice(notice: notice, reload: reload)
+                }
                 JourneyCategoryFilter(
                     categories: categories, total: gallery.items(branch: branch, category: nil).count,
                     selection: $category
@@ -46,6 +45,7 @@ struct JourneyGalleryGrid: View {
                 }
                 JourneyFooter(updatedAt: journey.updatedAt)
             }
+            .padding(.top, 8)
         }
         .refreshable {
             await reload()
