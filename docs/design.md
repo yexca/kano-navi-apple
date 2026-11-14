@@ -306,7 +306,8 @@ The app is a `TabView` with five tabs.
    X; a Bilibili account by its platform, never its mid), JST time, text in
    the content language with Show Original, the ready images (up to four,
    "+N" for the rest), the quoted post nested in it (a deleted or withheld
-   quote says so and still links to it) and Open on X or Open on Bilibili.
+   quote says so and still links to it) and a link to the post, shown as
+   the X or Bilibili logo and name.
    A promoted related-account post carries an Agency Post chip. Past Posts
    opens the month archive with the account filter: the dashboard's
    `xAccounts`, then its `bilibiliAccounts`.
@@ -643,11 +644,14 @@ permission is requested only when the user turns on **Allow Notifications** in
 ## Visual Language
 
 - System fonts, SF Symbols and semantic colors; light and dark appearance.
+- YouTube, X and Bilibili are marked by their monochrome logos, custom
+  symbols made from Simple Icons that tint and scale like SF Symbols; other
+  platforms and sites use a symbol.
 - Live state uses a red dot and the word "Live" (never color alone). Members
   entries carry a members chip. Cancelled and suspected cancellations are
   struck through or marked, with their state in words.
-- No official artwork, logos or branding. Media from the API is shown as the
-  API serves it.
+- No official Kano Mahoro artwork, logos or branding. Media from the API is
+  shown as the API serves it.
 - Every screen works at the largest accessibility text size; rows wrap rather
   than truncate important times.
 

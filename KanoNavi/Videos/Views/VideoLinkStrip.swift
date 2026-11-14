@@ -17,7 +17,7 @@ struct VideoLinkStrip: View {
                     Label {
                         Text(NowLinkButtons.title(for: link.destination))
                     } icon: {
-                        Image(systemName: NowLinkButtons.symbol(for: link.destination))
+                        NowLinkButtons.icon(for: link.destination)
                     }
                 }
                 .buttonStyle(.compactLink)

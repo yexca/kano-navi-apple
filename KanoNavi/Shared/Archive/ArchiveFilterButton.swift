@@ -1,3 +1,4 @@
+import KanoNaviComponents
 import SwiftUI
 
 /// One archive filter choice: its name and the month's count for it.
@@ -29,8 +30,8 @@ struct ArchiveFilterButton: View {
 
     private var nameAndIcon: some View {
         HStack(spacing: 4) {
-            if let systemImage = option.systemImage {
-                Image(systemName: systemImage)
+            if let logo = option.logo {
+                logo.image
                     .accessibilityHidden(true)
             }
             name

@@ -1,8 +1,10 @@
+import KanoNaviComponents
 import KanoNaviCore
 import SwiftUI
 
 /// One post: who wrote it and when, its text in the content language, its
-/// images, the post it quotes and a button to open the original.
+/// images, the post it quotes and a button that opens the original, marked
+/// with its platform's logo and name.
 struct PostCardView: View {
     let card: PostCard
 
@@ -20,9 +22,9 @@ struct PostCardView: View {
             }
             Button(action: open) {
                 Label {
-                    Text(card.isBilibili ? .Posts.openOnBilibili : .Posts.openOnX)
+                    Text(card.isBilibili ? DisplayCodeLabels.platform(.bilibili) : .Posts.sourceX)
                 } icon: {
-                    Image(systemName: "arrow.up.right.square")
+                    (card.isBilibili ? PlatformLogo.bilibili : .x).image
                 }
             }
             .buttonStyle(.compactLink)

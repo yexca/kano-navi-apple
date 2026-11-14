@@ -23,7 +23,7 @@ struct WorksWatchLinks: View {
                     Label {
                         Text(Self.title(for: item))
                     } icon: {
-                        Image(systemName: item.isGone ? "eye.slash" : Self.symbol(for: item.link))
+                        Self.icon(for: item)
                     }
                 }
                 .buttonStyle(.compactLink)
@@ -48,13 +48,19 @@ struct WorksWatchLinks: View {
             ? .Works.watchMembersOnly(platform) : WorksCodeLabels.platform(link.platform)
     }
 
-    nonisolated static func symbol(for link: PlatformVideoLink) -> String {
+    /// The button's icon: the platform's logo, or a symbol for a page that
+    /// is gone or does not show a logo.
+    static func icon(for item: WorksUploadLink) -> Image {
+        if item.isGone { return Image(systemName: "eye.slash") }
+        if let symbol = symbol(for: item.link) { return Image(systemName: symbol) }
+        return PlatformLogo(item.link.platform)?.image ?? Image(systemName: "link")
+    }
+
+    /// The SF Symbol for a page that does not show its platform's logo: a
+    /// members-only page, or one on niconico, which has no logo here.
+    nonisolated static func symbol(for link: PlatformVideoLink) -> String? {
         if link.isMembersOnly { return "person.badge.key.fill" }
-        return switch link.platform {
-        case .niconico: "play.tv.fill"
-        case .youtube: "play.rectangle.fill"
-        case .bilibili: "tv.fill"
-        }
+        return PlatformLogo(link.platform) == nil ? "play.tv.fill" : nil
     }
 
     /// What VoiceOver reads: what is watched, where, and that it is gone

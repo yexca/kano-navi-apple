@@ -1,11 +1,11 @@
 import KanoNaviCore
 import SwiftUI
 
-/// A platform's generic symbol and its name, such as YouTube or Bilibili.
+/// A platform's logo and its name, such as YouTube or Bilibili.
 ///
-/// The marks are SF Symbols, not the platforms' logos. With `showsName`
-/// set to `false` only the symbol is drawn, and VoiceOver still reads the
-/// name. Safe in widgets.
+/// YouTube and Bilibili show their monochrome ``PlatformLogo``; any other
+/// platform shows a link symbol. With `showsName` set to `false` only the
+/// icon is drawn, and VoiceOver still reads the name. Safe in widgets.
 public struct PlatformMark: View {
     private let platform: EventPlatform
     private let showsName: Bool
@@ -20,7 +20,7 @@ public struct PlatformMark: View {
         let label = Label {
             Text(Self.name(for: platform))
         } icon: {
-            Image(systemName: Self.systemImage(for: platform))
+            Self.image(for: platform)
         }
         if showsName {
             label.labelStyle(.titleAndIcon)
@@ -35,13 +35,10 @@ public struct PlatformMark: View {
         DisplayCodeLabels.platform(platform)
     }
 
-    /// The symbol drawn for a platform.
-    static func systemImage(for platform: EventPlatform) -> String {
-        switch platform {
-        case .youtube: "play.rectangle.fill"
-        case .bilibili: "tv.fill"
-        case .other, .unknown: "link"
-        }
+    /// The icon drawn for a platform: its logo, or a link symbol for a
+    /// platform without one.
+    public static func image(for platform: EventPlatform) -> Image {
+        PlatformLogo(platform)?.image ?? Image(systemName: "link")
     }
 }
 

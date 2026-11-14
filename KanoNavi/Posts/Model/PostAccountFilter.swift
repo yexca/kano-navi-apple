@@ -1,3 +1,4 @@
+import KanoNaviComponents
 import KanoNaviCore
 
 /// The post archive's account filter: the board's X accounts, then its
@@ -27,7 +28,7 @@ enum PostAccountFilter {
                     code: account.code,
                     label: account.isBilibili
                         ? .localized(DisplayCodeLabels.platform(.bilibili)) : .verbatim("@" + account.code),
-                    systemImage: account.isBilibili ? "tv.fill" : nil,
+                    logo: account.isBilibili ? .bilibili : nil,
                     count: known ? counts[account.code.lowercased()] ?? 0 : nil)
             }
     }
