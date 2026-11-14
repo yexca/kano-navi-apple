@@ -18,7 +18,7 @@ struct VideoShelfList: View {
         let filter = shelf.resolved(
             VideoShelfFilter(kind: kind.flatMap(VideoShelfKind.init(rawValue:)), platform: platform))
         let shown = shelf.narrowed(by: filter)
-        let kindOptions = shelf.kindOptions(on: filter.platform)
+        let kindOptions = shelf.kindOptions(on: filter.platform, selected: filter.kind)
         let platforms = shelf.platforms
         List {
             DashboardNoticeSection(dashboard: dashboard)

@@ -59,6 +59,16 @@ struct VideoShelfFilterTests {
 
         let options = shelf.kindOptions(on: .bilibili)
 
+        #expect(options.map(\.code) == [nil, "streams", "videos"])
+        #expect(options.map(\.count) == [2, 1, 1])
+    }
+
+    @Test func theSelectedKindStaysAtZeroOnAPlatform() throws {
+        let shelf = try Self.shelf()
+
+        let options = shelf.kindOptions(on: .bilibili, selected: .shorts)
+
+        #expect(options.map(\.code) == [nil, "streams", "videos", "shorts"])
         #expect(options.map(\.count) == [2, 1, 1, 0])
     }
 

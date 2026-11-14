@@ -34,18 +34,20 @@ extension VideoShelf {
                 ? filter.platform.flatMap { platforms.contains($0) ? $0 : nil } : nil)
     }
 
-    /// The kind filter's choices: all, then each kind on the shelf, counting
-    /// the videos on the chosen platform. Empty with fewer than two kinds.
-    func kindOptions(on platform: VideoShelfPlatform?) -> [ArchiveFilterOption] {
-        let kinds = kinds
-        guard kinds.count > 1 else { return [] }
+    /// The kind filter's choices: all, then each kind with videos on the
+    /// chosen platform, with its count. The selected kind stays even at zero,
+    /// so it can be seen and left. Empty when fewer than two kinds remain.
+    func kindOptions(on platform: VideoShelfPlatform?, selected: VideoShelfKind? = nil)
+        -> [ArchiveFilterOption]
+    {
         let onPlatform = cards.filter { card in platform.map(card.isOn) ?? true }
+        let counted = kinds.map { kind in (kind, onPlatform.count { $0.kind == kind }) }
+            .filter { kind, count in count > 0 || kind == selected }
+        guard counted.count > 1 else { return [] }
         let all = ArchiveFilterOption(code: nil, label: .localized(.Archive.all), count: onPlatform.count)
         return [all]
-            + kinds.map { kind in
-                ArchiveFilterOption(
-                    code: kind.rawValue, label: .localized(kind.label),
-                    count: onPlatform.count { $0.kind == kind })
+            + counted.map { kind, count in
+                ArchiveFilterOption(code: kind.rawValue, label: .localized(kind.label), count: count)
             }
     }
 

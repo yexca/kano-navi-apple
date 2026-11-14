@@ -352,8 +352,9 @@ The app is a `TabView` with five tabs.
      current choice: All (default), YouTube or Bilibili, offered when the
      shelf has videos on both. A video is on a platform when it or one of
      its `alternates` is; with a platform chosen, that platform's page is the
-     card's first link, which a Short's card opens. The kind counts follow
-     the platform.
+     card's first link, which a Short's card opens. The kind chips follow
+     the platform: a kind with no videos on it is hidden unless it is the
+     one selected, and the chips show only while two kinds remain.
    - Each group keeps its matching videos in order. The lead stays the lead
      when it matches and is left out otherwise. A filter that matches
      nothing says so in one line; a choice the shelf no longer offers goes
