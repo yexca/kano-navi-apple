@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import colorsys
 import datetime as dt
 import hashlib
 import json
@@ -48,8 +49,30 @@ def png_bytes(width: int, height: int, seed: int) -> bytes:
     return b"\x89PNG\r\n\x1a\n" + chunk(b"IHDR", struct.pack(">IIBBBBB", width, height, 8, 6, 0, 0, 0)) + chunk(b"IDAT", zlib.compress(raw, 9)) + chunk(b"IEND", b"")
 
 
-def ensure_image(data_root: pathlib.Path, key: str, seed: int, namespace: str, width: int = 96, height: int = 64) -> tuple[str, str, int]:
-    content = png_bytes(width, height, seed)
+def cover_png_bytes(width: int, height: int, index: int) -> bytes:
+    """A 16:9 upload cover: a vertical gradient of one hue with a band of its
+    complement. Hues step by the golden ratio so neighbours on a shelf differ."""
+    hue = (index * 0.6180339887) % 1.0
+    band = (hue + 0.5) % 1.0
+    rows = []
+    for y in range(height):
+        t = y / max(1, height - 1)
+        if 0.62 * height <= y < 0.74 * height:
+            rgb = colorsys.hsv_to_rgb(band, 0.35, 0.95)
+        else:
+            rgb = colorsys.hsv_to_rgb(hue, 0.45 + 0.35 * t, 0.95 - 0.4 * t)
+        pixel = bytes(round(c * 255) for c in rgb)
+        rows.append(b"\x00" + pixel * width)
+
+    def chunk(kind: bytes, data: bytes) -> bytes:
+        return struct.pack(">I", len(data)) + kind + data + struct.pack(">I", zlib.crc32(kind + data) & 0xFFFFFFFF)
+
+    raw = b"".join(rows)
+    return b"\x89PNG\r\n\x1a\n" + chunk(b"IHDR", struct.pack(">IIBBBBB", width, height, 8, 2, 0, 0, 0)) + chunk(b"IDAT", zlib.compress(raw, 9)) + chunk(b"IEND", b"")
+
+
+def ensure_image(data_root: pathlib.Path, key: str, seed: int, namespace: str, width: int = 96, height: int = 64, content: bytes | None = None) -> tuple[str, str, int]:
+    content = content if content is not None else png_bytes(width, height, seed)
     content_hash = hashlib.sha256(content).hexdigest()
     relative = pathlib.PurePosixPath(namespace, "sha256", content_hash[:2], content_hash + ".png")
     path = data_root / pathlib.Path(*relative.parts)
@@ -59,10 +82,13 @@ def ensure_image(data_root: pathlib.Path, key: str, seed: int, namespace: str, w
     return relative.as_posix(), content_hash, len(content)
 
 
-def media(conn: sqlite3.Connection, data_root: pathlib.Path, now: str, url: str, source: str, seed: int, owner: tuple[str, str, str, int] | None = None) -> str:
+def media(conn: sqlite3.Connection, data_root: pathlib.Path, now: str, url: str, source: str, seed: int, owner: tuple[str, str, str, int] | None = None, *, cover: bool = False) -> str:
+    """Cache one synthetic PNG for url; a cover is a 320x180 upload cover."""
     media_id = hashlib.sha256(url.encode()).hexdigest()
     namespace = source if source in {"x", "youtube", "bilibili", "niconico"} else "x"
-    cache_path, content_hash, size = ensure_image(data_root, media_id, seed, namespace)
+    width, height = (320, 180) if cover else (96, 64)
+    content = cover_png_bytes(width, height, seed) if cover else None
+    cache_path, content_hash, size = ensure_image(data_root, media_id, seed, namespace, width, height, content)
     conn.execute(
         """INSERT INTO media_assets
         (id,source,source_url,cache_path,mime_type,extension,byte_size,sha256,width,height,status,fetched_at,last_checked_at,last_seen_at,created_at,updated_at)
@@ -71,7 +97,7 @@ def media(conn: sqlite3.Connection, data_root: pathlib.Path, now: str, url: str,
         mime_type=excluded.mime_type,extension=excluded.extension,byte_size=excluded.byte_size,sha256=excluded.sha256,
         width=excluded.width,height=excluded.height,status='ready',fetched_at=excluded.fetched_at,last_checked_at=excluded.last_checked_at,
         last_seen_at=excluded.last_seen_at,updated_at=excluded.updated_at""",
-        (media_id, source, url, cache_path, "image/png", "png", size, content_hash, 96, 64, now, now, now, now, now),
+        (media_id, source, url, cache_path, "image/png", "png", size, content_hash, width, height, now, now, now, now, now),
     )
     if owner:
         owner_type, owner_id, role, position = owner
@@ -125,6 +151,102 @@ def event_row(event_id: str, source: str, title: str, start: dt.datetime, now: s
     return (event_id, source, source_item_id, "synthetic", title, "Synthetic schedule detail", japan_date(start), iso(start) if starts_at else None, iso(end) if end else None, ends_on, "Asia/Tokyo", "exact" if starts_at else "date", status, event_type, tag, "synthetic", url, provenance, locked, cancellation, None, None, "Synthetic evidence", None, None, None, None, now, now, platform, json.dumps(platforms))
 
 
+def works_index(checkout: pathlib.Path) -> tuple[list[dict], dict[str, str]]:
+    """The packaged upload list the server embeds (uploads with their videos in
+    cover order) and each upload's kind, read from the kano-navi checkout."""
+    works_dir = checkout / "backend" / "internal" / "works"
+    try:
+        index = json.loads((works_dir / "videos.json").read_text())
+        listed = json.loads((works_dir / "upload-list.json").read_text())
+    except (OSError, ValueError) as error:
+        print(f"seed.py: no works upload list in {works_dir} ({error}); seeding no upload covers", file=sys.stderr)
+        return [], {}
+    return index.get("uploads", []), {entry["id"]: entry.get("kind", "") for entry in listed.get("uploads", [])}
+
+
+def seed_works_uploads(conn: sqlite3.Connection, data_root: pathlib.Path, now: str, uploads: list[dict], kinds: dict[str, str]) -> dict[str, int]:
+    """Give the real Works upload IDs synthetic stored state for
+    GET /api/works/uploads: covers for most uploads, a few stored videos with
+    lengths, and removed and private ones. Picks follow rules over the list,
+    newest first, so they hold when the packaged list grows."""
+    newest = sorted(enumerate(uploads), key=lambda pair: (pair[1]["date"], pair[0]), reverse=True)
+    ranked = [upload for _, upload in newest]
+    used: set[str] = set()
+
+    def platforms(upload: dict) -> list[str]:
+        return [video["platform"] for video in upload["videos"]]
+
+    def members(upload: dict) -> bool:
+        return any(video.get("members") for video in upload["videos"])
+
+    def pick(rule) -> dict | None:
+        for upload in ranked:
+            if upload["id"] not in used and rule(upload):
+                used.add(upload["id"])
+                return upload
+        return None
+
+    def youtube_only(upload: dict) -> bool:
+        return platforms(upload) == ["youtube"] and not members(upload)
+
+    def youtube_and_bilibili(upload: dict) -> bool:
+        return platforms(upload) == ["youtube", "bilibili"] and not members(upload)
+
+    # Upload ID -> [(video, title, seconds, availability, thumbnail)] in cover order.
+    stored: dict[str, list[tuple[dict, str, int | None, str | None, bool]]] = {}
+
+    def store(upload: dict | None, *specs: tuple[int | None, str | None, bool]) -> None:
+        if upload is None:
+            return
+        rows = []
+        for video, (seconds, availability, thumbnail) in zip(upload["videos"], specs):
+            title = f"Synthetic {kinds.get(upload['id']) or 'upload'} {upload['date']} ({video['platform']})"
+            rows.append((video, title, seconds, availability, thumbnail))
+        stored[upload["id"]] = rows
+
+    # Lengths on new uploads, one with a stored Bilibili copy merged into it.
+    store(pick(youtube_only), (245, "public", True))
+    store(pick(youtube_and_bilibili), (312, "public", True), (314, "public", False))
+    store(pick(lambda u: platforms(u) == ["youtube"] and members(u)), (268, "members", True))
+    store(pick(lambda u: kinds.get(u["id"]) == "compilation" and "youtube" in platforms(u)), (1985, "public", True))
+    # A video the service stores before it knows its length or who can watch it.
+    store(pick(lambda u: youtube_only(u) and u["date"] < "2024"), (None, None, True))
+    # One page of two is gone; the upload still has a cover and a page to watch.
+    store(pick(lambda u: youtube_and_bilibili(u) and u["date"] < "2023"), (230, "public", True), (231, "removed", False))
+    # Every page is gone: no cover, so the app shows its sleeve and gone mark.
+    store(pick(lambda u: youtube_only(u) and u["date"] < "2020"), (201, "removed", False))
+    store(pick(lambda u: youtube_only(u) and u["date"] < "2018"), (188, "private", False))
+
+    covers = 0
+    for rank, upload in enumerate(ranked):
+        if upload["id"] in stored:
+            for video, title, seconds, availability, thumbnail in stored[upload["id"]]:
+                source = video["platform"]
+                url = f"https://www.youtube.com/watch?v={video['id']}" if source == "youtube" else f"https://www.bilibili.com/video/{video['id']}"
+                thumb = f"https://example.com/synthetic/work-thumb-{video['id']}.png" if thumbnail else None
+                published = upload["date"] + "T11:00:00.000Z"
+                merged = upload["videos"][0]["id"] if source == "bilibili" else None
+                conn.execute(
+                    """INSERT INTO videos(id,source,title,published_at,url,thumbnail_url,kind,is_upcoming,duration_seconds,is_short,is_premiere,tag,tag_source,availability,merged_into,merge_source,merge_reason,merged_at,kind_source)
+                    VALUES(?,?,?,?,?,?,'upload',0,?,0,0,'song','synthetic',?,?,?,?,?,'synthetic')""",
+                    (video["id"], source, title, published, url, thumb, seconds, availability, merged, "manual" if merged else None, "synthetic merge" if merged else None, now if merged else None),
+                )
+                if thumb:
+                    media(conn, data_root, now, thumb, source, rank, ("video", video["id"], "thumbnail", 0), cover=True)
+                    covers += 1
+                add_translations(conn, "video", video["id"], "title", title, "zh" if source == "bilibili" else "ja", source, now)
+            continue
+        # Past the newest two dozen, every tenth upload keeps no cover, so the
+        # list's printed sleeve stays in use.
+        if rank >= 24 and rank % 10 == 9:
+            continue
+        video = upload["videos"][0]
+        url = f"https://example.com/synthetic/work-cover-{video['platform']}-{video['id']}.png"
+        media(conn, data_root, now, url, video["platform"], rank, ("work-video", f"{video['platform']}:{video['id']}", "thumbnail", 0), cover=True)
+        covers += 1
+    return {"workUploads": len(uploads), "workCovers": covers, "workVideos": sum(len(rows) for rows in stored.values())}
+
+
 def main() -> int:
     if len(sys.argv) not in (3, 4):
         print("usage: seed.py DATABASE DATA_ROOT [--repair-profile]", file=sys.stderr)
@@ -153,7 +275,7 @@ def main() -> int:
     dynamic_tables = [
         "media_links", "media_versions", "media_assets", "profile_media", "posts", "x_statuses", "x_reposts",
         "bilibili_statuses", "events", "event_sources", "videos", "focus", "assets", "schedule_asset_reviews",
-        "translations", "translation_states", "sync_state", "sync_runs",
+        "translations", "translation_states", "sync_state", "sync_runs", "work_cover_lookups",
     ]
     for table in dynamic_tables:
         conn.execute(f"DELETE FROM {table}")
@@ -271,6 +393,11 @@ def main() -> int:
     conn.execute("INSERT INTO assets(id,kind,url,source_url,alt,week_start,source_account,updated_at,period_start,period_end,period_basis) VALUES(?,?,?,?,?,?,?,?,?,?,?)", ("synthetic-schedule", "schedule", schedule_url, "https://x.com/kano_2525/status/900000000010", "Synthetic schedule image", japan_date(now_dt - dt.timedelta(days=now_dt.astimezone(JST).weekday())), "kano_2525", now, japan_date(now_dt - dt.timedelta(days=7)), japan_date(now_dt + dt.timedelta(days=7)), "manual"))
     conn.execute("INSERT INTO schedule_asset_reviews(asset_id,llm_status,manual_status,updated_at) VALUES(?,?,?,?)", ("synthetic-schedule", "schedule", "schedule", now))
 
+    # The Works page's uploads are the real packaged list; their covers, lengths
+    # and availability are synthetic rows keyed to its upload and video IDs.
+    checkout = pathlib.Path(os.environ.get("KANO_CHECKOUT") or pathlib.Path(__file__).resolve().parents[3].parent / "kano")
+    works = seed_works_uploads(conn, data_root, now, *works_index(checkout))
+
     conn.execute("INSERT INTO app_settings(key,value,updated_at) VALUES('featured_video_id','SYNTHSONG01',?)", (now,))
     old_revision = conn.execute("SELECT COALESCE(value,'0') FROM app_settings WHERE key='dashboard_revision'").fetchone()
     revision = int(old_revision[0]) + 1 if old_revision and str(old_revision[0]).isdigit() else 1
@@ -281,7 +408,7 @@ def main() -> int:
 
     conn.commit()
     conn.close()
-    print(json.dumps({"seededAt": now, "revision": revision, "events": len(events), "videos": len(videos), "posts": len(posts)}))
+    print(json.dumps({"seededAt": now, "revision": revision, "events": len(events), "videos": len(videos), "posts": len(posts), **works}))
     return 0
 
 
