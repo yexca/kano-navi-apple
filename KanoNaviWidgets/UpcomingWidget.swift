@@ -14,9 +14,19 @@ struct UpcomingWidget: Widget {
         }
         .configurationDisplayName(.widgetUpcomingName)
         .description(.widgetUpcomingDescription)
-        .supportedFamilies([
-            .systemSmall, .systemMedium, .systemLarge, .systemExtraLarge, .accessoryRectangular,
-            .accessoryInline,
-        ])
+        .supportedFamilies(Self.families)
+    }
+
+    /// The Home Screen sizes everywhere, and the Lock Screen layouts on
+    /// iPhone and iPad; a Mac has no Lock Screen widgets.
+    private static var families: [WidgetFamily] {
+        #if os(iOS)
+            [
+                .systemSmall, .systemMedium, .systemLarge, .systemExtraLarge, .accessoryRectangular,
+                .accessoryInline,
+            ]
+        #else
+            [.systemSmall, .systemMedium, .systemLarge, .systemExtraLarge]
+        #endif
     }
 }

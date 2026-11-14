@@ -67,11 +67,11 @@ struct WorksHomeList: View {
                 }
             }
         }
-        .refreshable {
+        .refreshableScreen {
             await reload()
         }
         .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
+            ToolbarItem(placement: .barTrailing) {
                 Button(.Works.info, systemImage: "info.circle") {
                     isShowingInfo = true
                 }

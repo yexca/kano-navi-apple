@@ -54,11 +54,11 @@ struct VideoTimelineScreen: View {
         // The covers at the top are drawn on the first frame when the disk
         // cache has them.
         .environment(\.mediaImageDecodesCachedFilesAtOnce, true)
-        .refreshable(action: model.refresh)
+        .refreshableScreen(action: model.refresh)
         .navigationTitle(.tabVideos)
         .navigationSubtitle(subtitle ?? Text(verbatim: ""))
         .toolbar {
-            ToolbarItemGroup(placement: .topBarLeading) {
+            ToolbarItemGroup(placement: .barLeading) {
                 VideoKindMenu(selection: $model.filter.kind)
                 VideoPlatformMenu(selection: $model.filter.platform)
             }

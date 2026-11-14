@@ -17,6 +17,6 @@ struct WorksReleasePage: View {
                     notice: model.notice, reload: model.reload)
             }
         }
-        .navigationBarTitleDisplayMode(.inline)
+        .inlineNavigationTitle()
     }
 }

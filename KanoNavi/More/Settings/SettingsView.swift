@@ -1,6 +1,5 @@
 import KanoNaviCore
 import SwiftUI
-import UIKit
 
 /// The Notifications link, the content language menu, and a link to the
 /// system's per-app language setting for the interface.
@@ -8,7 +7,9 @@ struct SettingsView: View {
     @AppStorage(AppSettings.contentLanguageKey) private var contentLanguage: ContentLanguage = .system
     @Environment(NotificationController.self) private var notifications: NotificationController?
     @Environment(\.openURL) private var openURL
-    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+    #if os(iOS)
+        @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+    #endif
 
     private var contentLanguagePicker: some View {
         Picker(selection: $contentLanguage) {
@@ -49,18 +50,23 @@ struct SettingsView: View {
             }
 
             Section {
-                // A menu's label and value stack and clip at accessibility
-                // sizes, so there the choices open as a list instead.
-                if dynamicTypeSize.isAccessibilitySize {
-                    contentLanguagePicker
-                        .pickerStyle(.navigationLink)
-                } else {
+                #if os(iOS)
+                    // A menu's label and value stack and clip at accessibility
+                    // sizes, so there the choices open as a list instead.
+                    if dynamicTypeSize.isAccessibilitySize {
+                        contentLanguagePicker
+                            .pickerStyle(.navigationLink)
+                    } else {
+                        contentLanguagePicker
+                            .pickerStyle(.menu)
+                    }
+                #else
                     contentLanguagePicker
                         .pickerStyle(.menu)
-                }
+                #endif
 
                 Button {
-                    if let url = URL(string: UIApplication.openSettingsURLString) {
+                    if let url = SystemSettingsURL.appLanguage {
                         openURL(url)
                     }
                 } label: {
@@ -80,7 +86,7 @@ struct SettingsView: View {
             }
         }
         .navigationTitle(.More.moreSettings)
-        .navigationBarTitleDisplayMode(.inline)
+        .inlineNavigationTitle()
         .task {
             await notifications?.refreshSystemStatus()
         }

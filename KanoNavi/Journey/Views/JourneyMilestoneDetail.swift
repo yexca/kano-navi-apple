@@ -46,7 +46,7 @@ struct JourneyMilestoneDetail: View {
         }
         .readableContentWidth()
         .navigationTitle(.Journey.detailTitle)
-        .navigationBarTitleDisplayMode(.inline)
+        .inlineNavigationTitle()
         .mediaViewer(item: $opened, in: milestone.media, source: \.imageSource) { [contentLocale] media in
             Text(verbatim: media.title(in: contentLocale))
         } caption: { media in

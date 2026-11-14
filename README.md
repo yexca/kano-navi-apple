@@ -1,6 +1,6 @@
-# Kano Navi for iOS
+# Kano Navi for iOS and macOS
 
-The iOS app for Kano Navi (鹿乃ナビ, 鹿乃 Navi), the unofficial fan status board
+The iOS and macOS app for Kano Navi (鹿乃ナビ, 鹿乃 Navi), the unofficial fan status board
 for Kano Mahoro (鹿乃まほろ). It reads the public API of the
 [`kano-navi`](https://github.com/yexca/kano-navi) service; see its
 [Public API](https://github.com/yexca/kano-navi/blob/main/docs/architecture/public-api.md)
@@ -11,6 +11,7 @@ Kano Mahoro or her agency.
 
 - Xcode 27 or later
 - iOS 26 or later; iPhone and iPad
+- macOS 26 or later
 
 ## Project Layout
 
@@ -38,6 +39,13 @@ The app, its widgets and the app-level tests:
 xcodebuild test -project KanoNavi.xcodeproj -scheme KanoNavi -destination 'platform=iOS Simulator,name=iPhone 17e'
 ```
 
+The same on the Mac, with the `KanoNaviMac` scheme, which leaves out the
+iOS-only UI tests:
+
+```bash
+xcodebuild test -project KanoNavi.xcodeproj -scheme KanoNaviMac -destination 'platform=macOS,arch=arm64'
+```
+
 The shared package's tests, from `Packages/KanoNaviKit`:
 
 ```bash
@@ -47,5 +55,8 @@ xcodebuild test -scheme KanoNaviKit-Package -destination 'platform=iOS Simulator
 `swift test` in the same folder runs them on the Mac, which is faster while
 iterating on `KanoNaviCore`.
 
-Releases are unsigned IPAs, so the project has no development team or signing
-profile.
+Releases are unsigned IPAs for iPhone and iPad and an ad-hoc-signed `.app`
+for the Mac, so the project has no development team or signing profile. On
+a Mac other than the one that built it, macOS asks the user to approve the
+app's first launch in System Settings ▸ Privacy & Security; see
+[Signing and Distribution](docs/design.md#signing-and-distribution).

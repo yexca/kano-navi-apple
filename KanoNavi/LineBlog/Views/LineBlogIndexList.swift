@@ -32,8 +32,8 @@ struct LineBlogIndexList: View {
                     }
                 }
             }
-            .listStyle(.insetGrouped)
-            .refreshable {
+            .insetGroupedListStyle()
+            .refreshableScreen {
                 await reload()
             }
             .toolbar {

@@ -1,7 +1,7 @@
 # App Design
 
-Kano Navi for iOS shows what Kano Mahoro is up to: what airs next, the
-schedule, recent videos and posts. It reads the Kano Navi public API and keeps
+Kano Navi for iOS and macOS shows what Kano Mahoro is up to: what airs
+next, the schedule, recent videos and posts. It reads the Kano Navi public API and keeps
 its own layout; it does not mirror the web board page by page. The rules in
 [`AGENTS.md`](../AGENTS.md) apply throughout; this document describes how the
 app is built on them.
@@ -28,9 +28,13 @@ app is built on them.
 | `KanoNaviKit` → `KanoNaviCore`  | Local Swift package lib  | API models, client, SSE revision streaming, caching, refresh scheduling, notification planning, Japan time, content language, display-code labels |
 | `KanoNaviKit` → `KanoNaviComponents` | Local Swift package lib | SwiftUI pieces shared by the app and widgets: state chips, platform marks, time labels, event rows |
 | `KanoNaviTests`                 | Unit tests               | App-level tests (Swift Testing)                                          |
-| `KanoNaviUITests`               | UI tests                 | Launch and navigation smoke tests (XCTest)                               |
+| `KanoNaviWidgetsTests`          | Unit tests               | Widget timeline and layout tests (Swift Testing)                         |
+| `KanoNaviUITests`               | UI tests                 | Launch and navigation smoke tests (XCTest), iPhone and iPad only         |
 
-The package lives in `Packages/KanoNaviKit` with the Swift Testing targets
+Every target but `KanoNaviUITests` builds for iOS (iPhone and iPad) and as a
+native macOS app from the same sources; see
+[Platforms](#platforms). The package lives in `Packages/KanoNaviKit` with the
+Swift Testing targets
 `KanoNaviCoreTests` and `KanoNaviComponentsTests`. It depends on nothing
 outside the Apple SDKs. `KanoNaviCore` does not import SwiftUI;
 `KanoNaviComponents` depends on `KanoNaviCore`.
@@ -40,6 +44,68 @@ Folders inside `KanoNavi/` follow features: `App/`, `Now/`, `Schedule/`,
 `Notifications/`, `Shared/`. The app icon in `Resources/Assets.xcassets` is
 the web board's avatar (`public/assets/kano-avatar.jpg` in `kano-navi`)
 scaled to 1024 px.
+
+## Platforms
+
+The app runs on iPhone and iPad, and natively on the Mac (not Mac Catalyst
+and not the iPad app on the Mac). The two share every screen; where an API
+exists on one platform only, a small helper in `Shared/Platform/` chooses
+the counterpart, so screens carry no platform checks of their own:
+
+| Helper                                   | iOS                                   | macOS                                   |
+| ---------------------------------------- | ------------------------------------- | --------------------------------------- |
+| `ToolbarItemPlacement.barLeading`/`barTrailing` | `topBarLeading`/`topBarTrailing` | `navigation`/`primaryAction`            |
+| `inlineNavigationTitle()`                | `navigationBarTitleDisplayMode(.inline)` | nothing (a window title is inline)   |
+| `insetGroupedListStyle()`                | `.insetGrouped`                       | `.inset`                                |
+| `SearchFieldPlacement.alwaysInBar`       | navigation bar drawer, always shown   | toolbar                                 |
+| `Color.groupedBackground`/`groupedCellBackground` | system grouped backgrounds  | light gray and white; window background and a lifted gray in dark |
+| `Pasteboard.copy(_:)`                    | `UIPasteboard`                        | `NSPasteboard`                          |
+| `SystemSettingsURL`                      | the app's settings and notification settings | Language & Region, and the app's Notifications settings |
+| `refreshableScreen(action:)`             | pull to refresh, and View ▸ Refresh (⌘R) with a keyboard | View ▸ Refresh (⌘R) |
+
+On the Mac:
+
+- The app is one window, at least 720 × 520 points and 1100 × 760 when it
+  first opens. The tabs are the sidebar of the sidebar-adaptable tab view.
+  A link or a notification opens in the window; File has no New Window.
+- View ▸ Refresh (⌘R) reads the screen in front again, as pull to refresh
+  does on iOS: every screen that pulls to refresh offers its action to the
+  command through `FocusedValues.screenRefresh`.
+- Sheets close with their Close button or Esc. The image viewer is a large
+  sheet; see [Image Viewer](#image-viewer).
+- Settings stays in the More tab; there is no Settings window. App Language
+  opens Language & Region in System Settings, where the app's language is
+  chosen under Applications.
+- Notifications and their background check work as on iOS; see
+  [Notifications and Reminders](#notifications-and-reminders).
+- The widgets offer the Home Screen sizes on the desktop and in Notification
+  Center, without the Lock Screen layouts.
+- The LINE BLOG player needs no audio session, since a Mac has none.
+- The dark Berry is a shade lighter on the Mac (`#FF768E` for `#FF7088`), in
+  the Journey's and the Schedule's color sets alike, so text in it keeps
+  4.5:1 on the Mac's dark background (`#1E1E1E`), which is lighter than
+  iOS's black.
+- The Mac app has its own icon sizes in the `AppIcon` set: the same artwork
+  in the Mac's rounded square.
+
+### Signing and Distribution
+
+iOS releases are unsigned IPAs. The Mac app is ad-hoc signed ("Sign to Run
+Locally", `CODE_SIGN_IDENTITY[sdk=macosx*] = -`) with no development team,
+so it runs on the Mac that built it and, copied to another Mac, opens after
+the user approves its first launch in System Settings ▸ Privacy & Security,
+since Gatekeeper does not know its signer. The app and the widget extension
+run in the App Sandbox with outgoing network connections only
+(`Config/KanoNavi-macOS.entitlements`, `Config/Widgets-macOS.entitlements`),
+applied to the macOS build alone; macOS loads a widget extension only when
+it is sandboxed.
+
+The `KanoNavi` scheme builds and tests on iOS. The `KanoNaviMac` scheme is
+the same without the iOS-only UI tests, so its test action runs on the Mac:
+
+```bash
+xcodebuild test -project KanoNavi.xcodeproj -scheme KanoNaviMac -destination 'platform=macOS,arch=arm64'
+```
 
 ## API Contract
 
@@ -114,7 +180,8 @@ alone.
 - Streaming and polling stop when the scene goes to the background. When local
   notifications are enabled, the app schedules a `BGAppRefreshTask`
   (`<bundle-id>.refresh`) to check the dashboard and 14-day calendar in the
-  background; the widgets refresh on their own timeline.
+  background, or on the Mac an `NSBackgroundActivityScheduler` activity
+  under the same identifier; the widgets refresh on their own timeline.
 - A store exposes `snapshot` (last good data, possibly stale), `phase`
   (`idle`, `loading`, `refreshing`, `failed(error)`), `fetchedAt` and
   `source` (`cache` until a refresh succeeds, then `network`), so a view can
@@ -244,6 +311,11 @@ screen over a list of pictures, opening on the one given.
   the page nor closes the viewer.
 - The Close button, a drag downwards and the VoiceOver escape gesture close
   it. A tap hides and shows the bars; they stay while VoiceOver is on.
+- On the Mac the viewer is a large sheet over the window, 1000 × 720 points
+  at first. A trackpad swipe, the Left and Right Arrow keys and the Previous
+  and Next buttons at the sides, shown with the bars, turn the page; a pinch
+  or a double click zooms and a drag moves the zoomed picture. Esc and the
+  Close button close it; a drag does not.
 - A page loads the copy that fits the screen by the same width rule and
   shows a smaller copy already in memory, such as the thumbnail, meanwhile.
 - The screen supplies the caption under each picture (title, credit,
@@ -293,8 +365,8 @@ or its comments. It is generic over an `APIRequest` and built on
 
 ## Screens
 
-The app is a `TabView` with five tabs, on iPhone and iPad. On iPhone they
-are a tab bar. On iPad the tab view is sidebar-adaptable: a wide window shows
+The app is a `TabView` with five tabs, on iPhone, iPad and Mac. On iPhone
+they are a tab bar, and on the Mac a sidebar. On iPad the tab view is sidebar-adaptable: a wide window shows
 the tabs in a sidebar and a narrower one in a bar at the top, and the
 sidebar button switches between the two. A link, a notification or a
 button that opens another tab selects it the same way in either.
@@ -587,7 +659,8 @@ orientation; every screen adapts to its width.
 5. **More** — Journey, Works and the LINE BLOG archive, each described
    below, then Settings and About. Settings is three rows without
    explanations: Notifications with its status, a Content Language menu, and
-   App Language, which opens the system's per-app language setting. About
+   App Language, which opens the system's per-app language setting (on the
+   Mac, Language & Region). About
    says in one line that the app is an unofficial fan project, links the web
    board and the `kano-navi` repository, lists the models the app was built
    with (Claude Opus 5.5, Gemini 4 Carbon, Claude Fable 5.2) and shows the
@@ -881,7 +954,7 @@ permission is requested only when the user turns on **Allow Notifications** in
   seeds this baseline without posting banners. Later evaluations ignore posts
   and non-reservation videos published more than 24 hours before the check, so
   archive backfills do not alert.
-- **Immediate alerts.** Evaluated during `BGAppRefreshTask` runs (which read
+- **Immediate alerts.** Evaluated during background refresh runs (which read
   `/api/dashboard?days=7` and the 14-day calendar window) and kept silent while
   a scene is active so foreground browsing only advances the baseline:
   - *Live Now*: a scheduled entry entering `live`, or an unannounced Bilibili
@@ -899,6 +972,15 @@ permission is requested only when the user turns on **Allow Notifications** in
   - Up to three banners are posted per thread (`live`, `posts`, `videos`,
     `schedule`); four or more updates in one thread send the newest two plus a
     summary banner.
+- **Background refresh.** On iOS it is a `BGAppRefreshTask` the scene's
+  `backgroundTask` runs, no earlier than 15 minutes after it is queued. On
+  the Mac, `SystemBackgroundRefreshScheduler` queues an
+  `NSBackgroundActivityScheduler` activity that runs the same check 15 to
+  about 22 minutes later, at a moment macOS picks for its energy use; it
+  runs while the app runs, with or without its window, and not after the
+  app quits. A Mac always reports background refresh as available, so the
+  notice about it being off appears on iOS alone. Each run queues the next,
+  as on iOS.
 - **Timed reminders.** `UNCalendarNotificationTrigger` requests are rebuilt
   from the 14-day calendar window (up to 48 nearest future triggers). While
   notifications are on, the window is read from the service for each new
@@ -921,9 +1003,10 @@ permission is requested only when the user turns on **Allow Notifications** in
   category, for Console. Debug builds add **Run Background Check (Debug)**
   at the end of the notification settings: it runs the same refresh, with
   immediate alerts, about five seconds after the app next enters the
-  background, under a UIKit background task, so its banners appear on the
-  Home or Lock Screen. Changes the foreground already saw are part of the
-  baseline and do not alert. To launch the real `BGAppRefreshTask` instead,
+  background, under a UIKit background task on iOS, so its banners appear on
+  the Home or Lock Screen; on the Mac, closing the window counts as leaving
+  the app. Changes the foreground already saw are part of the baseline and
+  do not alert. To launch the real `BGAppRefreshTask` on iOS instead,
   pause the app in the debugger after leaving it and run
   `e -l objc -- (void)[[BGTaskScheduler sharedScheduler] _simulateLaunchForTaskWithIdentifier:@"com.yexca.kanonavi.refresh"]`,
   then continue.
@@ -931,14 +1014,15 @@ permission is requested only when the user turns on **Allow Notifications** in
   routed by `AppRouter`: `kanonavi://now`, `kanonavi://posts`,
   `kanonavi://videos`, `kanonavi://event/<id>`,
   `kanonavi://schedule?date=<YYYY-MM-DD>`, and
-  `kanonavi://settings/notifications`. A link or notification that launches
-  the app reaches SwiftUI only after the first frame, so `AppDelegate` reads
+  `kanonavi://settings/notifications`. On iOS a link or notification that
+  launches the app reaches SwiftUI only after the first frame, so `AppDelegate` reads
   the target from the scene's connection options (its URL contexts, or the
   tapped notification's `routeURL`) while the scene is configured and seeds
   the router; the first frame is already the target tab with its focus. The
   router skips the later delivery of that same target once, and forgets it
   when the app goes to the background. A link or notification while the app
-  runs goes through `onOpenURL` and the notification delegate.
+  runs, and on the Mac every link and notification, goes through `onOpenURL`
+  and the notification delegate.
 
 ## Widgets
 
@@ -959,14 +1043,14 @@ permission is requested only when the user turns on **Allow Notifications** in
     entries under compact day headings, as many whole rows as fit, so the
     shorter large widget on an iPad mini lists fewer. Days without entries
     appear only in the strip.
-  - Extra large, on iPad, has large's header and strip across its width,
+  - Extra large, on iPad and the Mac, has large's header and strip across its width,
     then the lead entry's card beside the week's other entries, which get
     the height of both.
   - At accessibility text sizes medium, large and extra large list the next
     entries by day instead, each time above its title, under an "Upcoming"
     header.
-- **Lock Screen** (`accessoryRectangular`, `accessoryInline`): the next entry
-  and its time. The rectangular layout has three fixed lines, so its text
+- **Lock Screen** (`accessoryRectangular`, `accessoryInline`), on iPhone and
+  iPad: the next entry and its time. The rectangular layout has three fixed lines, so its text
   stops growing at the `xxxLarge` Dynamic Type size.
 - The Home Screen widgets use the board's Berry accent (`#DC4560`, `#FF7088`
   in dark appearance) for the capsule and today, a cream-to-pink or plum

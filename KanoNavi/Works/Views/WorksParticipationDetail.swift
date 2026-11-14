@@ -74,7 +74,7 @@ struct WorksParticipationDetail: View {
             }
         }
         .readableContentWidth()
-        .refreshable {
+        .refreshableScreen {
             await reload()
         }
         .navigationTitle(Text(verbatim: work.title))

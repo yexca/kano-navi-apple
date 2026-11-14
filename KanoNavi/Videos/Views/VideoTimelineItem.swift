@@ -1,7 +1,6 @@
 import KanoNaviComponents
 import KanoNaviCore
 import SwiftUI
-import UIKit
 
 /// One video in the timeline, as a video app's feed draws it: the cover
 /// across the width, then the platform, the title in up to two lines and one
@@ -64,7 +63,7 @@ struct VideoTimelineItem: View {
             }
             if let url = card.primaryLink?.url {
                 Button(.Videos.copyLink) {
-                    UIPasteboard.general.url = url
+                    Pasteboard.copy(url)
                 }
             }
         }
@@ -107,7 +106,7 @@ struct VideoTimelineItem: View {
         }
         if let url = card.primaryLink?.url {
             Button(.Videos.copyLink, systemImage: "link") {
-                UIPasteboard.general.url = url
+                Pasteboard.copy(url)
             }
             ShareLink(item: url) {
                 Label(.Videos.share, systemImage: "square.and.arrow.up")

@@ -16,6 +16,6 @@ struct WorksView: View {
             }
         }
         .navigationTitle(.Works.title)
-        .navigationBarTitleDisplayMode(.inline)
+        .inlineNavigationTitle()
     }
 }

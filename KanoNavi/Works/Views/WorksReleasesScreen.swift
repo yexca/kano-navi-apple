@@ -15,9 +15,9 @@ struct WorksReleasesScreen: View {
                 notice: model.notice, reload: model.reload)
         }
         .navigationTitle(.Works.areaReleases)
-        .navigationBarTitleDisplayMode(.inline)
+        .inlineNavigationTitle()
         .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
+            ToolbarItem(placement: .barTrailing) {
                 WorksOrderMenu(order: $order)
             }
         }

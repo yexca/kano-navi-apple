@@ -1,6 +1,5 @@
 import KanoNaviCore
 import SwiftUI
-import UIKit
 
 /// Configures local notification switches and timed reminders.
 struct NotificationSettingsView: View {
@@ -25,7 +24,7 @@ struct NotificationSettingsView: View {
             }
         }
         .navigationTitle(.Notifications.screenTitle)
-        .navigationBarTitleDisplayMode(.inline)
+        .inlineNavigationTitle()
         .task {
             await controller?.refreshSystemStatus()
             syncMasterSwitchFromController()
@@ -320,11 +319,8 @@ struct NotificationSettingsView: View {
     }
 
     private func openAppNotificationSettings() {
-        let target = UIApplication.openNotificationSettingsURLString
-        if let url = URL(string: target) {
+        if let url = SystemSettingsURL.notifications {
             openURL(url)
-        } else if let fallback = URL(string: UIApplication.openSettingsURLString) {
-            openURL(fallback)
         }
     }
 }

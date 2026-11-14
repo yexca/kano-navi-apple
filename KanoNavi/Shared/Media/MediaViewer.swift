@@ -21,6 +21,9 @@ import SwiftUI
 /// - Swipe sideways to turn the page; pinch or double tap to zoom and drag
 ///   to move the picture while zoomed; drag down, tap Close or use the
 ///   VoiceOver escape gesture to close. A tap hides and shows the bars.
+/// - On macOS a trackpad swipe, the arrow keys or the buttons at the sides
+///   turn the page, a pinch or a double click zooms, and Esc or Close
+///   closes; a drag does not close it.
 /// - Each page loads the copy that fits the screen and shows a smaller copy
 ///   already in memory, such as the thumbnail, meanwhile. A missing file
 ///   says so; the caption stays, so keep the provenance link in it.
@@ -39,6 +42,7 @@ struct MediaViewer<Item: Identifiable, Caption: View>: View {
     @State private var isZoomed = false
     @State private var drag = MediaViewerDismissDrag()
     @State private var height: CGFloat = 0
+    @FocusState private var isFocused: Bool
 
     @Environment(\.dismiss) private var dismiss
     @Environment(\.accessibilityVoiceOverEnabled) private var isVoiceOverOn
@@ -74,7 +78,7 @@ struct MediaViewer<Item: Identifiable, Caption: View>: View {
         .scrollDisabled(isZoomed || drag.isActive)
         .ignoresSafeArea()
         .offset(y: drag.translation)
-        .simultaneousGesture(dismissDrag, isEnabled: isZoomed == false)
+        .simultaneousGesture(dismissDrag, isEnabled: Self.closesOnDrag && isZoomed == false)
         .background {
             Color.black
                 .opacity(1 - 0.6 * drag.progress)
@@ -83,6 +87,16 @@ struct MediaViewer<Item: Identifiable, Caption: View>: View {
         .overlay(alignment: .top) {
             MediaViewerTopBar(position: (index ?? 0) + 1, count: items.count, close: close)
                 .opacity(barsOpacity)
+        }
+        .overlay {
+            #if os(macOS)
+                if items.count > 1, let index {
+                    MediaViewerPageButtons(
+                        hasPrevious: index > 0, hasNext: index < items.count - 1, turn: turnPage
+                    )
+                    .opacity(barsOpacity)
+                }
+            #endif
         }
         .overlay(alignment: .bottom) {
             if let index {
@@ -101,6 +115,32 @@ struct MediaViewer<Item: Identifiable, Caption: View>: View {
         .environment(\.colorScheme, .dark)
         .presentationBackground(.clear)
         .accessibilityAction(.escape, close)
+        #if os(macOS)
+            .focusable()
+            .focusEffectDisabled()
+            .focused($isFocused)
+            .onKeyPress(.leftArrow) {
+                turnPage(by: -1)
+                return .handled
+            }
+            .onKeyPress(.rightArrow) {
+                turnPage(by: 1)
+                return .handled
+            }
+            .onAppear {
+                isFocused = true
+            }
+        #endif
+    }
+
+    /// A Mac has no pull-down gesture for a sheet, and a drag there pans a
+    /// zoomed picture or does nothing.
+    private static var closesOnDrag: Bool {
+        #if os(iOS)
+            true
+        #else
+            false
+        #endif
     }
 
     /// The bars stay for VoiceOver, which cannot tap the picture to bring
@@ -123,6 +163,17 @@ struct MediaViewer<Item: Identifiable, Caption: View>: View {
                     }
                 }
             }
+    }
+
+    /// Shows the picture `step` places away, unless the picture is zoomed,
+    /// as a swipe does.
+    private func turnPage(by step: Int) {
+        guard isZoomed == false, let index = items.firstIndex(where: { $0.id == currentID }) else { return }
+        let target = index + step
+        guard items.indices.contains(target) else { return }
+        withAnimation(.snappy(duration: 0.3)) {
+            currentID = items[target].id
+        }
     }
 
     private func toggleBars() {

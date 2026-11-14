@@ -25,6 +25,30 @@
         }
       }
     },
+    "refreshCommand": {
+      "comment": "The View menu command that reads the screen in front again.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Refresh"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "再読み込み"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "刷新"
+          }
+        }
+      }
+    },
     "rootPlaceholderMessage": {
       "comment": "Explains the placeholder shown on a tab whose screen is not built yet.",
       "extractionState": "manual",

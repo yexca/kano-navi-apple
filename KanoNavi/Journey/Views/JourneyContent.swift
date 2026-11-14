@@ -32,7 +32,7 @@ struct JourneyContent: View {
         // through them.
         .scrollEdgeEffectStyle(.hard, for: .top)
         .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
+            ToolbarItem(placement: .barTrailing) {
                 JourneyModePicker(mode: $mode)
             }
         }
@@ -69,7 +69,7 @@ struct JourneyContent: View {
         NavigationStack {
             JourneyContent(journey: JourneyPreviewData.journey, notice: nil) {}
                 .navigationTitle(.More.moreJourney)
-                .navigationBarTitleDisplayMode(.inline)
+                .inlineNavigationTitle()
         }
     }
 #endif

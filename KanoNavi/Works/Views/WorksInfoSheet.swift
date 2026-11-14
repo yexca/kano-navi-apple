@@ -24,7 +24,7 @@ struct WorksInfoSheet: View {
                 }
             }
             .navigationTitle(.Works.info)
-            .navigationBarTitleDisplayMode(.inline)
+            .inlineNavigationTitle()
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button(role: .close) {

@@ -1,8 +1,9 @@
 import Foundation
+import ImageIO
 import KanoNaviCore
 import SwiftUI
 import Testing
-import UIKit
+import UniformTypeIdentifiers
 
 /// Writes contact sheets of every widget family to `KN_RENDER_DIR` for
 /// visual review, one per family and device. Runs only when that variable is set (pass it to
@@ -144,11 +145,17 @@ struct WidgetRenderTests {
 
                 let renderer = ImageRenderer(content: sheet)
                 renderer.scale = 2
-                let data = try #require(renderer.uiImage?.pngData())
-                try data.write(
-                    to: directory.appending(path: "\(name)-\(family.rawValue)-\(device.name).png"))
+                let image = try #require(renderer.cgImage)
+                try writePNG(image, to: directory.appending(path: "\(name)-\(family.rawValue)-\(device.name).png"))
             }
         }
+    }
+
+    private func writePNG(_ image: CGImage, to url: URL) throws {
+        let destination = try #require(
+            CGImageDestinationCreateWithURL(url as CFURL, UTType.png.identifier as CFString, 1, nil))
+        CGImageDestinationAddImage(destination, image, nil)
+        #expect(CGImageDestinationFinalize(destination))
     }
 
     @ViewBuilder

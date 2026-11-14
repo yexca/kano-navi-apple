@@ -3,7 +3,8 @@ import SwiftUI
 extension View {
     /// Presents the full-screen image viewer over `items` while `item` is
     /// set, opening on that item; closing the viewer sets it back to `nil`.
-    /// See `MediaViewer` for what the viewer does and what `caption` should
+    /// On macOS the viewer is a large sheet over the window. See
+    /// `MediaViewer` for what the viewer does and what `caption` should
     /// hold.
     ///
     /// - Parameters:
@@ -16,8 +17,15 @@ extension View {
         item: Binding<Item?>, in items: [Item], source: @escaping (Item) -> MediaImageSource,
         label: @escaping (Item) -> Text, @ViewBuilder caption: @escaping (Item) -> Caption
     ) -> some View {
-        fullScreenCover(item: item) { start in
-            MediaViewer(items: items, startingAt: start.id, source: source, label: label, caption: caption)
-        }
+        #if os(iOS)
+            fullScreenCover(item: item) { start in
+                MediaViewer(items: items, startingAt: start.id, source: source, label: label, caption: caption)
+            }
+        #else
+            sheet(item: item) { start in
+                MediaViewer(items: items, startingAt: start.id, source: source, label: label, caption: caption)
+                    .frame(minWidth: 640, idealWidth: 1000, minHeight: 480, idealHeight: 720)
+            }
+        #endif
     }
 }

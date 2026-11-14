@@ -1,9 +1,12 @@
 import Foundation
 import KanoNaviCore
 import Observation
-import UIKit
 import UserNotifications
 import os
+
+#if os(iOS)
+    import UIKit
+#endif
 
 /// Coordinates local notification permissions, preference changes, foreground
 /// baseline synchronization, calendar reminders, and background app refresh.
@@ -71,6 +74,9 @@ final class NotificationController {
         self.backgroundScheduler = backgroundScheduler
         self.defaults = defaults
         self.preferences = preferencesStore.load()
+        backgroundScheduler.setRefreshHandler { [weak self] in
+            await self?.performBackgroundRefresh()
+        }
     }
 
     var backgroundTaskIdentifier: String {
@@ -89,7 +95,9 @@ final class NotificationController {
 
     func refreshSystemStatus() async {
         authorizationState = await center.authorizationState()
-        isBackgroundRefreshAvailable = UIApplication.shared.backgroundRefreshStatus == .available
+        #if os(iOS)
+            isBackgroundRefreshAvailable = UIApplication.shared.backgroundRefreshStatus == .available
+        #endif
         updateBackgroundRefreshRegistration()
     }
 
@@ -417,12 +425,17 @@ final class NotificationController {
     }
 
     /// Runs `work` under a UIKit background task so it can finish after the
-    /// app leaves the screen.
+    /// app leaves the screen. A Mac app keeps running without a window, so
+    /// there `work` simply runs.
     private func withBackgroundExecution(named name: String, _ work: () async -> Void) async {
-        let execution = BackgroundExecution()
-        execution.begin(named: name)
-        await work()
-        execution.end()
+        #if os(iOS)
+            let execution = BackgroundExecution()
+            execution.begin(named: name)
+            await work()
+            execution.end()
+        #else
+            await work()
+        #endif
     }
 
     private func clearPendingReminders() async {
@@ -454,6 +467,7 @@ final class NotificationController {
     }
 }
 
+#if os(iOS)
 /// One UIKit background task, ended once by whichever comes first: the work
 /// finishing or the system's expiration handler.
 private final class BackgroundExecution {
@@ -471,3 +485,4 @@ private final class BackgroundExecution {
         identifier = .invalid
     }
 }
+#endif
