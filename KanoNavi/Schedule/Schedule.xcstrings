@@ -1,6 +1,30 @@
 {
   "sourceLanguage": "en",
   "strings": {
+    "allDay": {
+      "comment": "Trailing label of a day's entry that has no clock time.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "All Day"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "終日"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "全天"
+          }
+        }
+      }
+    },
     "autoDetected": {
       "comment": "The entry was read automatically from a post or a schedule image.",
       "extractionState": "manual",
@@ -649,6 +673,54 @@
         }
       }
     },
+    "rowTime": {
+      "comment": "VoiceOver reading of an entry's start in Japan time. %@ is the clock time.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ JST"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ JST"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ JST"
+          }
+        }
+      }
+    },
+    "rowTimeRange": {
+      "comment": "VoiceOver reading of an entry's start and end in Japan time. %1$@ is the start, %2$@ the end.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@ to %2$@ JST"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@～%2$@ JST"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@ 至 %2$@ JST"
+          }
+        }
+      }
+    },
     "shareSubscription": {
       "comment": "Menu item that shares the calendar subscription link.",
       "extractionState": "manual",
@@ -813,6 +885,30 @@
           "stringUnit": {
             "state": "translated",
             "value": "日历订阅"
+          }
+        }
+      }
+    },
+    "timesInJST": {
+      "comment": "Caption above a day's entries saying their times are in Japan time.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Times in JST"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "時刻は日本時間 (JST)"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "时间为日本时间 (JST)"
           }
         }
       }

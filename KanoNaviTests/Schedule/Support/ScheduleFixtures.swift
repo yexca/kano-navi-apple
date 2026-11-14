@@ -9,6 +9,8 @@ enum ScheduleFixtures {
         id: String,
         startsOn: String,
         startsAt: String? = nil,
+        endsAt: String? = nil,
+        state: String = "upcoming",
         typeCode: String = "stream",
         calendarEntries: [[String: Any]]? = nil
     ) throws -> ScheduleEvent {
@@ -19,6 +21,7 @@ enum ScheduleFixtures {
             "title": id,
             "startsOn": startsOn,
             "startsAt": startsAt as Any,
+            "endsAt": endsAt as Any,
             "timezone": "Asia/Tokyo",
             "timePrecision": precision,
             "eventType": typeCode,
@@ -26,7 +29,7 @@ enum ScheduleFixtures {
             "cancellationStatus": "none",
             "url": "https://example.com/\(id)",
             "view": [
-                "state": "upcoming",
+                "state": state,
                 "typeCode": typeCode,
                 "activityContext": "",
                 "isWork": false,
