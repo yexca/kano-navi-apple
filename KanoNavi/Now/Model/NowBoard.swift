@@ -5,6 +5,7 @@ import KanoNaviCore
 /// instant. The projection decides; this only joins records by ID. Coming Up
 /// reads its entries from the calendar; see ``NowComingUp``.
 struct NowBoard: Equatable {
+    var profile: NowProfile
     var spotlight: NowSpotlight?
     var liveBroadcast: NowLiveBroadcast?
     /// The dashboard's events, for Coming Up's recently ended entries.
@@ -14,6 +15,7 @@ struct NowBoard: Equatable {
     var freshness: NowFreshness
 
     init(dashboard: Dashboard, now: Date) {
+        profile = NowProfile(dashboard: dashboard)
         let spotlight = NowSpotlight(dashboard: dashboard)
         self.spotlight = spotlight
         liveBroadcast = NowLiveBroadcast(dashboard: dashboard, spotlight: spotlight)
