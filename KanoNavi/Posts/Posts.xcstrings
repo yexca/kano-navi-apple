@@ -301,6 +301,30 @@
         }
       }
     },
+    "recentAccountEmpty": {
+      "comment": "Shown when the chosen account has none of the dashboard's recent posts.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No recent posts from this account."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "このアカウントの最近のポストはありません。"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "这个账号最近没有动态。"
+          }
+        }
+      }
+    },
     "recentEmpty": {
       "comment": "Shown when the dashboard lists no posts. %lld is the number of days the dashboard covers.",
       "extractionState": "manual",

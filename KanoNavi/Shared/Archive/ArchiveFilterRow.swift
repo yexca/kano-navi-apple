@@ -7,8 +7,7 @@ import SwiftUI
 ///
 /// The row scrolls across the whole space it is given and insets its first
 /// and last choices by the standard margin, so give it the full width
-/// rather than padding it: a screen's width in a scroll view, or a list
-/// row's width with zero insets.
+/// rather than padding it, such as a screen's width in a `safeAreaBar`.
 struct ArchiveFilterRow: View {
     let options: [ArchiveFilterOption]
     @Binding var selection: String?

@@ -28,7 +28,6 @@ struct VideosView: View {
             VideoShelfList(
                 shelf: VideoShelf(dashboard: snapshot), dashboard: dashboard, showsArchive: services != nil
             )
-            .refreshable(action: dashboard.refresh)
         } else {
             DashboardUnavailableView(dashboard: dashboard) {
                 if services != nil {

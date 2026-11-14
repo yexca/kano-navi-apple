@@ -8,7 +8,8 @@ enum VideoFixtures {
         id: String, source: String = "youtube", phase: String = "past", formCode: String? = "video",
         shelfGroup: String = "work", tag: String? = nil, availability: String? = "public",
         isShort: Bool = false, scheduledAt: String? = nil, publishedAt: String? = "2026-11-09T10:00:00Z",
-        alternates: [[String: Any]] = [], durationSeconds: Int? = nil
+        alternates: [[String: Any]] = [], durationSeconds: Int? = nil, kind: String? = nil,
+        tagContext: String = "work"
     ) -> [String: Any] {
         var video: [String: Any] = [
             "id": id,
@@ -22,7 +23,7 @@ enum VideoFixtures {
             "alternates": alternates,
             "view": [
                 "phase": phase, "formCode": formCode.map { $0 as Any } ?? NSNull(), "shelfGroup": shelfGroup,
-                "latestEligible": true, "focusEligible": false, "tagContext": "work",
+                "latestEligible": true, "focusEligible": false, "tagContext": tagContext,
             ],
         ]
         video["scheduledAt"] = scheduledAt
@@ -30,6 +31,7 @@ enum VideoFixtures {
         video["tag"] = tag
         video["availability"] = availability
         video["durationSeconds"] = durationSeconds
+        video["kind"] = kind
         return video
     }
 
