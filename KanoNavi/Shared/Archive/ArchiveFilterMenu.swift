@@ -54,7 +54,8 @@ struct ArchiveFilterMenu: View {
                         options: [
                             ArchiveFilterOption(code: nil, label: .verbatim("All"), count: 12),
                             ArchiveFilterOption(code: "a", label: .verbatim("@example"), count: 9),
-                            ArchiveFilterOption(code: "b", label: .verbatim("Bilibili"), logo: .bilibili, count: 3),
+                            ArchiveFilterOption(
+                                code: "b", label: .verbatim("Bilibili"), logo: .bilibili, count: 3),
                         ], selection: $selection, title: "Filter")
                 }
             }

@@ -57,7 +57,9 @@ struct VideoTimelineModelTests {
         let stub = StubVideoTimelineLoader(
             pages: [
                 Self.query(): [.success(try Self.page(["N1", "N2"], hasNext: true))],
-                Self.query(page: 2): [.success(try Self.page(many, page: 2, source: "bilibili", hasNext: true))],
+                Self.query(page: 2): [
+                    .success(try Self.page(many, page: 2, source: "bilibili", hasNext: true))
+                ],
                 Self.query(page: 3): [.success(try Self.page(["O1"], page: 3))],
             ])
         let model = model(stub)
