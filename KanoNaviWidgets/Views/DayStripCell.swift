@@ -4,11 +4,13 @@ import SwiftUI
 import WidgetKit
 
 /// One day of the strip: its weekday letter, its date in a circle that is
-/// filled for today, and a dot when it has entries.
+/// filled for today, and a dot in its tag color for each of its first three
+/// entries (one plain dot outside full color).
 struct DayStripCell: View {
     let date: JapanDate
     let isToday: Bool
-    let hasEntries: Bool
+    /// The tags of the day's entries, in order.
+    let tags: [ScheduleTag]
 
     @Environment(\.locale) private var locale
     @Environment(\.widgetRenderingMode) private var renderingMode
@@ -31,10 +33,15 @@ struct DayStripCell: View {
                             .fill(isFullColor ? Color.berry : Color.primary.opacity(0.25))
                     }
                 }
-            Circle()
-                .frame(width: dotSize, height: dotSize)
-                .berryForeground()
-                .opacity(hasEntries ? 1 : 0)
+            HStack(spacing: 2) {
+                ForEach(dotTags.enumerated(), id: \.offset) { _, tag in
+                    Circle()
+                        .fill(isFullColor ? tag.color : Color.primary)
+                        .frame(width: dotSize, height: dotSize)
+                        .widgetAccentable()
+                }
+            }
+            .frame(height: dotSize)
         }
         .lineLimit(1)
         .accessibilityElement(children: .ignore)
@@ -42,4 +49,10 @@ struct DayStripCell: View {
     }
 
     private var isFullColor: Bool { renderingMode == .fullColor }
+
+    /// A dot per entry, at most three, in full color; one plain dot for a
+    /// day with entries otherwise.
+    private var dotTags: [ScheduleTag] {
+        isFullColor ? Array(tags.prefix(3)) : Array(tags.prefix(1))
+    }
 }

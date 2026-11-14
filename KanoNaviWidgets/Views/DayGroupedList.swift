@@ -3,7 +3,7 @@ import SwiftUI
 import WidgetKit
 
 /// Entries under compact day headings, with their times in one aligned
-/// Berry column.
+/// column, each in its entry's tag color.
 struct DayGroupedList: View {
     let days: [WidgetDay]
     let today: JapanDate
@@ -22,7 +22,7 @@ struct DayGroupedList: View {
                         Link(destination: item.url) {
                             EntryTime(item: item, now: now)
                                 .fontWeight(.bold)
-                                .berryForeground()
+                                .tagForeground(item)
                         }
                         .fixedSize()
                         Link(destination: item.url) {
