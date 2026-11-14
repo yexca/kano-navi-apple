@@ -410,7 +410,12 @@ The app is a `TabView` with five tabs.
      sale window, and a link to the original announcement.
    - A widget or notification link to a date or an entry switches to List and
      shows its month with its day selected; an entry also opens its sheet.
-     Pull to refresh reads the month on screen again.
+     Pull to refresh reads the month on screen again. When the dashboard's
+     revision changes, or the app comes back to the foreground, the month on
+     screen and the months beside it are read again and the other loaded
+     months are marked out of date, to be read again when shown; what is on
+     screen, the selection and the scroll position stay until each read
+     returns.
 3. **Posts** — the dashboard's posts in its order: the account (`@handle` on
    X; a Bilibili account by its platform, never its mid), JST time, text in
    the content language with Show Original, the ready images (up to four,
