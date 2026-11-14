@@ -1,10 +1,10 @@
 import KanoNaviCore
 import SwiftUI
 
-/// The video timeline: every dated video newest first by Japan month, paged
-/// as the list scrolls, narrowed by the filter menu and started at a month
-/// chosen in the month menu. A failed read keeps the videos on screen and
-/// says so.
+/// The video timeline: a feed of every dated video newest first under
+/// pinned Japan month headers, paged as it scrolls, narrowed by the filter
+/// menus and started at a month chosen in the month menu. A failed read
+/// keeps the videos on screen and says so.
 struct VideoTimelineScreen: View {
     @State private var model: VideoTimelineModel
 
@@ -19,19 +19,20 @@ struct VideoTimelineScreen: View {
     }
 
     var body: some View {
-        List {
-            if let notice = model.notice {
-                Section {
+        ScrollView {
+            LazyVStack(alignment: .leading, spacing: 0, pinnedViews: .sectionHeaders) {
+                if let notice = model.notice {
                     VideoTimelineStatusNotice(notice: notice, retry: retry)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding()
                 }
-            }
 
-            VideoTimelineItems(model: model)
+                VideoTimelineItems(model: model)
+            }
         }
-        // Each start is its own list, shown from its top, even when its
+        // Each start is its own feed, shown from its top, even when its
         // pages were read before.
         .id(model.start)
-        .listStyle(.insetGrouped)
         // The covers at the top are drawn on the first frame when the disk
         // cache has them.
         .environment(\.mediaImageDecodesCachedFilesAtOnce, true)

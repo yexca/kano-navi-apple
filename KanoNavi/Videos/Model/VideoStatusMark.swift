@@ -22,3 +22,15 @@ enum VideoStatusMark: Equatable {
         }
     }
 }
+
+extension VideoStatusMark {
+    /// The API's phase this mark stands for.
+    var phase: VideoPhase {
+        switch self {
+        case .live: .live
+        case .upcoming: .upcoming
+        case .started: .started
+        case .cancelled: .cancelled
+        }
+    }
+}
