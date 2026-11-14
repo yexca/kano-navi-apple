@@ -47,11 +47,35 @@ struct PostArchiveTests {
         #expect(request.account == "_sub")
     }
 
+    @Test func pageEntriesCarryThePagesResolvedAvatars() async throws {
+        let page: [String: Any] = [
+            "items": [PostFixtures.json(id: "1", handle: "kano_example")],
+            "adjacent": ["previous": NSNull(), "next": NSNull()], "total": 1, "page": 1, "hasNext": false,
+            "revision": 1, "accountAvatars": ["x:kano_example": "/media/account-avatar/x/kano_example?v=2"],
+        ]
+        let body = try JSONSerialization.data(withJSONObject: page)
+        let client = try APIClient(
+            baseURL: try #require(URL(string: "https://api.example.com")),
+            transport: ClosureTransport { _ in TransportResponse(data: body, statusCode: 200) },
+            cache: MemoryResponseCache())
+
+        let loaded = try await PostArchiveSource.page(client: client)(
+            ArchiveQuery(month: ArchiveFixtures.october, filter: nil, page: 1))
+        let entry = try #require(loaded.items.first)
+
+        #expect(entry.post.id == "1")
+        #expect(
+            entry.accountAvatars?["x:kano_example"]??.absoluteString
+                == "https://api.example.com/media/account-avatar/x/kano_example?v=2")
+    }
+
     @Test func recentPostsKeepTheDashboardsOrder() throws {
         var fixture = DashboardFixture()
         fixture.posts = ["3", "1", "2"].map { PostFixtures.json(id: $0) }
 
-        let cards = try fixture.dashboard().posts.map(PostCard.init)
+        let cards = try fixture.dashboard().posts.map {
+            PostCard(post: $0, accountAvatars: nil, profileAvatarURL: nil)
+        }
 
         #expect(cards.map(\.id) == ["3", "1", "2"])
     }

@@ -31,7 +31,10 @@ struct PostsView: View {
                 }
                 .navigationDestination(for: PostsDestination.self) { _ in
                     if let services {
-                        PostArchiveScreen(client: services.client, meta: dashboard.snapshot?.meta)
+                        PostArchiveScreen(
+                            client: services.client, meta: dashboard.snapshot?.meta,
+                            accountAvatars: dashboard.snapshot?.accountAvatars,
+                            profileAvatarURL: dashboard.snapshot?.profile.avatarURL)
                     }
                 }
         }
