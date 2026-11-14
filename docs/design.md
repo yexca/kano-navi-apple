@@ -410,9 +410,10 @@ it with the screens it opens; Uploads adds `/api/works/upload-list` and
 `/api/works/uploads`. Each read loads on appear and on pull to refresh.
 
 - **Entry.** The years the collection spans, the three ways in with their
-  counts (Own Releases, Featured On, Uploads), the covers of the eight
-  newest releases in a row that scrolls sideways, and the date the
-  collection was checked through.
+  counts (Own Releases, Featured On, Uploads) and the covers of the eight
+  newest releases in a row that scrolls sideways. The toolbar's info button
+  opens a sheet with the date the collection covers works through and the
+  rights notice.
 - **Own Releases.** Covers in a grid by Japan year, newest first, with a
   format filter (All, Album, Single, EP, Doujin, and Other for a format the
   app does not name) and its counts. A card shows the first cover, the
@@ -422,9 +423,9 @@ it with the screens it opens; Uploads adds `/api/works/upload-list` and
   becomes rows.
 - **Release.** `WorksReleaseScreen(releaseID:)` loads the Works document
   itself, so any screen can push it, and says Release Not Found for an ID
-  the collection does not hold: only once the read has ended, since the
-  cached copy may be older than the link, and with the notice when that
-  read failed. It shows the first cover large and the
+  the collection does not hold, with Try Again: only once the read has
+  ended, since the cached copy may be older than the link, and with the
+  notice when that read failed. It shows the first cover large and the
   others as a strip, title, date and marks, label and catalog number, the
   tracks every edition shares by disc (credits, note, and watch links from
   `listen`), disc photos, then a section per edition, store bonuses and the
@@ -440,7 +441,8 @@ it with the screens it opens; Uploads adds `/api/works/upload-list` and
     linked to the contributor's page, whether the file is the publisher's
     or a third party's, and the source page as a link or the site's name.
 - **Featured On.** The participation works by year with cover, date, role
-  and form chips and the unit. A work shows its cover, label, event and
+  and form chips and the unit; an ID the collection does not hold says
+  Work Not Found, as a release does. A work shows its cover, label, event and
   catalog number as written (an empty one is left out), the tracks Kano
   took part in with her further credits, the full track list folded below
   when it holds more than those, and a link to the page the record follows.
@@ -462,11 +464,12 @@ it with the screens it opens; Uploads adds `/api/works/upload-list` and
   - A search that finds nothing shows the system's no-results view; a kind
     or a collection without uploads says so in its own words.
   - Above the list, Newer Uploads shows `recent` (three until expanded)
-    with titles in the content language, JST time and platform links, and
-    says when `recentTotal` exceeds what was sent.
+    with titles in the content language, JST time and platform links, under
+    one footer line with the date they follow and `recentTotal`.
   - The list is the screen's document. When only `/api/works/uploads`
-    fails, the list stays and a notice says covers and newer uploads could
-    not be loaded, or are the saved copy, with Try Again.
+    fails, the list stays and a one-line notice says covers and newer
+    uploads could not be loaded or updated, or are the saved copy, with Try
+    Again.
 - Codes (formats, roles, forms, credits, upload kinds, store platforms,
   image credit roles, the reason a newer upload is listed) are worded in
   `Works.xcstrings`; an unknown code gets a neutral label. Dates are Japan
@@ -479,10 +482,11 @@ captures after the service closed. It has three screens, each one
 [single document](#single-documents) with its saved-copy and failure
 notices and pull to refresh.
 
-- **Article list** (`/api/lineblog`). An introduction says what the archive
-  is, carries the rights notice and links the blog's original address. The
-  articles follow in the service's order, newest first, under their Japan
-  month with its count. A row shows the first picture, the title in the
+- **Article list** (`/api/lineblog`). The articles in the service's order,
+  newest first, under their Japan month with its count. The toolbar's info
+  button opens a sheet that says what the archive is and how its comments
+  were kept, links the blog's original address and carries the rights
+  notice. A row shows the first picture, the title in the
   content language (the Japanese original when that language has none), the
   JST time and the number of archived comments. The toolbar's Jump to Month
   menu lists the years and, inside each, its months with their counts, and
@@ -513,11 +517,12 @@ notices and pull to refresh.
     each with its `alt`, its recovery note and links to where its file was
     recovered from and to the page it linked. A `recovery` code is worded
     under the row (stand-in, from the embedded tweet, or a neutral note for
-    an unknown code). A picture is a button only once it has loaded: one the
-    server does not have says "Image unavailable" and one whose fetch failed
-    offers Try Again, neither opens the viewer, and VoiceOver reads the
-    state as the picture's value and reaches the button. A picture the
-    archive never captured says so and links its original address.
+    an unknown code), each in a few words. A picture is a button only once
+    it has loaded: one the server does not have says "Image unavailable"
+    and one whose fetch failed offers Try Again, neither opens the viewer,
+    and VoiceOver reads the state as the picture's value and reaches the
+    button. A picture the archive never captured says "Picture not
+    archived" and links its original address.
   - A quote is set off with a bar, a rule is a divider, and a link card
     shows its picture, title, summary and host: a card with an `articleId`
     pushes that article, any other opens outside, and its archived capture
@@ -531,37 +536,35 @@ notices and pull to refresh.
     When none plays any more, the audio session is deactivated off the main
     actor after 0.4 seconds, notifying other apps so interrupted music
     carries on; the `playback` category stays for the next video. A copy
-    that cannot be opened says so. Without a copy the cover stands alone
-    with a note. The YouTube page and its archived capture are links under
+    that cannot be opened says "Can't play this video". Without a copy the
+    cover stands alone over "Video not archived". The YouTube page and its archived capture are links under
     the video and are never loaded. The app asks the system for its VP9
     decoder, which exists from iOS 26.2; a VP9 or AV1 copy on a system
     that cannot decode it shows the cannot-be-played note.
   - Translations follow the content language. Japanese shows none. Chinese
     or English shows that language's translation after each paragraph, with
     a bar beside it and "Machine translation" as its VoiceOver value, the
-    translated title under the title, and a note that translations are
-    machine translations. The toolbar's Show Translation switch turns them
-    off for the article on screen. The switch and the note appear whenever
+    translated title under the title, and a Machine Translation mark under
+    the time. The toolbar's Show Translation switch turns them off for the
+    article on screen. The switch and the mark appear whenever
     the article has anything in that language, a translated title alone
     included, and neither appears when it has nothing. A translation is
     text: pictures in it are left out.
   - The article ends with the link to its comments and their count, which
     the article states (a copy cached before the service counted them takes
-    it from the article list; an article known to have none says so), Older
-    Article and
-    Newer Article with the neighbour's title (`previousId` is older,
-    `nextId` newer), which swap the article in place so Back returns to
-    where the reader was opened, and the original address and archived
-    capture as provenance.
+    it from the article list; an article known to have none says "No
+    archived comments"), Older Article and Newer Article with the
+    neighbour's title (`previousId` is older, `nextId` newer), which swap
+    the article in place so Back returns to where the reader was opened,
+    and under Sources the original address and archived capture.
   - An article number the archive does not have (404, or a number that is
     not an article number) shows Article Not Found.
-- **Comments** (`/api/lineblog/posts/{id}/comments`). Under a note that
-  they are what an archived copy of the page preserved and the rights
-  notice, each comment shows its number, the name its writer gave, the JST
-  time, its rating and its text as written, selectable, newest first. A
+- **Comments** (`/api/lineblog/posts/{id}/comments`). Under their count,
+  each comment shows its number, the name its writer gave, the JST time,
+  its rating and its text as written, selectable, newest first. A
   rating is the old form's stars or face with the value in figures beside
   it (`4/5`), read by VoiceOver as one sentence; an unknown kind shows the
-  figures alone. An article without comments says so.
+  figures alone. An article without comments says No Archived Comments.
 
 ## Notifications and Reminders
 
