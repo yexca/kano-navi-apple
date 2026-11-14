@@ -1,7 +1,8 @@
 import KanoNaviCore
 import SwiftUI
 
-/// The app's tab bar. Each tab owns its own navigation stack.
+/// The app's tabs: a tab bar on iPhone, and on iPad a tab bar that the
+/// person can turn into a sidebar. Each tab owns its own navigation stack.
 ///
 /// The dashboard store refreshes only while the scene is active. Timed
 /// reminders are rebuilt from a fresh calendar read when the scene becomes
@@ -68,6 +69,7 @@ struct RootView: View {
                 }
             }
         }
+        .tabViewStyle(.sidebarAdaptable)
         .onOpenURL { url in
             router.open(url)
         }
