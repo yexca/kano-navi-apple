@@ -9,6 +9,9 @@ struct NotificationSettingsView: View {
     @Environment(\.scenePhase) private var scenePhase
 
     @State private var masterSwitch = false
+    #if DEBUG
+        @State private var isDebugCheckArmed = false
+    #endif
 
     var body: some View {
         Group {
@@ -28,6 +31,11 @@ struct NotificationSettingsView: View {
             syncMasterSwitchFromController()
         }
         .onChange(of: scenePhase) { _, phase in
+            #if DEBUG
+                if phase == .background {
+                    isDebugCheckArmed = false
+                }
+            #endif
             if phase == .active {
                 Task {
                     await controller?.refreshSystemStatus()
@@ -82,6 +90,9 @@ struct NotificationSettingsView: View {
                 scheduleSection(controller: controller)
                 remindersSection(controller: controller)
                 membersSection(controller: controller)
+                #if DEBUG
+                    debugSection(controller: controller)
+                #endif
             }
         }
     }
@@ -255,6 +266,30 @@ struct NotificationSettingsView: View {
             Text(.Notifications.membersSectionFooter)
         }
     }
+
+    #if DEBUG
+        /// Runs the background check shortly after the app leaves the screen.
+        /// Debug builds only, so its text stays out of the String Catalog.
+        private func debugSection(controller: NotificationController) -> some View {
+            Section {
+                Button {
+                    controller.armDebugBackgroundCheck()
+                    isDebugCheckArmed = true
+                } label: {
+                    LabeledContent {
+                        if isDebugCheckArmed {
+                            Image(systemName: "checkmark")
+                                .accessibilityLabel(Text(verbatim: "Armed"))
+                        }
+                    } label: {
+                        Text(verbatim: "Run Background Check (Debug)")
+                    }
+                }
+            } footer: {
+                Text(verbatim: "Runs 5 seconds after you leave the app.")
+            }
+        }
+    #endif
 
     private func eventLeadLabel(_ lead: EventReminderLead) -> LocalizedStringResource {
         switch lead {

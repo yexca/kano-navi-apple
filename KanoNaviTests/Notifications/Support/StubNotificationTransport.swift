@@ -3,6 +3,7 @@ import KanoNaviCore
 
 actor StubNotificationTransport: APITransport {
     private var handler: @Sendable (URLRequest) throws -> TransportResponse
+    private(set) var requestedPaths: [String] = []
 
     init(handler: @escaping @Sendable (URLRequest) throws -> TransportResponse) {
         self.handler = handler
@@ -12,7 +13,12 @@ actor StubNotificationTransport: APITransport {
         self.handler = handler
     }
 
+    func requestCount(pathContaining fragment: String) -> Int {
+        requestedPaths.filter { $0.contains(fragment) }.count
+    }
+
     func send(_ request: URLRequest) async throws -> TransportResponse {
-        try handler(request)
+        requestedPaths.append(request.url?.path ?? "")
+        return try handler(request)
     }
 }
