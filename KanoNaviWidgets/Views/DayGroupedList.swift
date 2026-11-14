@@ -2,32 +2,33 @@ import KanoNaviCore
 import SwiftUI
 import WidgetKit
 
-/// Entries under day headings, with their times in one aligned column.
+/// Entries under compact day headings, with their times in one aligned
+/// Berry column.
 struct DayGroupedList: View {
     let days: [WidgetDay]
     let today: JapanDate
     let now: Date
 
     var body: some View {
-        Grid(alignment: .leadingFirstTextBaseline, horizontalSpacing: 8, verticalSpacing: 2) {
+        Grid(alignment: .leadingFirstTextBaseline, horizontalSpacing: 10, verticalSpacing: 3) {
             ForEach(days) { day in
-                DayLabel(date: day.date, today: today)
-                    .font(.caption2.weight(.semibold))
+                DayLabel(date: day.date, today: today, isCompact: true)
+                    .font(.caption.weight(.bold))
                     .foregroundStyle(.secondary)
-                    .padding(.top, day.id == days.first?.id ? 0 : 3)
+                    .padding(.top, day.id == days.first?.id ? 0 : 4)
                     .gridCellColumns(2)
                 ForEach(day.items) { item in
                     GridRow {
                         Link(destination: item.url) {
                             EntryTime(item: item, now: now)
-                                .fontWeight(.semibold)
-                                .foregroundStyle(Color.primary)
-                                .widgetAccentable()
+                                .fontWeight(.bold)
+                                .berryForeground()
                         }
                         .fixedSize()
                         Link(destination: item.url) {
                             HStack(spacing: 4) {
                                 EntryTitle(item: item)
+                                    .fontWeight(.medium)
                                 EntryMarks(item: item)
                             }
                         }
@@ -35,6 +36,6 @@ struct DayGroupedList: View {
                 }
             }
         }
-        .font(.footnote)
+        .font(.subheadline)
     }
 }

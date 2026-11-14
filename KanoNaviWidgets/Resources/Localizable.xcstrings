@@ -25,6 +25,30 @@
         }
       }
     },
+    "widgetEnds": {
+      "comment": "Label beside the time a live entry ends.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ends"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "終了"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "结束"
+          }
+        }
+      }
+    },
     "widgetEndsAt": {
       "comment": "When a live stream ends. %@ is a Japan time, such as 23:00 JST.",
       "extractionState": "manual",
@@ -141,6 +165,30 @@
           "stringUnit": {
             "state": "translated",
             "value": "接下来的日程"
+          }
+        }
+      }
+    },
+    "widgetJST": {
+      "comment": "Time zone label beside a large time, which is Japan time.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "JST"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "JST"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "JST"
           }
         }
       }
@@ -265,50 +313,50 @@
         }
       }
     },
-    "widgetMoreCount": {
-      "comment": "Entries on a day that did not fit. %lld is their number.",
+    "widgetNext": {
+      "comment": "Capsule marking the next entry, when nothing is live.",
       "extractionState": "manual",
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "+%lld more"
+            "value": "Next"
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "ほか%lld件"
+            "value": "次"
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "另有%lld项"
+            "value": "下一项"
           }
         }
       }
     },
-    "widgetNoEntries": {
-      "comment": "Shown for a day without entries in the week view.",
+    "widgetNothingElse": {
+      "comment": "Shown beside the next entry when no other entry follows it.",
       "extractionState": "manual",
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "No entries"
+            "value": "Nothing else"
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "予定なし"
+            "value": "ほかの予定なし"
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "无安排"
+            "value": "暂无其他安排"
           }
         }
       }
@@ -385,26 +433,26 @@
         }
       }
     },
-    "widgetTimesInJST": {
-      "comment": "Note in a widget header that every time shown is Japan time.",
+    "widgetThisWeek": {
+      "comment": "Heading of the large widget, over the seven days from today.",
       "extractionState": "manual",
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Times in JST"
+            "value": "This Week"
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "日本時間"
+            "value": "今週"
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "日本时间"
+            "value": "本周"
           }
         }
       }
@@ -457,30 +505,6 @@
         }
       }
     },
-    "widgetUnavailableMessage": {
-      "comment": "Follows widgetUnavailableTitle; the widget retries on its own.",
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "It will try again soon."
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "しばらくすると再試行します。"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "稍后将自动重试。"
-          }
-        }
-      }
-    },
     "widgetUnavailableTitle": {
       "comment": "The widget could not load the schedule and has nothing saved.",
       "extractionState": "manual",
@@ -501,30 +525,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "无法载入日程"
-          }
-        }
-      }
-    },
-    "widgetUpNext": {
-      "comment": "Heading above the next scheduled entry.",
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Up Next"
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "次の予定"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "下一项"
           }
         }
       }

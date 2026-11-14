@@ -58,14 +58,25 @@ nonisolated struct WidgetSchedule: Equatable, Sendable {
         current(at: now).first { $0.isCancelled == false }
     }
 
+    /// The current entries after `item`, up to `limit`, for a list beside it.
+    func following(_ item: WidgetItem, at now: Date, limit: Int) -> [WidgetItem] {
+        Array(current(at: now).filter { $0.id != item.id }.prefix(limit))
+    }
+
     /// Current entries grouped by Japan day, within `lineBudget` lines, where
-    /// each day heading takes one line and each entry `itemLines`.
-    func upcomingDays(at now: Date, lineBudget: Int, itemLines: Int = 1) -> [WidgetDay] {
+    /// each day heading takes one line and each entry `itemLines`. It leaves
+    /// out the entry `excluding` names, shown elsewhere, and days after
+    /// `lastDay`.
+    func upcomingDays(
+        at now: Date, lineBudget: Int, itemLines: Int = 1, excluding excludedID: WidgetItem.ID? = nil,
+        through lastDay: JapanDate? = nil
+    ) -> [WidgetDay] {
         let today = JapanDate.date(from: now)
         var days: [WidgetDay] = []
         var remaining = lineBudget
-        for item in current(at: now) {
+        for item in current(at: now) where item.id != excludedID {
             let date = max(item.day, today)
+            if let lastDay, date > lastDay { break }
             if days.last?.date != date {
                 guard remaining >= 1 + itemLines else { break }
                 days.append(WidgetDay(date: date, items: []))
@@ -78,26 +89,13 @@ nonisolated struct WidgetSchedule: Equatable, Sendable {
         return days
     }
 
-    /// The seven Japan days from today, each with its current entries, within
-    /// `lineBudget` lines. Every day takes at least one line; days with
-    /// entries take one line per entry, earlier days first. Entries that do
-    /// not fit are counted in `hiddenCount`.
-    func week(at now: Date, lineBudget: Int) -> [WidgetDay] {
+    /// The seven Japan days from today, each with all its current entries.
+    func week(at now: Date) -> [WidgetDay] {
         let today = JapanDate.date(from: now)
         let current = current(at: now)
-        let days = (0..<7).map { offset in
+        return (0..<7).map { offset in
             let date = today.addingDays(offset)
             return WidgetDay(date: date, items: current.filter { max($0.day, today) == date })
-        }
-        var spare = lineBudget - days.count
-        return days.map { day in
-            var day = day
-            let extra = max(0, min(day.items.count - 1, spare))
-            spare -= extra
-            let shown = day.items.isEmpty ? 0 : extra + 1
-            day.hiddenCount = day.items.count - shown
-            day.items = Array(day.items.prefix(shown))
-            return day
         }
     }
 

@@ -88,20 +88,25 @@ struct WidgetScheduleTests {
         #expect(days.map(\.date) == [CalendarFixture.today])
     }
 
-    @Test func weekShowsSevenDaysFromToday() {
-        let week = schedule.week(at: now, lineBudget: 9)
+    @Test func weekShowsSevenDaysFromTodayWithAllTheirEntries() {
+        let week = schedule.week(at: now)
         #expect(week.map(\.date) == (0..<7).map { CalendarFixture.today.addingDays($0) })
         #expect(
             week.map { $0.items.map(\.eventID) } == [
                 ["live", "later"], ["cancelled", "members"], ["sale"], ["release"], [], [], [],
             ])
-        #expect(week.map(\.hiddenCount) == [0, 0, 0, 0, 0, 0, 0])
     }
 
-    @Test func weekCountsEntriesThatDoNotFit() {
-        let week = schedule.week(at: now, lineBudget: 8)
-        #expect(week[1].items.map(\.eventID) == ["cancelled"])
-        #expect(week[1].hiddenCount == 1)
+    @Test func followingListsTheOtherCurrentEntriesUpToTheLimit() throws {
+        let live = try #require(schedule.next(at: now))
+        #expect(
+            schedule.following(live, at: now, limit: 3).map(\.id) == ["later#0", "cancelled#0", "members#0"])
+    }
+
+    @Test func upcomingDaysLeaveOutTheShownEntryAndLaterDays() {
+        let days = schedule.upcomingDays(
+            at: now, lineBudget: 10, excluding: "live#0", through: CalendarFixture.today.addingDays(1))
+        #expect(days.map { $0.items.map(\.eventID) } == [["later"], ["cancelled", "members"]])
     }
 
     @Test func countsTwoLinesPerEntryWhenTimesSitAboveTitles() {
