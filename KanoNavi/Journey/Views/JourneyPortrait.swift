@@ -2,11 +2,11 @@ import KanoNaviCore
 import SwiftUI
 
 /// An identity's mark cropped to a circle and ringed in its tone: the
-/// portrait, or a symbol for the All card and for a branch without one.
+/// portrait, or a symbol for the All chip and for a branch without one.
 struct JourneyPortrait: View {
     let mark: JourneyBranchMark
     let tone: JourneyTone
-    /// Whether the circle is ringed in the tone (not for the All card).
+    /// Whether the circle is ringed in the tone (not for the All chip).
     let isRinged: Bool
 
     var body: some View {
@@ -20,7 +20,7 @@ struct JourneyPortrait: View {
                     )
                 case .symbol(let systemImage):
                     Image(systemName: systemImage)
-                        .font(.title2)
+                        .font(.caption.weight(.semibold))
                         .foregroundStyle(isRinged ? AnyShapeStyle(tone.color) : AnyShapeStyle(.secondary))
                 }
             }

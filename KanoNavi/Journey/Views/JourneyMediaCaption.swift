@@ -2,15 +2,17 @@ import KanoNaviComponents
 import KanoNaviCore
 import SwiftUI
 
-/// What the viewer shows under a Journey image: what it shows, its title,
-/// its date and what the date is, who published the file, credit and
-/// creator as written, the frame time of a video frame, the provenance note,
-/// cancelled-release and third-party marks, and the source links.
+/// What the viewer shows under a Journey image: what it shows, with
+/// cancelled-release and third-party marks, its title, its date and what the
+/// date is, credit and creator as written, and the source links. Who
+/// published the file, the frame time of a video frame and the provenance
+/// note open from Details.
 struct JourneyMediaCaption: View {
     let media: JourneyMedia
 
     @ContentLocaleSetting private var contentLocale
     @Environment(\.locale) private var locale
+    @State private var showsDetails = false
 
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
@@ -36,28 +38,56 @@ struct JourneyMediaCaption: View {
                 }
             }
             JourneyCaptionFact(label: JourneyLabels.dateKind(media.dateKind), value: dateText)
-            JourneyCaptionFact(
-                label: .Journey.sourceKindLabel, value: Text(JourneyLabels.sourceKind(media.sourceKind)))
             if let creator = media.creator, creator.isEmpty == false {
                 JourneyCaptionFact(label: .Journey.creatorLabel, value: Text(verbatim: creator))
-            }
-            if let frameTime = media.frameTime, frameTime.isEmpty == false {
-                JourneyCaptionFact(label: .Journey.frameTimeLabel, value: Text(verbatim: frameTime))
             }
             JourneyCoverCredit(credit: media.cover?.credit)
             if let credit = media.credit, credit.isEmpty == false {
                 Text(verbatim: credit)
                     .font(.footnote)
             }
+            JourneyMediaLinks(media: media)
+                .font(.subheadline)
+            Button {
+                showsDetails = true
+            } label: {
+                Label {
+                    Text(.Journey.captionDetails)
+                } icon: {
+                    Image(systemName: "info.circle")
+                }
+                .font(.footnote)
+            }
+            // The caption bar measures its content more than once, so the
+            // details open over it rather than growing it.
+            .popover(isPresented: $showsDetails) {
+                ScrollView {
+                    details
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding()
+                }
+                .frame(idealWidth: 360, idealHeight: 280)
+                .presentationDetents([.medium, .large])
+            }
+            .accessibilityIdentifier("journey.caption.details")
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+    }
+
+    /// Who published the file, the frame time and the provenance note.
+    private var details: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            JourneyCaptionFact(
+                label: .Journey.sourceKindLabel, value: Text(JourneyLabels.sourceKind(media.sourceKind)))
+            if let frameTime = media.frameTime, frameTime.isEmpty == false {
+                JourneyCaptionFact(label: .Journey.frameTimeLabel, value: Text(verbatim: frameTime))
+            }
             if let note = JourneyLabels.note(media.note) {
                 Text(note)
                     .font(.footnote)
                     .foregroundStyle(.secondary)
             }
-            JourneyMediaLinks(media: media)
-                .font(.subheadline)
         }
-        .frame(maxWidth: .infinity, alignment: .leading)
     }
 
     private var dateText: Text {

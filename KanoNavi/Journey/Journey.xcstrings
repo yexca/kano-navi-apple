@@ -1,6 +1,30 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "aboutNotes" : {
+      "comment" : "VoiceOver label of the info button beside the checked-through date, which shows how the list is made and the image rights notice.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "About This List"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "この一覧について"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "关于此列表"
+          }
+        }
+      }
+    },
     "archiveOnly" : {
       "comment" : "In place of a source link when a milestone is known only from a third-party archive of an official stream.",
       "extractionState" : "manual",
@@ -8,43 +32,19 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Based on a third-party archive of the official stream"
+            "value" : "Third-party stream archive"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "公式配信の第三者アーカイブに基づく"
+            "value" : "第三者の配信アーカイブ"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "依据官方配信的第三方存档"
-          }
-        }
-      }
-    },
-    "branchSince" : {
-      "comment" : "Under an identity's name: the year it starts. %@ is the year, such as 2010.",
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "since %@"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@〜"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ 起"
+            "value" : "第三方配信存档"
           }
         }
       }
@@ -69,6 +69,30 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "发售中止"
+          }
+        }
+      }
+    },
+    "captionDetails" : {
+      "comment" : "Button in the image viewer's caption that opens who published the file, the frame time and the provenance note.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Details"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "詳細"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "详情"
           }
         }
       }
@@ -674,25 +698,25 @@
       }
     },
     "disclaimer" : {
-      "comment" : "Note at the end of the Journey.",
+      "comment" : "In the info popover at the end of the Journey: how the list is made.",
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Hand-curated and not exhaustive. Each source page is authoritative."
+            "value" : "Hand-curated, not exhaustive. Source pages are authoritative."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "手作業の整理のため網羅的ではありません。各出典の元ページが正です。"
+            "value" : "手作業で整理しており、網羅的ではありません。出典ページが正です。"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "节点为人工整理，可能不完整。一切以各来源原页面为准。"
+            "value" : "人工整理，可能不完整，以来源页面为准。"
           }
         }
       }
@@ -728,19 +752,19 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "No images match this selection."
+            "value" : "No matching images"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "この条件の画像はまだ収録していません。"
+            "value" : "該当する画像はありません"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "此筛选下暂时没有图片。"
+            "value" : "没有符合的图片"
           }
         }
       }
@@ -770,7 +794,7 @@
       }
     },
     "identityFilter" : {
-      "comment" : "Accessibility label of the row of identity cards that filter the Journey.",
+      "comment" : "Accessibility label of the row of identity chips that filter the Journey.",
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
@@ -830,25 +854,25 @@
       }
     },
     "imageRights" : {
-      "comment" : "Rights notice under the Journey images.",
+      "comment" : "In the info popover at the end of the Journey: the rights notice for the images.",
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Images belong to their creators and rights holders. Refer to each source page for reuse and credit requirements."
+            "value" : "Images belong to their rights holders. Check each source page before reuse."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "画像の権利は作者・権利者に帰属します。転載時は元ページの利用・クレジット条件をご確認ください。"
+            "value" : "画像の権利は各権利者に帰属します。転載前に出典ページをご確認ください。"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "图片权利属于作者及相关权利人；转载请参照原始页面的署名与使用要求。"
+            "value" : "图片权利归各权利人所有，转载前请查看来源页面。"
           }
         }
       }
@@ -873,54 +897,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "图片"
-          }
-        }
-      }
-    },
-    "jumpLatest" : {
-      "comment" : "First choice of the year menu: scrolls to the newest milestones.",
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Latest"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "最新"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "最新"
-          }
-        }
-      }
-    },
-    "jumpToYear" : {
-      "comment" : "Toolbar menu that scrolls the timeline to a year.",
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Jump to Year"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "年に移動"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "跳转到年份"
           }
         }
       }
@@ -1418,25 +1394,25 @@
       }
     },
     "milestoneMissingMessage" : {
-      "comment" : "Explanation on a milestone's page when a reload no longer lists that milestone.",
+      "comment" : "One line on a milestone's page when a reload no longer lists that milestone.",
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "This milestone is no longer in the Journey. Go back to see the current timeline."
+            "value" : "No longer in the Journey."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "この出来事は今のあゆみに含まれていません。戻って最新のタイムラインをご覧ください。"
+            "value" : "今のあゆみには含まれていません。"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "此节点已不在当前的历程中。请返回查看最新的时间线。"
+            "value" : "已不在当前历程中。"
           }
         }
       }
@@ -1466,7 +1442,7 @@
       }
     },
     "modeGallery" : {
-      "comment" : "Segment showing every Journey image as a grid.",
+      "comment" : "Toolbar segment (a symbol; VoiceOver reads this) showing every Journey image as a grid.",
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
@@ -1514,7 +1490,7 @@
       }
     },
     "modeTimeline" : {
-      "comment" : "Segment showing the Journey milestones as a timeline.",
+      "comment" : "Toolbar segment (a symbol; VoiceOver reads this) showing the Journey milestones as a timeline.",
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
@@ -2305,30 +2281,6 @@
         }
       }
     },
-    "storyContinues" : {
-      "comment" : "Closing line at the end of the timeline, after the newest milestone.",
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "The story continues"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "物語はまだ続く"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "故事还在继续"
-          }
-        }
-      }
-    },
     "thirdPartyMark" : {
       "comment" : "Mark on a release cover whose file comes from a store, database or collector, not the publisher.",
       "extractionState" : "manual",
@@ -2360,19 +2312,19 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "No milestones for this identity yet."
+            "value" : "No milestones yet"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "この名義の出来事はまだ収録していません。"
+            "value" : "出来事はまだありません"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "这个身份暂时没有收录节点。"
+            "value" : "暂无节点"
           }
         }
       }

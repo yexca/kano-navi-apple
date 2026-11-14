@@ -1,8 +1,8 @@
 import KanoNaviCore
 import SwiftUI
 
-/// The loaded Journey: the timeline or the gallery, with the identity filter
-/// both share, and the milestone pages they push.
+/// The loaded Journey: the timeline or the gallery, switched in the toolbar,
+/// with the identity filter both share, and the milestone pages they push.
 struct JourneyContent: View {
     let journey: JourneyResponse
     let notice: DocumentNotice?
@@ -24,8 +24,10 @@ struct JourneyContent: View {
                     journey: journey, branch: $branch, category: $category, notice: notice, reload: reload)
             }
         }
-        .safeAreaBar(edge: .top) {
-            JourneyModePicker(mode: $mode)
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                JourneyModePicker(mode: $mode)
+            }
         }
         .navigationDestination(for: JourneyDestination.self) { destination in
             JourneyDestinationView(destination: destination, journey: journey)

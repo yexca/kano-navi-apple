@@ -2,7 +2,7 @@ import KanoNaviCore
 import SwiftUI
 
 /// The top of the timeline and the gallery: the notice of a saved copy or a
-/// failed read, and the identity cards.
+/// failed read, and the identity chips.
 struct JourneyListHeader: View {
     let branches: [JourneyBranch]
     @Binding var branch: String?

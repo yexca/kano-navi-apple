@@ -34,12 +34,6 @@ struct JourneyStringsTests {
         #expect(resolved(.Journey.imageCount(73), "zh-Hans") == "73 张图片")
     }
 
-    @Test func sinceNamesTheYear() {
-        #expect(resolved(.Journey.branchSince("2010"), "en") == "since 2010")
-        #expect(resolved(.Journey.branchSince("2010"), "ja") == "2010〜")
-        #expect(resolved(.Journey.branchSince("2010"), "zh-Hans") == "2010 起")
-    }
-
     /// The keys of the compiled table for one language, plain and plural.
     private func keys(_ language: String) throws -> Set<String> {
         let folder = try #require(Bundle.main.url(forResource: language, withExtension: "lproj"))
