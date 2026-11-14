@@ -2,7 +2,7 @@ import KanoNaviCore
 import SwiftUI
 import UIKit
 
-/// Notification preferences, the content language picker, and a link to the
+/// The Notifications link, the content language menu, and a link to the
 /// system's per-app language setting for the interface.
 struct SettingsView: View {
     @AppStorage(AppSettings.contentLanguageKey) private var contentLanguage: ContentLanguage = .system
@@ -24,8 +24,6 @@ struct SettingsView: View {
                         }
                     }
                 }
-            } footer: {
-                Text(.More.settingsNotificationsFooter)
             }
 
             Section {
@@ -41,32 +39,32 @@ struct SettingsView: View {
                         .tag(language)
                     }
                 } label: {
-                    Text(.More.settingsContentLanguageHeader)
+                    Label {
+                        Text(.More.settingsContentLanguage)
+                    } icon: {
+                        Image(systemName: "character.bubble")
+                    }
                 }
-                .pickerStyle(.inline)
-                .labelsHidden()
-            } header: {
-                Text(.More.settingsContentLanguageHeader)
-            } footer: {
-                Text(.More.settingsContentLanguageFooter)
-            }
+                .pickerStyle(.menu)
 
-            Section {
                 Button {
                     if let url = URL(string: UIApplication.openSettingsURLString) {
                         openURL(url)
                     }
                 } label: {
-                    Label {
-                        Text(.More.settingsAppLanguageButton)
-                    } icon: {
-                        Image(systemName: "globe")
+                    LabeledContent {
+                        Image(systemName: "arrow.up.forward.app")
+                            .foregroundStyle(.secondary)
+                            .accessibilityHidden(true)
+                    } label: {
+                        Label {
+                            Text(.More.settingsAppLanguage)
+                        } icon: {
+                            Image(systemName: "globe")
+                        }
                     }
                 }
-            } header: {
-                Text(.More.settingsAppLanguageHeader)
-            } footer: {
-                Text(.More.settingsAppLanguageFooter)
+                .accessibilityHint(Text(.More.settingsAppLanguageHint))
             }
         }
         .navigationTitle(.More.moreSettings)

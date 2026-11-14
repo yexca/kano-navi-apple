@@ -1,16 +1,15 @@
 import SwiftUI
 
-/// States that the app is an unofficial fan project, where its data comes
-/// from, and links the web board and the source repository.
+/// States that the app is an unofficial fan project, links the web board and
+/// the source repository, and lists the models the app was built with.
 struct AboutView: View {
     var body: some View {
         List {
             Section {
-                VStack(alignment: .leading, spacing: 12) {
+                VStack(alignment: .leading, spacing: 4) {
                     Text(.appName)
                         .font(.title2.weight(.bold))
                     Text(.More.aboutUnofficial)
-                    Text(.More.aboutData)
                         .foregroundStyle(.secondary)
                 }
                 .padding(.vertical, 4)
@@ -25,8 +24,14 @@ struct AboutView: View {
                         .More.aboutSourceCode, systemImage: "chevron.left.forwardslash.chevron.right",
                         url: url)
                 }
+            }
+
+            Section {
+                ForEach(AboutCredits.models, id: \.self) { model in
+                    Text(verbatim: model)
+                }
             } header: {
-                Text(.More.aboutLinksHeader)
+                Text(.More.aboutBuiltWith)
             }
 
             Section {
@@ -45,15 +50,11 @@ struct AboutView: View {
         Link(destination: url) {
             LabeledContent {
                 Image(systemName: "arrow.up.right")
+                    .foregroundStyle(.secondary)
                     .accessibilityHidden(true)
             } label: {
                 Label {
-                    VStack(alignment: .leading, spacing: 2) {
-                        Text(title)
-                        Text(verbatim: url.host() ?? url.absoluteString)
-                            .font(.footnote)
-                            .foregroundStyle(.secondary)
-                    }
+                    Text(title)
                 } icon: {
                     Image(systemName: systemImage)
                 }

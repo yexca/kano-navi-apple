@@ -1,6 +1,6 @@
 import KanoNaviCore
 
-/// The choices of the content language picker, in display order.
+/// The choices of the content language menu, in display order.
 enum ContentLanguageOption {
     static let all: [ContentLanguage] = [.system, .en, .ja, .zhHans]
 
