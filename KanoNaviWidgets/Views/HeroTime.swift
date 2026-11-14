@@ -2,7 +2,7 @@ import KanoNaviComponents
 import KanoNaviCore
 import SwiftUI
 
-/// A lead entry's time, large and in Berry: "Ends" and when a live entry
+/// A lead entry's time, large and in its tag color: "Ends" and when a live entry
 /// ends, the next entry's Japan time, each with "JST", or "All day".
 struct HeroTime: View {
     let item: WidgetItem
@@ -60,7 +60,7 @@ struct HeroTime: View {
             time
                 .font(.title2.weight(.bold))
                 .monospacedDigit()
-                .berryForeground()
+                .tagForeground(item)
                 .layoutPriority(1)
             if isTime {
                 Text(.widgetJST)

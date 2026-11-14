@@ -4,12 +4,14 @@ import SwiftUI
 
 /// The Compact, Stacked and Details modes: months scrolling vertically one
 /// after another under a pinned weekday row. The month at the top is the
-/// model's month, which names the navigation bar and is read with the months
+/// model's month, which is the large title and is read with the months
 /// beside it as it comes into view.
 struct ScheduleGridContent: View {
     let model: ScheduleModel
     let style: ScheduleMode
     let contentLanguage: ContentLanguage
+    /// Counts Today taps; each one scrolls to today's month.
+    let todayTaps: Int
     let openDay: (JapanDate) -> Void
 
     /// The month at the top of the scroll view, kept in step with the
@@ -23,12 +25,13 @@ struct ScheduleGridContent: View {
     @State private var hasLanded = false
 
     init(
-        model: ScheduleModel, style: ScheduleMode, contentLanguage: ContentLanguage,
+        model: ScheduleModel, style: ScheduleMode, contentLanguage: ContentLanguage, todayTaps: Int,
         openDay: @escaping (JapanDate) -> Void
     ) {
         self.model = model
         self.style = style
         self.contentLanguage = contentLanguage
+        self.todayTaps = todayTaps
         self.openDay = openDay
         _position = State(initialValue: ScrollPosition(id: model.displayedMonth, anchor: .top))
     }
@@ -58,6 +61,11 @@ struct ScheduleGridContent: View {
         .onChange(of: style) {
             // Cells change height with the style; keep the month in view.
             Task { await land(on: model.displayedMonth) }
+        }
+        .onChange(of: todayTaps) {
+            withAnimation {
+                position.scrollTo(id: model.today.firstOfMonth, anchor: .top)
+            }
         }
         .onChange(of: model.displayedMonth) { _, month in
             if month != scrolledMonth {

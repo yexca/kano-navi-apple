@@ -1,4 +1,5 @@
 import Foundation
+import KanoNaviComponents
 import KanoNaviCore
 
 /// One calendar entry as the widgets show it: an event's start, or a sale's
@@ -23,6 +24,8 @@ nonisolated struct WidgetItem: Equatable, Identifiable, Sendable {
     var state: EventState
     var typeCode: String?
 
+    /// The entry's color family, as in the app's calendar.
+    var tag: ScheduleTag { ScheduleTag(typeCode: typeCode) }
     var isMembers: Bool { typeCode == "member" }
     var isCancelled: Bool { state == .cancelled }
     var isCancellationSuspected: Bool { state == .cancellationReview }

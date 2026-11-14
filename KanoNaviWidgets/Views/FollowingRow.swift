@@ -37,7 +37,7 @@ struct FollowingRow: View {
                 .foregroundStyle(.secondary)
             EntryTime(item: item, now: now)
                 .font(.caption.weight(.bold))
-                .berryForeground()
+                .tagForeground(item)
         }
     }
 

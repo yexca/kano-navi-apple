@@ -20,7 +20,7 @@ struct StackedDayList: View {
                         VStack(alignment: .leading, spacing: 0) {
                             EntryTime(item: item, now: now, labelsZone: true)
                                 .fontWeight(.bold)
-                                .berryForeground()
+                                .tagForeground(item)
                             EntryTitle(item: item)
                                 .fontWeight(.semibold)
                         }

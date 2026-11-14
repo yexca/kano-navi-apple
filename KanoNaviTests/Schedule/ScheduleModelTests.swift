@@ -267,7 +267,7 @@ struct ScheduleModelTests {
         #expect(model.selectedDate == chosen)
     }
 
-    @Test func monthTitleReturnsToToday() {
+    @Test func todayShowsTodaysMonthWithTodaySelected() {
         let model = model(StubMonthLoader([:]))
         model.showMonth(offset: 3)
         model.select(JapanDate(year: 2027, month: 2, day: 9))

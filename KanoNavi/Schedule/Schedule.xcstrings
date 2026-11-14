@@ -818,7 +818,7 @@
       }
     },
     "today": {
-      "comment": "VoiceOver action of the month title that shows today's Japan date in the calendar.",
+      "comment": "Toolbar button that shows today's Japan date and its month in the calendar.",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -861,30 +861,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "今天，%@"
-          }
-        }
-      }
-    },
-    "todayHint": {
-      "comment": "VoiceOver hint of the month title in the navigation bar.",
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Shows today."
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "今日を表示します。"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "显示今天。"
           }
         }
       }

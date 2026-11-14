@@ -18,7 +18,6 @@ struct ScheduleGridDayCell: View {
     @ScaledMetric(relativeTo: .subheadline) private var circleSize = 28.0
     @ScaledMetric(relativeTo: .subheadline) private var compactHeight = 62.0
     @ScaledMetric(relativeTo: .subheadline) private var tallHeight = 92.0
-    @ScaledMetric(relativeTo: .caption2) private var dotSize = 6.0
     @ScaledMetric(relativeTo: .caption2) private var barHeight = 6.0
 
     var body: some View {
@@ -58,12 +57,7 @@ struct ScheduleGridDayCell: View {
         let shown = entries.prefix(marks.shown)
         switch style {
         case .list, .compact:
-            // Fewer dots before "+n" would be cut short in a narrow cell.
-            ViewThatFits(in: .horizontal) {
-                ForEach((1...style.markCapacity).reversed(), id: \.self) { capacity in
-                    dots(capacity: capacity)
-                }
-            }
+            ScheduleDayDots(entries: entries, capacity: style.markCapacity)
         case .stacked:
             VStack(spacing: 3) {
                 ForEach(shown) { item in
@@ -80,18 +74,6 @@ struct ScheduleGridDayCell: View {
                 }
                 more(marks.more)
             }
-        }
-    }
-
-    private func dots(capacity: Int) -> some View {
-        let marks = ScheduleMode.marks(forEntryCount: entries.count, capacity: capacity)
-        return HStack(spacing: 2) {
-            ForEach(entries.prefix(marks.shown)) { item in
-                Circle()
-                    .fill(color(of: item))
-                    .frame(width: dotSize, height: dotSize)
-            }
-            more(marks.more)
         }
     }
 

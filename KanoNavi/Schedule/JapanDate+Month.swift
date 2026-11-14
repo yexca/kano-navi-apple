@@ -32,9 +32,10 @@ nonisolated extension JapanDate {
         JapanTime.startOfDay(self) ?? Date(timeIntervalSince1970: 0)
     }
 
-    /// The month and year, such as "November 2026", in the given locale.
-    func monthTitle(locale: Locale) -> String {
-        startInstant.formatted(Self.style(locale: locale).month(.wide).year())
+    /// The month and year, such as "November 2026", or "Nov 2026" when
+    /// `abbreviated`, in the given locale.
+    func monthTitle(locale: Locale, abbreviated: Bool = false) -> String {
+        startInstant.formatted(Self.style(locale: locale).month(abbreviated ? .abbreviated : .wide).year())
     }
 
     /// The month alone, abbreviated, such as "Nov" or "11月".

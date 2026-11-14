@@ -320,17 +320,19 @@ The app is a `TabView` with five tabs.
    Pull to refresh reloads the dashboard and then Coming Up's range; Coming
    Up also reloads whenever the dashboard is received.
 2. **Schedule** — Monday-first months of Japan dates, after the month view
-   of the iPhone Calendar app. The navigation bar has no title: its leading
-   item is the name of the month on screen ("November 2026"), large and bold,
-   and tapping it goes back to today (today's month, today selected; VoiceOver
-   reads the month with a Today hint and action). Its trailing items are the
-   mode menu and the calendar subscription menu (`webcal://` link to
+   of the iPhone Calendar app. The large title is the name of the month on
+   screen ("November 2026"; "Nov 2026" at accessibility text sizes, so the
+   year stays) in every mode, and it collapses into the bar as the content
+   scrolls. Today, at the leading end of the bar, selects today
+   and shows its month (a grid mode scrolls to it). The trailing items are
+   the mode menu and the calendar subscription menu (`webcal://` link to
    `/api/calendar.ics` in the interface language, or share the HTTPS link).
    - **Modes**: a menu of four, each with its symbol and the current one
      checked; the menu's icon is the current mode's. The choice is kept on the
      device (`AppSettings.scheduleModeKey`), and List is the default.
-     - **List**: one month with a mark on each day that has entries
-       (`dayCounts`), and the selected day's entries below it. Swiping the
+     - **List**: one month with a dot per entry in its tag color under each
+       day (as in Compact, gray on the days of the months around it), and
+       the selected day's entries below it. Swiping the
        grid pages to the month before or after it, which selects today in
        today's month and the first day elsewhere; every day also has Previous
        Month and Next Month VoiceOver actions.
@@ -340,15 +342,17 @@ The app is a `TabView` with five tabs.
        left blank, and today in a filled circle. A day shows its entries as a
        dot each (Compact), a bar each in taller cells (Stacked), or each
        title on one line on a tint of its color (Details), and folds what
-       does not fit into "+n". The navigation bar names the month at the top,
-       and that month and the months on each side of it are read as it comes
+       does not fit into "+n"; a cell too narrow for its dots and "+n" draws
+       fewer dots rather than cut "+n" short. The title names the month at
+       the top, and that month and the months on each side of it are read as it comes
        into view. Tapping a day opens it in List. At accessibility text sizes
        Stacked and Details use Compact's dots.
-   - **Colors** come from `view.typeCode`, defined once in `ScheduleTag`:
-     stream in the app's Berry, member purple, event orange, release blue,
-     video teal, sale green, and gray for no or an unknown code. Each has a
-     light and a dark shade that keeps Details text at 4.5:1 or more on its
-     tint. Done and cancelled entries keep their hue but fade; a cancelled
+   - **Colors** come from `view.typeCode`, defined once in `ScheduleTag` in
+     `KanoNaviComponents`, which the widgets share: stream in the app's
+     Berry, member purple, event orange, release blue, video teal, sale
+     green, and gray for no or an unknown code. Each has a light and a dark
+     shade that keeps text at 4.5:1 or more on its Details tint and on the
+     widgets' backgrounds. Done and cancelled entries keep their hue but fade; a cancelled
      title is struck through. List's entry rows carry a thin bar of the same
      color, and the type's name stays in words in the entry's chips.
    - **Entries**: a day's entries come from each event's
@@ -749,8 +753,8 @@ permission is requested only when the user turns on **Allow Notifications** in
   - Medium shows that lead entry as small does, then a divider and up to
     three following entries, each with its day, time and title.
   - Large shows a header with the avatar, "This Week" and the JST date range;
-    a strip of the seven Japan days from today, today filled and a dot under
-    each day with entries; a card for the lead entry; and the week's other
+    a strip of the seven Japan days from today, today filled and a dot in its
+    tag color under each day for each of its first three entries; a card for the lead entry; and the week's other
     entries under compact day headings. Days without entries appear only in
     the strip.
   - At accessibility text sizes medium and large list the next entries by
@@ -759,10 +763,13 @@ permission is requested only when the user turns on **Allow Notifications** in
   and its time. The rectangular layout has three fixed lines, so its text
   stops growing at the `xxxLarge` Dynamic Type size.
 - The Home Screen widgets use the board's Berry accent (`#DC4560`, `#FF7088`
-  in dark appearance) for times, the capsule and today, a cream-to-pink or
-  plum background, and the rounded system font. Berry parts are accented so
-  tinted and clear Home Screens keep the hierarchy; there the background is
-  removed and Berry becomes the primary style. The lead entry's time and its
+  in dark appearance) for the capsule and today, a cream-to-pink or plum
+  background, and the rounded system font. Each entry's time is in its tag
+  color (see Schedule), faded when done or cancelled, so the widgets agree
+  with the app. Berry and tag-colored parts are accented so tinted and clear
+  Home Screens keep the hierarchy; there the background is removed, the
+  colors become the primary style and the strip shows one plain dot per day,
+  and the title and marks still say what each entry is. The lead entry's time and its
   state row stop growing at large text sizes so the title keeps its lines.
 - Unavailable, empty and cached states take one short line each.
 - The widgets draw JST times and dates, and the live state in lists, with the
