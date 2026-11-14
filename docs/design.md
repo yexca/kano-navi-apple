@@ -320,13 +320,15 @@ The app is a `TabView` with five tabs.
    Pull to refresh reloads the dashboard and then Coming Up's range; Coming
    Up also reloads whenever the dashboard is received.
 2. **Schedule** — Monday-first months of Japan dates, after the month view
-   of the iPhone Calendar app. The large title is the name of the month on
-   screen ("November 2026"; "Nov 2026" at accessibility text sizes, so the
-   year stays) in every mode, and it collapses into the bar as the content
-   scrolls. Today, at the leading end of the bar, selects today
-   and shows its month (a grid mode scrolls to it). The trailing items are
-   the mode menu and the calendar subscription menu (`webcal://` link to
-   `/api/calendar.ics` in the interface language, or share the HTTPS link).
+   of the iPhone Calendar app. The name of the month on screen ("November
+   2026"; "Nov 2026" at accessibility text sizes, so the year stays) is a
+   fixed header styled like a large title at the top of every mode, never
+   the navigation bar's title, so it never collapses or scrolls away; it
+   follows the month in view. The bar has no visible title: Today at its
+   leading end selects today and shows its month (a grid mode scrolls to
+   it), and its trailing items are the mode menu and the calendar
+   subscription menu (`webcal://` link to `/api/calendar.ics` in the
+   interface language, or share the HTTPS link).
    - **Modes**: a menu in Calendar's order (Compact, Stacked, Details, a
      divider, then List), each with its symbol and the current one checked;
      the menu's icon is the current mode's. The choice is kept on the device
@@ -335,7 +337,8 @@ The app is a `TabView` with five tabs.
      the first and after the last, a hairline above each day (so a week's
      line spans only its days), weekend numbers in gray and today in the
      tint.
-     - **List**: the weekday row and the month on screen fixed at the top,
+     - **List**: the month's name, the weekday row and the month on screen
+       fixed at the top with nothing around them that scrolls,
        with a dot per entry in its tag color under each day; the selected day
        is in a filled circle (the tint for today, else the primary color).
        Swiping the month up shows the next month and down the previous one,
@@ -346,7 +349,7 @@ The app is a `TabView` with five tabs.
        the selected day's entries in a plain list of their own that pulls to
        refresh, or "No Entries" in the middle.
      - **Compact**, **Stacked** and **Details**: months scroll vertically one
-       after another under a pinned weekday row, each with its short name
+       after another under the pinned, opaque month name and weekday row, each with its short name
        above the column of its first day. A day shows its entries as a dot
        each (Compact), a bar each in taller cells (Stacked), or each title
        on one line on a tint of its color (Details), and folds what does not

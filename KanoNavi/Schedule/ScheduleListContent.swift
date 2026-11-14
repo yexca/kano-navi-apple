@@ -2,8 +2,9 @@ import KanoNaviComponents
 import KanoNaviCore
 import SwiftUI
 
-/// The List mode, as in Calendar: the weekday row and the month on screen
-/// fixed at the top, edge to edge, then the month's notice when it is not
+/// The List mode, as in Calendar: the month's name, the weekday row and the
+/// month on screen fixed at the top, edge to edge, with nothing around them
+/// that scrolls, then the month's notice when it is not
 /// a fresh read, then the selected day's entries. Swiping the month up shows
 /// the next month and down the previous one.
 struct ScheduleListContent: View {
@@ -16,6 +17,7 @@ struct ScheduleListContent: View {
 
     var body: some View {
         VStack(spacing: 0) {
+            ScheduleMonthHeader(month: model.displayedMonth)
             ScheduleWeekdayRow()
                 .padding(.vertical, 6)
                 .dynamicTypeSize(...DynamicTypeSize.xxxLarge)
