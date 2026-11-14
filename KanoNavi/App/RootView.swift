@@ -3,8 +3,10 @@ import SwiftUI
 
 /// The app's tab bar. Each tab owns its own navigation stack.
 ///
-/// The dashboard store refreshes only while the scene is active; when the scene
-/// enters the background, local notification refresh is scheduled if enabled.
+/// The dashboard store refreshes only while the scene is active. Timed
+/// reminders are rebuilt from a fresh calendar read when the scene becomes
+/// active or enters the background, where the next background refresh is also
+/// scheduled if enabled.
 struct RootView: View {
     @Environment(AppRouter.self) private var router
     @Environment(DashboardStore.self) private var dashboard
@@ -75,11 +77,12 @@ struct RootView: View {
                 dashboard.start()
                 Task {
                     await notifications?.refreshSystemStatus()
+                    await notifications?.refreshReminders(interfaceLocale: locale)
                 }
             case .background:
                 dashboard.stop()
                 Task {
-                    await notifications?.handleDidEnterBackground()
+                    await notifications?.handleDidEnterBackground(interfaceLocale: locale)
                 }
             case .inactive:
                 dashboard.stop()

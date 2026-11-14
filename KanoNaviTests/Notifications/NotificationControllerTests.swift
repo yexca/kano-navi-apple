@@ -13,66 +13,11 @@ struct NotificationControllerTests {
         return defaults
     }
 
-    private func calendarPageData(events: [[String: Any]] = []) throws -> Data {
-        let object: [String: Any] = [
-            "events": events,
-            "scheduleImages": [],
-            "adjacent": ["previous": NSNull(), "next": NSNull()],
-            "dayCounts": [:],
-            "total": events.count,
-            "page": 1,
-            "pageSize": 100,
-            "totalPages": 1,
-            "hasNext": false,
-            "revision": 1,
-        ]
-        return try JSONSerialization.data(withJSONObject: object)
-    }
-
-    private func dashboardData(posts: [[String: Any]] = [], revision: Int) throws -> Data {
-        let object: [String: Any] = [
-            "profile": [
-                "displayName": "Synthetic",
-                "romanizedName": "Synthetic",
-                "bio": "",
-                "xUrl": "https://example.com/x",
-                "youtubeUrl": "https://example.com/youtube",
-            ],
-            "projection": [
-                "version": 1,
-                "focus": ["eventIds": [], "videoIds": []],
-                "spotlight": NSNull(),
-                "sales": [],
-                "shelf": [
-                    "leadIsFeatured": false,
-                    "reservations": [],
-                    "works": [],
-                    "archives": [],
-                    "shorts": [],
-                ],
-            ],
-            "summary": [:],
-            "posts": posts,
-            "events": [],
-            "videos": [],
-            "timeline": [],
-            "resources": [],
-            "assets": [],
-            "scheduleImages": [],
-            "meta": [
-                "postWindowDays": 7,
-                "xAccounts": ["kano_synthetic"],
-                "revision": revision,
-            ],
-        ]
-        return try JSONSerialization.data(withJSONObject: object)
-    }
-
     @Test func deniedPermissionKeepsMasterSwitchDisabled() async throws {
         let defaults = try makeDefaults()
         let center = MockUserNotificationCenterClient(status: .notDetermined, grantOnRequest: false)
         let scheduler = MockBackgroundRefreshScheduler()
-        let emptyCalendar = try calendarPageData()
+        let emptyCalendar = try NotificationFixtures.calendarPageData()
         let transport = StubNotificationTransport { _ in
             TransportResponse(data: emptyCalendar, statusCode: 200)
         }
@@ -104,8 +49,8 @@ struct NotificationControllerTests {
         let scheduler = MockBackgroundRefreshScheduler()
         let stateStore = MemoryNotificationStateStore()
 
-        let initialDashboardData = try dashboardData(revision: 1)
-        let calendarData = try calendarPageData()
+        let initialDashboardData = try NotificationFixtures.dashboardData(revision: 1)
+        let calendarData = try NotificationFixtures.calendarPageData()
 
         let transport = StubNotificationTransport { request in
             let path = request.url?.path ?? ""
@@ -146,7 +91,7 @@ struct NotificationControllerTests {
             "media": [],
             "mediaStatus": "none",
         ]
-        let secondData = try dashboardData(posts: [postJSON], revision: 2)
+        let secondData = try NotificationFixtures.dashboardData(posts: [postJSON], revision: 2)
 
         await transport.setHandler { request in
             let path = request.url?.path ?? ""
