@@ -755,7 +755,7 @@ permission is requested only when the user turns on **Allow Notifications** in
   IDs, video IDs, event snapshots and live broadcast IDs in Application
   Support. Recording the first snapshot (or turning notifications back on)
   seeds this baseline without posting banners. Later evaluations ignore posts
-  and non-reservation videos published more than 48 hours before the check, so
+  and non-reservation videos published more than 24 hours before the check, so
   archive backfills do not alert.
 - **Immediate alerts.** Evaluated during `BGAppRefreshTask` runs (which read
   `/api/dashboard?days=7` and the 14-day calendar window) and kept silent while
