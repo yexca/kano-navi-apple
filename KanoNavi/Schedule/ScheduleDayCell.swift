@@ -8,19 +8,23 @@ import SwiftUI
 /// - List: a larger number, a filled circle when selected (the tint for
 ///   today, else the primary color), and a capsule split into the tag colors
 ///   of its entries.
-/// - Compact, Stacked and Details: a smaller number in a taller cell, and its
-///   entries as dots, bars or one-line titles, with "+n" past what fits.
+/// - Compact, Stacked and Details: a smaller number in a fixed-height cell,
+///   and its entries as dots, bars or one-line titles, with "+n" past what
+///   fits.
 ///
 /// The same cell serves every mode, so switching modes resizes its number
-/// and height in place while only its marks cross-fade. It takes plain
-/// values and compares equal without its action, so it is redrawn only when
-/// what it shows changes.
+/// and height in place while only the active mode's marks cross-fade. It
+/// takes plain values and compares equal without its action, so it is redrawn
+/// only when what it shows changes.
 struct ScheduleDayCell: View, Equatable {
     let date: JapanDate
     let isToday: Bool
     let isSelected: Bool
     let marks: [ScheduleDayMark]
     let style: ScheduleMode
+    /// Content width of the cell in `.compact`, used to drop dots before "+n"
+    /// truncates; `nil` in other modes so width changes do not redraw them.
+    var dotWidth: CGFloat? = nil
     let action: () -> Void
 
     @Environment(\.locale) private var locale
@@ -32,7 +36,7 @@ struct ScheduleDayCell: View, Equatable {
 
     nonisolated static func == (lhs: Self, rhs: Self) -> Bool {
         lhs.date == rhs.date && lhs.isToday == rhs.isToday && lhs.isSelected == rhs.isSelected
-            && lhs.marks == rhs.marks && lhs.style == rhs.style
+            && lhs.marks == rhs.marks && lhs.style == rhs.style && lhs.dotWidth == rhs.dotWidth
     }
 
     /// The grids' number size against List's: subheadline to title 3.
@@ -62,7 +66,7 @@ struct ScheduleDayCell: View, Equatable {
                     }
                 marksView
             }
-            .frame(maxWidth: .infinity, minHeight: minHeight, alignment: .top)
+            .frame(maxWidth: .infinity, minHeight: fixedHeight, maxHeight: fixedHeight, alignment: .top)
             .padding(.horizontal, 3)
             .padding(.top, 4)
             .padding(.bottom, isList ? 3 : 4)
@@ -77,7 +81,7 @@ struct ScheduleDayCell: View, Equatable {
         .accessibilityAddTraits(showsSelection ? .isSelected : [])
     }
 
-    private var minHeight: CGFloat? {
+    private var fixedHeight: CGFloat? {
         switch style {
         case .list: nil
         case .compact: compactHeight
@@ -97,49 +101,50 @@ struct ScheduleDayCell: View, Equatable {
         }
     }
 
-    /// Every kind of mark, each shown only in its mode. They all stay in
-    /// place, the others flat and clear, so switching modes resizes and
-    /// fades them with the cell instead of inserting views that would not
-    /// follow it.
+    /// Draws only the current mode's marks, cross-fading when modes switch,
+    /// instead of keeping all four modes' view trees alive in every cell.
+    @ViewBuilder
     private var marksView: some View {
         ZStack(alignment: .top) {
-            markKind(.list) {
-                ScheduleDayCapsule(segments: ScheduleDaySegments.segments(of: marks))
-            }
-            markKind(.compact) {
-                ScheduleDayDots(marks: marks, capacity: ScheduleMode.compact.markCapacity)
-            }
-            markKind(.stacked) {
-                let shape = ScheduleMode.stacked.marks(forEntryCount: marks.count)
-                VStack(spacing: 3) {
-                    ForEach(marks.prefix(shape.shown)) { mark in
-                        Capsule()
-                            .fill(mark.tag.color.opacity(mark.isFaded ? ScheduleTag.fadedOpacity : 1))
-                            .frame(height: barHeight)
-                    }
-                    more(shape.more)
+            switch style {
+            case .list:
+                ScheduleDayCapsule(segments: marks.isEmpty ? [] : ScheduleDaySegments.segments(of: marks))
+                    .transition(.opacity)
+            case .compact:
+                if marks.isEmpty == false {
+                    ScheduleDayDots(
+                        marks: marks, capacity: ScheduleMode.compact.markCapacity, availableWidth: dotWidth
+                    )
+                    .transition(.opacity)
                 }
-            }
-            markKind(.details) {
-                let shape = ScheduleMode.details.marks(forEntryCount: marks.count)
-                VStack(alignment: .leading, spacing: 2) {
-                    ForEach(marks.prefix(shape.shown)) { mark in
-                        ScheduleGridEntryTitle(mark: mark)
+            case .stacked:
+                if marks.isEmpty == false {
+                    let shape = ScheduleMode.stacked.marks(forEntryCount: marks.count)
+                    VStack(spacing: 3) {
+                        ForEach(marks.prefix(shape.shown)) { mark in
+                            Capsule()
+                                .fill(mark.tag.color.opacity(mark.isFaded ? ScheduleTag.fadedOpacity : 1))
+                                .frame(height: barHeight)
+                        }
+                        more(shape.more)
                     }
-                    more(shape.more)
+                    .transition(.opacity)
+                }
+            case .details:
+                if marks.isEmpty == false {
+                    let shape = ScheduleMode.details.marks(forEntryCount: marks.count)
+                    VStack(alignment: .leading, spacing: 2) {
+                        ForEach(marks.prefix(shape.shown)) { mark in
+                            ScheduleGridEntryTitle(mark: mark)
+                        }
+                        more(shape.more)
+                    }
+                    .transition(.opacity)
                 }
             }
         }
-    }
-
-    private func markKind(_ kind: ScheduleMode, @ViewBuilder content: () -> some View) -> some View {
-        let isShown = style == kind
-        return content()
-            .frame(maxWidth: .infinity)
-            .frame(height: isShown ? nil : 0, alignment: .top)
-            .clipped()
-            .opacity(isShown ? 1 : 0)
-            .accessibilityHidden(isShown == false)
+        .frame(maxWidth: .infinity, maxHeight: isList ? nil : .infinity, alignment: .top)
+        .clipped()
     }
 
     @ViewBuilder

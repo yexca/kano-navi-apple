@@ -61,4 +61,24 @@ final class ScheduleModeTests {
         #expect(marks.more == 4)
         #expect(ScheduleMode.marks(forEntryCount: 3, capacity: 1).shown == 0)
     }
+
+    @Test func dotsFitFullCapacityOnStandardCellWidth() {
+        #expect(
+            ScheduleDayDots.fittingCapacity(
+                entryCount: 4, maxCapacity: 4, availableWidth: 48, dotSize: 6) == 4)
+        #expect(
+            ScheduleDayDots.fittingCapacity(
+                entryCount: 6, maxCapacity: 4, availableWidth: 48, dotSize: 6) == 4)
+    }
+
+    @Test func dotsDropCountBeforeTruncatingMoreLabel() {
+        let fitted = ScheduleDayDots.fittingCapacity(
+            entryCount: 6, maxCapacity: 4, availableWidth: 26, dotSize: 6)
+
+        #expect(fitted < 4)
+        #expect(fitted >= 1)
+        #expect(
+            ScheduleDayDots.fittingCapacity(
+                entryCount: 6, maxCapacity: 4, availableWidth: 12, dotSize: 6) == 1)
+    }
 }

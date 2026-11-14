@@ -30,6 +30,10 @@ struct ScheduleGridContent: View {
     @State private var hasLanded = false
     /// The month a landing is bringing to the top, until it is there.
     @State private var landingMonth: JapanDate?
+    /// Keeps `displayedMonth` locked while cell heights morph between
+    /// `.compact` and taller grid styles.
+    @State private var isRestyling = false
+    @State private var restyleTask: Task<Void, Never>?
 
     init(
         model: ScheduleModel, style: ScheduleMode, contentLanguage: ContentLanguage, todayTaps: Int,
@@ -61,9 +65,11 @@ struct ScheduleGridContent: View {
                     // until the month it lands on is at the top.
                     if let target = landingMonth {
                         if first == target {
-                            landingMonth = nil
-                            scrolledMonth = target
-                            hasLanded = true
+                            if isRestyling == false {
+                                landingMonth = nil
+                                scrolledMonth = target
+                                hasLanded = true
+                            }
                         } else {
                             proxy.scrollTo(target, anchor: .top)
                         }
@@ -75,9 +81,25 @@ struct ScheduleGridContent: View {
                         model.showMonth(first)
                     }
                 }
-                .onChange(of: style) {
-                    // Cells change height with the style; keep the month in view.
-                    Task { await land(on: model.displayedMonth, with: proxy) }
+                .onChange(of: style) { oldStyle, newStyle in
+                    // Stacked and Details share the same fixed cell height, so
+                    // switching between them never shifts the scroll position.
+                    guard Self.rowHeightDiffers(between: oldStyle, and: newStyle) else { return }
+                    restyleTask?.cancel()
+                    let target = model.displayedMonth
+                    isRestyling = true
+                    landingMonth = target
+                    proxy.scrollTo(target, anchor: .top)
+                    restyleTask = Task {
+                        try? await Task.sleep(for: .milliseconds(450))
+                        guard Task.isCancelled == false else { return }
+                        isRestyling = false
+                        if landingMonth == target {
+                            landingMonth = nil
+                            scrolledMonth = target
+                            hasLanded = true
+                        }
+                    }
                 }
                 .onChange(of: alignRequests) {
                     scrolledMonth = model.displayedMonth
@@ -142,22 +164,21 @@ struct ScheduleGridContent: View {
         Task { await model.load(month) }
     }
 
-    /// Scrolls to a month's top. The lazy stack places months it has not
-    /// measured by estimate, so it scrolls again over a few frames as the
-    /// months around the target are laid out, and again whenever the month
-    /// at the top is another; it has landed once the target is at the top,
-    /// or after those frames.
-    /// The reader scrolls even when the scroll position already names the
-    /// month.
+    private static func rowHeightDiffers(between lhs: ScheduleMode, and rhs: ScheduleMode) -> Bool {
+        (lhs == .compact) != (rhs == .compact)
+    }
+
+    /// Scrolls to a month's top on initial presentation. Since grid cells have
+    /// deterministic heights, a brief pass settles the scroll position without
+    /// blocking subsequent animations.
     private func land(on month: JapanDate, with proxy: ScrollViewProxy) async {
         hasLanded = false
         landingMonth = month
-        for frame in 1...6 {
+        for frame in 1...3 {
             guard landingMonth == month else { return }
             proxy.scrollTo(month, anchor: .top)
             try? await Task.sleep(for: .milliseconds(16 * frame))
         }
-        // Already at the top, the stack reports no change; it has landed.
         guard landingMonth == month else { return }
         landingMonth = nil
         scrolledMonth = month

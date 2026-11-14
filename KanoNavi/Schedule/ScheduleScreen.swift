@@ -26,6 +26,7 @@ struct ScheduleScreen: View {
     /// The switch waiting for the grid to bring the month to the top: the
     /// grid mode it leaves and the mode it goes to.
     @State private var waitingSwitch: (from: ScheduleMode, to: ScheduleMode)?
+    @State private var alignTask: Task<Void, Never>?
     /// Set by a deep link so its switch to List has no animation.
     @State private var switchesInstantly = false
     let feedURL: URL
@@ -141,14 +142,20 @@ struct ScheduleScreen: View {
         case .crossFade:
             withAnimation(ScheduleModeSwitch.crossFadeAnimation) { settle(on: new) }
         case .restyle:
-            waitForAlignment(from: displayedMode, to: new)
+            withAnimation(ScheduleModeSwitch.morphAnimation) {
+                shownMode = new
+            }
         case .expand(let grid):
-            pendingGrid = grid
             withAnimation(ScheduleModeSwitch.morphAnimation, completionCriteria: .logicallyComplete) {
                 expansion = grid
             } completion: {
                 guard mode == grid else { return }
                 settle(on: grid)
+            }
+            Task {
+                await Task.yield()
+                guard mode == grid, expansion == grid else { return }
+                pendingGrid = grid
             }
         case .collapse(let grid):
             waitForAlignment(from: grid, to: .list)
@@ -158,20 +165,22 @@ struct ScheduleScreen: View {
     /// Asks the grid to bring the month to the top, then goes on with the
     /// switch once it has, or after the time that takes at the latest.
     private func waitForAlignment(from grid: ScheduleMode, to target: ScheduleMode) {
+        alignTask?.cancel()
         waitingSwitch = (grid, target)
         alignRequests += 1
-        Task {
+        alignTask = Task {
             try? await Task.sleep(for: ScheduleModeSwitch.alignDuration)
+            guard Task.isCancelled == false else { return }
             finishAligned()
         }
     }
 
     /// Hands a grid that has brought the month to the top over to List drawn
-    /// exactly as the grid is, then morphs it: into List itself, its weeks
-    /// shrinking, the next months fading out and the day's entries sliding
-    /// up; or into another grid mode, the cells changing height and content
-    /// in place while that grid lands underneath and then takes over.
+    /// exactly as the grid is, then shrinks its weeks into List's, fades out
+    /// the next months and slides the day's entries up.
     private func finishAligned() {
+        alignTask?.cancel()
+        alignTask = nil
         guard let (grid, target) = waitingSwitch else { return }
         waitingSwitch = nil
         guard mode == target else { return }
@@ -179,25 +188,19 @@ struct ScheduleScreen: View {
         swap.disablesAnimations = true
         withTransaction(swap) {
             expansion = grid
-            pendingGrid = target.isGrid ? target : nil
+            pendingGrid = nil
             shownMode = .list
         }
         Task {
             await Task.yield()
-            if target.isGrid {
-                withAnimation(ScheduleModeSwitch.morphAnimation, completionCriteria: .logicallyComplete) {
-                    expansion = target
-                } completion: {
-                    guard mode == target else { return }
-                    settle(on: target)
-                }
-            } else {
-                withAnimation(ScheduleModeSwitch.morphAnimation) { expansion = nil }
-            }
+            guard mode == target else { return }
+            withAnimation(ScheduleModeSwitch.morphAnimation) { expansion = nil }
         }
     }
 
     private func settle(on mode: ScheduleMode) {
+        alignTask?.cancel()
+        alignTask = nil
         shownMode = mode
         expansion = nil
         pendingGrid = nil

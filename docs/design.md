@@ -433,9 +433,8 @@ orientation; every screen adapts to its width.
    - **Switching modes** moves as in Calendar, with the month name fixed.
      The List month and the grids' months are one view with one cell per
      day, so each day's number is drawn once and moves and resizes in
-     place, its row growing or shrinking, while only its marks cross-fade
-     (every kind of mark stays in the cell, the unused ones flat and
-     clear). From List to a grid mode, the month grows in place into the
+     place, its row growing or shrinking, while only the active mode's marks
+     are built and cross-fade. From List to a grid mode, the month grows in place into the
      grid's while the next months fade in below and the day's entries slide
      away, then the grid, laid out the same, takes over. From a grid mode to List, including a tapped day,
      the grid first brings the month to the top, then the weeks shrink, the

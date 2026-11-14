@@ -16,13 +16,16 @@ struct ScheduleMonthWeeks: View {
     /// Pages by months, for VoiceOver; `nil` where swiping does not page.
     let page: ((Int) -> Void)?
 
+    @State private var monthWidth: CGFloat = 0
+
     var body: some View {
+        let dotWidth: CGFloat? = style == .compact && monthWidth > 0 ? monthWidth / 7 - 6 : nil
         VStack(spacing: 0) {
             ForEach(weeks.enumerated(), id: \.offset) { _, week in
                 HStack(alignment: .top, spacing: 0) {
                     ForEach(week.enumerated(), id: \.offset) { _, date in
                         if let date {
-                            cell(date)
+                            cell(date, dotWidth: dotWidth)
                         } else {
                             Color.clear
                                 .frame(maxWidth: .infinity, maxHeight: 0)
@@ -30,16 +33,19 @@ struct ScheduleMonthWeeks: View {
                         }
                     }
                 }
-                .fixedSize(horizontal: false, vertical: true)
+                .fixedSize(horizontal: false, vertical: style == .list)
             }
+        }
+        .onGeometryChange(for: CGFloat.self, of: \.size.width) { width in
+            monthWidth = width
         }
     }
 
     @ViewBuilder
-    private func cell(_ date: JapanDate) -> some View {
+    private func cell(_ date: JapanDate, dotWidth: CGFloat?) -> some View {
         let cell = ScheduleDayCell(
             date: date, isToday: date == today, isSelected: date == selectedDate, marks: marks[date] ?? [],
-            style: style
+            style: style, dotWidth: dotWidth
         ) {
             action(date)
         }
