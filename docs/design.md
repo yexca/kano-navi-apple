@@ -472,12 +472,22 @@ orientation; every screen adapts to its width.
      months are marked out of date, to be read again when shown; what is on
      screen, the selection and the scroll position stay until each read
      returns.
-3. **Posts** — the dashboard's posts in its order: the account (`@handle` on
-   X; a Bilibili account by its platform, never its mid), JST time, text in
-   the content language with Show Original, the ready images (up to four,
-   "+N" for the rest), the quoted post nested in it (a deleted or withheld
-   quote says so and still links to it) and a link to the post: the X
-   logo alone, or the Bilibili logo and name.
+3. **Posts** — the dashboard's posts in its order, each in its own grouped
+   card. A card's header leads with the account's round avatar, then the
+   account (`@handle` on X; a Bilibili account by its platform, never its
+   mid) over the JST time, and ends with a small link to the post in its
+   top-right corner: the X logo alone, or the Bilibili logo and name, which
+   drops to the logo when the line has no room. Under the header come the
+   text in the content language with Show Original, the ready images (up to
+   four, "+N" for the rest) and the quoted post nested in it (a deleted or
+   withheld quote says so and still links to it). At accessibility text
+   sizes the account and time move under the avatar and the link.
+   The avatar resolves from the response's `accountAvatars` the way the
+   board's [post cards](https://github.com/yexca/kano-navi/blob/main/docs/architecture/frontend.md)
+   do: the account's cached avatar, the handle's initial for a hidden one,
+   and without an entry the profile avatar for Kano's own posts and the
+   initial for a promoted one (a person symbol when there is no X handle to
+   take it from). The archive uses its page's map, else the dashboard's.
    A promoted related-account post carries an Agency Post chip. The title is
    large, with a control at each end of the navigation bar:
    - **Filter** (leading): a menu whose icon fills while a filter is active.
