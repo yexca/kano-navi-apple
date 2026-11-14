@@ -335,19 +335,31 @@ The app is a `TabView` with five tabs.
      (`AppSettings.scheduleModeKey`), and List is the default. Every mode
      draws months edge to edge with only their own days: blank places before
      the first and after the last, a hairline above each day (so a week's
-     line spans only its days), weekend numbers in gray and today in the
-     tint.
+     line spans only its days), weekend numbers in gray and today's number
+     in the tint.
      - **List**: the month's name, the weekday row and the month on screen
-       fixed at the top with nothing around them that scrolls,
-       with a dot per entry in its tag color under each day; the selected day
-       is in a filled circle (the tint for today, else the primary color).
-       Swiping the month up shows the next month and down the previous one,
-       sliding it in; the new month selects today in today's month and its
-       first day elsewhere, and grows or shrinks with its four to six weeks.
-       Every day also has Previous Month and Next Month VoiceOver actions.
-       Below the month, the month's notice when it is not a fresh read, then
-       the selected day's entries in a plain list of their own that pulls to
-       refresh, or "No Entries" in the middle.
+       fixed at the top with nothing around them that scrolls, in short
+       rows. Under each day with entries is a small capsule split into a
+       segment per tag among its entries, in the order they first appear, at
+       most three, a segment faded when all its entries are done or
+       cancelled. The selected day is in a filled circle (the tint for
+       today, else the primary color). Swiping the month up shows the next
+       month and down the previous one, sliding it in; the new month selects
+       today in today's month and its first day elsewhere, and grows or
+       shrinks with its four to six weeks. Every day also has Previous Month
+       and Next Month VoiceOver actions. Below the month, the month's notice
+       when it is not a fresh read, then the selected day's entries in a
+       plain list of their own that pulls to refresh, or "No Entries" in the
+       middle. Entries without a clock time come first. Each row, as in
+       Calendar, has a bar in its tag color, its title in up to two lines, a
+       quiet line with its state when notable (Live in red with its dot, On
+       Sale, Opens or Closes for a sale's entry, Pending, Cancellation
+       Suspected, or Cancelled in red) and its type, and on the trailing
+       side its start over its end (a clock time on the same Japan day, else
+       the end's date), or "All Day". Platforms and links stay in the detail
+       sheet. One caption, "Times in JST", sits above a day's list when it
+       has a timed entry, instead of "JST" on every row. Done entries fade.
+       At accessibility text sizes the time moves under the title.
      - **Compact**, **Stacked** and **Details**: months scroll vertically one
        after another under the pinned, opaque month name and weekday row, each with its short name
        above the column of its first day. A day shows its entries as a dot
@@ -369,7 +381,7 @@ The app is a `TabView` with five tabs.
      shade that keeps text at 4.5:1 or more on its Details tint and on the
      widgets' backgrounds. Done and cancelled entries keep their hue but fade; a cancelled
      title is struck through. List's entry rows carry a thin bar of the same
-     color, and the type's name stays in words in the entry's chips.
+     color, and the type's name stays in words on each row.
    - **Entries**: a day's entries come from each event's
      `view.calendarEntries`, not its `startsOn`, so a sale is listed on its
      opening day and on its closing day with the matching chip; within a
