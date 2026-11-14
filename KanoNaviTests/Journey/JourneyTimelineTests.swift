@@ -34,6 +34,16 @@ struct JourneyTimelineTests {
         #expect(JourneyTimeline.groups(journey.milestones, branch: "gamma").isEmpty)
     }
 
+    @Test func topYearIsTheFirstGroupWithAMilestoneOnScreenWhateverTheReportedOrder() {
+        let groups = JourneyTimeline.groups(journey.milestones, branch: nil)
+        let slot = { (year: Int, id: String) in JourneyTimelineSlot(year: year, milestoneID: id) }
+
+        #expect(JourneyTimeline.topYear(of: groups, visible: [slot(2021, "d"), slot(2015, "e")]) == 2015)
+        #expect(JourneyTimeline.topYear(of: groups, visible: [slot(2010, "a")]) == 2010)
+        #expect(JourneyTimeline.topYear(of: groups, visible: [slot(1999, "x")]) == nil)
+        #expect(JourneyTimeline.topYear(of: groups, visible: []) == nil)
+    }
+
     @Test func countsMilestonesPerBranch() {
         #expect(JourneyTimeline.milestoneCounts(journey.milestones) == ["alpha": 3, "beta": 2])
     }

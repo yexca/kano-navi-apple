@@ -1,7 +1,9 @@
 import SwiftUI
 
-/// The sticky header of one year on the timeline, with its milestone count:
-/// side by side, or the count under the year at accessibility text sizes.
+/// The header that opens a year on the timeline after the first, with its
+/// milestone count: side by side, or the count under the year at
+/// accessibility text sizes. It scrolls with the milestones, set apart from
+/// the year before it.
 struct JourneyYearHeader: View {
     let year: Int
     let count: Int
@@ -25,8 +27,8 @@ struct JourneyYearHeader: View {
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(.horizontal)
-        .padding(.vertical, 8)
-        .background(.bar)
+        .padding(.top, 28)
+        .padding(.bottom, 8)
         .accessibilityElement(children: .combine)
         .accessibilityAddTraits(.isHeader)
         .accessibilityIdentifier("journey.year.\(year)")

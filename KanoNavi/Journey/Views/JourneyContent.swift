@@ -28,8 +28,8 @@ struct JourneyContent: View {
         .safeAreaBar(edge: .top) {
             filter
         }
-        // A firm edge under the chips, so rows and the pinned year header
-        // never show through them.
+        // A firm edge under the chips, so rows and year headers never show
+        // through them.
         .scrollEdgeEffectStyle(.hard, for: .top)
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {

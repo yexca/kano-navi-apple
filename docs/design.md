@@ -573,15 +573,19 @@ failure notice opens the scrolling content. Both views end with one line,
 the date the data was checked through, whose info button opens the
 hand-curation note and the image rights notice.
 
-- **Timeline.** Milestones read oldest first, as the story runs, under a
-  header per year with its count, which sticks under the identity chips;
-  within a year they keep the API's order. A row shows a marker with the
-  kind's symbol on a line in the branch's tone, the date at its stored
-  precision (a year, `Sep` or `Sep 7` within the year; a `dateEnd` as a range;
-  the `dateNote` after it), the branch's name, the kind, the title and up to
-  three lines of detail in the content language, and up to three cropped
-  thumbnails with "+N". A highlight has a filled marker, a larger title, a
-  tinted card and "Key milestone".
+- **Timeline.** Milestones read oldest first, as the story runs, by year;
+  within a year they keep the API's order. The navigation subtitle names the
+  year of the topmost milestone not yet under the identity chips and its
+  count, such as "2019 · 8 milestones", or the year alone at accessibility
+  text sizes; it follows the identity filter, and the gallery has none. The
+  first year has no header of its own; each later one opens with its year in
+  bold and its count, which scroll with the milestones as the divider between
+  years. A row shows a marker with the kind's symbol on a line in the branch's
+  tone, the date at its stored precision (a year, `Sep` or `Sep 7` within the
+  year; a `dateEnd` as a range; the `dateNote` after it), the branch's name,
+  the kind, the title and up to three lines of detail in the content language,
+  and up to three cropped thumbnails with "+N". A highlight has a filled
+  marker, a larger title, a tinted card and "Key milestone".
 - **Milestone page.** A row opens the full date with its year, the whole
   detail, every image at its own shape (tall ones capped) with what it shows,
   its date and its source link, then Source and Links: the source page by its
