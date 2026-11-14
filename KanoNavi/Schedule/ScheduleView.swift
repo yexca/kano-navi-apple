@@ -4,6 +4,7 @@ import SwiftUI
 /// The Schedule tab. See `docs/design.md`.
 struct ScheduleView: View {
     @Environment(\.services) private var services
+    @Environment(DashboardStore.self) private var dashboard: DashboardStore?
 
     var body: some View {
         if let services {
@@ -11,7 +12,8 @@ struct ScheduleView: View {
                 loader: { [calendar = services.calendar] month in
                     try await calendar.month(containing: month)
                 },
-                feedURL: services.client.calendarSubscriptionURL)
+                feedURL: services.client.calendarSubscriptionURL,
+                revision: dashboard?.snapshot?.meta.revision)
         } else {
             FeaturePlaceholder(title: .tabSchedule)
         }

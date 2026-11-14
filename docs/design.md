@@ -343,10 +343,15 @@ The app is a `TabView` with five tabs.
        segment per tag among its entries, in the order they first appear, at
        most three, a segment faded when all its entries are done or
        cancelled. The selected day is in a filled circle (the tint for
-       today, else the primary color). Swiping the month up shows the next
-       month and down the previous one, sliding it in; the new month selects
-       today in today's month and its first day elsewhere, and grows or
-       shrinks with its four to six weeks. Every day also has Previous Month
+       today, else the primary color). Dragging the month vertically moves
+       it with the finger, the month after it rising from below (dragging
+       up) or the month before it coming down from above, clipped to the
+       month area. On release it settles on that month when the drag, with
+       its momentum, reaches a third of the month's height, and otherwise
+       springs back. The new month selects today in today's month and its
+       first day elsewhere, then the month area grows or shrinks to its
+       four to six weeks. A tap that does not move stays a tap on its day;
+       Reduce Motion cross-fades to the new month. Every day also has Previous Month
        and Next Month VoiceOver actions. Below the month, the month's notice
        when it is not a fresh read, then the selected day's entries in a
        plain list of their own that pulls to refresh, or "No Entries" in the
@@ -370,11 +375,14 @@ The app is a `TabView` with five tabs.
        top, and that month and the months on each side of it are read as it
        comes into view. Tapping a day opens it in List. At accessibility text
        sizes Stacked and Details use Compact's dots.
-   - **Switching modes** moves as in Calendar, with the month name fixed:
-     from List to a grid mode, the month's weeks grow in place into the
-     grid's (each week row is matched to its twin) while the next months
-     fade in below and the day's entries slide away, then the grid, laid out
-     the same, takes over. From a grid mode to List, including a tapped day,
+   - **Switching modes** moves as in Calendar, with the month name fixed.
+     The List month and the grids' months are one view with one cell per
+     day, so each day's number is drawn once and moves and resizes in
+     place, its row growing or shrinking, while only its marks cross-fade
+     (every kind of mark stays in the cell, the unused ones flat and
+     clear). From List to a grid mode, the month grows in place into the
+     grid's while the next months fade in below and the day's entries slide
+     away, then the grid, laid out the same, takes over. From a grid mode to List, including a tapped day,
      the grid first brings the month to the top, then the weeks shrink, the
      next months fade out and the day's entries slide up. Between grid
      modes the cells change height and content in place. Each is a 0.4 s
@@ -402,7 +410,12 @@ The app is a `TabView` with five tabs.
      sale window, and a link to the original announcement.
    - A widget or notification link to a date or an entry switches to List and
      shows its month with its day selected; an entry also opens its sheet.
-     Pull to refresh reads the month on screen again.
+     Pull to refresh reads the month on screen again. When the dashboard's
+     revision changes, or the app comes back to the foreground, the month on
+     screen and the months beside it are read again and the other loaded
+     months are marked out of date, to be read again when shown; what is on
+     screen, the selection and the scroll position stay until each read
+     returns.
 3. **Posts** — the dashboard's posts in its order: the account (`@handle` on
    X; a Bilibili account by its platform, never its mid), JST time, text in
    the content language with Show Original, the ready images (up to four,

@@ -28,19 +28,22 @@ struct ScheduleScreen: View {
     @State private var waitingSwitch: (from: ScheduleMode, to: ScheduleMode)?
     /// Set by a deep link so its switch to List has no animation.
     @State private var switchesInstantly = false
-    @Namespace private var morph
     let feedURL: URL
+    /// The dashboard's revision, which changes when the service's data does.
+    let revision: Int?
 
     @Environment(AppRouter.self) private var router
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @Environment(\.locale) private var locale
     @Environment(\.accessibilityReduceMotion) private var reducesMotion
+    @Environment(\.scenePhase) private var scenePhase
     @AppStorage(AppSettings.contentLanguageKey) private var contentLanguage: ContentLanguage = .system
     @AppStorage(AppSettings.scheduleModeKey) private var mode = ScheduleMode.defaultMode
 
-    init(loader: @escaping ScheduleModel.MonthLoader, feedURL: URL) {
+    init(loader: @escaping ScheduleModel.MonthLoader, feedURL: URL, revision: Int? = nil) {
         _model = State(initialValue: ScheduleModel(loader: loader))
         self.feedURL = feedURL
+        self.revision = revision
     }
 
     var body: some View {
@@ -68,6 +71,16 @@ struct ScheduleScreen: View {
                 }
                 .onChange(of: mode) { old, new in
                     switchMode(from: old, to: new)
+                }
+                // Months already read are read again when the service's data
+                // changes or the app comes back, keeping them on screen.
+                .onChange(of: revision) { old, _ in
+                    guard old != nil else { return }
+                    Task { await model.reloadAfterChange() }
+                }
+                .onChange(of: scenePhase) { _, phase in
+                    guard phase == .active else { return }
+                    Task { await model.reloadAfterChange() }
                 }
                 .task(id: model.displayedMonth) {
                     await model.loadMonths(around: model.displayedMonth)
@@ -102,7 +115,7 @@ struct ScheduleScreen: View {
             if displayedMode == .list {
                 ScheduleListContent(
                     model: model, contentLanguage: contentLanguage, open: open,
-                    expansion: expansion.map(gridStyle), morph: morph
+                    expansion: expansion.map(gridStyle)
                 )
                 .transition(.opacity)
             }

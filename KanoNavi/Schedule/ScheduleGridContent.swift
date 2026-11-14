@@ -45,54 +45,46 @@ struct ScheduleGridContent: View {
     }
 
     var body: some View {
-        let today = model.today
-        ScrollView {
-            LazyVStack(spacing: 0) {
-                ForEach(model.browsableMonths, id: \.self) { month in
-                    ScheduleGridMonth(
-                        month: month, today: today, days: model.monthDays[month],
-                        notice: model.notice(for: month), style: style, contentLanguage: contentLanguage,
-                        openDay: openDay, retry: { retry(month) }
-                    )
-                    .equatable()
+        ScrollViewReader { proxy in
+            months
+                .scrollPosition($position, anchor: .top)
+                .task {
+                    await land(on: model.displayedMonth, with: proxy)
                 }
-            }
-            .scrollTargetLayout()
-        }
-        .scrollPosition($position, anchor: .top)
-        .task {
-            await land(on: model.displayedMonth)
-        }
-        // The month in view is the earliest one at least 40% on screen.
-        .onScrollTargetVisibilityChange(idType: JapanDate.self, threshold: 0.4) { months in
-            if hasLanded, let first = months.min(), first != scrolledMonth {
-                scrolledMonth = first
-                model.showMonth(first)
-            }
-        }
-        .onChange(of: style) {
-            // Cells change height with the style; keep the month in view.
-            Task { await land(on: model.displayedMonth) }
-        }
-        .onChange(of: alignRequests) {
-            scrolledMonth = model.displayedMonth
-            withAnimation(ScheduleModeSwitch.alignAnimation, completionCriteria: .logicallyComplete) {
-                position.scrollTo(id: model.displayedMonth, anchor: .top)
-            } completion: {
-                onAligned()
-            }
-        }
-        .onChange(of: todayTaps) {
-            withAnimation {
-                position.scrollTo(id: model.today.firstOfMonth, anchor: .top)
-            }
-        }
-        .onChange(of: model.displayedMonth) { _, month in
-            if month != scrolledMonth {
-                withAnimation {
-                    position.scrollTo(id: month, anchor: .top)
+                // The month in view is the earliest one at least 40% on screen.
+                .onScrollTargetVisibilityChange(idType: JapanDate.self, threshold: 0.4) { months in
+                    // Until it has landed, the months the lazy stack passes on
+                    // the way are not the month in view.
+                    guard hasLanded, let first = months.min() else { return }
+                    if first != scrolledMonth {
+                        scrolledMonth = first
+                        model.showMonth(first)
+                    }
                 }
-            }
+                .onChange(of: style) {
+                    // Cells change height with the style; keep the month in view.
+                    Task { await land(on: model.displayedMonth, with: proxy) }
+                }
+                .onChange(of: alignRequests) {
+                    scrolledMonth = model.displayedMonth
+                    withAnimation(ScheduleModeSwitch.alignAnimation, completionCriteria: .logicallyComplete) {
+                        proxy.scrollTo(model.displayedMonth, anchor: .top)
+                    } completion: {
+                        onAligned()
+                    }
+                }
+                .onChange(of: todayTaps) {
+                    withAnimation {
+                        proxy.scrollTo(model.today.firstOfMonth, anchor: .top)
+                    }
+                }
+                .onChange(of: model.displayedMonth) { _, month in
+                    if month != scrolledMonth {
+                        withAnimation {
+                            proxy.scrollTo(month, anchor: .top)
+                        }
+                    }
+                }
         }
         // Applied before the pinned row, so the row's content does not pick
         // up its own refresh control.
@@ -114,18 +106,38 @@ struct ScheduleGridContent: View {
         }
     }
 
+    private var months: some View {
+        let today = model.today
+        return ScrollView {
+            LazyVStack(spacing: 0) {
+                ForEach(model.browsableMonths, id: \.self) { month in
+                    ScheduleMonthView(
+                        month: month, today: today, days: model.monthDays[month],
+                        notice: model.notice(for: month), style: style, showsLabel: true, selectedDate: nil,
+                        contentLanguage: contentLanguage, action: openDay, page: nil, retry: { retry(month) }
+                    )
+                    .equatable()
+                    .id(month)
+                }
+            }
+            .scrollTargetLayout()
+        }
+    }
+
     private func retry(_ month: JapanDate) {
         Task { await model.load(month) }
     }
 
     /// Scrolls to a month's top. The lazy stack places months it has not
-    /// measured by estimate, so the second pass, once the months around the
-    /// target are laid out, lands exactly.
-    private func land(on month: JapanDate) async {
+    /// measured by estimate, so it scrolls again over a few frames, as the
+    /// months around the target are laid out, until it lands exactly; the
+    /// month in view is taken from then on. The reader scrolls even when the
+    /// scroll position already names the month.
+    private func land(on month: JapanDate, with proxy: ScrollViewProxy) async {
         hasLanded = false
-        for _ in 0..<2 {
-            position.scrollTo(id: month, anchor: .top)
-            await Task.yield()
+        for frame in 1...4 {
+            proxy.scrollTo(month, anchor: .top)
+            try? await Task.sleep(for: .milliseconds(16 * frame))
         }
         scrolledMonth = month
         hasLanded = true

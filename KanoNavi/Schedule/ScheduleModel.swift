@@ -28,6 +28,9 @@ final class ScheduleModel {
     private(set) var selectedDate: JapanDate
     /// Loaded months by their first day.
     private(set) var months: [JapanDate: ScheduleMonthResult] = [:]
+    /// Loaded months that may be out of date since the service changed. They
+    /// stay on screen and are read again when shown.
+    private(set) var staleMonths: Set<JapanDate> = []
     /// Loaded months' entries by day, by the month's first day.
     private(set) var monthDays: [JapanDate: ScheduleMonthDays] = [:]
     /// The months the screen can show, by their first day: five years back
@@ -136,15 +139,26 @@ final class ScheduleModel {
     }
 
     /// The months to read when `month` is in view: it first, then the month
-    /// after it and the month before it, leaving out those loaded or loading.
+    /// after it and the month before it, leaving out those loaded and current
+    /// or loading.
     func monthsToLoad(around month: JapanDate) -> [JapanDate] {
         let center = month.firstOfMonth
         return [center, center.addingMonths(1), center.addingMonths(-1)].filter {
-            months[$0] == nil && inFlight[$0] == nil
+            (months[$0] == nil || staleMonths.contains($0)) && inFlight[$0] == nil
         }
     }
 
-    /// Reads the months around `month` that are not loaded yet, together.
+    /// Marks every loaded month out of date after the service changed or the
+    /// app came back, then reads the month on screen and the months beside it
+    /// again; the others are read again when shown. What is on screen, the
+    /// selection and the scroll position stay until each read returns.
+    func reloadAfterChange() async {
+        staleMonths = Set(months.keys)
+        await loadMonths(around: displayedMonth)
+    }
+
+    /// Reads the months around `month` that are not loaded yet, or out of
+    /// date, together.
     func loadMonths(around month: JapanDate) async {
         await withTaskGroup(of: Void.self) { group in
             for month in monthsToLoad(around: month) {
@@ -155,7 +169,7 @@ final class ScheduleModel {
 
     /// Loads the month on screen unless it is loaded already.
     func loadIfNeeded() async {
-        guard months[displayedMonth] == nil else { return }
+        guard months[displayedMonth] == nil || staleMonths.contains(displayedMonth) else { return }
         await load(displayedMonth)
     }
 
@@ -185,6 +199,7 @@ final class ScheduleModel {
             let result = try await loader(month)
             months[month] = result
             monthDays[month] = ScheduleMonthDays(month: month, events: result.events)
+            staleMonths.remove(month)
             failures[month] = nil
         } catch is CancellationError {
             return
