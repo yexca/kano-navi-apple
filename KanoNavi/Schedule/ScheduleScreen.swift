@@ -2,8 +2,8 @@ import KanoNaviComponents
 import KanoNaviCore
 import SwiftUI
 
-/// The Schedule tab: the month in one of four modes under its name as the
-/// large title, Today at the leading end, and the entry sheet. See
+/// The Schedule tab: the month in one of four modes under its name as a
+/// fixed header, Today at the leading end, and the entry sheet. See
 /// `docs/design.md`.
 struct ScheduleScreen: View {
     @State private var model: ScheduleModel
@@ -38,14 +38,12 @@ struct ScheduleScreen: View {
                         ScheduleSubscriptionMenu(feedURL: feedURL)
                     }
                 }
-                // At accessibility sizes the month is abbreviated, so the year
-                // stays in the title.
-                .navigationTitle(
-                    Text(
-                        verbatim: model.displayedMonth.monthTitle(
-                            locale: locale, abbreviated: dynamicTypeSize.isAccessibilitySize))
-                )
-                .navigationBarTitleDisplayMode(.large)
+                // The month is drawn as a fixed header in the content, so it
+                // never collapses with a scroll; the bar keeps the title only
+                // for the app switcher and accessibility.
+                .navigationTitle(Text(verbatim: model.displayedMonth.monthTitle(locale: locale)))
+                .navigationBarTitleDisplayMode(.inline)
+                .toolbar(removing: .title)
                 .task(id: model.displayedMonth) {
                     await model.loadMonths(around: model.displayedMonth)
                 }

@@ -3,9 +3,9 @@ import KanoNaviCore
 import SwiftUI
 
 /// The Compact, Stacked and Details modes: months scrolling vertically one
-/// after another under a pinned weekday row. The month at the top is the
-/// model's month, which is the large title and is read with the months
-/// beside it as it comes into view.
+/// after another under the pinned month name and weekday row. The month at
+/// the top is the model's month, which names the header and is read with
+/// the months beside it as it comes into view.
 struct ScheduleGridContent: View {
     let model: ScheduleModel
     let style: ScheduleMode
@@ -83,8 +83,12 @@ struct ScheduleGridContent: View {
         .refreshable {
             await model.refresh()
         }
+        // The pinned header is opaque; the edge effect would draw the
+        // scrolled months over it.
+        .scrollEdgeEffectHidden(true, for: .top)
         .safeAreaBar(edge: .top) {
             VStack(spacing: 0) {
+                ScheduleMonthHeader(month: model.displayedMonth)
                 ScheduleWeekdayRow()
                     .dynamicTypeSize(...DynamicTypeSize.xxxLarge)
                     .padding(.vertical, 6)
