@@ -52,7 +52,9 @@ enum PostFixtures {
         return try JSONDecoder.kanoNavi().decode(Post.self, from: data)
     }
 
-    @MainActor static func card(_ json: [String: Any]) throws -> PostCard {
-        PostCard(post: try post(json))
+    @MainActor static func card(
+        _ json: [String: Any], accountAvatars: [String: URL?]? = nil, profileAvatarURL: URL? = nil
+    ) throws -> PostCard {
+        PostCard(post: try post(json), accountAvatars: accountAvatars, profileAvatarURL: profileAvatarURL)
     }
 }

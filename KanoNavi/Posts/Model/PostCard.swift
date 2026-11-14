@@ -5,6 +5,7 @@ import KanoNaviCore
 struct PostCard: Equatable, Identifiable {
     var id: String
     var account: PostAccount
+    var avatar: PostAvatar
     /// A related account's post promoted onto the board: the agency's, not
     /// Kano's own.
     var isPromoted: Bool
@@ -17,9 +18,14 @@ struct PostCard: Equatable, Identifiable {
     /// The original post on X or Bilibili.
     var url: URL
 
-    init(post: Post) {
+    /// - Parameters:
+    ///   - accountAvatars: The snapshot's or archive page's account avatars.
+    ///   - profileAvatarURL: Kano's profile avatar, for Kano's own posts without
+    ///     an account avatar.
+    init(post: Post, accountAvatars: [String: URL?]?, profileAvatarURL: URL?) {
         id = post.id
         account = PostAccount(source: post.source, handle: post.accountHandle)
+        avatar = PostAvatar(post: post, accountAvatars: accountAvatars, profileAvatarURL: profileAvatarURL)
         isPromoted = post.promoted == true
         publishedAt = post.publishedAt
         text =

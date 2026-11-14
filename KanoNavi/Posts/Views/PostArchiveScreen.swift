@@ -1,3 +1,4 @@
+import Foundation
 import KanoNaviCore
 import SwiftUI
 
@@ -6,17 +7,23 @@ import SwiftUI
 /// paged as the list scrolls. A failed read keeps the posts on screen and
 /// says so.
 struct PostArchiveScreen: View {
-    @State private var model: ArchiveModel<Post>
+    @State private var model: ArchiveModel<PostArchiveEntry>
     /// The board's accounts, from the dashboard's metadata when there is a
     /// snapshot.
     let meta: DashboardMeta?
+    /// The dashboard's account avatars, for pages that leave theirs out.
+    let accountAvatars: [String: URL?]?
+    /// Kano's profile avatar, for Kano's own posts without an account avatar.
+    let profileAvatarURL: URL?
 
-    init(client: APIClient, meta: DashboardMeta?) {
+    init(client: APIClient, meta: DashboardMeta?, accountAvatars: [String: URL?]?, profileAvatarURL: URL?) {
         _model = State(
             initialValue: ArchiveModel(
                 months: PostArchiveSource.months(client: client),
-                page: PostArchiveSource.page(client: client), itemID: \.id))
+                page: PostArchiveSource.page(client: client), itemID: \.post.id))
         self.meta = meta
+        self.accountAvatars = accountAvatars
+        self.profileAvatarURL = profileAvatarURL
     }
 
     var body: some View {
@@ -33,9 +40,11 @@ struct PostArchiveScreen: View {
                 }
             }
 
-            PostArchiveItems(model: model)
+            PostArchiveItems(
+                model: model, accountAvatars: accountAvatars, profileAvatarURL: profileAvatarURL)
         }
         .listStyle(.insetGrouped)
+        .listSectionSpacing(.compact)
         .readableContentWidth()
         .refreshable(action: model.refresh)
         .navigationTitle(.Posts.archiveTitle)

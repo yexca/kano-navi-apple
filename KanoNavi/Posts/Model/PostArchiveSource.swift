@@ -7,15 +7,17 @@ nonisolated enum PostArchiveSource {
     /// Posts per archive page.
     static let pageSize = 20
 
-    static func months(client: APIClient) -> ArchiveModel<Post>.MonthsLoader {
+    static func months(client: APIClient) -> ArchiveModel<PostArchiveEntry>.MonthsLoader {
         { ArchiveMonthIndex(try await client.readResult(PostsMonthsRequest())) }
     }
 
-    static func page(client: APIClient) -> ArchiveModel<Post>.PageLoader {
+    static func page(client: APIClient) -> ArchiveModel<PostArchiveEntry>.PageLoader {
         { query in
             let result = try await client.readResult(request(for: query))
+            let avatars = result.value.accountAvatars
             return ArchivePage(
-                items: result.value.items, page: result.value.page, hasNext: result.value.hasNext,
+                items: result.value.items.map { PostArchiveEntry(post: $0, accountAvatars: avatars) },
+                page: result.value.page, hasNext: result.value.hasNext,
                 total: result.value.total, counts: result.value.accountCounts ?? [:],
                 isFromCache: result.isFromCache, fetchedAt: result.fetchedAt)
         }

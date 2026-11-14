@@ -60,6 +60,8 @@ struct PostRecentFilterTests {
             PostFixtures.json(id: "5", handle: "agency", promoted: true),
         ]
         let dashboard = try fixture.dashboard()
-        return (dashboard.meta, dashboard.posts.map(PostCard.init(post:)))
+        return (dashboard.meta, dashboard.posts.map {
+            PostCard(post: $0, accountAvatars: nil, profileAvatarURL: nil)
+        })
     }
 }

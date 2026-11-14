@@ -2,8 +2,8 @@ import KanoNaviCore
 import SwiftUI
 
 /// The Posts tab's recent posts for one snapshot, newest first as the
-/// dashboard lists them, narrowed by the account filter menu at the leading
-/// end of the navigation bar.
+/// dashboard lists them, each in its own grouped card, narrowed by the
+/// account filter menu at the leading end of the navigation bar.
 struct PostsList: View {
     let snapshot: Dashboard
     let dashboard: DashboardStore
@@ -12,28 +12,41 @@ struct PostsList: View {
     @State private var account: String?
 
     var body: some View {
-        let cards = snapshot.posts.map(PostCard.init(post:))
+        let cards = snapshot.posts.map {
+            PostCard(
+                post: $0, accountAvatars: snapshot.accountAvatars,
+                profileAvatarURL: snapshot.profile.avatarURL)
+        }
         let accounts = PostRecentFilter.accounts(meta: snapshot.meta)
         let shown = PostRecentFilter.cards(cards, code: account)
         List {
             DashboardNoticeSection(dashboard: dashboard)
 
-            Section {
-                if cards.isEmpty {
-                    Text(.Posts.recentEmpty(snapshot.meta.postWindowDays))
-                        .foregroundStyle(.secondary)
-                } else if shown.isEmpty {
-                    Text(.Posts.recentAccountEmpty)
-                        .foregroundStyle(.secondary)
+            if cards.isEmpty || shown.isEmpty {
+                Section {
+                    if cards.isEmpty {
+                        Text(.Posts.recentEmpty(snapshot.meta.postWindowDays))
+                            .foregroundStyle(.secondary)
+                    } else {
+                        Text(.Posts.recentAccountEmpty)
+                            .foregroundStyle(.secondary)
+                    }
+                } header: {
+                    Text(.Posts.recentHeader)
                 }
-                ForEach(shown) { card in
+            }
+            ForEach(shown) { card in
+                Section {
                     PostCardView(card: card)
+                } header: {
+                    if card.id == shown.first?.id {
+                        Text(.Posts.recentHeader)
+                    }
                 }
-            } header: {
-                Text(.Posts.recentHeader)
             }
         }
         .listStyle(.insetGrouped)
+        .listSectionSpacing(.compact)
         .readableContentWidth()
         // The images at the top are drawn on the first frame when the disk
         // cache has them.
