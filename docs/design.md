@@ -310,9 +310,15 @@ The app is a `TabView` with five tabs.
    "+N" for the rest), the quoted post nested in it (a deleted or withheld
    quote says so and still links to it) and a link to the post: the X
    logo alone, or the Bilibili logo and name.
-   A promoted related-account post carries an Agency Post chip. Past Posts
-   opens the month archive with the account filter: the dashboard's
-   `xAccounts`, then its `bilibiliAccounts`.
+   A promoted related-account post carries an Agency Post chip. An account
+   filter pinned under the inline title narrows the posts on the device:
+   All, each of the dashboard's `xAccounts` as `@handle` (compared without
+   case), then one Bilibili choice with its logo for all its
+   `bilibiliAccounts`, each with its count among the recent posts; a post by
+   another account, such as the agency's, shows only under All. The row is
+   left out when there are no posts, and a choice without posts says so in
+   one line. Past Posts opens the month archive with the account filter:
+   the dashboard's `xAccounts`, then its `bilibiliAccounts`.
 4. **Videos** — the projection's shelf joined to the dashboard's `videos` by
    ID, each group in the projection's order, leaving out an ID without a
    record: the lead (marked Featured when `leadIsFeatured`, otherwise Latest
@@ -322,9 +328,27 @@ The app is a `TabView` with five tabs.
    `view.formCode` chip, the tag, availability when not everyone can watch
    (members, private, removed), the JST time (scheduled start, else
    publication) and buttons for the video's page and its `alternates`. Shorts
-   are vertical cards in a row that scrolls sideways. Pull to refresh reloads
-   the dashboard. Past Videos opens the month archive with the category filter
-   (`game`, `talk`, `song`, `other`).
+   are vertical cards in a row that scrolls sideways.
+   A filter pinned under the inline title narrows the shelf on the device,
+   as the web board's does, and lasts for the session:
+   - **Kind**: All, Streams (form `stream` or `archive`, and a reservation
+     whose stored `kind` or `view.tagContext` is `stream`), Videos (`video`,
+     `premiere` and the other reservations) and Shorts (form `short` or
+     `isShort`), with counts. Only the kinds on the shelf are offered, and the
+     chips only when there are two.
+   - **Platform**: a round menu at the row's trailing end, its icon the
+     current choice: All (default), YouTube or Bilibili, offered when the
+     shelf has videos on both. A video is on a platform when it or one of
+     its `alternates` is; with a platform chosen, that platform's page is the
+     card's first link, which a Short's card opens. The kind counts follow
+     the platform.
+   - Each group keeps its matching videos in order. The lead stays the lead
+     when it matches and is left out otherwise. A filter that matches
+     nothing says so in one line; a choice the shelf no longer offers goes
+     back to All.
+
+   Pull to refresh reloads the dashboard. Past Videos opens the month
+   archive with the category filter (`game`, `talk`, `song`, `other`).
 5. **More** — Journey, Works and the LINE BLOG archive, each described
    below, then Settings and About. Settings is three rows without
    explanations: Notifications with its status, a Content Language menu, and
@@ -337,9 +361,11 @@ The app is a `TabView` with five tabs.
 Both month archives read their month index (`/api/videos/months`,
 `/api/posts/months`) and show one Japan month at a time, newest first, from
 its first to its last date, 20 items per page; the next page is read when the
-list reaches its end. A filter's counts come from the page's `categoryCounts`
-or `accountCounts`, which count the whole month whatever the filter (keys are
-lowercase handles); All is their sum.
+list reaches its end. The post archive's account filter is one row that
+scrolls sideways, pinned under the navigation bar; the video archive's
+category filter wraps above the list. A filter's counts come from the page's
+`categoryCounts` or `accountCounts`, which count the whole month whatever the
+filter (keys are lowercase handles); All is their sum.
 
 Delivery order: Now, Schedule, widgets, Settings and About first; Videos and
 Posts next; Works, Journey and LINE BLOG last.
@@ -442,8 +468,9 @@ without what they add, and Uploads says why when it opens.
     matches.
 - **Own Releases.** Covers in a grid by Japan year, newest first, with a
   format filter (All, Album, Single, EP, Doujin, and Other for a format the
-  app does not name) and its counts in one row that scrolls sideways and
-  keeps the selected format in view. A card shows the first cover, the
+  app does not name) and its counts in one row that scrolls sideways,
+  keeps the selected format in view and stays pinned under the navigation
+  bar, in a `safeAreaBar` with a hard scroll edge, while the covers scroll. A card shows the first cover, the
   title, the date and marks for format, digital, unit and cancelled
   (struck through); a release without a cover draws a disc mark. A toolbar
   menu switches to oldest first. At accessibility text sizes the grid
@@ -475,7 +502,8 @@ without what they add, and Uploads says why when it opens.
   when it holds more than those, and a link to the page the record follows.
 - **Uploads.** The upload list joined with `/api/works/uploads` by upload
   ID, by year, newest first, with a kind filter and its counts in one row
-  that scrolls sideways, as on Own Releases, and a search
+  that scrolls sideways and stays pinned, as on Own Releases (the notices
+  and Newer Uploads scroll under it), and a search
   over song, original artist, collaborators, albums, a compilation's songs
   and the Bilibili title. A row shows the song, the original artist and
   collaborators, date and kind, the albums that include the recording, a
