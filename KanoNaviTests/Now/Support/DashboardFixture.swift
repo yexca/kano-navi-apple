@@ -23,6 +23,9 @@ struct DashboardFixture {
     var resources: [[String: Any]] = []
     /// Fields that replace the synthetic profile's.
     var profile: [String: Any] = [:]
+    /// The `accountAvatars` map, with `NSNull()` for a hidden avatar; left
+    /// out when `nil`.
+    var accountAvatars: [String: Any]?
 
     func dashboard() throws -> Dashboard {
         var summary: [String: Any] = [:]
@@ -60,6 +63,7 @@ struct DashboardFixture {
             "meta": meta,
         ]
         body["liveNow"] = liveNow
+        body["accountAvatars"] = accountAvatars
         let data = try JSONSerialization.data(withJSONObject: body)
         return try JSONDecoder.kanoNavi().decode(Dashboard.self, from: data)
     }
