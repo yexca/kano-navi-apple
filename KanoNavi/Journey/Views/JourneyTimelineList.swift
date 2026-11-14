@@ -1,10 +1,11 @@
 import KanoNaviCore
 import SwiftUI
 
-/// The milestones, oldest first, under a sticky header per year.
+/// The milestones of the chosen identity, oldest first, under a sticky
+/// header per year.
 struct JourneyTimelineList: View {
     let journey: JourneyResponse
-    @Binding var branch: String?
+    let branch: String?
     let notice: DocumentNotice?
     let reload: () async -> Void
 
@@ -12,11 +13,10 @@ struct JourneyTimelineList: View {
         let groups = JourneyTimeline.groups(journey.milestones, branch: branch)
         ScrollView {
             LazyVStack(alignment: .leading, spacing: 0, pinnedViews: .sectionHeaders) {
-                JourneyListHeader(
-                    branches: journey.branches, branch: $branch,
-                    counts: JourneyTimeline.milestoneCounts(journey.milestones),
-                    total: journey.milestones.count, countLabel: { .Journey.milestoneCount($0) },
-                    notice: notice, reload: reload)
+                if let notice {
+                    JourneyNotice(notice: notice, reload: reload)
+                        .padding(.vertical, 8)
+                }
 
                 ForEach(groups) { group in
                     Section {

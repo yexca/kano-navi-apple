@@ -2,7 +2,8 @@ import KanoNaviCore
 import SwiftUI
 
 /// The loaded Journey: the timeline or the gallery, switched in the toolbar,
-/// with the identity filter both share, and the milestone pages they push.
+/// under the identity filter both share, pinned in the bar area so it stays
+/// while either scrolls, and the milestone pages they push.
 struct JourneyContent: View {
     let journey: JourneyResponse
     let notice: DocumentNotice?
@@ -18,12 +19,18 @@ struct JourneyContent: View {
         VStack(spacing: 0) {
             switch mode {
             case .timeline:
-                JourneyTimelineList(journey: journey, branch: $branch, notice: notice, reload: reload)
+                JourneyTimelineList(journey: journey, branch: branch, notice: notice, reload: reload)
             case .gallery:
                 JourneyGalleryGrid(
-                    journey: journey, branch: $branch, category: $category, notice: notice, reload: reload)
+                    journey: journey, branch: branch, category: $category, notice: notice, reload: reload)
             }
         }
+        .safeAreaBar(edge: .top) {
+            filter
+        }
+        // A firm edge under the chips, so rows and the pinned year header
+        // never show through them.
+        .scrollEdgeEffectStyle(.hard, for: .top)
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 JourneyModePicker(mode: $mode)
@@ -32,6 +39,28 @@ struct JourneyContent: View {
         .navigationDestination(for: JourneyDestination.self) { destination in
             JourneyDestinationView(destination: destination, journey: journey)
         }
+    }
+
+    /// The identity chips, counting milestones on the timeline and images in
+    /// the gallery. One filter for both, so switching keeps where it scrolled.
+    private var filter: JourneyBranchFilter {
+        let counts: [String: Int]
+        let total: Int
+        let countLabel: (Int) -> LocalizedStringResource
+        switch mode {
+        case .timeline:
+            counts = JourneyTimeline.milestoneCounts(journey.milestones)
+            total = journey.milestones.count
+            countLabel = { .Journey.milestoneCount($0) }
+        case .gallery:
+            let gallery = JourneyGallery(journey)
+            counts = gallery.branchCounts
+            total = gallery.items.count
+            countLabel = { .Journey.imageCount($0) }
+        }
+        return JourneyBranchFilter(
+            branches: journey.branches, selection: $branch, counts: counts, total: total,
+            countLabel: countLabel)
     }
 }
 
