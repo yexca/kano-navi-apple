@@ -1,9 +1,12 @@
 import KanoNaviCore
 import SwiftUI
 
-/// The timeline's videos under their Japan months, or why there are none,
-/// and the row that reads the next page, for a lazy stack that pins its
-/// section headers. Each item spans the width less the standard margins.
+/// The timeline's videos by Japan month, or why there are none, and the row
+/// that reads the next page, for a scroll target lazy stack. The first
+/// section has no header, since the navigation subtitle names the section at
+/// the top; each later one opens with its name, which scrolls with the
+/// videos. Each item spans the width less the standard margins and is
+/// identified by its `VideoTimelineSlot`.
 struct VideoTimelineItems: View {
     let model: VideoTimelineModel
 
@@ -19,9 +22,12 @@ struct VideoTimelineItems: View {
                             // About 16 points between items, as a feed.
                             .padding(.horizontal)
                             .padding(.vertical, 8)
+                            .id(VideoTimelineSlot(sectionID: section.id, cardID: card.id))
                     }
                 } header: {
-                    header(for: section)
+                    if section.id != sections.first?.id {
+                        header(for: section)
+                    }
                 }
             }
             if listing.items.isEmpty {
@@ -48,22 +54,15 @@ struct VideoTimelineItems: View {
         }
     }
 
-    /// A section's title across the width on the screen's background, so the
-    /// covers scrolling under it while it is pinned stay hidden.
+    /// A section's name, set apart from the videos before it.
     private func header(for section: VideoTimelineSection) -> some View {
-        Group {
-            if section.isOnAir {
-                Text(.Videos.onAir)
-            } else if let month = section.month {
-                Text(verbatim: month.title(locale: locale))
-            }
-        }
-        .font(.headline)
-        .accessibilityAddTraits(.isHeader)
-        .padding(.horizontal)
-        .padding(.vertical, 8)
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .background(.background)
+        section.title(locale: locale)
+            .font(.title3.bold())
+            .accessibilityAddTraits(.isHeader)
+            .padding(.horizontal)
+            .padding(.top, 24)
+            .padding(.bottom, 4)
+            .frame(maxWidth: .infinity, alignment: .leading)
     }
 
     private func note(_ text: LocalizedStringResource) -> some View {
