@@ -83,6 +83,12 @@ or model providers itself, and never calls admin or MCP control endpoints.
 
 ## UI and Test Contracts
 
+- Keep the interface concise. Prefer a label, an icon or a short phrase to a
+  sentence. A link to another platform is its logo and name (YouTube, X,
+  Bilibili), not "Open on …". Explanations few people need, such as data
+  provenance, curation notes, rights notices or how a screen works, are left
+  out or folded behind a control such as an info button. Error, saved-copy
+  and empty states stay, each in one short line.
 - Check affected UI in the iOS Simulator on a small and a large iPhone, in
   light and dark appearance, and at the largest Dynamic Type size.
 - Tests protect concrete behaviors and contracts. Choose the lowest sufficient
