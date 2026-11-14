@@ -346,11 +346,16 @@ The app is a `TabView` with five tabs.
        today, else the primary color). Dragging the month vertically moves
        it with the finger, the month after it rising from below (dragging
        up) or the month before it coming down from above, clipped to the
-       month area. On release it settles on that month when the drag, with
-       its momentum, reaches a third of the month's height, and otherwise
-       springs back. The new month selects today in today's month and its
-       first day elsewhere, then the month area grows or shrinks to its
-       four to six weeks. A tap that does not move stays a tap on its day;
+       month area. Once the drag passes a third of the month's height the
+       header names the month a release would show, cross-fading, and names
+       the month on screen again if the drag goes back. On release it
+       settles on that month when the drag, with its momentum, reaches a
+       third of the month's height, and otherwise springs back, carrying on
+       at the finger's speed while the month area grows or shrinks to the
+       new month's four to six weeks in the same motion. The new month
+       selects today in today's month and its first day elsewhere. Both
+       neighbours are already drawn and indexed, so a drag only moves
+       them. A tap that does not move stays a tap on its day;
        Reduce Motion cross-fades to the new month. Every day also has Previous Month
        and Next Month VoiceOver actions. Below the month, the month's notice
        when it is not a fresh read, then the selected day's entries in a
@@ -372,8 +377,8 @@ The app is a `TabView` with five tabs.
        on one line on a tint of its color (Details), and folds what does not
        fit into "+n"; a cell too narrow for its dots and "+n" draws fewer
        dots rather than cut "+n" short. The title names the month at the
-       top, and that month and the months on each side of it are read as it
-       comes into view. Tapping a day opens it in List. At accessibility text
+       top, and that month and the two months on each side of it are read as
+       it comes into view. Tapping a day opens it in List. At accessibility text
        sizes Stacked and Details use Compact's dots.
    - **Switching modes** moves as in Calendar, with the month name fixed.
      The List month and the grids' months are one view with one cell per
@@ -388,8 +393,9 @@ The app is a `TabView` with five tabs.
      modes the cells change height and content in place. Each is a 0.4 s
      spring; Reduce Motion cross-fades instead, and a deep link switches
      without motion.
-   - **Drawing**: a month's entries are indexed by day once, when it loads
-     (`ScheduleMonthDays`). Months and days take plain values and compare
+   - **Drawing**: a month's entries are indexed by day once, away from the
+     main actor, when it loads (`ScheduleMonthDays`); the month on screen
+     and the two months on each side are read and indexed ahead. Months and days take plain values and compare
      equal without their actions, so selecting a day redraws two days,
      loading a month redraws that month, and scrolling redraws none.
    - **Colors** come from `view.typeCode`, defined once in `ScheduleTag` in
