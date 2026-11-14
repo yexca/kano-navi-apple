@@ -17,6 +17,8 @@ struct ScheduleGridMonth: View, Equatable {
     let contentLanguage: ContentLanguage
     let openDay: (JapanDate) -> Void
     let retry: () -> Void
+    /// Pairs the weeks with the List mode's while modes switch.
+    var morph: Namespace.ID?
 
     @Environment(\.locale) private var locale
 
@@ -38,7 +40,8 @@ struct ScheduleGridMonth: View, Equatable {
             }
             ScheduleGridMonthLabel(month: month, isCurrentMonth: month.isInSameMonth(as: today))
             ForEach(weeks.enumerated(), id: \.offset) { _, week in
-                ScheduleGridWeek(week: week, today: today, marks: marks, style: style, openDay: openDay)
+                ScheduleGridWeek(
+                    week: week, today: today, marks: marks, style: style, openDay: openDay, morph: morph)
             }
         }
         // Seven columns cannot grow past this size on an iPhone.

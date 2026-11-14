@@ -12,6 +12,8 @@ struct ScheduleMonthGrid: View, Equatable {
     let marks: [JapanDate: [ScheduleDayMark]]
     let select: (JapanDate) -> Void
     let page: (Int) -> Void
+    /// Pairs the weeks with a grid mode's while modes switch.
+    var morph: Namespace.ID?
 
     nonisolated static func == (lhs: Self, rhs: Self) -> Bool {
         lhs.weeks == rhs.weeks && lhs.today == rhs.today && lhs.selectedDate == rhs.selectedDate
@@ -41,6 +43,7 @@ struct ScheduleMonthGrid: View, Equatable {
                     }
                 }
                 .fixedSize(horizontal: false, vertical: true)
+                .scheduleWeekMorph(week, in: morph)
             }
         }
         .overlay(alignment: .bottom) {

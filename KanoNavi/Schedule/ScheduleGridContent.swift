@@ -12,6 +12,11 @@ struct ScheduleGridContent: View {
     let contentLanguage: ContentLanguage
     /// Counts Today taps; each one scrolls to today's month.
     let todayTaps: Int
+    /// Counts requests to bring the model's month to the top, made before
+    /// the List mode takes its place.
+    var alignRequests = 0
+    /// Called once the model's month is at the top after a request.
+    var onAligned: () -> Void = {}
     let openDay: (JapanDate) -> Void
 
     /// The month at the top of the scroll view, kept in step with the
@@ -26,12 +31,15 @@ struct ScheduleGridContent: View {
 
     init(
         model: ScheduleModel, style: ScheduleMode, contentLanguage: ContentLanguage, todayTaps: Int,
+        alignRequests: Int = 0, onAligned: @escaping () -> Void = {},
         openDay: @escaping (JapanDate) -> Void
     ) {
         self.model = model
         self.style = style
         self.contentLanguage = contentLanguage
         self.todayTaps = todayTaps
+        self.alignRequests = alignRequests
+        self.onAligned = onAligned
         self.openDay = openDay
         _position = State(initialValue: ScrollPosition(id: model.displayedMonth, anchor: .top))
     }
@@ -65,6 +73,14 @@ struct ScheduleGridContent: View {
         .onChange(of: style) {
             // Cells change height with the style; keep the month in view.
             Task { await land(on: model.displayedMonth) }
+        }
+        .onChange(of: alignRequests) {
+            scrolledMonth = model.displayedMonth
+            withAnimation(ScheduleModeSwitch.alignAnimation, completionCriteria: .logicallyComplete) {
+                position.scrollTo(id: model.displayedMonth, anchor: .top)
+            } completion: {
+                onAligned()
+            }
         }
         .onChange(of: todayTaps) {
             withAnimation {

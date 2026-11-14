@@ -11,6 +11,11 @@ struct ScheduleListContent: View {
     let model: ScheduleModel
     let contentLanguage: ContentLanguage
     let open: (ScheduleEvent) -> Void
+    /// The grid mode this List is turning into or out of. Its month is then
+    /// drawn as that mode's month, the weeks paired with `morph` so they grow
+    /// or shrink in place, and the day's entries slide away.
+    var expansion: ScheduleMode?
+    var morph: Namespace.ID?
 
     /// Where the next month slides in from.
     @State private var pageEdge = Edge.bottom
@@ -22,19 +27,57 @@ struct ScheduleListContent: View {
                 .padding(.vertical, 6)
                 .dynamicTypeSize(...DynamicTypeSize.xxxLarge)
             ScheduleHairline()
-            month
-            if let notice = model.notice {
-                ScheduleStatusNotice(notice: notice, retry: retry)
-                    .padding(.horizontal)
-                    .padding(.vertical, 8)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                ScheduleHairline()
+            if let expansion {
+                // The grown months run past the screen; laid over a view that
+                // takes just the space left, they grow down without moving
+                // anything above them.
+                Color.clear
+                    .overlay(alignment: .top) {
+                        expandedMonth(expansion)
+                    }
+                    .clipped()
+            } else {
+                month
+                if let notice = model.notice {
+                    ScheduleStatusNotice(notice: notice, retry: retry)
+                        .padding(.horizontal)
+                        .padding(.vertical, 8)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    ScheduleHairline()
+                }
+                ScheduleDayList(
+                    entries: model.entries(on: model.selectedDate), isLoading: model.isLoading,
+                    isLoaded: model.month != nil, contentLanguage: contentLanguage, open: open,
+                    refresh: model.refresh
+                )
+                .transition(.move(edge: .bottom).combined(with: .opacity))
             }
-            ScheduleDayList(
-                entries: model.entries(on: model.selectedDate), isLoading: model.isLoading,
-                isLoaded: model.month != nil, contentLanguage: contentLanguage, open: open,
-                refresh: model.refresh)
         }
+        // Opaque, so it covers the grid exactly while they hand over.
+        .background(.background)
+    }
+
+    /// The month on screen drawn as the grid mode's month, with the next
+    /// months below it fading in or out, exactly where the grid shows them.
+    private func expandedMonth(_ style: ScheduleMode) -> some View {
+        let month = model.displayedMonth
+        return VStack(spacing: 0) {
+            gridMonth(month, style: style, morph: morph)
+            ForEach(1...2, id: \.self) { offset in
+                gridMonth(month.addingMonths(offset), style: style, morph: nil)
+                    .transition(.opacity)
+            }
+        }
+        .dynamicTypeSize(...DynamicTypeSize.xxxLarge)
+        .allowsHitTesting(false)
+    }
+
+    private func gridMonth(_ month: JapanDate, style: ScheduleMode, morph: Namespace.ID?) -> some View {
+        ScheduleGridMonth(
+            month: month, today: model.today, days: model.monthDays[month], notice: nil, style: style,
+            contentLanguage: contentLanguage, openDay: { _ in }, retry: {}, morph: morph
+        )
+        .equatable()
     }
 
     private var month: some View {
@@ -44,7 +87,7 @@ struct ScheduleListContent: View {
             ScheduleMonthGrid(
                 weeks: weeks, today: model.today, selectedDate: model.selectedDate,
                 marks: ScheduleDayMark.marks(of: model.monthDays[month], weeks: weeks),
-                select: model.select, page: page
+                select: model.select, page: page, morph: morph
             )
             .equatable()
             .id(month)

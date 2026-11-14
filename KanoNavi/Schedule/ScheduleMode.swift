@@ -20,6 +20,9 @@ nonisolated enum ScheduleMode: String, CaseIterable, Identifiable {
 
     var id: Self { self }
 
+    /// Whether the mode scrolls months vertically.
+    var isGrid: Bool { self != .list }
+
     var title: LocalizedStringResource {
         switch self {
         case .list: .Schedule.modeList
