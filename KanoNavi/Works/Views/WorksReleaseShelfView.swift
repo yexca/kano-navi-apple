@@ -1,8 +1,9 @@
 import KanoNaviCore
 import SwiftUI
 
-/// The shelf's content: the format filter, then each year's releases as a
-/// grid of covers, or as rows at accessibility text sizes.
+/// The shelf's content: the format filter as one row that scrolls sideways,
+/// then each year's releases as a grid of covers, or as rows at
+/// accessibility text sizes.
 struct WorksReleaseShelfView: View {
     let shelf: WorksReleaseShelf
     @Binding var format: String?
@@ -16,10 +17,13 @@ struct WorksReleaseShelfView: View {
             LazyVStack(alignment: .leading, spacing: 24) {
                 if let notice {
                     DocumentStatusNotice(notice: notice, reload: reload)
+                        .padding(.horizontal)
                 }
-                ArchiveFilterBar(options: shelf.options, selection: $format, title: .Works.filterFormat)
+                // Full width: the row scrolls from edge to edge and insets itself.
+                ArchiveFilterRow(options: shelf.options, selection: $format, title: .Works.filterFormat)
                 ForEach(groups) { group in
                     WorksReleaseYearSection(group: group)
+                        .padding(.horizontal)
                 }
                 if groups.isEmpty {
                     ContentUnavailableView {
@@ -31,7 +35,7 @@ struct WorksReleaseShelfView: View {
                     }
                 }
             }
-            .padding()
+            .padding(.vertical)
         }
         .refreshable {
             await reload()

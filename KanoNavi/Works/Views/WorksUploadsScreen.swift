@@ -4,12 +4,13 @@ import SwiftUI
 /// The uploads: the collection's list joined with the covers and videos
 /// the service stores, and the videos newer than the collection above it.
 ///
-/// Two reads feed it. The list is the screen's document; the stored data
-/// only adds to it, so the list shows on its own while that read runs or
-/// after it fails.
+/// Two reads feed it, both owned by the Works entry, which starts them, so
+/// opening the screen reads nothing again. The list is the screen's
+/// document; the stored data only adds to it, so the list shows on its own
+/// while that read runs or after it fails.
 struct WorksUploadsScreen: View {
-    @State private var list: DocumentModel<WorksUploadListRequest>
-    @State private var stored: DocumentModel<WorksUploadsRequest>
+    let list: DocumentModel<WorksUploadListRequest>
+    let stored: DocumentModel<WorksUploadsRequest>
 
     @State private var kind: String?
     @State private var order = WorksOrder.newestFirst
@@ -18,11 +19,6 @@ struct WorksUploadsScreen: View {
     /// Whether the query filters the list: one of spaces alone does not.
     private var isSearching: Bool {
         query.contains { $0.isWhitespace == false }
-    }
-
-    init(client: APIClient) {
-        _list = State(initialValue: DocumentModel(client: client, request: WorksUploadListRequest()))
-        _stored = State(initialValue: DocumentModel(client: client, request: WorksUploadsRequest()))
     }
 
     var body: some View {

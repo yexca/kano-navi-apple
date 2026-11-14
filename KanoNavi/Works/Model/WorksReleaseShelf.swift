@@ -25,9 +25,4 @@ nonisolated struct WorksReleaseShelf: Equatable, Sendable {
         let shown = releases.filter { Self.filter.matches($0.format.rawValue, selection: format) }
         return WorksYearGroup.groups(of: shown, order: order, date: \.date)
     }
-
-    /// The newest releases, newest first, for the entry screen.
-    func latest(_ limit: Int) -> [WorksRelease] {
-        Array(groups(format: nil, order: .newestFirst).flatMap(\.items).prefix(limit))
-    }
 }

@@ -2,7 +2,8 @@ import KanoNaviComponents
 import SwiftUI
 
 /// An archive's filter choices as a wrapping row of buttons, each with the
-/// month's count; the selected one is prominent.
+/// month's count; the selected one is prominent. `ArchiveFilterRow` puts
+/// the same buttons in one row that scrolls sideways.
 struct ArchiveFilterBar: View {
     let options: [ArchiveFilterOption]
     @Binding var selection: String?

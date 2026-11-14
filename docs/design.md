@@ -414,18 +414,36 @@ hand-curation note and the image rights notice.
 
 ### Works
 
-Opens from More. It reads `/api/works` once as a single document and shares
-it with the screens it opens; Uploads adds `/api/works/upload-list` and
-`/api/works/uploads`. Each read loads on appear and on pull to refresh.
+Opens from More. The entry reads `/api/works`, `/api/works/upload-list` and
+`/api/works/uploads` once each and shares them with the screens it opens, so
+moving between them reads nothing again. Each read loads on appear and on
+pull to refresh. The collection is the entry's document; the two upload
+reads only add to it, so while they run or after they fail the entry shows
+without what they add, and Uploads says why when it opens.
 
 - **Entry.** The years the collection spans, the three ways in with their
-  counts (Own Releases, Featured On, Uploads) and the covers of the eight
-  newest releases in a row that scrolls sideways. The toolbar's info button
-  opens a sheet with the date the collection covers works through and the
-  rights notice.
+  counts (Own Releases, Featured On, Uploads), then two sections. The
+  toolbar's info button opens a sheet with the date the collection covers
+  works through and the rights notice.
+  - Latest Uploads: the ten newest uploads as cover cards in a row that
+    scrolls sideways, each with its cover, title and Japan date. The videos
+    newer than the collection (`recent`) lead, titled in the content
+    language; the collection's uploads follow, newest first, with their
+    stored covers. A card opens its watch page in the browser: a newer
+    video's own page, or a collection upload's first page in the order of
+    its watch buttons that is not removed or private. A card with no such
+    page does nothing. The Uploads row above is the way to the full list.
+  - On This Day: personal releases, participation works and uploads whose
+    Japan month and day are today's in Asia/Tokyo, from past years, newest
+    first, each with a small cover and "N years ago". A release or work
+    opens its page, an upload its watch page as a card does. A work dated
+    February 29 shows on February 28 in years without that day, and on
+    February 29 alone in leap years. The section is left out when nothing
+    matches.
 - **Own Releases.** Covers in a grid by Japan year, newest first, with a
   format filter (All, Album, Single, EP, Doujin, and Other for a format the
-  app does not name) and its counts. A card shows the first cover, the
+  app does not name) and its counts in one row that scrolls sideways and
+  keeps the selected format in view. A card shows the first cover, the
   title, the date and marks for format, digital, unit and cancelled
   (struck through); a release without a cover draws a disc mark. A toolbar
   menu switches to oldest first. At accessibility text sizes the grid
@@ -456,7 +474,8 @@ it with the screens it opens; Uploads adds `/api/works/upload-list` and
   took part in with her further credits, the full track list folded below
   when it holds more than those, and a link to the page the record follows.
 - **Uploads.** The upload list joined with `/api/works/uploads` by upload
-  ID, by year, newest first, with a kind filter and its counts and a search
+  ID, by year, newest first, with a kind filter and its counts in one row
+  that scrolls sideways, as on Own Releases, and a search
   over song, original artist, collaborators, albums, a compilation's songs
   and the Bilibili title. A row shows the song, the original artist and
   collaborators, date and kind, the albums that include the recording, a
