@@ -1,9 +1,9 @@
 import KanoNaviCore
 import SwiftUI
 
-/// The shelf's content: the format filter as one row that scrolls sideways,
-/// then each year's releases as a grid of covers, or as rows at
-/// accessibility text sizes.
+/// The shelf's content: each year's releases as a grid of covers, or as rows
+/// at accessibility text sizes, under the format filter, one row that scrolls
+/// sideways pinned in the bar area so it stays while the shelf scrolls.
 struct WorksReleaseShelfView: View {
     let shelf: WorksReleaseShelf
     @Binding var format: String?
@@ -19,8 +19,6 @@ struct WorksReleaseShelfView: View {
                     DocumentStatusNotice(notice: notice, reload: reload)
                         .padding(.horizontal)
                 }
-                // Full width: the row scrolls from edge to edge and insets itself.
-                ArchiveFilterRow(options: shelf.options, selection: $format, title: .Works.filterFormat)
                 ForEach(groups) { group in
                     WorksReleaseYearSection(group: group)
                         .padding(.horizontal)
@@ -37,6 +35,12 @@ struct WorksReleaseShelfView: View {
             }
             .padding(.vertical)
         }
+        .safeAreaBar(edge: .top) {
+            // Full width: the row scrolls from edge to edge and insets itself.
+            ArchiveFilterRow(options: shelf.options, selection: $format, title: .Works.filterFormat)
+        }
+        // A firm edge under the chips, so covers never show through them.
+        .scrollEdgeEffectStyle(.hard, for: .top)
         .refreshable {
             await reload()
         }

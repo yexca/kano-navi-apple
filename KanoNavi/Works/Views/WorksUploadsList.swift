@@ -1,8 +1,9 @@
 import KanoNaviCore
 import SwiftUI
 
-/// The Uploads screen's content: notices, the newer videos, the kind
-/// filter as one row that scrolls sideways and the uploads by year.
+/// The Uploads screen's content: notices, the newer videos and the uploads
+/// by year, under the kind filter, one row that scrolls sideways pinned in
+/// the bar area so it stays while the list scrolls.
 struct WorksUploadsList: View {
     let catalog: WorksUploadCatalog
     /// The videos newer than the collection; `nil` without any or while searching.
@@ -37,12 +38,6 @@ struct WorksUploadsList: View {
                 WorksRecentSection(recent: recent)
             }
 
-            Section {
-                ArchiveFilterRow(options: catalog.options, selection: $kind, title: .Works.filterKind)
-                    .listRowBackground(Color.clear)
-                    .listRowInsets(EdgeInsets())
-            }
-
             ForEach(groups) { group in
                 Section {
                     ForEach(group.items) { item in
@@ -61,6 +56,12 @@ struct WorksUploadsList: View {
                 }
             }
         }
+        .safeAreaBar(edge: .top) {
+            // Outside the list, so the row scrolls from edge to edge.
+            ArchiveFilterRow(options: catalog.options, selection: $kind, title: .Works.filterKind)
+        }
+        // A firm edge under the chips, so rows never show through them.
+        .scrollEdgeEffectStyle(.hard, for: .top)
         .refreshable {
             await reload()
         }
