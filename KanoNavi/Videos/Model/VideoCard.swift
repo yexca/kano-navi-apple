@@ -1,7 +1,7 @@
 import Foundation
 import KanoNaviCore
 
-/// One video as the Videos tab shows it, from a shelf or an archive page.
+/// One video as the Videos tab's timeline shows it.
 struct VideoCard: Equatable, Identifiable {
     var id: String
     var title: NowContentText
@@ -10,16 +10,17 @@ struct VideoCard: Equatable, Identifiable {
     /// The scheduled start, or the publication without one.
     var time: Date?
     var status: VideoStatusMark?
-    /// The form chip, shown when the video has no status mark.
+    /// The form chip, shown when the video has no status mark; `short` for
+    /// a Short whatever its stored form.
     var formCode: VideoFormCode?
     /// The video's tag code, such as `game`, `talk`, `song` or `video`.
     var tag: String?
     var availability: VideoAvailabilityMark?
     /// The video's own page first, then its alternates on other platforms.
     var links: [NowLink]
-    /// Whether the video is a Short, drawn as a vertical card.
+    /// Whether the video is a Short, by its form or its flag.
     var isShort: Bool
-    /// The shelf filter's kind for the video's form.
+    /// The filter's kind for the video's form.
     var kind: VideoShelfKind
     var durationSeconds: Int?
 
@@ -30,7 +31,8 @@ struct VideoCard: Equatable, Identifiable {
         thumbnailURL = video.thumbnailURL
         time = video.scheduledAt ?? video.publishedAt
         status = VideoStatusMark(video: video)
-        formCode = video.view?.formCode
+        isShort = video.view?.formCode == .short || video.isShort == true
+        formCode = isShort ? .short : video.view?.formCode
         tag = video.tag
         availability = VideoAvailabilityMark(video.availability)
         let own = NowLink.page(
@@ -39,7 +41,6 @@ struct VideoCard: Equatable, Identifiable {
             NowLink.page(on: EventPlatform(videoSource: alternate.source), url: alternate.url)
         }
         links = [own] + alternates.filter { $0.url != video.url }
-        isShort = video.view?.formCode == .short || video.isShort == true
         kind = VideoShelfKind(video: video)
         durationSeconds = video.durationSeconds
     }

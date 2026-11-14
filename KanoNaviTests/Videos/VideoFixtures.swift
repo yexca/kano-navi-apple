@@ -39,14 +39,4 @@ enum VideoFixtures {
         let data = try JSONSerialization.data(withJSONObject: json)
         return try JSONDecoder.kanoNavi().decode(Video.self, from: data)
     }
-
-    static func shelf(
-        lead: String? = nil, featured: Bool = false, reservations: [String] = [], works: [String] = [],
-        archives: [String] = [], shorts: [String] = []
-    ) -> [String: Any] {
-        [
-            "leadId": lead ?? NSNull(), "leadIsFeatured": featured, "reservations": reservations,
-            "works": works, "archives": archives, "shorts": shorts,
-        ]
-    }
 }

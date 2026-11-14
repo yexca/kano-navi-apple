@@ -2,7 +2,7 @@ import Foundation
 import KanoNaviComponents
 import KanoNaviCore
 
-/// A platform the video shelf can be narrowed to.
+/// A platform the video timeline can be narrowed to.
 enum VideoShelfPlatform: String, CaseIterable, Identifiable {
     case youtube
     case bilibili

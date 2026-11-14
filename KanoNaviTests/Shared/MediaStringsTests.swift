@@ -6,15 +6,14 @@ import Testing
 /// The Videos, Posts and Archive tables resolve in every interface language.
 struct MediaStringsTests {
     @Test func tablesResolveInEachLanguage() {
-        #expect(resolved(.Videos.featured, "en") == "Featured")
-        #expect(resolved(.Videos.featured, "ja") == "ピックアップ")
+        #expect(resolved(.Videos.newest, "en") == "Newest")
+        #expect(resolved(.Videos.jumpToMonth, "ja") == "月を選ぶ")
         #expect(resolved(.Posts.agencyPost, "zh-Hans") == "事务所动态")
         #expect(resolved(.Archive.all, "ja") == "すべて")
     }
 
     @Test func countsArePluralized() {
-        #expect(resolved(.Videos.videoCount(1), "en") == "1 Video")
-        #expect(resolved(.Videos.videoCount(4), "en") == "4 Videos")
+        #expect(resolved(.Posts.postCount(1), "en") == "1 Post")
         #expect(resolved(.Posts.postCount(4), "ja") == "4 件")
     }
 
@@ -33,6 +32,14 @@ struct MediaStringsTests {
     @Test func filterChoiceShowsItsCount() {
         #expect(resolved(.Archive.filterWithCount("@example", 9), "en") == "@example (9)")
         #expect(resolved(.Archive.filterWithCount("@example", 9), "ja") == "@example（9）")
+    }
+
+    @Test func timelineNoticeNamesWhenTheCopyWasRead() {
+        let time = "Tue, Nov 10 11:20 JST"
+        #expect(
+            resolved(.Videos.timelineSavedCopy(time), "en")
+                == "Couldn’t update videos. Showing the copy from \(time).")
+        #expect(resolved(.Videos.timelineSavedCopy(time), "ja").contains("\(time) 時点"))
     }
 
     private func resolved(_ resource: LocalizedStringResource, _ identifier: String) -> String {
