@@ -2,7 +2,7 @@
   "sourceLanguage": "en",
   "strings": {
     "accountFilter": {
-      "comment": "VoiceOver label of the post archive's account filter.",
+      "comment": "Name of the account filter menu on the Posts tab and in the post archive.",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -218,7 +218,7 @@
       }
     },
     "pastPosts": {
-      "comment": "Link from the recent posts to the month archive.",
+      "comment": "Toolbar button on the Posts tab that opens the month archive; VoiceOver reads it beside its clock icon.",
       "extractionState": "manual",
       "localizations": {
         "en": {

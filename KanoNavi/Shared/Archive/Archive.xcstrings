@@ -25,6 +25,30 @@
         }
       }
     },
+    "filterWithCount": {
+      "comment": "One choice of a filter menu. %1$@ is the choice, such as “All” or an @handle; %2$lld is the number of items it shows.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@ (%2$lld)"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@（%2$lld）"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@（%2$lld）"
+          }
+        }
+      }
+    },
     "loadFailed": {
       "comment": "Notice when an archive month could not be loaded and nothing is on screen.",
       "extractionState": "manual",

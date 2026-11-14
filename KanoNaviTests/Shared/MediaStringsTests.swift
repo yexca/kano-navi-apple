@@ -30,6 +30,11 @@ struct MediaStringsTests {
         #expect(resolved(.Archive.monthWithCount("November 2026", 10), "en") == "November 2026 (10)")
     }
 
+    @Test func filterChoiceShowsItsCount() {
+        #expect(resolved(.Archive.filterWithCount("@example", 9), "en") == "@example (9)")
+        #expect(resolved(.Archive.filterWithCount("@example", 9), "ja") == "@example（9）")
+    }
+
     private func resolved(_ resource: LocalizedStringResource, _ identifier: String) -> String {
         var resource = resource
         resource.locale = Locale(identifier: identifier)
