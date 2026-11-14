@@ -1,6 +1,15 @@
 import KanoNaviComponents
 import SwiftUI
-import UIKit
+
+#if os(iOS)
+    import UIKit
+
+    private typealias PlatformFont = UIFont
+#else
+    import AppKit
+
+    private typealias PlatformFont = NSFont
+#endif
 
 /// A day's entries as one dot each in its tag color, faded when done or
 /// cancelled, with "+n" past `capacity`. A cell too narrow for that row
@@ -39,7 +48,7 @@ struct ScheduleDayDots: View {
     ) -> Int {
         let limit = max(maxCapacity, 1)
         guard entryCount > 1, let availableWidth, availableWidth > 0 else { return limit }
-        let font = UIFont.systemFont(ofSize: 11.0 * (dotSize / 6.0), weight: .medium)
+        let font = PlatformFont.systemFont(ofSize: 11.0 * (dotSize / 6.0), weight: .medium)
         let spacing: CGFloat = 2.0
         for candidate in (1...limit).reversed() {
             let shape = ScheduleMode.marks(forEntryCount: entryCount, capacity: candidate)
