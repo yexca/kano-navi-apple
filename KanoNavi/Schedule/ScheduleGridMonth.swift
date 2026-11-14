@@ -2,79 +2,47 @@ import KanoNaviComponents
 import KanoNaviCore
 import SwiftUI
 
-/// One month of the vertically scrolling grid: its short name above the
-/// column of its first day, then its weeks with a line above each. Days of
-/// the months around it stay blank, so months follow on as in Calendar. The
-/// month's notice comes first when it is not a fresh read.
-struct ScheduleGridMonth: View {
+/// One month of the vertically scrolling grid, as in Calendar: its short
+/// name above the column of its first day, then only its own days in
+/// Monday-first weeks, a hairline above each day, the places of the months
+/// around it left blank. The month's notice comes first when it is not a
+/// fresh read. Takes plain values and compares equal without its actions,
+/// so loading one month redraws only that month.
+struct ScheduleGridMonth: View, Equatable {
     let month: JapanDate
-    let model: ScheduleModel
+    let today: JapanDate
+    let days: ScheduleMonthDays?
+    let notice: ScheduleNotice?
     let style: ScheduleMode
     let contentLanguage: ContentLanguage
     let openDay: (JapanDate) -> Void
+    let retry: () -> Void
 
     @Environment(\.locale) private var locale
 
+    nonisolated static func == (lhs: Self, rhs: Self) -> Bool {
+        lhs.month == rhs.month && lhs.today == rhs.today && lhs.days === rhs.days
+            && lhs.notice == rhs.notice && lhs.style == rhs.style
+            && lhs.contentLanguage == rhs.contentLanguage
+    }
+
     var body: some View {
+        let weeks = month.monthWeekLayout
+        let marks = ScheduleDayMark.marks(
+            of: days, weeks: weeks, titlesIn: style == .details ? contentLanguage : nil, locale: locale)
         VStack(alignment: .leading, spacing: 0) {
-            if let notice = model.notice(for: month) {
+            if let notice {
                 ScheduleStatusNotice(notice: notice, retry: retry)
                     .padding(.horizontal)
                     .padding(.vertical, 8)
             }
-            Grid(horizontalSpacing: 0, verticalSpacing: 0) {
-                GridRow {
-                    ForEach(0..<firstColumn, id: \.self) { _ in
-                        Color.clear.gridCellUnsizedAxes([.horizontal, .vertical])
-                    }
-                    Text(verbatim: month.shortMonthTitle(locale: locale))
-                        .font(.title3.weight(.bold))
-                        .foregroundStyle(
-                            month.isInSameMonth(as: model.today)
-                                ? AnyShapeStyle(.tint) : AnyShapeStyle(.primary)
-                        )
-                        .lineLimit(1)
-                        .minimumScaleFactor(0.7)
-                        .padding(.horizontal, 6)
-                        .padding(.vertical, 6)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .gridCellColumns(7 - firstColumn)
-                        .accessibilityLabel(Text(verbatim: month.monthTitle(locale: locale)))
-                        .accessibilityAddTraits(.isHeader)
-                }
-                ForEach(month.monthWeeks, id: \.first) { week in
-                    Divider()
-                    GridRow {
-                        ForEach(week, id: \.self) { date in
-                            if date.isInSameMonth(as: month) {
-                                ScheduleGridDayCell(
-                                    date: date,
-                                    isToday: date == model.today,
-                                    entries: model.entries(on: date),
-                                    style: style,
-                                    contentLanguage: contentLanguage
-                                ) {
-                                    openDay(date)
-                                }
-                            } else {
-                                Color.clear.gridCellUnsizedAxes([.horizontal, .vertical])
-                            }
-                        }
-                    }
-                }
+            ScheduleGridMonthLabel(month: month, isCurrentMonth: month.isInSameMonth(as: today))
+            ForEach(weeks.enumerated(), id: \.offset) { _, week in
+                ScheduleGridWeek(week: week, today: today, marks: marks, style: style, openDay: openDay)
             }
-            // Seven columns cannot grow past this size on an iPhone.
-            .dynamicTypeSize(...DynamicTypeSize.xxxLarge)
         }
+        // Seven columns cannot grow past this size on an iPhone.
+        .dynamicTypeSize(...DynamicTypeSize.xxxLarge)
         .padding(.bottom, 12)
-    }
-
-    /// The Monday-first column of the month's first day.
-    private var firstColumn: Int {
-        month.monthWeeks.first?.firstIndex(of: month.firstOfMonth) ?? 0
-    }
-
-    private func retry() {
-        Task { await model.load(month) }
     }
 }

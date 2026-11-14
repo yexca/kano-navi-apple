@@ -37,12 +37,16 @@ struct ScheduleGridContent: View {
     }
 
     var body: some View {
+        let today = model.today
         ScrollView {
             LazyVStack(spacing: 0) {
                 ForEach(model.browsableMonths, id: \.self) { month in
                     ScheduleGridMonth(
-                        month: month, model: model, style: style, contentLanguage: contentLanguage,
-                        openDay: openDay)
+                        month: month, today: today, days: model.monthDays[month],
+                        notice: model.notice(for: month), style: style, contentLanguage: contentLanguage,
+                        openDay: openDay, retry: { retry(month) }
+                    )
+                    .equatable()
                 }
             }
             .scrollTargetLayout()
@@ -53,7 +57,7 @@ struct ScheduleGridContent: View {
         }
         // The month in view is the earliest one at least 40% on screen.
         .onScrollTargetVisibilityChange(idType: JapanDate.self, threshold: 0.4) { months in
-            if hasLanded, let first = months.min() {
+            if hasLanded, let first = months.min(), first != scrolledMonth {
                 scrolledMonth = first
                 model.showMonth(first)
             }
@@ -80,11 +84,18 @@ struct ScheduleGridContent: View {
             await model.refresh()
         }
         .safeAreaBar(edge: .top) {
-            ScheduleWeekdayRow()
-                .dynamicTypeSize(...DynamicTypeSize.xxxLarge)
-                .padding(.horizontal, 2)
-                .padding(.vertical, 6)
+            VStack(spacing: 0) {
+                ScheduleWeekdayRow()
+                    .dynamicTypeSize(...DynamicTypeSize.xxxLarge)
+                    .padding(.vertical, 6)
+                ScheduleHairline()
+            }
+            .background(.background)
         }
+    }
+
+    private func retry(_ month: JapanDate) {
+        Task { await model.load(month) }
     }
 
     /// Scrolls to a month's top. The lazy stack places months it has not

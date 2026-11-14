@@ -15,11 +15,24 @@ final class ScheduleModel {
     typealias MonthLoader = @Sendable (JapanDate) async throws -> ScheduleMonthResult
 
     /// The first day of the month on screen.
-    private(set) var displayedMonth: JapanDate
+    private(set) var displayedMonth: JapanDate {
+        didSet {
+            if displayedMonth < browsableMonths.first ?? displayedMonth
+                || displayedMonth > browsableMonths.last ?? displayedMonth
+            {
+                browsableMonths = Self.browsableMonths(today: today, reaching: displayedMonth)
+            }
+        }
+    }
     /// The day whose entries are listed.
     private(set) var selectedDate: JapanDate
     /// Loaded months by their first day.
     private(set) var months: [JapanDate: ScheduleMonthResult] = [:]
+    /// Loaded months' entries by day, by the month's first day.
+    private(set) var monthDays: [JapanDate: ScheduleMonthDays] = [:]
+    /// The months the screen can show, by their first day: five years back
+    /// and two years ahead of today, widened to reach the month on screen.
+    private(set) var browsableMonths: [JapanDate]
     /// The last failure per month, cleared by a successful load.
     private(set) var failures: [JapanDate: any Error] = [:]
     private(set) var loadingMonths: Set<JapanDate> = []
@@ -34,6 +47,7 @@ final class ScheduleModel {
         let today = today()
         displayedMonth = today.firstOfMonth
         selectedDate = today
+        browsableMonths = Self.browsableMonths(today: today, reaching: today)
     }
 
     /// Today's Japan date.
@@ -41,10 +55,6 @@ final class ScheduleModel {
 
     /// The loaded result for the month on screen.
     var month: ScheduleMonthResult? { months[displayedMonth] }
-
-    /// The 42 Monday-first dates on screen. They are known before the month
-    /// loads, so the grid never blanks.
-    var gridDates: [JapanDate] { month?.dates ?? displayedMonth.monthGrid }
 
     /// Whether the month on screen is loading.
     var isLoading: Bool { loadingMonths.contains(displayedMonth) }
@@ -66,40 +76,31 @@ final class ScheduleModel {
         return .saved(fetchedAt: result.fetchedAt)
     }
 
-    /// The months the screen can show, by their first day: five years back
-    /// and two years ahead of today, widened to reach the month on screen.
-    var browsableMonths: [JapanDate] {
+    private static let monthsBack = 60
+    private static let monthsAhead = 24
+
+    private static func browsableMonths(today: JapanDate, reaching month: JapanDate) -> [JapanDate] {
         let current = today.firstOfMonth
-        let first = min(current.addingMonths(-Self.monthsBack), displayedMonth)
-        let last = max(current.addingMonths(Self.monthsAhead), displayedMonth)
+        let first = min(current.addingMonths(-monthsBack), month.firstOfMonth)
+        let last = max(current.addingMonths(monthsAhead), month.firstOfMonth)
         var months: [JapanDate] = []
-        var month = first
-        while month <= last {
-            months.append(month)
-            month = month.addingMonths(1)
+        var next = first
+        while next <= last {
+            months.append(next)
+            next = next.addingMonths(1)
         }
         return months
     }
 
-    private static let monthsBack = 60
-    private static let monthsAhead = 24
-
-    /// The number of entries the server counts on a date.
-    func count(on date: JapanDate) -> Int {
-        result(containing: date)?.dayCounts[date] ?? 0
-    }
-
-    /// The entries on a date, from the loaded month whose grid contains it.
+    /// The entries on a date, from its month's index once that month loads.
     func entries(on date: JapanDate) -> [ScheduleDayEntry] {
-        guard let result = result(containing: date) else { return [] }
-        return ScheduleDayEntry.entries(on: date, in: result.events)
+        monthDays[date.firstOfMonth]?.entries(on: date) ?? []
     }
 
-    /// Selects a date. A date outside the grid on screen also shows its month.
+    /// Selects a date and shows its month, since a month shows only its own
+    /// days.
     func select(_ date: JapanDate) {
-        if gridDates.contains(date) == false {
-            displayedMonth = date.firstOfMonth
-        }
+        displayedMonth = date.firstOfMonth
         selectedDate = date
     }
 
@@ -123,6 +124,7 @@ final class ScheduleModel {
     func showToday() {
         displayedMonth = today.firstOfMonth
         selectedDate = today
+        browsableMonths = Self.browsableMonths(today: today, reaching: today)
     }
 
     /// Opens a day tapped in a grid mode: its month with the day selected,
@@ -182,6 +184,7 @@ final class ScheduleModel {
         do {
             let result = try await loader(month)
             months[month] = result
+            monthDays[month] = ScheduleMonthDays(month: month, events: result.events)
             failures[month] = nil
         } catch is CancellationError {
             return
@@ -223,13 +226,6 @@ final class ScheduleModel {
             }
         }
         return nil
-    }
-
-    private func result(containing date: JapanDate) -> ScheduleMonthResult? {
-        if let month, month.dates.contains(date) {
-            return month
-        }
-        return months[date.firstOfMonth]
     }
 
     /// The day an event is shown on when it is opened from a link: its first

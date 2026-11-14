@@ -1,26 +1,32 @@
 import KanoNaviCore
 import SwiftUI
 
-/// One day of the List mode's month: its number, a ring for today, a filled
-/// circle when selected, and its entries as dots in their tag colors (see
-/// ``ScheduleDayDots``), gray on the days of the months around it.
-struct ScheduleDayCell: View {
+/// One day of the List mode's month, as in Calendar: a hairline above, its
+/// number (gray on weekends, in the tint for today), a filled circle when
+/// selected (the tint for today, else the primary color), and a dot per
+/// entry in its tag color. Takes plain values and compares equal without
+/// its action, so selecting a day redraws only the days that change.
+struct ScheduleDayCell: View, Equatable {
     let date: JapanDate
-    let isInDisplayedMonth: Bool
     let isToday: Bool
     let isSelected: Bool
-    let entries: [ScheduleDayEntry]
+    let marks: [ScheduleDayMark]
     let action: () -> Void
 
     @Environment(\.locale) private var locale
-    @ScaledMetric(relativeTo: .body) private var circleSize = 36.0
-    @ScaledMetric(relativeTo: .caption2) private var marksHeight = 13.0
+    @ScaledMetric(relativeTo: .body) private var circleSize = 34.0
+    @ScaledMetric(relativeTo: .caption2) private var marksHeight = 12.0
+
+    nonisolated static func == (lhs: Self, rhs: Self) -> Bool {
+        lhs.date == rhs.date && lhs.isToday == rhs.isToday && lhs.isSelected == rhs.isSelected
+            && lhs.marks == rhs.marks
+    }
 
     var body: some View {
         Button(action: action) {
-            VStack(spacing: 3) {
+            VStack(spacing: 2) {
                 Text(date.day, format: .number)
-                    .font(.body.weight(isToday || isSelected ? .semibold : .regular))
+                    .font(.title3.weight(.semibold))
                     .monospacedDigit()
                     .lineLimit(1)
                     .minimumScaleFactor(0.6)
@@ -29,37 +35,34 @@ struct ScheduleDayCell: View {
                     .background {
                         if isSelected {
                             Circle().fill(isToday ? AnyShapeStyle(.tint) : AnyShapeStyle(.primary))
-                        } else if isToday {
-                            Circle().strokeBorder(.tint, lineWidth: 1.5)
                         }
                     }
-                ScheduleDayDots(
-                    entries: entries, capacity: ScheduleMode.compact.markCapacity,
-                    isMuted: isInDisplayedMonth == false
-                )
-                .frame(height: marksHeight)
+                ScheduleDayDots(marks: marks, capacity: ScheduleMode.compact.markCapacity)
+                    .frame(height: marksHeight)
             }
             .frame(maxWidth: .infinity)
-            .padding(.vertical, 2)
+            .padding(.top, 4)
+            .padding(.bottom, 2)
+            .overlay(alignment: .top) {
+                ScheduleHairline()
+            }
             .contentShape(.rect)
         }
         .buttonStyle(.plain)
         .accessibilityLabel(accessibilityLabel)
-        .accessibilityValue(
-            entries.isEmpty ? Text(verbatim: "") : Text(.Schedule.dayEntryCount(entries.count))
-        )
+        .accessibilityValue(marks.isEmpty ? Text(verbatim: "") : Text(.Schedule.dayEntryCount(marks.count)))
         .accessibilityAddTraits(isSelected ? .isSelected : [])
     }
 
     private var numberStyle: AnyShapeStyle {
         if isSelected {
-            AnyShapeStyle(.background)
+            isToday ? AnyShapeStyle(.white) : AnyShapeStyle(.background)
         } else if isToday {
             AnyShapeStyle(.tint)
-        } else if isInDisplayedMonth {
-            AnyShapeStyle(.primary)
+        } else if date.isWeekend {
+            AnyShapeStyle(.secondary)
         } else {
-            AnyShapeStyle(.tertiary)
+            AnyShapeStyle(.primary)
         }
     }
 

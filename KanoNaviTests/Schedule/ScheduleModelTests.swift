@@ -13,16 +13,14 @@ struct ScheduleModelTests {
         ScheduleModel(loader: { month in try await stub.load(month) }, today: { ScheduleFixtures.today })
     }
 
-    @Test func startsOnTodayInAMondayFirstGrid() {
+    @Test func startsOnToday() {
         let model = model(StubMonthLoader([:]))
 
         #expect(model.displayedMonth == november)
         #expect(model.selectedDate == ScheduleFixtures.today)
-        #expect(model.gridDates.count == 42)
-        #expect(model.gridDates.first == JapanDate(year: 2026, month: 10, day: 26))
     }
 
-    @Test func loadedMonthGivesCountsAndTheDaysEntries() async throws {
+    @Test func loadedMonthGivesTheDaysEntries() async throws {
         let timed = try ScheduleFixtures.event(
             id: "timed", startsOn: "2026-11-10", startsAt: "2026-11-10T12:00:00Z")
         let early = try ScheduleFixtures.event(
@@ -34,8 +32,7 @@ struct ScheduleModelTests {
 
         await model.loadIfNeeded()
 
-        #expect(model.count(on: ScheduleFixtures.today) == 3)
-        #expect(model.count(on: JapanDate(year: 2026, month: 11, day: 11)) == 0)
+        #expect(model.entries(on: JapanDate(year: 2026, month: 11, day: 11)).isEmpty)
         #expect(model.entries(on: ScheduleFixtures.today).map(\.event.id) == ["date-only", "early", "timed"])
     }
 
@@ -90,7 +87,7 @@ struct ScheduleModelTests {
 
         #expect(model.month == nil)
         #expect(model.failure as? APIError == .offline)
-        #expect(model.gridDates.count == 42)
+        #expect(model.entries(on: ScheduleFixtures.today).isEmpty)
     }
 
     @Test func failuresSayWhetherAMonthIsStillOnScreen() async {
@@ -120,7 +117,6 @@ struct ScheduleModelTests {
         await model.loadIfNeeded()
 
         #expect(model.notice == .saved(fetchedAt: fetchedAt))
-        #expect(model.count(on: ScheduleFixtures.today) == 1)
         #expect(model.entries(on: ScheduleFixtures.today).map(\.event.id) == ["saved"])
 
         await model.refresh()
@@ -162,14 +158,14 @@ struct ScheduleModelTests {
         #expect(model.isLoading == false)
     }
 
-    @Test func selectingADayInTheGridKeepsTheMonth() {
+    @Test func selectingADayOfTheNextMonthShowsThatMonth() {
         let model = model(StubMonthLoader([:]))
-        let adjacent = JapanDate(year: 2026, month: 12, day: 3)
+        let next = JapanDate(year: 2026, month: 12, day: 3)
 
-        model.select(adjacent)
+        model.select(next)
 
-        #expect(model.displayedMonth == november)
-        #expect(model.selectedDate == adjacent)
+        #expect(model.displayedMonth == december)
+        #expect(model.selectedDate == next)
     }
 
     @Test func selectingADayOutsideTheGridShowsItsMonth() {
@@ -182,7 +178,7 @@ struct ScheduleModelTests {
         #expect(model.selectedDate == later)
     }
 
-    @Test func pagingSelectsTheFirstDayOrToday() {
+    @Test func swipingUpShowsTheNextMonthWithItsFirstDayAndDownGoesBackToToday() {
         let model = model(StubMonthLoader([:]))
 
         model.showMonth(offset: 1)
