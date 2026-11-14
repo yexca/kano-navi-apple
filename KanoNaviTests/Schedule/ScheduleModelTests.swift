@@ -285,12 +285,13 @@ struct ScheduleModelTests {
         #expect(model.selectedDate == tapped)
     }
 
-    @Test func gridAsksForTheMonthInViewThenTheMonthsBesideIt() {
+    @Test func monthInViewIsReadFirstThenTheTwoMonthsOnEachSide() {
         let model = model(StubMonthLoader([:]))
 
         #expect(
             model.monthsToLoad(around: JapanDate(year: 2027, month: 1, day: 15)) == [
                 JapanDate(year: 2027, month: 1, day: 1), JapanDate(year: 2027, month: 2, day: 1), december,
+                JapanDate(year: 2027, month: 3, day: 1), november,
             ])
     }
 
@@ -304,13 +305,19 @@ struct ScheduleModelTests {
         let model = model(stub)
         await model.loadIfNeeded()
 
-        #expect(model.monthsToLoad(around: december) == [december, JapanDate(year: 2027, month: 1, day: 1)])
+        let january = JapanDate(year: 2027, month: 1, day: 1)
+        let september = JapanDate(year: 2026, month: 9, day: 1)
+        #expect(
+            model.monthsToLoad(around: december) == [
+                december, january, JapanDate(year: 2027, month: 2, day: 1), october,
+            ])
 
         await model.loadMonths(around: november)
 
-        #expect(Set(await stub.requests) == [november, december, october])
-        #expect(await stub.requests.count == 3)
-        #expect(model.monthsToLoad(around: november).isEmpty)
+        #expect(Set(await stub.requests) == [november, december, october, january, september])
+        #expect(await stub.requests.count == 5)
+        // Months that could not be read are asked for again.
+        #expect(model.monthsToLoad(around: november) == [january, september])
     }
 
     @Test func eachMonthHasItsOwnNotice() async {
@@ -356,7 +363,8 @@ struct ScheduleModelTests {
         await model.reloadAfterChange()
 
         #expect(model.entries(on: ScheduleFixtures.today).map(\.event.id) == ["added"])
-        #expect(await stub.requests.count == 6)
+        // Five months around November, then the same five again.
+        #expect(await stub.requests.count == 10)
         #expect(model.staleMonths.isEmpty)
         #expect(model.selectedDate == JapanDate(year: 2026, month: 11, day: 20))
         #expect(model.displayedMonth == november)

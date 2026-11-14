@@ -28,6 +28,8 @@ struct ScheduleGridContent: View {
     /// Whether the scroll view has landed on the month it opened on. Until
     /// then, the months it passes do not count as the month in view.
     @State private var hasLanded = false
+    /// The month a landing is bringing to the top, until it is there.
+    @State private var landingMonth: JapanDate?
 
     init(
         model: ScheduleModel, style: ScheduleMode, contentLanguage: ContentLanguage, todayTaps: Int,
@@ -53,9 +55,21 @@ struct ScheduleGridContent: View {
                 }
                 // The month in view is the earliest one at least 40% on screen.
                 .onScrollTargetVisibilityChange(idType: JapanDate.self, threshold: 0.4) { months in
+                    guard let first = months.min() else { return }
                     // Until it has landed, the months the lazy stack passes on
-                    // the way are not the month in view.
-                    guard hasLanded, let first = months.min() else { return }
+                    // the way are not the month in view; it scrolls again
+                    // until the month it lands on is at the top.
+                    if let target = landingMonth {
+                        if first == target {
+                            landingMonth = nil
+                            scrolledMonth = target
+                            hasLanded = true
+                        } else {
+                            proxy.scrollTo(target, anchor: .top)
+                        }
+                        return
+                    }
+                    guard hasLanded else { return }
                     if first != scrolledMonth {
                         scrolledMonth = first
                         model.showMonth(first)
@@ -129,16 +143,23 @@ struct ScheduleGridContent: View {
     }
 
     /// Scrolls to a month's top. The lazy stack places months it has not
-    /// measured by estimate, so it scrolls again over a few frames, as the
-    /// months around the target are laid out, until it lands exactly; the
-    /// month in view is taken from then on. The reader scrolls even when the
-    /// scroll position already names the month.
+    /// measured by estimate, so it scrolls again over a few frames as the
+    /// months around the target are laid out, and again whenever the month
+    /// at the top is another; it has landed once the target is at the top,
+    /// or after those frames.
+    /// The reader scrolls even when the scroll position already names the
+    /// month.
     private func land(on month: JapanDate, with proxy: ScrollViewProxy) async {
         hasLanded = false
-        for frame in 1...4 {
+        landingMonth = month
+        for frame in 1...6 {
+            guard landingMonth == month else { return }
             proxy.scrollTo(month, anchor: .top)
             try? await Task.sleep(for: .milliseconds(16 * frame))
         }
+        // Already at the top, the stack reports no change; it has landed.
+        guard landingMonth == month else { return }
+        landingMonth = nil
         scrolledMonth = month
         hasLanded = true
     }

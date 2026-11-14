@@ -138,12 +138,14 @@ final class ScheduleModel {
         return .list
     }
 
-    /// The months to read when `month` is in view: it first, then the month
-    /// after it and the month before it, leaving out those loaded and current
-    /// or loading.
+    /// The months to read when `month` is in view, nearest first: it, the
+    /// months after and before it, then those two away, so a month drag or
+    /// scroll finds its neighbours read and indexed. Months loaded and
+    /// current, or loading, are left out.
     func monthsToLoad(around month: JapanDate) -> [JapanDate] {
         let center = month.firstOfMonth
-        return [center, center.addingMonths(1), center.addingMonths(-1)].filter {
+        let nearest = [0, 1, -1, 2, -2].map { center.addingMonths($0) }
+        return nearest.filter {
             (months[$0] == nil || staleMonths.contains($0)) && inFlight[$0] == nil
         }
     }
@@ -197,8 +199,13 @@ final class ScheduleModel {
     private func perform(_ month: JapanDate) async {
         do {
             let result = try await loader(month)
+            // Indexed away from the main actor, so a month drag never waits
+            // on it; the month and its index then appear together.
+            let days = await Task.detached(priority: .userInitiated) {
+                ScheduleMonthDays(month: month, events: result.events)
+            }.value
             months[month] = result
-            monthDays[month] = ScheduleMonthDays(month: month, events: result.events)
+            monthDays[month] = days
             staleMonths.remove(month)
             failures[month] = nil
         } catch is CancellationError {

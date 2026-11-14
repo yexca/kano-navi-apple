@@ -5,7 +5,7 @@ import SwiftUI
 /// The selected day's entries under the List mode's month, in a plain list
 /// that scrolls on its own and pulls to refresh, under a quiet caption
 /// saying the times are in JST, or a centered line when the day has none.
-struct ScheduleDayList: View {
+struct ScheduleDayList: View, Equatable {
     let entries: [ScheduleDayEntry]
     let isLoading: Bool
     let isLoaded: Bool
@@ -14,6 +14,11 @@ struct ScheduleDayList: View {
     let refresh: () async -> Void
 
     @Environment(\.locale) private var locale
+
+    nonisolated static func == (lhs: Self, rhs: Self) -> Bool {
+        lhs.entries == rhs.entries && lhs.isLoading == rhs.isLoading && lhs.isLoaded == rhs.isLoaded
+            && lhs.contentLanguage == rhs.contentLanguage
+    }
 
     var body: some View {
         let rows = entries.map { ScheduleDayRowModel($0, contentLanguage: contentLanguage, locale: locale) }
