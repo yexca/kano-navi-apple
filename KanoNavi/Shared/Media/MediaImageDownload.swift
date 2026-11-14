@@ -31,13 +31,20 @@ nonisolated struct MediaImageDownload: Sendable {
         return URLSession(configuration: configuration)
     }
 
+    /// The request for the file at `url`, as sent and as looked up in the
+    /// disk cache.
+    static func request(for url: URL) -> URLRequest {
+        var request = URLRequest(url: url)
+        request.setValue("image/*", forHTTPHeaderField: "Accept")
+        return request
+    }
+
     /// The bytes of the file at `url`. A missing file (404 or 410) is
     /// `MediaImageError.unavailable`; any other failure is `.failed`, except
     /// cancellation, which is `CancellationError`.
     func data(from url: URL) async throws -> Data {
         guard url.scheme?.lowercased() == "https" else { throw MediaImageError.unavailable }
-        var request = URLRequest(url: url)
-        request.setValue("image/*", forHTTPHeaderField: "Accept")
+        let request = Self.request(for: url)
 
         let data: Data
         let response: URLResponse

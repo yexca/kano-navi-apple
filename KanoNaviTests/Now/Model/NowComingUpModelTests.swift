@@ -1,5 +1,7 @@
 import Foundation
 import KanoNaviCore
+import Observation
+import Synchronization
 import Testing
 
 @testable import KanoNavi
@@ -60,6 +62,42 @@ struct NowComingUpModelTests {
         await load.value
 
         #expect(model.events?.map(\.id) == ["fresh"])
+    }
+
+    @Test func rangeReadBeforeTheModelIsCreatedIsThereAtOnce() throws {
+        let model = NowComingUpModel(
+            loader: { _ in throw APIError.offline }, cached: try result(["cached"], isFromCache: true),
+            today: { [today] in today })
+
+        #expect(model.events?.map(\.id) == ["cached"])
+        #expect(model.notice == nil)
+    }
+
+    @Test func reloadWithTheSameEventsPublishesNothing() async throws {
+        let model = model(StubCalendarLoader([.success(try result(["next"]))]))
+        await model.reload()
+        let tracked = ObservationFlag()
+        withObservationTracking {
+            _ = model.result
+            _ = model.failure
+            _ = model.hasLoaded
+        } onChange: {
+            tracked.set()
+        }
+
+        await model.reload()
+
+        #expect(tracked.isSet == false)
+        #expect(model.events?.map(\.id) == ["next"])
+    }
+
+    @Test func freshReadReplacesTheCachedRangeEvenWithTheSameEvents() throws {
+        let cached = try result(["next"], isFromCache: true)
+        let fresh = try result(["next"])
+
+        #expect(NowComingUpModel.changes(cached, to: fresh))
+        #expect(NowComingUpModel.changes(fresh, to: fresh) == false)
+        #expect(NowComingUpModel.changes(fresh, to: try result(["other"])))
     }
 
     @Test func cachedFallbackIsMarkedWithItsFetchTime() async throws {
@@ -140,4 +178,11 @@ actor StubCalendarLoader {
         }
         return try next.get()
     }
+}
+
+/// Set once from an observation's change handler, on any thread.
+nonisolated final class ObservationFlag: Sendable {
+    private let value = Mutex(false)
+    func set() { value.withLock { $0 = true } }
+    var isSet: Bool { value.withLock { $0 } }
 }

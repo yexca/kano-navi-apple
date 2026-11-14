@@ -93,7 +93,12 @@ alone.
   keeps the cached body. Errors are typed (`offline`, `http(status)`,
   `decoding`, `incompatible`).
 - The last good dashboard and calendar pages are stored as raw JSON plus ETag
-  in the caches directory, so launch shows them at once and then revalidates.
+  in the caches directory. The dashboard store reads its saved copy on the
+  caller's thread when it is created, and the Now tab reads Coming Up's
+  range the same way, so a launch draws the saved board on its first frame
+  and then revalidates; "Loading…" appears only when nothing is saved
+  (`ResponseCache.loadImmediately(key:)`,
+  `CalendarReader.cachedResultImmediately(from:to:)`).
 - While a scene is active, the dashboard store:
   - opens an SSE connection to `/api/dashboard/events` (`text/event-stream`),
     waits a random 0–3 second jitter when a pushed revision differs from the
@@ -114,14 +119,25 @@ alone.
   (`idle`, `loading`, `refreshing`, `failed(error)`), `fetchedAt` and
   `source` (`cache` until a refresh succeeds, then `network`), so a view can
   show data and an error at the same time and say whether the data is cached.
+- A refresh publishes only what changed. A dashboard equal to the one on
+  screen leaves `snapshot` and `source` untouched, and Coming Up keeps its
+  range when a read returns the same events, so a quiet refresh, including
+  the one on every return to the foreground, re-renders and animates
+  nothing. A return to the foreground keeps the snapshot on screen and does
+  not read the cache over it. A failure stays in `phase` while the next
+  refresh runs, so its banner does not leave and come back.
 
 ### Cached and Stale Data on Screen
 
 Every screen keeps what it shows and says where it came from:
 
-- **Now** marks the snapshot read from the cache at launch with "Showing data
-  saved on this device from <JST date and time>", plus "Updating…" while the
-  first refresh runs; the mark goes away once a refresh succeeds. A failed
+- **Now** shows the snapshot read from the cache at launch in place, with
+  nothing added above it. When the first refresh has run for a second, an
+  "Updating…" capsule floats over the bottom of the list (VoiceOver reads it
+  as "Showing data saved on this device from <JST date and time>"); it
+  covers the list instead of moving it and goes once the refresh ends. Rows
+  that do change, such as Coming Up entries that differ from the saved
+  range, move in with the default animation. A failed
   refresh shows a banner with the reason and a Try Again button over the data,
   and its footnote says whether the data is the saved copy or the last data
   received since launch, with its JST time.
@@ -136,8 +152,8 @@ Every screen keeps what it shows and says where it came from:
   "Couldn't update the schedule. Showing the copy from <JST date and time>"
   with Try Again; a failed reload of a month already on screen, or a first
   load with nothing cached, says so with Try Again.
-- **Posts** marks the recent posts, which come from the dashboard, with the
-  same notices as Now. The post archive keeps the month on screen when a read
+- **Posts** shows the recent posts, which come from the dashboard, with the
+  same capsule and failure banner as Now. The post archive keeps the month on screen when a read
   fails. A month read from the cache because the service could not be read
   shows "Couldn't update this month. Showing the copy from <JST date and
   time>" with Try Again; a failed reload of a month already on screen, a
@@ -166,7 +182,8 @@ page or month index.
 
 The Journey, Works and LINE BLOG screens share three pieces in
 `KanoNavi/Shared/`: image loading, a full-screen image viewer and the loading
-of a read that is one whole document.
+of a read that is one whole document. The Now board draws its profile
+images and covers with the same image loading.
 
 ### Images
 
@@ -194,6 +211,12 @@ original's pixel size.
   128 MB least-recently-used memory cache that empties on a memory warning.
   Views drawing the same file at the same size share one fetch and one
   decoded image, and a load stops once every view waiting for it has gone.
+- **First frame.** As soon as a view has its size it checks the memory
+  cache on the main actor and draws a hit in the same frame as its box. A
+  screen shown at launch sets `\.mediaImageDecodesCachedFilesAtOnce`, and
+  its images also decode a file the disk cache holds at that moment; the
+  Now board does, a long archive list does not. An image that has to load
+  fades in over a placeholder of its final size.
 - **States.** A file the server does not have (404 `media_not_found`) or
   that is not an image draws "Image unavailable"; a failed fetch draws a Try
   Again button. The screen keeps the provenance link beside the image in
@@ -264,8 +287,8 @@ or its comments. It is generic over an `APIRequest` and built on
 
 The app is a `TabView` with five tabs.
 
-1. **Now** — from top to bottom (below the saved-copy or failure notice,
-   when there is one):
+1. **Now** — from top to bottom (below the failure notice, when there is
+   one):
    - The profile card, as on the web board: the profile banner cropped to
      128 pt with its top third in view (a soft fill without one), the
      84 pt round avatar rising halfway over it in a ring of the card's color

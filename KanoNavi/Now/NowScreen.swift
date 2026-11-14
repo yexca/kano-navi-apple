@@ -16,8 +16,11 @@ struct NowScreen: View {
     @Environment(DashboardStore.self) private var dashboard
 
     init(calendar: CalendarReader?, feedURL: URL?) {
+        // Reads the cached range at once, so Coming Up is on the first frame.
+        // `NowView` builds this screen once, as its only input is the
+        // services, which do not change.
         let model =
-            calendar.map(NowComingUpModel.init(calendar:))
+            calendar.map { NowComingUpModel(calendar: $0) }
             ?? NowComingUpModel(loader: { _ in throw APIError.offline })
         _comingUp = State(initialValue: model)
         self.feedURL = feedURL
@@ -45,6 +48,9 @@ struct NowScreen: View {
                     fetchedAt: dashboard.fetchedAt,
                     retry: refresh
                 )
+            }
+            .overlay(alignment: .bottom) {
+                NowSavedCopyNotice(dashboard: dashboard)
             }
             .refreshable(action: refresh)
             .task(id: dashboard.fetchedAt) {
