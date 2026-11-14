@@ -1,8 +1,32 @@
 {
   "sourceLanguage": "en",
   "strings": {
+    "accountEmpty": {
+      "comment": "Shown when the chosen account has no posts in the timeline.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No posts from this account."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "このアカウントのポストはありません。"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "此账号没有动态。"
+          }
+        }
+      }
+    },
     "accountFilter": {
-      "comment": "Name of the account filter menu on the Posts tab and in the post archive.",
+      "comment": "Name of the account filter menu of the Posts timeline.",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -45,78 +69,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "事务所动态"
-          }
-        }
-      }
-    },
-    "archiveEmpty": {
-      "comment": "Shown when the post archive holds no month at all.",
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "No posts are stored yet."
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "保存されたポストはまだありません。"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "还没有已保存的动态。"
-          }
-        }
-      }
-    },
-    "archiveMonthEmpty": {
-      "comment": "Shown when the chosen month and account have no stored posts.",
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "No stored posts for this month and account."
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "この月とアカウントに保存されたポストはありません。"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "这个月份和账号没有已保存的动态。"
-          }
-        }
-      }
-    },
-    "archiveTitle": {
-      "comment": "Title of the post month archive.",
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Post Archive"
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ポストのアーカイブ"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "动态存档"
           }
         }
       }
@@ -217,66 +169,6 @@
         }
       }
     },
-    "pastPosts": {
-      "comment": "Toolbar button on the Posts tab that opens the month archive; VoiceOver reads it beside its clock icon.",
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Past Posts"
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "過去のポスト"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "历史动态"
-          }
-        }
-      }
-    },
-    "postCount": {
-      "comment": "Header of the archive month's list. %lld is the number of posts in the month under the chosen account.",
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "variations": {
-            "plural": {
-              "one": {
-                "stringUnit": {
-                  "state": "translated",
-                  "value": "%lld Post"
-                }
-              },
-              "other": {
-                "stringUnit": {
-                  "state": "translated",
-                  "value": "%lld Posts"
-                }
-              }
-            }
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%lld 件"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "共 %lld 条"
-          }
-        }
-      }
-    },
     "quoteUnavailable": {
       "comment": "Shown in place of a quoted post that was deleted or withheld.",
       "extractionState": "manual",
@@ -301,90 +193,6 @@
         }
       }
     },
-    "recentAccountEmpty": {
-      "comment": "Shown when the chosen account has none of the dashboard's recent posts.",
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "No recent posts from this account."
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "このアカウントの最近のポストはありません。"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "这个账号最近没有动态。"
-          }
-        }
-      }
-    },
-    "recentEmpty": {
-      "comment": "Shown when the dashboard lists no posts. %lld is the number of days the dashboard covers.",
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "variations": {
-            "plural": {
-              "one": {
-                "stringUnit": {
-                  "state": "translated",
-                  "value": "No new posts in the last day."
-                }
-              },
-              "other": {
-                "stringUnit": {
-                  "state": "translated",
-                  "value": "No new posts in the last %lld days."
-                }
-              }
-            }
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "最近 %lld 日間に新しいポストはありません。"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "最近 %lld 天没有新的动态。"
-          }
-        }
-      }
-    },
-    "recentHeader": {
-      "comment": "Header of the dashboard's recent posts.",
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Recent Posts"
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "最近の投稿"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "最新动态"
-          }
-        }
-      }
-    },
     "sourceX": {
       "comment": "The platform name X: an X post's account when the post does not name its handle, and the button that opens a post on X.",
       "extractionState": "manual",
@@ -405,6 +213,102 @@
           "stringUnit": {
             "state": "translated",
             "value": "X"
+          }
+        }
+      }
+    },
+    "timelineEmpty": {
+      "comment": "Shown when the service stores no posts.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No posts are stored yet."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "保存されたポストはまだありません。"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "尚未保存任何动态。"
+          }
+        }
+      }
+    },
+    "timelineLoadFailed": {
+      "comment": "Notice when the post timeline could not be loaded and nothing is on screen.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Couldn’t load posts."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ポストを読み込めませんでした。"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "无法加载动态。"
+          }
+        }
+      }
+    },
+    "timelineSavedCopy": {
+      "comment": "Notice when the service could not be read and the post timeline is the copy saved on this device. %@ is when that copy was read, in Japan time.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Couldn’t update posts. Showing the copy from %@."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ポストを更新できませんでした。%@ 時点の内容を表示しています。"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "无法更新动态。正在显示截至 %@ 的内容。"
+          }
+        }
+      }
+    },
+    "timelineUpdateFailed": {
+      "comment": "Notice when the post timeline could not be read again; the posts loaded before stay on screen.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Couldn’t update posts. Showing what was loaded before."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ポストを更新できませんでした。前に読み込んだ内容を表示しています。"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "无法更新动态。正在显示之前加载的内容。"
           }
         }
       }

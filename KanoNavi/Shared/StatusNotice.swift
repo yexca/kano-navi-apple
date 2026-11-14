@@ -3,8 +3,9 @@ import SwiftUI
 /// A notice over content that is not a fresh read from the service: a line
 /// saying why, and a button to read again. The content stays on screen.
 ///
-/// The month archives and the single-document screens word it through
-/// `ArchiveStatusNotice` and `DocumentStatusNotice`.
+/// The timelines and the single-document screens word it through
+/// `PostTimelineStatusNotice`, `VideoTimelineStatusNotice` and
+/// `DocumentStatusNotice`.
 struct StatusNotice: View {
     let message: LocalizedStringResource
     /// `true` when the content is the copy saved on this device (a quiet

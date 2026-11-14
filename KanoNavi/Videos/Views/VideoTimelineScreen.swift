@@ -3,7 +3,7 @@ import SwiftUI
 
 /// The video timeline: a feed of every dated video newest first by Japan
 /// month, paged as it scrolls, narrowed by the filter menus and started at a
-/// month chosen in the month menu. The navigation subtitle names the section
+/// month chosen in the month picker. The navigation subtitle names the section
 /// at the top, On Air or a month, abbreviated at accessibility text sizes. A
 /// failed read keeps the videos on screen and says so.
 struct VideoTimelineScreen: View {
@@ -64,7 +64,8 @@ struct VideoTimelineScreen: View {
             }
             if let index = model.index, index.months.isEmpty == false {
                 ToolbarItem(placement: .primaryAction) {
-                    VideoMonthMenu(index: index, selection: $model.start)
+                    MonthPickerButton(index: index, selection: $model.start, unit: .videos)
+                        .accessibilityIdentifier("videos.month")
                 }
             }
         }

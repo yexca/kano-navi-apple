@@ -49,30 +49,6 @@
         }
       }
     },
-    "jumpToMonth": {
-      "comment": "Name of the Videos toolbar menu that starts the timeline at a chosen month.",
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Jump to Month"
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "月を選ぶ"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "选择月份"
-          }
-        }
-      }
-    },
     "kind": {
       "comment": "Heading of the kind choices in the Videos filter menu.",
       "extractionState": "manual",
@@ -141,30 +117,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "视频"
-          }
-        }
-      }
-    },
-    "newest": {
-      "comment": "Choice of the Videos month menu that starts the timeline at the newest video.",
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Newest"
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "最新"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "最新"
           }
         }
       }
