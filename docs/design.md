@@ -327,26 +327,38 @@ The app is a `TabView` with five tabs.
    and shows its month (a grid mode scrolls to it). The trailing items are
    the mode menu and the calendar subscription menu (`webcal://` link to
    `/api/calendar.ics` in the interface language, or share the HTTPS link).
-   - **Modes**: a menu of four, each with its symbol and the current one
-     checked; the menu's icon is the current mode's. The choice is kept on the
-     device (`AppSettings.scheduleModeKey`), and List is the default.
-     - **List**: one month with a dot per entry in its tag color under each
-       day (as in Compact, gray on the days of the months around it), and
-       the selected day's entries below it. Swiping the
-       grid pages to the month before or after it, which selects today in
-       today's month and the first day elsewhere; every day also has Previous
-       Month and Next Month VoiceOver actions.
+   - **Modes**: a menu in Calendar's order (Compact, Stacked, Details, a
+     divider, then List), each with its symbol and the current one checked;
+     the menu's icon is the current mode's. The choice is kept on the device
+     (`AppSettings.scheduleModeKey`), and List is the default. Every mode
+     draws months edge to edge with only their own days: blank places before
+     the first and after the last, a hairline above each day (so a week's
+     line spans only its days), weekend numbers in gray and today in the
+     tint.
+     - **List**: the weekday row and the month on screen fixed at the top,
+       with a dot per entry in its tag color under each day; the selected day
+       is in a filled circle (the tint for today, else the primary color).
+       Swiping the month up shows the next month and down the previous one,
+       sliding it in; the new month selects today in today's month and its
+       first day elsewhere, and grows or shrinks with its four to six weeks.
+       Every day also has Previous Month and Next Month VoiceOver actions.
+       Below the month, the month's notice when it is not a fresh read, then
+       the selected day's entries in a plain list of their own that pulls to
+       refresh, or "No Entries" in the middle.
      - **Compact**, **Stacked** and **Details**: months scroll vertically one
-       after another under a pinned weekday row, each named above the column
-       of its first day, its weeks ruled, the days of the months beside it
-       left blank, and today in a filled circle. A day shows its entries as a
-       dot each (Compact), a bar each in taller cells (Stacked), or each
-       title on one line on a tint of its color (Details), and folds what
-       does not fit into "+n"; a cell too narrow for its dots and "+n" draws
-       fewer dots rather than cut "+n" short. The title names the month at
-       the top, and that month and the months on each side of it are read as it comes
-       into view. Tapping a day opens it in List. At accessibility text sizes
-       Stacked and Details use Compact's dots.
+       after another under a pinned weekday row, each with its short name
+       above the column of its first day. A day shows its entries as a dot
+       each (Compact), a bar each in taller cells (Stacked), or each title
+       on one line on a tint of its color (Details), and folds what does not
+       fit into "+n"; a cell too narrow for its dots and "+n" draws fewer
+       dots rather than cut "+n" short. The title names the month at the
+       top, and that month and the months on each side of it are read as it
+       comes into view. Tapping a day opens it in List. At accessibility text
+       sizes Stacked and Details use Compact's dots.
+   - **Drawing**: a month's entries are indexed by day once, when it loads
+     (`ScheduleMonthDays`). Months and days take plain values and compare
+     equal without their actions, so selecting a day redraws two days,
+     loading a month redraws that month, and scrolling redraws none.
    - **Colors** come from `view.typeCode`, defined once in `ScheduleTag` in
      `KanoNaviComponents`, which the widgets share: stream in the app's
      Berry, member purple, event orange, release blue, video teal, sale
@@ -364,8 +376,8 @@ The app is a `TabView` with five tabs.
      `provenance` is `manual` or `manualLocked` is set, the board's rule),
      sale window, and a link to the original announcement.
    - A widget or notification link to a date or an entry switches to List and
-     selects its day; an entry also opens its sheet. Pull to refresh reads
-     the month on screen again.
+     shows its month with its day selected; an entry also opens its sheet.
+     Pull to refresh reads the month on screen again.
 3. **Posts** — the dashboard's posts in its order: the account (`@handle` on
    X; a Bilibili account by its platform, never its mid), JST time, text in
    the content language with Show Original, the ready images (up to four,
