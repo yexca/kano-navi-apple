@@ -11,6 +11,7 @@ struct NowProfileCard: View {
     let profile: NowProfile
 
     @Environment(\.openURL) private var openURL
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
 
     /// The row's background, which the avatar's ring repeats.
     static let background = Color(.secondarySystemGroupedBackground)
@@ -84,33 +85,87 @@ struct NowProfileCard: View {
         .accessibilityAddTraits(.isHeader)
     }
 
+    /// The links in one row: the X handles, then YouTube and Bilibili as
+    /// round logo buttons. A row too wide for the card is tried with tighter
+    /// spacing, between the buttons and between each X logo and its handle,
+    /// then at the extra large and large text sizes; past that the handles
+    /// shrink to keep the row. Only at accessibility text sizes do the links
+    /// wrap instead.
     private var links: some View {
-        NowFlowLayout(spacing: 8) {
+        ViewThatFits(in: .horizontal) {
+            linkRow(spacing: 8)
+            linkRow(spacing: 4, logoSpacing: 4)
+            if dynamicTypeSize.isAccessibilitySize {
+                NowFlowLayout(spacing: 8) {
+                    linkButtons()
+                }
+            } else {
+                linkRow(spacing: 4, logoSpacing: 4)
+                    .dynamicTypeSize(...DynamicTypeSize.xLarge)
+                linkRow(spacing: 4, logoSpacing: 4)
+                    .dynamicTypeSize(...DynamicTypeSize.large)
+                HStack(spacing: 4) {
+                    linkButtons(logoSpacing: 4)
+                }
+            }
+        }
+    }
+
+    /// The links in one row, none of them shrunk.
+    private func linkRow(spacing: CGFloat, logoSpacing: CGFloat? = nil) -> some View {
+        HStack(spacing: spacing) {
+            linkButtons(logoSpacing: logoSpacing)
+        }
+        .fixedSize()
+    }
+
+    /// The links' buttons, small except at accessibility text sizes.
+    /// - Parameter logoSpacing: The gap between each X logo and its handle;
+    ///   `nil` keeps the label's own.
+    private func linkButtons(logoSpacing: CGFloat? = nil) -> some View {
+        Group {
             ForEach(profile.xAccounts) { account in
                 Button {
                     openURL(account.url)
                 } label: {
-                    Label {
-                        // A handle has no word breaks; at large text sizes it
-                        // shrinks to stay whole on one line.
-                        Text(verbatim: "@" + account.handle)
-                            .lineLimit(1)
-                            .minimumScaleFactor(0.5)
-                    } icon: {
-                        PlatformLogo.x.image
-                    }
+                    handleLabel(account.handle, logoSpacing: logoSpacing)
                 }
                 .accessibilityLabel(Text(.Now.profileXAccount(account.handle)))
             }
-            link(to: profile.youtubeURL, title: .Now.sourceYouTube, logo: .youtube)
+            logoLink(to: profile.youtubeURL, title: .Now.sourceYouTube, logo: .youtube)
             if let url = profile.bilibiliURL {
-                link(to: url, title: .Now.sourceBilibili, logo: .bilibili)
+                logoLink(to: url, title: .Now.sourceBilibili, logo: .bilibili)
             }
         }
-        .buttonStyle(.compactLink)
+        .buttonStyle(.bordered)
+        .controlSize(dynamicTypeSize.isAccessibilitySize ? .regular : .small)
     }
 
-    private func link(to url: URL, title: LocalizedStringResource, logo: PlatformLogo) -> some View {
+    @ViewBuilder
+    private func handleLabel(_ handle: String, logoSpacing: CGFloat?) -> some View {
+        // A handle has no word breaks; when the links do not fit at their
+        // full size it shrinks to stay whole on one line.
+        let text = Text(verbatim: "@" + handle)
+            .lineLimit(1)
+            .minimumScaleFactor(0.5)
+        if let logoSpacing {
+            HStack(spacing: logoSpacing) {
+                PlatformLogo.x.image
+                text
+            }
+        } else {
+            Label {
+                text
+            } icon: {
+                PlatformLogo.x.image
+            }
+            .labelStyle(.titleAndIcon)
+        }
+    }
+
+    /// A round button showing only the platform's logo, by the user's choice
+    /// for this card; VoiceOver reads the platform's name from the label.
+    private func logoLink(to url: URL, title: LocalizedStringResource, logo: PlatformLogo) -> some View {
         Button {
             openURL(url)
         } label: {
@@ -119,6 +174,8 @@ struct NowProfileCard: View {
             } icon: {
                 logo.image
             }
+            .labelStyle(.iconOnly)
         }
+        .buttonBorderShape(.circle)
     }
 }
