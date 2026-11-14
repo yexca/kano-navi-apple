@@ -484,8 +484,12 @@ The app is a `TabView` with five tabs.
    section that leads the newest timeline with the videos whose phase is
    `live` or `started`, ahead of reservations dated later; a timeline
    started at a chosen month has no On Air section. The feed is a plain
-   list, as a video app's: the On Air and month headers stay pinned on the
-   screen's background, and items are about 16 pt apart with no separators.
+   list, as a video app's, with items about 16 pt apart and no separators.
+   The navigation subtitle names the section of the topmost video not yet
+   under the navigation bar: On Air or the month and year, abbreviated at
+   accessibility text sizes. The first section has no header of its own;
+   each later one opens with its name in bold, which scrolls with the
+   videos as the divider between months.
    Each item has:
    - the cover across the width less the standard margins, in a fixed 16:9
      box with 12 pt corners, cropped to fill, asking the media route for the

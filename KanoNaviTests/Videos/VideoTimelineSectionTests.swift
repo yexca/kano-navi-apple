@@ -73,6 +73,23 @@ struct VideoTimelineSectionTests {
         #expect(sections.map(\.id) == ["2026-11"])
     }
 
+    @Test func topIsTheFirstSectionWithAVideoOnScreenWhateverTheReportedOrder() throws {
+        let sections = VideoTimelineSection.grouping(
+            try [
+                card("L1", phase: "live", scheduledAt: "2026-11-14T07:00:00Z"),
+                card("N1", publishedAt: "2026-11-10T10:00:00Z"),
+                card("O1", publishedAt: "2026-10-05T10:00:00Z"),
+            ], liftsOnAir: true)
+        let slot = { (section: String, card: String) in VideoTimelineSlot(sectionID: section, cardID: card) }
+
+        #expect(
+            VideoTimelineSection.topID(of: sections, visible: [slot("2026-10", "O1"), slot("2026-11", "N1")])
+                == "2026-11")
+        #expect(VideoTimelineSection.topID(of: sections, visible: [slot("on-air", "L1")]) == "on-air")
+        #expect(VideoTimelineSection.topID(of: sections, visible: [slot("2026-09", "X")]) == nil)
+        #expect(VideoTimelineSection.topID(of: sections, visible: []) == nil)
+    }
+
     private func card(
         _ id: String, phase: String = "past", scheduledAt: String? = nil, publishedAt: String? = nil
     ) throws -> VideoCard {
