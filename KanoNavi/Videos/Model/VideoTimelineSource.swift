@@ -14,12 +14,21 @@ nonisolated enum VideoTimelineSource {
 
     static func page(client: APIClient) -> VideoTimelineModel.PageLoader {
         { query in
-            let result = try await client.readResult(request(for: query))
-            return ArchivePage(
-                items: result.value.items, page: result.value.page, hasNext: result.value.hasNext,
-                total: result.value.total, counts: result.value.categoryCounts ?? [:],
-                isFromCache: result.isFromCache, fetchedAt: result.fetchedAt)
+            page(from: try await client.readResult(request(for: query)))
         }
+    }
+
+    /// The newest page as cached on this device, read at once, so the
+    /// timeline is on screen from its first frame; `nil` when none is cached.
+    static func cachedFirstPage(client: APIClient) -> ArchivePage<Video>? {
+        client.cachedResultImmediately(request(for: VideoTimelineQuery(start: nil, page: 1))).map(page(from:))
+    }
+
+    private static func page(from result: ReadResult<VideoArchivePage>) -> ArchivePage<Video> {
+        ArchivePage(
+            items: result.value.items, page: result.value.page, hasNext: result.value.hasNext,
+            total: result.value.total, counts: result.value.categoryCounts ?? [:],
+            isFromCache: result.isFromCache, fetchedAt: result.fetchedAt)
     }
 
     /// The request for one timeline page: every dated video, or those dated

@@ -24,6 +24,20 @@ struct ReadResultTests {
         #expect(result.value.months.first?.counts == ["game": 1, "other": 2])
     }
 
+    @Test func cachedResultImmediatelyReadsTheCacheWithoutTheService() async throws {
+        let cache = MemoryResponseCache()
+        let first = try client(
+            SequenceTransport([.success(TransportResponse(data: monthsBody, statusCode: 200))]), cache: cache)
+        let fresh = try await first.readResult(VideosMonthsRequest())
+        let offline = try client(SequenceTransport([]), cache: cache)
+
+        let result = try #require(offline.cachedResultImmediately(VideosMonthsRequest()))
+
+        #expect(result.isFromCache)
+        #expect(result.value == fresh.value)
+        #expect(offline.cachedResultImmediately(PostsMonthsRequest()) == nil)
+    }
+
     @Test func failedReadReturnsTheCachedResponseWithItsFetchTime() async throws {
         let cache = MemoryResponseCache()
         let first = try client(

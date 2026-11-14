@@ -1,7 +1,6 @@
 import SwiftUI
 
-/// One image of a post as the service serves it, filling a tile of the given
-/// shape.
+/// One image of a post, cropped to fill a tile of the given shape.
 struct PostImageTile: View {
     let image: PostImage
     let aspectRatio: CGFloat
@@ -13,15 +12,7 @@ struct PostImageTile: View {
             .fill(.fill.tertiary)
             .aspectRatio(aspectRatio, contentMode: .fit)
             .overlay {
-                AsyncImage(url: image.url) { loaded in
-                    loaded
-                        .resizable()
-                        .scaledToFill()
-                } placeholder: {
-                    Image(systemName: "photo")
-                        .font(.title2)
-                        .foregroundStyle(.tertiary)
-                }
+                MediaImage(decorative: MediaImageSource(url: image.url), contentMode: .fill)
             }
             .overlay {
                 if hiddenCount > 0 {

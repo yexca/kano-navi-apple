@@ -1,7 +1,7 @@
 import SwiftUI
 
-/// A video's cover from the API, shown as the API serves it, with its length
-/// in the corner when known.
+/// A video's cover from the API, cropped to fill its box, with its length in
+/// the corner when known.
 struct VideoThumbnail: View {
     let url: URL?
     /// Width over height: 16:9 for videos, 9:16 for Shorts.
@@ -13,14 +13,8 @@ struct VideoThumbnail: View {
             .fill(.fill.tertiary)
             .aspectRatio(aspectRatio, contentMode: .fit)
             .overlay {
-                AsyncImage(url: url) { image in
-                    image
-                        .resizable()
-                        .scaledToFill()
-                } placeholder: {
-                    Image(systemName: "play.rectangle")
-                        .font(.title)
-                        .foregroundStyle(.tertiary)
+                if let url {
+                    MediaImage(decorative: MediaImageSource(url: url), contentMode: .fill)
                 }
             }
             .overlay(alignment: .bottomTrailing) {

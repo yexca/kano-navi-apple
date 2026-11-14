@@ -9,10 +9,13 @@ struct VideoTimelineScreen: View {
     @State private var model: VideoTimelineModel
 
     init(client: APIClient) {
+        // Reads the cached newest page at once, so the timeline is on the
+        // first frame. `VideosView` builds this screen once per services.
         _model = State(
             initialValue: VideoTimelineModel(
                 months: VideoTimelineSource.months(client: client),
-                page: VideoTimelineSource.page(client: client)))
+                page: VideoTimelineSource.page(client: client),
+                cachedFirstPage: VideoTimelineSource.cachedFirstPage(client: client)))
     }
 
     var body: some View {
@@ -29,6 +32,9 @@ struct VideoTimelineScreen: View {
         // pages were read before.
         .id(model.start)
         .listStyle(.insetGrouped)
+        // The covers at the top are drawn on the first frame when the disk
+        // cache has them.
+        .environment(\.mediaImageDecodesCachedFilesAtOnce, true)
         .refreshable(action: model.refresh)
         .navigationTitle(.tabVideos)
         .toolbar {

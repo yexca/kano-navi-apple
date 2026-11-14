@@ -36,6 +36,10 @@ final class VideoTimelineModel {
     /// The last failure reading a later page, per start.
     private(set) var moreFailures: [ArchiveMonthKey?: any Error] = [:]
     private(set) var loadingStarts: Set<ArchiveMonthKey?> = []
+    /// Starts whose listing is the copy read from the cache when the model
+    /// was created, which the first `loadIfNeeded()` reads again. Their copy
+    /// is not called a fallback until that read says so.
+    private(set) var launchCopies: Set<ArchiveMonthKey?> = []
     private(set) var loadingMoreStarts: Set<ArchiveMonthKey?> = []
 
     @ObservationIgnored private var inFlight: [ArchiveMonthKey?: Task<Void, Never>] = [:]
@@ -45,9 +49,19 @@ final class VideoTimelineModel {
     private let loadMonths: MonthsLoader
     private let loadPage: PageLoader
 
-    init(months: @escaping MonthsLoader, page: @escaping PageLoader) {
+    /// - Parameter cachedFirstPage: The newest page as cached on this
+    ///   device, read before the model is created, to show on the first
+    ///   frame.
+    init(
+        months: @escaping MonthsLoader, page: @escaping PageLoader, cachedFirstPage: ArchivePage<Video>? = nil
+    ) {
         loadMonths = months
         loadPage = page
+        if let cachedFirstPage {
+            generation += 1
+            store(ArchiveListing(firstPage: cachedFirstPage, generation: generation), for: nil)
+            launchCopies.insert(nil)
+        }
     }
 
     /// The pages loaded for the timeline on screen.
@@ -85,7 +99,7 @@ final class VideoTimelineModel {
         if failures[start] != nil {
             return listing == nil ? .loadFailed : .updateFailed
         }
-        guard let listing, listing.isFromCache else { return nil }
+        guard let listing, listing.isFromCache, launchCopies.contains(start) == false else { return nil }
         return .saved(fetchedAt: listing.fetchedAt)
     }
 
@@ -94,7 +108,7 @@ final class VideoTimelineModel {
     func loadIfNeeded() async {
         let start = start
         async let months: Void = readIndex(onlyIfMissing: true)
-        if listings[start] == nil {
+        if listings[start] == nil || launchCopies.contains(start) {
             await readFirstPage(start)
         }
         await months
@@ -200,5 +214,6 @@ final class VideoTimelineModel {
         } catch {
             failures[start] = error
         }
+        launchCopies.remove(start)
     }
 }
