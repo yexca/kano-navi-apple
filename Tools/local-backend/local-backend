@@ -140,7 +140,7 @@ wait_for_http() {
 }
 
 run_seed() {
-	python3 "$TOOL_DIR/seed/seed.py" "$DB_PATH" "$DATA_ROOT"
+	KANO_CHECKOUT="$KANO_CHECKOUT" python3 "$TOOL_DIR/seed/seed.py" "$DB_PATH" "$DATA_ROOT"
 	date +%s >"$SEED_MARKER"
 }
 

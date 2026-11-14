@@ -58,3 +58,12 @@ and `data/lineblog/` of the checkout into the isolated data directory, which
 the server only reads, and copies the prebuilt smaller copies from
 `data/cache/variants/`. A checkout without those folders serves the reads and
 answers 404 `media_not_found` for their media.
+
+`GET /api/works/uploads` joins that real upload list with stored data, so the
+seed reads the list from the checkout (`backend/internal/works/`) and keys
+synthetic rows to its upload and video IDs: a 320×180 PNG cover in a distinct
+color for the newest two dozen uploads and nine in ten of the rest, and a few
+stored videos with lengths, one members-only, one of unknown length and
+availability, and removed and private ones. Two uploads are gone entirely and
+show without a cover. The rest have no stored data, as an upload the service
+knows nothing about. Run `reseed` after the checkout's list changes.
