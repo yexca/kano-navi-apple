@@ -81,6 +81,7 @@ struct RootView: View {
                 }
             case .background:
                 dashboard.stop()
+                router.forgetLaunchRoute()
                 Task {
                     await notifications?.handleDidEnterBackground(interfaceLocale: locale)
                 }

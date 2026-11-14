@@ -44,6 +44,46 @@ struct AppRouterTests {
         #expect(router.scheduleFocus == .event(id: "synthetic-1"))
     }
 
+    @Test func launchRouteIsAppliedOnceAndItsLaterDeliveryIsSkipped() throws {
+        let url = try #require(URL(string: "kanonavi://event/synthetic-1"))
+        let router = AppRouter()
+
+        router.openAtLaunch(.event(id: "synthetic-1"))
+        #expect(router.selectedTab == .schedule)
+        #expect(router.scheduleFocus == .event(id: "synthetic-1"))
+
+        // The person moves on before SwiftUI hands over the same link.
+        router.selectedTab = .now
+        router.scheduleFocus = nil
+        #expect(router.open(url))
+        #expect(router.selectedTab == .now)
+        #expect(router.scheduleFocus == nil)
+
+        // A later tap on the same link is applied.
+        #expect(router.open(url))
+        #expect(router.selectedTab == .schedule)
+    }
+
+    @Test func anotherRouteAfterLaunchIsApplied() {
+        let router = AppRouter()
+        router.openAtLaunch(.posts)
+
+        router.open(.videos)
+
+        #expect(router.selectedTab == .videos)
+    }
+
+    @Test func forgottenLaunchRouteIsAppliedAgain() {
+        let router = AppRouter()
+        router.openAtLaunch(.posts)
+        router.selectedTab = .now
+        router.forgetLaunchRoute()
+
+        router.open(.posts)
+
+        #expect(router.selectedTab == .posts)
+    }
+
     @Test func openingNotificationTabAndSettingsRoutes() throws {
         let router = AppRouter()
 
