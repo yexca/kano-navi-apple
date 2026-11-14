@@ -5,7 +5,7 @@ import Testing
 import UIKit
 
 /// Writes contact sheets of every widget family to `KN_RENDER_DIR` for
-/// visual review. Runs only when that variable is set (pass it to
+/// visual review, one per family and device. Runs only when that variable is set (pass it to
 /// `xcodebuild` as `TEST_RUNNER_KN_RENDER_DIR`). With `KN_RENDER_CALENDAR`
 /// naming a recorded `/api/calendar` page, it also renders that data.
 @MainActor
@@ -13,32 +13,48 @@ struct WidgetRenderTests {
     nonisolated private static let environment = ProcessInfo.processInfo.environment
     nonisolated private static let outputDirectory = environment["KN_RENDER_DIR"].map { URL(filePath: $0) }
 
-    /// Point sizes of the small, medium, large, rectangular and inline
-    /// families on the two reference iPhones.
+    /// Point sizes of the families a reference device offers: the
+    /// small, medium, large, rectangular and inline families on the two
+    /// reference iPhones, and the Home Screen families, extra large among
+    /// them, on the smallest and largest iPad.
     private struct Device {
         var name: String
-        var small: CGSize
-        var medium: CGSize
-        var large: CGSize
-        var rectangular: CGSize
-        var inline: CGSize
+        var sizes: [Family: CGSize]
     }
 
     private static let devices = [
         Device(
-            name: "17e", small: CGSize(width: 158, height: 158), medium: CGSize(width: 338, height: 158),
-            large: CGSize(width: 338, height: 354), rectangular: CGSize(width: 160, height: 72),
-            inline: CGSize(width: 234, height: 26)),
+            name: "17e",
+            sizes: [
+                .small: CGSize(width: 158, height: 158), .medium: CGSize(width: 338, height: 158),
+                .large: CGSize(width: 338, height: 354), .rectangular: CGSize(width: 160, height: 72),
+                .inline: CGSize(width: 234, height: 26),
+            ]),
         Device(
-            name: "ProMax", small: CGSize(width: 170, height: 170), medium: CGSize(width: 364, height: 170),
-            large: CGSize(width: 364, height: 382), rectangular: CGSize(width: 172, height: 76),
-            inline: CGSize(width: 257, height: 26)),
+            name: "ProMax",
+            sizes: [
+                .small: CGSize(width: 170, height: 170), .medium: CGSize(width: 364, height: 170),
+                .large: CGSize(width: 364, height: 382), .rectangular: CGSize(width: 172, height: 76),
+                .inline: CGSize(width: 257, height: 26),
+            ]),
+        Device(
+            name: "iPadMini",
+            sizes: [
+                .small: CGSize(width: 141, height: 141), .medium: CGSize(width: 305, height: 141),
+                .large: CGSize(width: 305, height: 305), .extraLarge: CGSize(width: 634, height: 305),
+            ]),
+        Device(
+            name: "iPadPro13",
+            sizes: [
+                .small: CGSize(width: 170, height: 170), .medium: CGSize(width: 379, height: 170),
+                .large: CGSize(width: 379, height: 379), .extraLarge: CGSize(width: 795, height: 379),
+            ]),
     ]
 
     private static let sizes: [DynamicTypeSize] = [.large, .xxxLarge, .accessibility2]
 
     private enum Family: String, CaseIterable {
-        case small, medium, large, rectangular, inline
+        case small, medium, large, extraLarge, rectangular, inline
     }
 
     @Test(.enabled(if: outputDirectory != nil))
@@ -102,17 +118,18 @@ struct WidgetRenderTests {
         let directory = try #require(Self.outputDirectory)
         try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
         for family in Family.allCases {
-            let sheet = VStack(alignment: .leading, spacing: 12) {
-                ForEach(Self.devices, id: \.name) { device in
+            for device in Self.devices {
+                guard let tileSize = device.sizes[family] else { continue }
+                let sheet = VStack(alignment: .leading, spacing: 12) {
                     ForEach(Self.sizes, id: \.self) { size in
                         HStack(alignment: .top, spacing: 12) {
                             ForEach([ColorScheme.light, .dark], id: \.self) { scheme in
-                                tile(family: family, device: device, entry: entry)
+                                tile(family: family, size: tileSize, entry: entry)
                                     .environment(\.dynamicTypeSize, size)
                                     .environment(\.colorScheme, scheme)
                             }
                             MonochromeTile {
-                                tile(family: family, device: device, entry: entry)
+                                tile(family: family, size: tileSize, entry: entry)
                             }
                             .environment(\.dynamicTypeSize, size)
                             Text(verbatim: "\(device.name) \(size)")
@@ -121,31 +138,34 @@ struct WidgetRenderTests {
                         }
                     }
                 }
-            }
-            .padding(12)
-            .background(Color(white: 0.55))
-            .environment(\.locale, .current)
+                .padding(12)
+                .background(Color(white: 0.55))
+                .environment(\.locale, .current)
 
-            let renderer = ImageRenderer(content: sheet)
-            renderer.scale = 2
-            let data = try #require(renderer.uiImage?.pngData())
-            try data.write(to: directory.appending(path: "\(name)-\(family.rawValue).png"))
+                let renderer = ImageRenderer(content: sheet)
+                renderer.scale = 2
+                let data = try #require(renderer.uiImage?.pngData())
+                try data.write(
+                    to: directory.appending(path: "\(name)-\(family.rawValue)-\(device.name).png"))
+            }
         }
     }
 
     @ViewBuilder
-    private func tile(family: Family, device: Device, entry: UpcomingEntry) -> some View {
+    private func tile(family: Family, size: CGSize, entry: UpcomingEntry) -> some View {
         switch family {
         case .small:
-            HomeTile(size: device.small) { SmallUpcomingView(entry: entry) }
+            HomeTile(size: size) { SmallUpcomingView(entry: entry) }
         case .medium:
-            HomeTile(size: device.medium) { MediumUpcomingView(entry: entry) }
+            HomeTile(size: size) { MediumUpcomingView(entry: entry) }
         case .large:
-            HomeTile(size: device.large) { LargeUpcomingView(entry: entry) }
+            HomeTile(size: size) { LargeUpcomingView(entry: entry) }
+        case .extraLarge:
+            HomeTile(size: size) { ExtraLargeUpcomingView(entry: entry) }
         case .rectangular:
-            LockTile(size: device.rectangular) { RectangularUpcomingView(entry: entry) }
+            LockTile(size: size) { RectangularUpcomingView(entry: entry) }
         case .inline:
-            LockTile(size: device.inline) { InlineUpcomingView(entry: entry).font(.subheadline) }
+            LockTile(size: size) { InlineUpcomingView(entry: entry).font(.subheadline) }
         }
     }
 }

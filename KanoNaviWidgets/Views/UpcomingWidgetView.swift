@@ -25,6 +25,10 @@ struct UpcomingWidgetView: View {
             InlineUpcomingView(entry: entry)
                 .widgetURL(singleEntryURL)
                 .containerBackground(.clear, for: .widget)
+        case .systemExtraLarge:
+            ExtraLargeUpcomingView(entry: entry)
+                .widgetURL(entry.scheduleURL)
+                .containerBackground(for: .widget) { WidgetBackground() }
         default:
             LargeUpcomingView(entry: entry)
                 .widgetURL(entry.scheduleURL)

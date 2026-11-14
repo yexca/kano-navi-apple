@@ -15,7 +15,8 @@ struct UpcomingWidget: Widget {
         .configurationDisplayName(.widgetUpcomingName)
         .description(.widgetUpcomingDescription)
         .supportedFamilies([
-            .systemSmall, .systemMedium, .systemLarge, .accessoryRectangular, .accessoryInline,
+            .systemSmall, .systemMedium, .systemLarge, .systemExtraLarge, .accessoryRectangular,
+            .accessoryInline,
         ])
     }
 }

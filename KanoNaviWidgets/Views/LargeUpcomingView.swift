@@ -40,12 +40,10 @@ struct LargeUpcomingView: View {
                 Link(destination: hero.url) {
                     HeroCard(item: hero, now: entry.date, today: entry.today)
                 }
-                DayGroupedList(
-                    days: schedule.upcomingDays(
-                        at: entry.date, lineBudget: WidgetLineBudget.large(dynamicTypeSize),
-                        excluding: hero.id, through: lastDay),
-                    today: entry.today, now: entry.date)
-                Spacer(minLength: 0)
+                FittingDayList(
+                    schedule: schedule, now: entry.date, today: entry.today,
+                    lineBudget: WidgetLineBudget.large(dynamicTypeSize), excludedID: hero.id,
+                    lastDay: lastDay)
             } else {
                 NothingScheduledView()
             }
