@@ -1,4 +1,5 @@
 import Foundation
+import KanoNaviComponents
 import KanoNaviCore
 import Testing
 
@@ -19,7 +20,7 @@ struct PostArchiveTests {
         #expect(options.map(\.code) == [nil, "Kano_Example", "_Sub", "316381099"])
         #expect(options.map(\.count) == [5, 2, 1, 1])
         #expect(options[1].label == .verbatim("@Kano_Example"))
-        #expect(options[3].systemImage == "tv.fill")
+        #expect(options[3].logo == .bilibili)
     }
 
     @Test func withoutASnapshotTheFilterOffersTheCountedAccounts() {

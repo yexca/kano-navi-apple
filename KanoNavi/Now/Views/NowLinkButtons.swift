@@ -1,3 +1,4 @@
+import KanoNaviComponents
 import KanoNaviCore
 import SwiftUI
 
@@ -28,7 +29,7 @@ struct NowLinkButtons: View {
             Label {
                 Text(Self.title(for: link.destination))
             } icon: {
-                Image(systemName: Self.symbol(for: link.destination))
+                Self.icon(for: link.destination)
             }
         }
         .labelStyle(.titleAndIcon)
@@ -38,7 +39,7 @@ struct NowLinkButtons: View {
     static func title(for destination: NowLink.Destination) -> LocalizedStringResource {
         switch destination {
         case .platform(let platform):
-            .Now.openOnPlatform(String(localized: DisplayCodeLabels.platform(platform)))
+            DisplayCodeLabels.platform(platform)
         case .site(let host):
             .Now.openSite(host)
         case .announcement:
@@ -46,12 +47,13 @@ struct NowLinkButtons: View {
         }
     }
 
-    static func symbol(for destination: NowLink.Destination) -> String {
+    /// A platform page shows the platform's logo; a site or an
+    /// announcement shows a symbol.
+    static func icon(for destination: NowLink.Destination) -> Image {
         switch destination {
-        case .platform(.youtube): "play.rectangle.fill"
-        case .platform: "play.tv"
-        case .site: "safari"
-        case .announcement: "megaphone"
+        case .platform(let platform): PlatformMark.image(for: platform)
+        case .site: Image(systemName: "safari")
+        case .announcement: Image(systemName: "megaphone")
         }
     }
 }

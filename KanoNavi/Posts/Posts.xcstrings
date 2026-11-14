@@ -169,54 +169,6 @@
         }
       }
     },
-    "openOnBilibili": {
-      "comment": "Button that opens the original post on Bilibili.",
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Open on Bilibili"
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "bilibili で開く"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "在哔哩哔哩打开"
-          }
-        }
-      }
-    },
-    "openOnX": {
-      "comment": "Button that opens the original post on X.",
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Open on X"
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "X で開く"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "在 X 打开"
-          }
-        }
-      }
-    },
     "openQuote": {
       "comment": "Button that opens the quoted post on X.",
       "extractionState": "manual",
@@ -410,7 +362,7 @@
       }
     },
     "sourceX": {
-      "comment": "Name of an X post's account when the post does not name its handle.",
+      "comment": "The platform name X: an X post's account when the post does not name its handle, and the button that opens a post on X.",
       "extractionState": "manual",
       "localizations": {
         "en": {

@@ -577,30 +577,6 @@
         }
       }
     },
-    "openOnPlatform": {
-      "comment": "Button that opens a page on a platform. %@ is the platform name, such as YouTube.",
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Open on %@"
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%@ で開く"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "在 %@ 打开"
-          }
-        }
-      }
-    },
     "openSite": {
       "comment": "Button that opens a page on another site. %@ is the site's host name, such as shop.example.com.",
       "extractionState": "manual",
