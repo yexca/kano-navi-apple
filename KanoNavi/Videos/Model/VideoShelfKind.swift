@@ -28,6 +28,15 @@ enum VideoShelfKind: String, CaseIterable, Identifiable {
         }
     }
 
+    /// The kind's symbol in the kind menu.
+    var symbol: String {
+        switch self {
+        case .streams: "dot.radiowaves.left.and.right"
+        case .videos: "play.rectangle"
+        case .shorts: "rectangle.portrait"
+        }
+    }
+
     var label: LocalizedStringResource {
         switch self {
         case .streams: .Videos.kindStreams

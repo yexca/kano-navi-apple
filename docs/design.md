@@ -337,9 +337,10 @@ The app is a `TabView` with five tabs.
    A promoted related-account post carries an Agency Post chip. The title is
    large, with a control at each end of the navigation bar, as on Schedule:
    - **Filter** (leading): a menu whose icon fills while a filter is active.
-     It narrows the posts on the device and lists, with checkmarks, All,
-     each of the dashboard's `xAccounts` as `@handle` (compared without
-     case), then one Bilibili choice with its logo for all its
+     It narrows the posts on the device and lists, with checkmarks, All
+     with a grid symbol, each of the dashboard's `xAccounts` as `@handle`
+     with the X logo (compared without case), then one Bilibili choice with
+     its logo for all its
      `bilibiliAccounts`, each with its count among the recent posts. A post
      by another account, such as the agency's, shows only under All. The
      menu is left out when there are no posts, and a choice without posts
@@ -359,16 +360,19 @@ The app is a `TabView` with five tabs.
    by its form or `isShort`, says Short), the tag, availability when not
    everyone can watch (members, private, removed), the title in the content
    language, the JST time (scheduled start, else publication) and buttons for
-   the video's page and its `alternates`. The title is large, with a control
+   the video's page and its `alternates`. The title is large, with controls
    at each end of the navigation bar, as on Schedule:
-   - **Filter** (leading): a menu whose icon fills while a filter is active,
-     with two choices, each with a checkmark:
-     - **Kind**: All, Streams (form `stream` or `archive`, and a reservation
-       whose stored `kind` or `view.tagContext` is `stream`), Videos
-       (`video`, `premiere` and the other reservations) and Shorts.
-     - **Platform**: All, YouTube or Bilibili, each with its logo. A video is
-       on a platform when it or one of its `alternates` is; with a platform
-       chosen, that platform's page is the row's first link.
+   - **Filters** (leading): two menus side by side, each choice with its
+     icon and the current one with a checkmark. All has the same grid
+     symbol here and in the Posts filter.
+     - **Kind**: the filter icon, filled while a kind is chosen. All,
+       Streams (form `stream` or `archive`, and a reservation whose stored
+       `kind` or `view.tagContext` is `stream`), Videos (`video`, `premiere`
+       and the other reservations) and Shorts.
+     - **Platform**: the chosen platform's logo, or the All symbol. All,
+       YouTube or Bilibili. A video is on a platform when it or one of its
+       `alternates` is; with a platform chosen, that platform's page is the
+       row's first link.
 
      The API cannot narrow the timeline by either, so the filter applies on
      the device to the pages read, and reads further pages while it shows

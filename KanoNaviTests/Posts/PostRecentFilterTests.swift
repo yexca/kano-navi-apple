@@ -15,7 +15,7 @@ struct PostRecentFilterTests {
         #expect(options.map(\.code) == [nil, "Kano_Example", "_Sub", PostRecentFilter.bilibiliCode])
         #expect(options.map(\.count) == [5, 2, 1, 1])
         #expect(options[1].label == .verbatim("@Kano_Example"))
-        #expect(options[3].logo == .bilibili)
+        #expect(options.map(\.logo) == [nil, .x, .x, .bilibili])
     }
 
     @Test func withoutABilibiliAccountThereIsNoBilibiliChoice() throws {

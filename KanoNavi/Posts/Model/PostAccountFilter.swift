@@ -2,7 +2,7 @@ import KanoNaviComponents
 import KanoNaviCore
 
 /// The post archive's account filter: the board's X accounts, then its
-/// Bilibili accounts, each with the month's count.
+/// Bilibili accounts, each with its platform's logo and the month's count.
 enum PostAccountFilter {
     /// The accounts from the dashboard's metadata, or, without a snapshot,
     /// the accounts the month counts, in their order.
@@ -28,7 +28,7 @@ enum PostAccountFilter {
                     code: account.code,
                     label: account.isBilibili
                         ? .localized(DisplayCodeLabels.platform(.bilibili)) : .verbatim("@" + account.code),
-                    logo: account.isBilibili ? .bilibili : nil,
+                    logo: account.isBilibili ? .bilibili : .x,
                     count: known ? counts[account.code.lowercased()] ?? 0 : nil)
             }
     }

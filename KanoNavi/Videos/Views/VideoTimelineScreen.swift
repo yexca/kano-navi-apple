@@ -32,8 +32,9 @@ struct VideoTimelineScreen: View {
         .refreshable(action: model.refresh)
         .navigationTitle(.tabVideos)
         .toolbar {
-            ToolbarItem(placement: .topBarLeading) {
-                VideoFilterMenu(filter: $model.filter)
+            ToolbarItemGroup(placement: .topBarLeading) {
+                VideoKindMenu(selection: $model.filter.kind)
+                VideoPlatformMenu(selection: $model.filter.platform)
             }
             if let index = model.index, index.months.isEmpty == false {
                 ToolbarItem(placement: .primaryAction) {

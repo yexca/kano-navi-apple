@@ -33,6 +33,10 @@ struct ArchiveFilterMenu: View {
         .accessibilityValue(Text(verbatim: chosenName))
     }
 
+    /// The symbol of an All choice, in this menu and in the Videos tab's
+    /// platform menu.
+    static let allSymbol = "square.grid.2x2"
+
     /// The menu's symbol: filled while a filter is active.
     static func symbol(isFiltered: Bool) -> String {
         isFiltered ? "line.3.horizontal.decrease.circle.fill" : "line.3.horizontal.decrease.circle"

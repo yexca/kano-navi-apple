@@ -1,8 +1,8 @@
 import KanoNaviComponents
 import SwiftUI
 
-/// One choice of a filter menu: its logo when it has one, and its name with
-/// its count when known, such as "@example (9)".
+/// One choice of a filter menu: its logo when it has one, the All symbol for
+/// All, and its name with its count when known, such as "@example (9)".
 struct ArchiveFilterMenuItem: View {
     let option: ArchiveFilterOption
 
@@ -14,6 +14,12 @@ struct ArchiveFilterMenuItem: View {
                 Text(verbatim: title)
             } icon: {
                 logo.image
+            }
+        } else if option.code == nil {
+            Label {
+                Text(verbatim: title)
+            } icon: {
+                Image(systemName: ArchiveFilterMenu.allSymbol)
             }
         } else {
             Text(verbatim: title)
