@@ -763,7 +763,14 @@ permission is requested only when the user turns on **Allow Notifications** in
     `schedule`); four or more updates in one thread send the newest two plus a
     summary banner.
 - **Timed reminders.** `UNCalendarNotificationTrigger` requests are rebuilt
-  from the 14-day calendar window (up to 48 nearest future triggers):
+  from the 14-day calendar window (up to 48 nearest future triggers). While
+  notifications are on, the window is read from the service for each new
+  dashboard snapshot, when the app returns to the foreground, and when it
+  enters the background (just before the next background refresh is
+  queued), so an entry added since the last read gets its reminder. The
+  cached window stands in while that read runs and when it fails. Requests
+  for one dashboard revision share a single read, and a plan whose read
+  finishes after a newer snapshot arrived is dropped:
   - *Streams and events*: off, at start, 10 minutes before, or 30 minutes
     before (`startsAt` in JST, skipping cancelled or past entries).
   - *Merchandise sales*: sale opening (`sale_start`) and sale closing
@@ -771,6 +778,18 @@ permission is requested only when the user turns on **Allow Notifications** in
     occurrences fire relative to `09:00 JST` on that Japan date.
   - Titles follow the interface language and item text follows the content
     language; changing either rebuilds pending reminder text.
+- **Debugging.** `performBackgroundRefresh()` logs each step (the fetched
+  revision, the number of immediate alerts, the reminders scheduled) with
+  `os.Logger` under the bundle ID subsystem and the `notifications`
+  category, for Console. Debug builds add **Run Background Check (Debug)**
+  at the end of the notification settings: it runs the same refresh, with
+  immediate alerts, about five seconds after the app next enters the
+  background, under a UIKit background task, so its banners appear on the
+  Home or Lock Screen. Changes the foreground already saw are part of the
+  baseline and do not alert. To launch the real `BGAppRefreshTask` instead,
+  pause the app in the debugger after leaving it and run
+  `e -l objc -- (void)[[BGTaskScheduler sharedScheduler] _simulateLaunchForTaskWithIdentifier:@"com.yexca.kanonavi.refresh"]`,
+  then continue.
 - **Deep links.** Tapping a notification or widget opens a `kanonavi://` URL
   routed by `AppRouter`: `kanonavi://now`, `kanonavi://posts`,
   `kanonavi://videos`, `kanonavi://event/<id>`,
