@@ -1,9 +1,9 @@
 import KanoNaviCore
 import SwiftUI
 
-/// Kano's identities as cards that filter the Journey: All, then each branch
-/// with its portrait, name, the year it starts and its count. Tapping the
-/// selected card again shows all.
+/// Kano's identities as one scrolling row of equal-height chips that filter
+/// the Journey: All, then each branch with its portrait, name and count.
+/// Tapping the selected chip again shows all.
 struct JourneyBranchFilter: View {
     let branches: [JourneyBranch]
     @Binding var selection: String?
@@ -14,14 +14,17 @@ struct JourneyBranchFilter: View {
     var body: some View {
         ScrollViewReader { proxy in
             ScrollView(.horizontal) {
-                HStack(alignment: .top, spacing: 10) {
-                    JourneyBranchCard(
-                        branch: nil, count: countLabel(total), isSelected: selection == nil, select: selectAll
+                HStack(spacing: 8) {
+                    JourneyBranchChip(
+                        branch: nil, count: total, countLabel: countLabel(total),
+                        isSelected: selection == nil,
+                        select: selectAll
                     )
                     .id(Self.allID)
                     ForEach(branches) { branch in
-                        JourneyBranchCard(
-                            branch: branch, count: countLabel(counts[branch.id] ?? 0),
+                        let count = counts[branch.id] ?? 0
+                        JourneyBranchChip(
+                            branch: branch, count: count, countLabel: countLabel(count),
                             isSelected: selection == branch.id
                         ) {
                             toggle(branch.id)
@@ -29,6 +32,8 @@ struct JourneyBranchFilter: View {
                         .id(branch.id)
                     }
                 }
+                // Every chip takes the height of the tallest one.
+                .fixedSize(horizontal: false, vertical: true)
                 .padding(.horizontal)
                 .padding(.vertical, 4)
             }
@@ -41,7 +46,7 @@ struct JourneyBranchFilter: View {
         .accessibilityLabel(Text(.Journey.identityFilter))
     }
 
-    /// The All card's scroll ID, which no branch ID can take.
+    /// The All chip's scroll ID, which no branch ID can take.
     private static let allID = "\u{0}all"
 
     private func selectAll() {

@@ -23,7 +23,7 @@ struct JourneyBranchMarkTests {
         #expect(JourneyBranchMark(branch: branch) == .portrait(try #require(branch.portrait)))
     }
 
-    @Test func allCardHasItsOwnSymbol() {
+    @Test func allChipHasItsOwnSymbol() {
         #expect(JourneyBranchMark(branch: nil) == .symbol(JourneyBranchMark.allSymbol))
         #expect(JourneyBranchMark.allSymbol != JourneyBranchMark.missingPortraitSymbol)
     }

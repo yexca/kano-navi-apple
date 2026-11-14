@@ -1,18 +1,32 @@
 import SwiftUI
 
-/// The segmented switch between the timeline and the gallery.
+/// The toolbar's segmented switch between the timeline and the gallery, one
+/// symbol per mode. VoiceOver reads each mode's name.
 struct JourneyModePicker: View {
     @Binding var mode: JourneyMode
 
     var body: some View {
         Picker(selection: $mode) {
-            Text(.Journey.modeTimeline).tag(JourneyMode.timeline)
-            Text(.Journey.modeGallery).tag(JourneyMode.gallery)
+            Label {
+                Text(.Journey.modeTimeline)
+            } icon: {
+                Image(systemName: "list.bullet")
+            }
+            .tag(JourneyMode.timeline)
+            .accessibilityIdentifier("journey.mode.timeline")
+            Label {
+                Text(.Journey.modeGallery)
+            } icon: {
+                Image(systemName: "square.grid.3x3")
+            }
+            .tag(JourneyMode.gallery)
+            .accessibilityIdentifier("journey.mode.gallery")
         } label: {
             Text(.Journey.modePicker)
         }
         .pickerStyle(.segmented)
-        .padding(.horizontal)
-        .padding(.bottom, 8)
+        .labelStyle(.iconOnly)
+        .fixedSize()
+        .accessibilityIdentifier("journey.mode")
     }
 }

@@ -342,30 +342,30 @@ Posts next; Works, Journey and LINE BLOG last.
 
 Kano's public milestones and their images, from `/api/journey`, read as one
 document through `DocumentModel` (saved-copy and failure notices, pull to
-refresh). A segmented control switches between the timeline and the gallery;
-both start with the identity cards (All, then each branch with its portrait,
-name, "since" year and its milestone or image count), which filter both
-views. A branch without a portrait shows a person symbol in its tone's ring
-instead; the selected card is outlined and carries a check mark. Tapping the
-selected card shows all again.
+refresh). A segmented switch in the toolbar, one symbol per mode, flips
+between the timeline and the gallery. Both start with one horizontally
+scrolling row of equal-height identity chips (All, then each branch with its
+portrait, name and its milestone or image count, which VoiceOver reads as
+words), which filter both views. A branch without a portrait shows a person
+symbol in its tone's ring instead; the selected chip is outlined and its
+portrait carries a check mark. Tapping the selected chip shows all again.
+Both end with one line, the date the data was checked through, whose info
+button opens the hand-curation note and the image rights notice.
 
 - **Timeline.** Milestones read oldest first, as the story runs, under a
   sticky header per year with its count; within a year they keep the API's
-  order. The toolbar's Jump to Year menu offers Latest first, then every
-  year shown, and scrolls that year's header to the top. A row shows a marker with the kind's symbol on a line in the
+  order. A row shows a marker with the kind's symbol on a line in the
   branch's tone, the date at its stored precision (a year, `Sep` or `Sep 7`
   within the year; a `dateEnd` as a range; the `dateNote` after it), the
   branch's name, the kind, the title and up to three lines of detail in the
   content language, and up to three cropped thumbnails with "+N". A
   highlight has a filled marker, a larger title, a tinted card and "Key
-  milestone". The list ends with "The story continues", the
-  hand-curation note, the image rights notice and the date the data was
-  checked through.
+  milestone".
 - **Milestone page.** A row opens the full date with its year, the whole
   detail, every image at its own shape (tall ones capped) with what it shows,
   its date and its source link, then Source and Links: the source page by its
-  site, or "Based on a third-party archive of the official stream" when there
-  is none, and the further links by their worded labels. An image opens the
+  site, or "Third-party stream archive" when there is none, and the further
+  links by their worded labels. An image opens the
   viewer over the milestone's images. A milestone with a `releaseId` offers
   View in Works, which pushes that release's Works screen onto the More
   tab's stack: the Journey calls `journeyOpenRelease` from the environment,
@@ -379,16 +379,16 @@ selected card shows all again.
   cancelled release's cover carries a mark. A thumbnail opens the viewer over
   the filtered images.
 - **A milestone that is gone.** When a reload no longer lists the
-  milestone whose page is open, the page says "Milestone Not Found" and
-  points back to the timeline.
+  milestone whose page is open, the page says "Milestone Not Found" in one
+  line.
 - **Viewer caption.** What the image shows, with Release cancelled and
   Third-party file marks; the title (a cover's caption under it); the date
-  labelled with what it is (`dateKind`), or "Date unverified"; who published
-  the file (`sourceKind`); the recorded creator, the frame time and a cover's
-  scan or photo credit; the publisher's credit line as written; the
-  provenance note; and the links to the source page, the file or the video
-  at that moment, and the original stream. The links stay when the file is
-  unavailable.
+  labelled with what it is (`dateKind`), or "Date unverified"; the recorded
+  creator and a cover's scan or photo credit; the publisher's credit line as
+  written; and the links to the source page, the file or the video at that
+  moment, and the original stream. The links stay when the file is
+  unavailable. Details opens who published the file (`sourceKind`), the frame
+  time and the provenance note over the viewer, as a sheet on iPhone.
 - **Codes.** Kinds, link labels, categories, date kinds, source kinds,
   notes and cover credit roles are worded in `Journey.xcstrings`, after the
   web board's wording. An unknown kind reads "Milestone", an unknown link
