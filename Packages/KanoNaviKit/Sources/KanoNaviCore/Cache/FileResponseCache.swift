@@ -15,7 +15,7 @@ public actor FileResponseCache: ResponseCache {
             ?? URL(fileURLWithPath: NSTemporaryDirectory())
         return caches.appendingPathComponent(name, isDirectory: true)
     }
-    private func fileURL(for key: String) -> URL {
+    nonisolated private func fileURL(for key: String) -> URL {
         directory.appendingPathComponent(
             Data(key.utf8).base64EncodedString().replacingOccurrences(of: "/", with: "_") + ".json")
     }
@@ -28,6 +28,13 @@ public actor FileResponseCache: ResponseCache {
             try? FileManager.default.removeItem(at: url)
             return nil
         }
+    }
+    /// Reads the file on the caller's thread. Saves replace a file
+    /// atomically, so a read sees the old or the new response, never part of
+    /// one. An unreadable file is left for `load(key:)` to remove.
+    nonisolated public func loadImmediately(key: String) -> CachedResponse? {
+        guard let data = try? Data(contentsOf: fileURL(for: key)) else { return nil }
+        return try? JSONDecoder.kanoNavi().decode(CachedResponse.self, from: data)
     }
     public func save(_ response: CachedResponse, key: String) async {
         do {

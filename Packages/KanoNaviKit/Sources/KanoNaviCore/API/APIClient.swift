@@ -117,6 +117,21 @@ public struct APIClient: Sendable {
         }
     }
 
+    /// The cached response of a request with the time it was fetched, read
+    /// on the caller's thread without waiting, or `nil` when the cache has
+    /// nothing readable it can answer at once. See
+    /// `ResponseCache.loadImmediately(key:)`.
+    func cachedValueImmediately<R: APIRequest>(_ request: R) -> CachedValue<R.Response>? {
+        guard let urlRequest = try? makeURLRequest(request),
+            let key = urlRequest.url?.absoluteString,
+            let response = cache.loadImmediately(key: key),
+            let value = try? decodeAndNormalize(response.body, as: R.Response.self)
+        else {
+            return nil
+        }
+        return CachedValue(value: value, fetchedAt: response.fetchedAt)
+    }
+
     public func cachedFetchedAt<R: APIRequest>(_ request: R) async -> Date? {
         guard let urlRequest = try? makeURLRequest(request),
             let key = urlRequest.url?.absoluteString

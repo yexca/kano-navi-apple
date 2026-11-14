@@ -34,6 +34,10 @@ struct PostsList: View {
             }
         }
         .listStyle(.insetGrouped)
+        .animation(.default, value: dashboard.phase)
+        .overlay(alignment: .bottom) {
+            NowSavedCopyNotice(dashboard: dashboard)
+        }
         .refreshable(action: dashboard.refresh)
         .toolbar {
             if cards.isEmpty == false {

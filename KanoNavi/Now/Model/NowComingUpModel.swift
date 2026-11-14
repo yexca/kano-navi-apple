@@ -5,9 +5,10 @@ import Observation
 /// Reads the calendar range behind the Now tab's Coming Up section: today
 /// and the 13 Japan days after it.
 ///
-/// The first load shows the range cached on this device, if any, while the
-/// service is read. A failed load keeps the last good range on screen and
-/// records the failure beside it.
+/// The range cached on this device is on screen from the start, when it was
+/// read at once, or from the first load, while the service is read. A
+/// failed load keeps the last good range on screen and records the failure
+/// beside it. A load that returns what is on screen publishes nothing.
 @Observable
 final class NowComingUpModel {
     /// Reads the range starting on a Japan date, usually
@@ -30,21 +31,26 @@ final class NowComingUpModel {
     private let cacheReader: CacheReader
     private let todayProvider: () -> JapanDate
 
+    /// - Parameter cached: The range cached on this device, read before the
+    ///   model is created, to show on the first frame.
     init(
         loader: @escaping Loader, cacheReader: @escaping CacheReader = { _ in nil },
-        today: @escaping () -> JapanDate = { .today }
+        cached: CalendarReadResult? = nil, today: @escaping () -> JapanDate = { .today }
     ) {
         self.loader = loader
         self.cacheReader = cacheReader
         self.todayProvider = today
+        result = cached
     }
 
-    /// Builds the loaders from the app's calendar reader.
-    convenience init(calendar: CalendarReader) {
+    /// Builds the loaders from the app's calendar reader and reads the
+    /// cached range at once.
+    convenience init(calendar: CalendarReader, today: JapanDate = .today) {
         let lastDay = NowComingUp.dayCount - 1
         self.init(
             loader: { today in try await calendar.readResult(from: today, to: today.addingDays(lastDay)) },
-            cacheReader: { today in await calendar.cachedResult(from: today, to: today.addingDays(lastDay)) })
+            cacheReader: { today in await calendar.cachedResult(from: today, to: today.addingDays(lastDay)) },
+            cached: calendar.cachedResultImmediately(from: today, to: today.addingDays(lastDay)))
     }
 
     /// The range's events, or `nil` before anything is read.
@@ -81,8 +87,13 @@ final class NowComingUpModel {
             result = cached
         }
         do {
-            result = try await loader(today)
-            failure = nil
+            let read = try await loader(today)
+            if Self.changes(result, to: read) {
+                result = read
+            }
+            if failure != nil {
+                failure = nil
+            }
         } catch is CancellationError {
             return
         } catch APIError.cancelled {
@@ -90,6 +101,17 @@ final class NowComingUpModel {
         } catch {
             failure = error
         }
-        hasLoaded = true
+        if hasLoaded == false {
+            hasLoaded = true
+        }
+    }
+
+    /// Whether `read` shows anything other than `current`: other events, or
+    /// another source. A fresh read's time is not shown, so two fresh reads
+    /// of the same events are the same.
+    static func changes(_ current: CalendarReadResult?, to read: CalendarReadResult) -> Bool {
+        guard let current else { return true }
+        return current.page != read.page || current.isFromCache != read.isFromCache
+            || (read.isFromCache && current.fetchedAt != read.fetchedAt)
     }
 }

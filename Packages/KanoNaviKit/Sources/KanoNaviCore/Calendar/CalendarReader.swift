@@ -32,6 +32,27 @@ public struct CalendarReader: Sendable {
         return CalendarReadResult(page: cached.page, isFromCache: true, fetchedAt: cached.fetchedAt)
     }
 
+    /// The range as cached on this device, like `cachedResult(from:to:)`,
+    /// read on the caller's thread without waiting, so a screen can show it
+    /// on its first frame; `nil` when any page is not cached or the cache
+    /// cannot answer at once.
+    public func cachedResultImmediately(from: JapanDate, to: JapanDate) -> CalendarReadResult? {
+        var merger = PageMerger()
+        var oldest = Date.distantFuture
+        while true {
+            let request = CalendarRequest(from: from, to: to, page: merger.nextPage)
+            guard let cached = client.cachedValueImmediately(request) else { return nil }
+            oldest = min(oldest, cached.fetchedAt)
+            do {
+                if let merged = try merger.add(cached.value) {
+                    return CalendarReadResult(page: merged, isFromCache: true, fetchedAt: oldest)
+                }
+            } catch {
+                return nil
+            }
+        }
+    }
+
     private func readPages(from: JapanDate, to: JapanDate) async throws -> CalendarPage {
         var merger = PageMerger()
         while true {

@@ -54,11 +54,18 @@ public final class DashboardStore {
         self.clock = clock
         self.stream = stream
         self.pushJitter = pushJitter ?? { Double.random(in: 0...Self.maxPushJitter) }
+        // The saved copy is on screen from the first frame; the cache answers
+        // one small file at once.
+        if let cached = client.cachedValueImmediately(request) {
+            restore(cached)
+        }
     }
 
+    /// Starts refreshing while a scene is active. The snapshot on screen
+    /// stays; only a store with nothing to show reports `.loading`.
     public func start() {
         stop()
-        phase = snapshot == nil ? .loading : .refreshing
+        markRefreshing()
         loopTask = Task { [weak self] in
             guard let self else { return }
             await self.loadAtLaunch()
@@ -109,32 +116,80 @@ public final class DashboardStore {
         }
     }
 
+    /// Reads the dashboard and publishes only what changed: a response equal
+    /// to the snapshot on screen leaves `snapshot`, `source` and `phase` as
+    /// they are, so nothing on screen re-renders or animates for it.
     private func performRefresh() async {
         let previousPhase = phase
-        phase = snapshot == nil ? .loading : .refreshing
+        markRefreshing()
         do {
             let value = try await client.send(request)
-            snapshot = value
+            if snapshot != value {
+                snapshot = value
+            }
             fetchedAt = clock.now
-            source = .network
+            setIfChanged(\.source, .network)
             lastRevision = value.meta.revision ?? lastRevision
             transitionReloadAt = value.projection?.nextTransitionAt.flatMap { transition in
                 transition > clock.now ? transition : nil
             }
-            phase = .idle
-            isIncompatible = false
+            setIfChanged(\.phase, .idle)
+            setIfChanged(\.isIncompatible, false)
             lastPollError = nil
         } catch is CancellationError {
-            phase = previousPhase
+            setIfChanged(\.phase, Self.phaseAfterCancellation(previousPhase))
         } catch let error as APIError {
             if error == .cancelled {
-                phase = previousPhase
+                setIfChanged(\.phase, Self.phaseAfterCancellation(previousPhase))
             } else {
-                phase = .failed(error)
-                isIncompatible = error == .incompatible
+                setIfChanged(\.phase, .failed(error))
+                setIfChanged(\.isIncompatible, error == .incompatible)
             }
         } catch {
-            phase = .failed(.decoding(String(describing: error)))
+            setIfChanged(\.phase, .failed(.decoding(String(describing: error))))
+        }
+    }
+
+    /// The phase after a cancelled refresh: what it was before, except that
+    /// a refresh no longer runs, so `.loading` and `.refreshing` end.
+    private static func phaseAfterCancellation(_ previous: DashboardPhase) -> DashboardPhase {
+        switch previous {
+        case .loading, .refreshing: .idle
+        case .idle, .failed: previous
+        }
+    }
+
+    /// Reports a refresh starting: `.loading` with nothing to show, otherwise
+    /// `.refreshing`. A failure on screen stays until the refresh ends, so
+    /// its banner does not leave and come back while the read runs again.
+    private func markRefreshing() {
+        if snapshot == nil {
+            setIfChanged(\.phase, .loading)
+        } else if case .failed = phase {
+            return
+        } else {
+            setIfChanged(\.phase, .refreshing)
+        }
+    }
+
+    /// Assigns only a different value, so observers are not told of a change
+    /// that changes nothing.
+    private func setIfChanged<Value: Equatable>(
+        _ keyPath: ReferenceWritableKeyPath<DashboardStore, Value>, _ value: Value
+    ) {
+        if self[keyPath: keyPath] != value {
+            self[keyPath: keyPath] = value
+        }
+    }
+
+    /// Shows a snapshot read from the cache.
+    private func restore(_ cached: CachedValue<Dashboard>) {
+        snapshot = cached.value
+        fetchedAt = cached.fetchedAt
+        source = .cache
+        lastRevision = cached.value.meta.revision
+        transitionReloadAt = cached.value.projection?.nextTransitionAt.flatMap { transition in
+            transition > clock.now ? transition : nil
         }
     }
 
@@ -146,15 +201,13 @@ public final class DashboardStore {
             nextRevisionPoll = nil
         }
         nextRevalidation = launchNow.addingTimeInterval(Self.revalidationInterval)
-        if let cached = await client.cachedValue(request) {
-            snapshot = cached.value
-            fetchedAt = cached.fetchedAt
-            source = .cache
-            lastRevision = cached.value.meta.revision
-            transitionReloadAt = cached.value.projection?.nextTransitionAt.flatMap { transition in
-                transition > clock.now ? transition : nil
-            }
-            phase = .idle
+        // The cache was read when the store was created. A store that found
+        // nothing then tries once more, in case a background refresh saved a
+        // copy since; a store with a snapshot keeps it on screen and only
+        // refreshes, on every foreground return.
+        if snapshot == nil, let cached = await client.cachedValue(request) {
+            restore(cached)
+            phase = .refreshing
         }
         guard Task.isCancelled == false else { return }
         startStreamIfNeeded()

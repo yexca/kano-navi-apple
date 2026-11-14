@@ -21,11 +21,9 @@ struct NowBoardList: View {
                     NowStatusBanner(
                         status: status, isSavedCopy: isSavedCopy, fetchedAt: fetchedAt, retry: retry)
                 }
-            case .savedCopy(let isUpdating):
-                Section {
-                    NowSavedCopyNotice(isUpdating: isUpdating, fetchedAt: fetchedAt)
-                }
-            case nil:
+            case .savedCopy, nil:
+                // The saved copy's "Updating…" floats over the list
+                // (`NowSavedCopyNotice`), so the board does not move for it.
                 EmptyView()
             }
 
@@ -74,5 +72,13 @@ struct NowBoardList: View {
                 NowFreshnessFooter(freshness: board.freshness, fetchedAt: fetchedAt, now: now)
             }
         }
+        // Only real changes move rows, and they move quietly: a banner for a
+        // failed refresh, or Coming Up entries that differ from the cached
+        // ones. An identical read publishes nothing.
+        // The cover images at the top are drawn on the first frame when the
+        // disk cache has them, instead of popping in a frame later.
+        .environment(\.mediaImageDecodesCachedFilesAtOnce, true)
+        .animation(.default, value: notice)
+        .animation(.default, value: comingUp.result)
     }
 }

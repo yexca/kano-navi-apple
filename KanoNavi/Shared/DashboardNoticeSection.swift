@@ -1,9 +1,10 @@
 import KanoNaviCore
 import SwiftUI
 
-/// A list section saying why the dashboard data below it is not a fresh
-/// read, with the Now tab's wording: the saved copy from this device, or a
-/// failed refresh. Nothing when the data is fresh.
+/// A list section saying that the dashboard data below it is not a fresh
+/// read because a refresh failed, with the Now tab's wording. Nothing when
+/// the data is fresh or is the saved copy being updated, which
+/// `NowSavedCopyNotice` marks over the list without moving it.
 struct DashboardNoticeSection: View {
     let dashboard: DashboardStore
 
@@ -17,11 +18,7 @@ struct DashboardNoticeSection: View {
                     status: status, isSavedCopy: isSavedCopy, fetchedAt: dashboard.fetchedAt,
                     retry: dashboard.refresh)
             }
-        case .savedCopy(let isUpdating):
-            Section {
-                NowSavedCopyNotice(isUpdating: isUpdating, fetchedAt: dashboard.fetchedAt)
-            }
-        case nil:
+        case .savedCopy, nil:
             EmptyView()
         }
     }

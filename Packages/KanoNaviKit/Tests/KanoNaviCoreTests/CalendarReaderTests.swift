@@ -241,6 +241,23 @@ struct CalendarReaderTests {
         #expect(result.page.events.map(\.id) == ["first", "second"])
     }
 
+    @Test func cachedResultImmediatelyReadsTheCacheWithoutWaiting() async throws {
+        let today = try #require(JapanDate(rawValue: "2026-11-10"))
+        let to = today.addingDays(13)
+        let cache = MemoryResponseCache()
+        let older = try date("2026-11-09T11:59:00Z")
+        try await seedTwoPages(
+            cache, from: today, to: to, newer: try date("2026-11-09T12:00:00Z"), older: older)
+        let reader = CalendarReader(client: try client(SequenceTransport([]), cache: cache))
+
+        let result = try #require(reader.cachedResultImmediately(from: today, to: to))
+
+        #expect(result.isFromCache)
+        #expect(result.fetchedAt == older)
+        #expect(result.page.events.map(\.id) == ["first", "second"])
+        #expect(reader.cachedResultImmediately(from: today, to: today.addingDays(1)) == nil)
+    }
+
     @Test func cachedResultIsNilWhenAPageIsMissing() async throws {
         let today = try #require(JapanDate(rawValue: "2026-11-10"))
         let to = today.addingDays(13)
