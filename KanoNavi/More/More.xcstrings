@@ -1,50 +1,26 @@
 {
   "sourceLanguage": "en",
   "strings": {
-    "aboutData": {
-      "comment": "Explains where the app's data comes from.",
+    "aboutBuiltWith": {
+      "comment": "Header above the names of the AI models the app was developed with. The names are not translated.",
       "extractionState": "manual",
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Schedules, videos and posts come from the Kano Navi service, which collects them from public sources. Each item links back to its original post."
+            "value": "Built With"
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "予定・動画・ポストは、公開情報を集める鹿乃ナビのサービスから届きます。各項目は元の投稿にリンクしています。"
+            "value": "開発に使用したモデル"
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "日程、视频和动态来自鹿乃 Navi 服务，由其从公开来源收集。每一项都链接回原始发布。"
-          }
-        }
-      }
-    },
-    "aboutLinksHeader": {
-      "comment": "Header of the About links.",
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Links"
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "リンク"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "链接"
+            "value": "开发所用模型"
           }
         }
       }
@@ -80,19 +56,19 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Kano Navi is an unofficial fan project. It is not affiliated with Kano Mahoro or her agency."
+            "value": "Unofficial fan project. Not affiliated with Kano Mahoro or her agency."
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "鹿乃ナビは非公式のファンプロジェクトです。鹿乃まほろさんおよび所属事務所とは一切関係ありません。"
+            "value": "非公式のファンプロジェクトです。鹿乃まほろさん・所属事務所とは関係ありません。"
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "鹿乃 Navi 是非官方的粉丝项目，与鹿乃まほろ及其所属事务所无关。"
+            "value": "非官方粉丝项目，与鹿乃まほろ及其所属事务所无关。"
           }
         }
       }
@@ -265,56 +241,8 @@
         }
       }
     },
-    "settingsAppLanguageButton": {
-      "comment": "Button that opens this app's page in the Settings app, where its language is set.",
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Change in Settings"
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "設定で変更"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "在“设置”中更改"
-          }
-        }
-      }
-    },
-    "settingsAppLanguageFooter": {
-      "comment": "Explains where the interface language is set.",
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Buttons and labels follow the language chosen for Kano Navi in the Settings app."
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ボタンやラベルは、設定アプリで鹿乃ナビに選んだ言語で表示されます。"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "按钮和标签使用在“设置”应用中为鹿乃 Navi 选择的语言。"
-          }
-        }
-      }
-    },
-    "settingsAppLanguageHeader": {
-      "comment": "Header of the interface language section.",
+    "settingsAppLanguage": {
+      "comment": "Row that opens this app's page in the Settings app, where its interface language is set.",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -337,32 +265,32 @@
         }
       }
     },
-    "settingsContentLanguageFooter": {
-      "comment": "Explains what the content language changes.",
+    "settingsAppLanguageHint": {
+      "comment": "Accessibility hint of the App Language row.",
       "extractionState": "manual",
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Chooses the language of post text and of video and event titles. A translation is marked and can be switched to the original."
+            "value": "Opens the Settings app."
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "ポスト本文や動画・予定のタイトルの言語を選びます。翻訳にはマークが付き、原文に切り替えられます。"
+            "value": "設定アプリを開きます。"
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "选择动态正文以及视频和日程标题的语言。译文带有标记，并可切换为原文。"
+            "value": "打开“设置”应用。"
           }
         }
       }
     },
-    "settingsContentLanguageHeader": {
-      "comment": "Header and label of the content language picker.",
+    "settingsContentLanguage": {
+      "comment": "Label of the content language menu.",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -381,30 +309,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "内容语言"
-          }
-        }
-      }
-    },
-    "settingsNotificationsFooter": {
-      "comment": "Footer below the Notifications link in Settings.",
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Alerts for live broadcasts, new posts, videos, schedule changes and upcoming reminders."
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "配信開始、新しいポストや動画、予定の追加・変更、開始前や販売終了前のリマインダーを設定します。"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "管理开播提醒、新动态与视频、日程更新，以及直播活动开始与周边开售截止提醒。"
           }
         }
       }

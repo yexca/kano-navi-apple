@@ -37,7 +37,9 @@ outside the Apple SDKs. `KanoNaviCore` does not import SwiftUI;
 
 Folders inside `KanoNavi/` follow features: `App/`, `Now/`, `Schedule/`,
 `Videos/`, `Posts/`, `Journey/`, `Works/`, `LineBlog/`, `More/`,
-`Notifications/`, `Shared/`.
+`Notifications/`, `Shared/`. The app icon in `Resources/Assets.xcassets` is
+the web board's avatar (`public/assets/kano-avatar.jpg` in `kano-navi`)
+scaled to 1024 px.
 
 ## API Contract
 
@@ -323,10 +325,13 @@ The app is a `TabView` with five tabs.
    the dashboard. Past Videos opens the month archive with the category filter
    (`game`, `talk`, `song`, `other`).
 5. **More** — Journey, Works and the LINE BLOG archive, each described
-   below, then Settings (Notifications, Content Language, and the link to the
-   system's per-app language setting) and About. About states that the app is
-   an unofficial fan project and links the web board and the `kano-navi`
-   repository.
+   below, then Settings and About. Settings is three rows without
+   explanations: Notifications with its status, a Content Language menu, and
+   App Language, which opens the system's per-app language setting. About
+   says in one line that the app is an unofficial fan project, links the web
+   board and the `kano-navi` repository, lists the models the app was built
+   with (Claude Opus 5.5, Gemini 4 Carbon, Claude Fable 5.2) and shows the
+   version.
 
 Both month archives read their month index (`/api/videos/months`,
 `/api/posts/months`) and show one Japan month at a time, newest first, from
