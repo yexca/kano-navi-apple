@@ -10,7 +10,7 @@ Kano Mahoro or her agency.
 ## Requirements
 
 - Xcode 27 or later
-- iOS 26 or later; iPhone only
+- iOS 26 or later; iPhone and iPad
 
 ## Project Layout
 

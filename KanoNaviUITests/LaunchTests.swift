@@ -13,10 +13,22 @@ final class LaunchTests: XCTestCase {
 
         XCTAssertTrue(app.navigationBars["Now"].waitForExistence(timeout: 10))
 
-        let tabs = app.tabBars.buttons.allElementsBoundByIndex.map(\.label)
-        XCTAssertEqual(tabs, ["Now", "Schedule", "Posts", "Videos", "More"])
+        // In order along the tab bar, the iPad's bar at the top or its sidebar.
+        let labels = ["Now", "Schedule", "Posts", "Videos", "More"]
+        for label in labels {
+            XCTAssertTrue(app.tabButton(label).exists, label)
+        }
+        let frames = Dictionary(uniqueKeysWithValues: labels.map { ($0, app.tabButton($0).frame) })
+        let ordered = labels.sorted { first, second in
+            let a = frames[first] ?? .zero
+            let b = frames[second] ?? .zero
+            return (a.minY, a.minX) < (b.minY, b.minX)
+        }
+        XCTAssertEqual(ordered, labels)
 
-        app.tabBars.buttons["Schedule"].tap()
-        XCTAssertTrue(app.navigationBars["Schedule"].waitForExistence(timeout: 5))
+        app.selectTab("Schedule")
+        // The Schedule bar's title is the month on screen; Today is its own.
+        XCTAssertTrue(app.buttons["Today"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.tabButton("Schedule").isSelected)
     }
 }

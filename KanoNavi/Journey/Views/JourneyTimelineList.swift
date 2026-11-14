@@ -55,6 +55,7 @@ struct JourneyTimelineList: View {
             }
             .scrollTargetLayout()
         }
+        .readableContentWidth()
         // Reports only when a milestone comes on or goes off screen, and sets
         // the state only when the top year or the filter changes. The rows run
         // under the navigation bar and the identity chips, so a milestone

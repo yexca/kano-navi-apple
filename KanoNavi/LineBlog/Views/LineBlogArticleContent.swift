@@ -22,9 +22,6 @@ struct LineBlogArticleContent: View {
     @Environment(\.mediaImageLoader) private var loader
     @Environment(\.displayScale) private var displayScale
 
-    /// The widest a line of text gets, so long lines stay readable.
-    private static let readingWidth: CGFloat = 640
-
     var body: some View {
         ScrollView {
             // Not a lazy stack: an article is a few dozen blocks of very
@@ -54,10 +51,10 @@ struct LineBlogArticleContent: View {
                 LineBlogArticleFooter(response: response, summaries: summaries, show: show)
                     .padding(.top, 18)
             }
-            .frame(maxWidth: Self.readingWidth, alignment: .leading)
+            .frame(maxWidth: .infinity, alignment: .leading)
             .padding()
-            .frame(maxWidth: .infinity)
         }
+        .readableContentWidth()
         .refreshable {
             await reload()
             // Tries again the pictographs that could not be loaded.

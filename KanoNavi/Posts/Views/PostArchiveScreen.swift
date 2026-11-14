@@ -36,6 +36,7 @@ struct PostArchiveScreen: View {
             PostArchiveItems(model: model)
         }
         .listStyle(.insetGrouped)
+        .readableContentWidth()
         .refreshable(action: model.refresh)
         .navigationTitle(.Posts.archiveTitle)
         .navigationBarTitleDisplayMode(.inline)

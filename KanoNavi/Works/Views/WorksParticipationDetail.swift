@@ -73,6 +73,7 @@ struct WorksParticipationDetail: View {
                 }
             }
         }
+        .readableContentWidth()
         .refreshable {
             await reload()
         }
