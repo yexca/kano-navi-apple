@@ -2,12 +2,12 @@ import KanoNaviComponents
 import SwiftUI
 
 /// The top of an article: its title as written, the title's translation
-/// when translations show, when it was published in Japan time, and the
-/// note that translations are machine translations.
+/// when translations show, when it was published in Japan time, and a
+/// Machine Translation mark when translations show.
 struct LineBlogArticleHeader: View {
     let title: LineBlogTitle
     let published: Date
-    let showsTranslationNote: Bool
+    let showsTranslationMark: Bool
 
     @Environment(\.locale) private var locale
 
@@ -38,9 +38,9 @@ struct LineBlogArticleHeader: View {
                 .monospacedDigit()
                 .foregroundStyle(.secondary)
 
-            if showsTranslationNote {
+            if showsTranslationMark {
                 Label {
-                    Text(.LineBlog.translationNote)
+                    Text(.LineBlog.machineTranslation)
                 } icon: {
                     Image(systemName: "translate")
                 }

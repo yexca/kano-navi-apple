@@ -1,21 +1,43 @@
 import SwiftUI
 
-/// What the archive is, above the article list: recovered from a closed
-/// service, unofficial, with the blog's original address as provenance.
-struct LineBlogIndexIntro: View {
+/// What the article list folds behind its info button: what the archive is
+/// and how it was recovered, whose its contents are, and the blog's
+/// original address.
+struct LineBlogInfoSheet: View {
     let originalBlogURL: URL
 
+    @Environment(\.dismiss) private var dismiss
+
     var body: some View {
-        VStack(alignment: .leading, spacing: 10) {
-            Text(.LineBlog.introBody)
-                .font(.subheadline)
-            Text(.LineBlog.rightsNotice)
-                .font(.footnote)
-                .foregroundStyle(.secondary)
-            if let url = LineBlogLinkTarget.outsideURL(originalBlogURL) {
-                LineBlogProvenanceLink(title: .LineBlog.originalBlogAddress, url: url)
+        NavigationStack {
+            List {
+                Section {
+                    Text(.LineBlog.introBody)
+                    Text(.LineBlog.commentsNote)
+                    if let url = LineBlogLinkTarget.outsideURL(originalBlogURL) {
+                        LineBlogProvenanceLink(title: .LineBlog.originalBlogAddress, url: url)
+                    }
+                } footer: {
+                    Text(.LineBlog.rightsNotice)
+                }
+            }
+            .navigationTitle(.LineBlog.info)
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button(role: .close) {
+                        dismiss()
+                    }
+                }
             }
         }
-        .padding(.vertical, 4)
+        .presentationDetents([.medium, .large])
     }
+}
+
+#Preview {
+    Color.clear
+        .sheet(isPresented: .constant(true)) {
+            LineBlogInfoSheet(originalBlogURL: URL(string: "https://lineblog.me/example/")!)
+        }
 }

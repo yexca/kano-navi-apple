@@ -15,17 +15,6 @@ struct LineBlogCommentsList: View {
                 }
             }
 
-            Section {
-                VStack(alignment: .leading, spacing: 8) {
-                    Text(.LineBlog.commentsNote)
-                        .font(.subheadline)
-                    Text(.LineBlog.rightsNotice)
-                        .font(.footnote)
-                        .foregroundStyle(.secondary)
-                }
-                .padding(.vertical, 4)
-            }
-
             if comments.isEmpty {
                 Section {
                     ContentUnavailableView {
@@ -34,8 +23,6 @@ struct LineBlogCommentsList: View {
                         } icon: {
                             Image(systemName: "bubble.left")
                         }
-                    } description: {
-                        Text(.LineBlog.commentsNone)
                     }
                 }
             } else {

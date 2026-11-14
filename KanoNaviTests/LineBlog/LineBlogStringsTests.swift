@@ -33,7 +33,7 @@ struct LineBlogStringsTests {
     @Test func anUnknownRecoveryCodeGetsANeutralNote() {
         #expect(
             resolved(LineBlogRecoveryNote.text(for: .unknown("later-code")), "en")
-                == "This picture was added after the archive was recovered.")
+                == "Added after recovery")
     }
 
     @Test func tableResolvesInEachLanguage() {

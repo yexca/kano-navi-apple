@@ -42,7 +42,7 @@ struct LineBlogArticleContent: View {
 
                 LineBlogArticleHeader(
                     title: LineBlogTitle(response.post.title, translation: translation),
-                    published: response.post.published, showsTranslationNote: translation != nil
+                    published: response.post.published, showsTranslationMark: translation != nil
                 )
                 .padding(.bottom, 6)
 

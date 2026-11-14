@@ -53,9 +53,6 @@ struct LineBlogArticleFooter: View {
                 if let url = LineBlogLinkTarget.outsideURL(response.post.archiveURL) {
                     LineBlogProvenanceLink(title: .LineBlog.archivedCapture, url: url)
                 }
-                Text(.LineBlog.sourcesNote)
-                    .font(.footnote)
-                    .foregroundStyle(.secondary)
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
