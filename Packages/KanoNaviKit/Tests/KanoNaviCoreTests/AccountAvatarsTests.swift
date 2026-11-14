@@ -38,7 +38,8 @@ struct AccountAvatarsTests {
     }
 
     @Test func entryHiddenNullAndMissingKeyStayDistinct() throws {
-        let dashboard = try JSONDecoder.kanoNavi().decode(Dashboard.self, from: dashboardBody(avatars: avatars))
+        let dashboard = try JSONDecoder.kanoNavi().decode(
+            Dashboard.self, from: dashboardBody(avatars: avatars))
         let map = try #require(dashboard.accountAvatars)
 
         #expect(map["x:kano_example"] == .some(URL(string: "/media/account-avatar/x/kano_example?v=2")))
