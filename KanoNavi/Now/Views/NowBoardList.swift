@@ -67,6 +67,7 @@ struct NowBoardList: View {
                 NowFreshnessFooter(freshness: board.freshness, fetchedAt: fetchedAt, now: now)
             }
         }
+        .readableContentWidth()
         // Only real changes move rows, and they move quietly: a banner for a
         // failed refresh, or Coming Up entries that differ from the cached
         // ones. An identical read publishes nothing.

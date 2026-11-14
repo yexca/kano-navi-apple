@@ -31,6 +31,7 @@ struct ScheduleEventDetailView: View {
                 sourceSection
             }
             .listStyle(.insetGrouped)
+            .readableContentWidth()
             .navigationTitle(.Schedule.detailTitle)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {

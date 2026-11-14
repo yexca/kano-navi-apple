@@ -44,6 +44,7 @@ struct WorksReleaseDetail: View {
 
             WorksStoreSection(listings: release.stores)
         }
+        .readableContentWidth()
         .refreshable {
             await reload()
         }

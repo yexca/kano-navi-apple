@@ -36,6 +36,7 @@ struct LineBlogCommentsList: View {
             }
         }
         .listStyle(.insetGrouped)
+        .readableContentWidth()
         .refreshable {
             await reload()
         }

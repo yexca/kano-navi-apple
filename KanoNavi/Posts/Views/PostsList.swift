@@ -34,6 +34,7 @@ struct PostsList: View {
             }
         }
         .listStyle(.insetGrouped)
+        .readableContentWidth()
         // The images at the top are drawn on the first frame when the disk
         // cache has them.
         .environment(\.mediaImageDecodesCachedFilesAtOnce, true)

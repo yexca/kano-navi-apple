@@ -37,6 +37,7 @@ struct VideoTimelineScreen: View {
             }
             .scrollTargetLayout()
         }
+        .readableContentWidth()
         // Reports only when a video comes on or goes off screen, and sets
         // the state only when the top section changes. The feed runs under
         // the navigation bar, so a video counts while 30% of it shows: about
