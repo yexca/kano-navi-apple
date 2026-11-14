@@ -293,7 +293,22 @@ or its comments. It is generic over an `APIRequest` and built on
 
 ## Screens
 
-The app is a `TabView` with five tabs.
+The app is a `TabView` with five tabs, on iPhone and iPad. On iPhone they
+are a tab bar. On iPad the tab view is sidebar-adaptable: a wide window shows
+the tabs in a sidebar and a narrower one in a bar at the top, and the
+sidebar button switches between the two. A link, a notification or a
+button that opens another tab selects it the same way in either.
+
+On a wide iPad window, screens for reading keep their content in a centred
+column instead of stretching across the window: `readableContentWidth()`
+(`Shared/`) pads the sides of a list or scroll view when it is wider than
+672 pt, a width that grows with the text size. These are the Now board, the
+recent and archived posts, the video timeline, an entry's details, the
+Journey timeline and milestones, the Works release and participation pages,
+and LINE BLOG articles and comments. Lists of rows such as More, Works and
+the LINE BLOG index, grids, the Schedule months and the image viewer use the
+whole width. An iPad window can be resized freely and turned to any
+orientation; every screen adapts to its width.
 
 1. **Now** — from top to bottom (below the failure notice, when there is
    one):
@@ -889,8 +904,9 @@ permission is requested only when the user turns on **Allow Notifications** in
 
 `KanoNaviWidgets` holds the calendar widgets, the app's one required feature.
 
-- **Upcoming** (`systemSmall`, `systemMedium`, `systemLarge`) leads with the
-  live entry, or else the next one that is not cancelled:
+- **Upcoming** (`systemSmall`, `systemMedium`, `systemLarge`,
+  `systemExtraLarge`) leads with the live entry, or else the next one that is
+  not cancelled:
   - Small shows a state capsule ("● Live" on red, or "Next"), a countdown to
     an entry later today or the day of a later one, the title in up to three
     lines and the large time with "JST", or "Ends" and the time a live entry
@@ -900,10 +916,15 @@ permission is requested only when the user turns on **Allow Notifications** in
   - Large shows a header with the avatar, "This Week" and the JST date range;
     a strip of the seven Japan days from today, today filled and a dot in its
     tag color under each day for each of its first three entries; a card for the lead entry; and the week's other
-    entries under compact day headings. Days without entries appear only in
-    the strip.
-  - At accessibility text sizes medium and large list the next entries by
-    day instead, each time above its title, under an "Upcoming" header.
+    entries under compact day headings, as many whole rows as fit, so the
+    shorter large widget on an iPad mini lists fewer. Days without entries
+    appear only in the strip.
+  - Extra large, on iPad, has large's header and strip across its width,
+    then the lead entry's card beside the week's other entries, which get
+    the height of both.
+  - At accessibility text sizes medium, large and extra large list the next
+    entries by day instead, each time above its title, under an "Upcoming"
+    header.
 - **Lock Screen** (`accessoryRectangular`, `accessoryInline`): the next entry
   and its time. The rectangular layout has three fixed lines, so its text
   stops growing at the `xxxLarge` Dynamic Type size.
@@ -945,8 +966,8 @@ permission is requested only when the user turns on **Allow Notifications** in
   struck through or marked, with their state in words.
 - No official logos or branding, and no artwork beyond the app icon, which is
   the web board's avatar. The widget extension bundles its own small copy of
-  that artwork for the large widget's header. Media from the API is shown as
-  the API serves it.
+  that artwork for the header of the large and extra-large widgets. Media
+  from the API is shown as the API serves it.
 - Every screen works at the largest accessibility text size; rows wrap rather
   than truncate important times.
 
