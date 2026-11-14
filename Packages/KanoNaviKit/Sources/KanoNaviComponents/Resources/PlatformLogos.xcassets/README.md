@@ -7,6 +7,9 @@ releases its SVG data under [CC0 1.0](https://github.com/simple-icons/simple-ico
 the logos themselves are trademarks of their owners and only mark links to
 and names of those platforms.
 
-Each `.symbolset` holds one Regular-M glyph: the 24-unit icon box scaled to 88
-units at the 100 pt reference size, centered between the baseline and the
-cap line.
+Each `.symbolset` holds the Ultralight-S, Regular-S and Black-S sources the
+system interpolates every weight and scale from; a symbol without them draws
+nothing at the small or large scale, which buttons use at accessibility text
+sizes. Each source is the same glyph, since a logo has one weight: the 24-unit
+icon box scaled to 68.6 units at the 100 pt reference size (88 units at the
+medium scale), centered between the baseline and the cap line.
