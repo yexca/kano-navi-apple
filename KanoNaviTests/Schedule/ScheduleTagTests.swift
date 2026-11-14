@@ -1,3 +1,4 @@
+import KanoNaviComponents
 import KanoNaviCore
 import SwiftUI
 import Testing
@@ -5,8 +6,9 @@ import UIKit
 
 @testable import KanoNavi
 
-/// Entries take their color from `view.typeCode`, and Details titles stay
-/// readable on their tag's tint in both appearances.
+/// Entries take their color from `view.typeCode`, and their text stays
+/// readable on the Details tint and on the widgets' backgrounds in both
+/// appearances.
 @MainActor
 struct ScheduleTagTests {
     @Test(arguments: [
@@ -31,13 +33,27 @@ struct ScheduleTagTests {
         #expect(ScheduleTag(event: bare) == .other)
     }
 
-    @Test func streamsUseTheAppsBerry() {
-        #expect(ScheduleTag.stream.colorResource == .journeyBerry)
+    @Test(arguments: [UIUserInterfaceStyle.light, .dark])
+    func streamsUseTheAppsBerry(_ style: UIUserInterfaceStyle) {
+        let traits = UITraitCollection(userInterfaceStyle: style)
+        let berry = components(UIColor(resource: .journeyBerry).resolvedColor(with: traits))
+
+        #expect(rounded(rgb(of: .stream, style)) == rounded(berry))
+    }
+
+    @Test(arguments: [EventState.done, .cancelled])
+    func overOrCalledOffEntriesFade(_ state: EventState) {
+        #expect(ScheduleTag.isFaded(state))
+    }
+
+    @Test(arguments: [EventState.upcoming, .live, .open, .pending, .cancellationReview])
+    func currentEntriesKeepTheirColor(_ state: EventState) {
+        #expect(ScheduleTag.isFaded(state) == false)
     }
 
     @Test(arguments: [UIUserInterfaceStyle.light, .dark])
     func everyTagHasItsOwnColor(_ style: UIUserInterfaceStyle) {
-        let colors = ScheduleTag.allCases.map { rgb(of: $0, style).map { ($0 * 255).rounded() } }
+        let colors = ScheduleTag.allCases.map { rounded(rgb(of: $0, style)) }
         #expect(Set(colors).count == ScheduleTag.allCases.count)
     }
 
@@ -51,9 +67,33 @@ struct ScheduleTagTests {
         #expect(contrast(text, tint) >= 4.5)
     }
 
+    /// The widgets' light cream and pink, and dark plum backgrounds.
+    @Test(
+        arguments: ScheduleTag.allCases,
+        [
+            (UIUserInterfaceStyle.light, ["FDF9F6", "FBEAEE"]), (.dark, ["16121C", "241A2C"]),
+        ])
+    func tagTextIsReadableOnTheWidgetBackgrounds(
+        _ tag: ScheduleTag, _ appearance: (UIUserInterfaceStyle, [String])
+    ) {
+        let text = rgb(of: tag, appearance.0)
+        for hex in appearance.1 {
+            #expect(contrast(text, srgb(hex)) >= 4.5, "\(tag) on #\(hex)")
+        }
+    }
+
     private func rgb(of tag: ScheduleTag, _ style: UIUserInterfaceStyle) -> [Double] {
         let traits = UITraitCollection(userInterfaceStyle: style)
-        return components(UIColor(resource: tag.colorResource).resolvedColor(with: traits))
+        return components(UIColor(tag.color).resolvedColor(with: traits))
+    }
+
+    private func rounded(_ color: [Double]) -> [Double] {
+        color.map { ($0 * 255).rounded() }
+    }
+
+    private func srgb(_ hex: String) -> [Double] {
+        let value = Int(hex, radix: 16) ?? 0
+        return [16, 8, 0].map { Double((value >> $0) & 0xFF) / 255 }
     }
 
     private func components(_ color: UIColor) -> [Double] {
