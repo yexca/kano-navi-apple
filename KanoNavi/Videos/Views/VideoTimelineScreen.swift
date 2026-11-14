@@ -42,7 +42,7 @@ struct VideoTimelineScreen: View {
         // the state only when the top section changes. The feed runs under
         // the navigation bar, so a video counts while 30% of it shows: about
         // until it slides under the bar.
-        .onScrollTargetVisibilityChange(idType: VideoTimelineSlot.self, threshold: 0.3) { slots in
+        .onScrollTargetVisibilityChange(idType: TimelineSlot.self, threshold: 0.3) { slots in
             guard let id = VideoTimelineSection.topID(of: model.sections, visible: slots),
                 id != topSectionID
             else { return }

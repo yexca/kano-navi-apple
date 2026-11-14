@@ -6,7 +6,7 @@ import SwiftUI
 /// section has no header, since the navigation subtitle names the section at
 /// the top; each later one opens with its name, which scrolls with the
 /// videos. Each item spans the width less the standard margins and is
-/// identified by its `VideoTimelineSlot`.
+/// identified by its `TimelineSlot`.
 struct VideoTimelineItems: View {
     let model: VideoTimelineModel
 
@@ -22,7 +22,7 @@ struct VideoTimelineItems: View {
                             // About 16 points between items, as a feed.
                             .padding(.horizontal)
                             .padding(.vertical, 8)
-                            .id(VideoTimelineSlot(sectionID: section.id, cardID: card.id))
+                            .id(TimelineSlot(sectionID: section.id, itemID: card.id))
                     }
                 } header: {
                     if section.id != sections.first?.id {
