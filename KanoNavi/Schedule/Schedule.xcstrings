@@ -530,25 +530,25 @@
       }
     },
     "noEntries": {
-      "comment": "Shown below the calendar when the selected day has no entries.",
+      "comment": "Shown in the middle of the day's list when the selected day has no entries.",
       "extractionState": "manual",
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "No entries on this day."
+            "value": "No Entries"
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "この日の予定はありません。"
+            "value": "予定なし"
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "这一天没有日程。"
+            "value": "没有日程"
           }
         }
       }

@@ -15,6 +15,9 @@ nonisolated enum ScheduleMode: String, CaseIterable, Identifiable {
     /// The mode before one is chosen.
     static let defaultMode = ScheduleMode.list
 
+    /// The modes that scroll months vertically, in Calendar's menu order.
+    static let gridModes: [ScheduleMode] = [.compact, .stacked, .details]
+
     var id: Self { self }
 
     var title: LocalizedStringResource {

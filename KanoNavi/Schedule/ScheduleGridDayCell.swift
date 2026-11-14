@@ -2,16 +2,16 @@ import KanoNaviComponents
 import KanoNaviCore
 import SwiftUI
 
-/// One day of a vertically scrolling month: its number, today in a filled
-/// circle, and its entries in the tag colors, as dots (Compact), bars
-/// (Stacked) or one-line titles (Details), with "+n" past what fits.
-/// Tapping it opens the day in the List mode.
-struct ScheduleGridDayCell: View {
+/// One day of a vertically scrolling month: a hairline above, its number
+/// (gray on weekends, white in a tint circle for today), and its entries in
+/// the tag colors, as dots (Compact), bars (Stacked) or one-line titles
+/// (Details), with "+n" past what fits. Tapping it opens the day in the List
+/// mode. Takes plain values and compares equal without its action.
+struct ScheduleGridDayCell: View, Equatable {
     let date: JapanDate
     let isToday: Bool
-    let entries: [ScheduleDayEntry]
+    let marks: [ScheduleDayMark]
     let style: ScheduleMode
-    let contentLanguage: ContentLanguage
     let action: () -> Void
 
     @Environment(\.locale) private var locale
@@ -19,6 +19,11 @@ struct ScheduleGridDayCell: View {
     @ScaledMetric(relativeTo: .subheadline) private var compactHeight = 62.0
     @ScaledMetric(relativeTo: .subheadline) private var tallHeight = 92.0
     @ScaledMetric(relativeTo: .caption2) private var barHeight = 6.0
+
+    nonisolated static func == (lhs: Self, rhs: Self) -> Bool {
+        lhs.date == rhs.date && lhs.isToday == rhs.isToday && lhs.marks == rhs.marks
+            && lhs.style == rhs.style
+    }
 
     var body: some View {
         Button(action: action) {
@@ -28,14 +33,14 @@ struct ScheduleGridDayCell: View {
                     .monospacedDigit()
                     .lineLimit(1)
                     .minimumScaleFactor(0.6)
-                    .foregroundStyle(isToday ? AnyShapeStyle(.white) : AnyShapeStyle(.primary))
+                    .foregroundStyle(numberStyle)
                     .frame(width: circleSize, height: circleSize)
                     .background {
                         if isToday {
                             Circle().fill(.tint)
                         }
                     }
-                marks
+                content
             }
             .frame(
                 maxWidth: .infinity, minHeight: style == .compact ? compactHeight : tallHeight,
@@ -43,36 +48,48 @@ struct ScheduleGridDayCell: View {
             )
             .padding(.horizontal, 3)
             .padding(.vertical, 4)
+            .overlay(alignment: .top) {
+                ScheduleHairline()
+            }
             .contentShape(.rect)
         }
         .buttonStyle(.plain)
         .accessibilityLabel(accessibilityLabel)
-        .accessibilityValue(
-            entries.isEmpty ? Text(verbatim: "") : Text(.Schedule.dayEntryCount(entries.count)))
+        .accessibilityValue(marks.isEmpty ? Text(verbatim: "") : Text(.Schedule.dayEntryCount(marks.count)))
+    }
+
+    private var numberStyle: AnyShapeStyle {
+        if isToday {
+            AnyShapeStyle(.white)
+        } else if date.isWeekend {
+            AnyShapeStyle(.secondary)
+        } else {
+            AnyShapeStyle(.primary)
+        }
     }
 
     @ViewBuilder
-    private var marks: some View {
-        let marks = style.marks(forEntryCount: entries.count)
-        let shown = entries.prefix(marks.shown)
+    private var content: some View {
+        let shape = style.marks(forEntryCount: marks.count)
+        let shown = marks.prefix(shape.shown)
         switch style {
         case .list, .compact:
-            ScheduleDayDots(entries: entries, capacity: style.markCapacity)
+            ScheduleDayDots(marks: marks, capacity: style.markCapacity)
         case .stacked:
             VStack(spacing: 3) {
-                ForEach(shown) { item in
+                ForEach(shown) { mark in
                     Capsule()
-                        .fill(color(of: item))
+                        .fill(mark.tag.color.opacity(mark.isFaded ? ScheduleTag.fadedOpacity : 1))
                         .frame(height: barHeight)
                 }
-                more(marks.more)
+                more(shape.more)
             }
         case .details:
             VStack(alignment: .leading, spacing: 2) {
-                ForEach(shown) { item in
-                    ScheduleGridEntryTitle(item: item, contentLanguage: contentLanguage)
+                ForEach(shown) { mark in
+                    ScheduleGridEntryTitle(mark: mark)
                 }
-                more(marks.more)
+                more(shape.more)
             }
         }
     }
@@ -85,13 +102,8 @@ struct ScheduleGridDayCell: View {
                 .foregroundStyle(.secondary)
                 .lineLimit(1)
                 .fixedSize()
-                .frame(maxWidth: style == .compact ? nil : .infinity, alignment: .leading)
+                .frame(maxWidth: .infinity, alignment: .leading)
         }
-    }
-
-    private func color(of item: ScheduleDayEntry) -> Color {
-        ScheduleTag(event: item.event).color
-            .opacity(item.event.isFadedInSchedule ? ScheduleTag.fadedOpacity : 1)
     }
 
     private var accessibilityLabel: Text {

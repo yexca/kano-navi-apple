@@ -3,12 +3,10 @@ import SwiftUI
 
 /// A day's entries as one dot each in its tag color, faded when done or
 /// cancelled, with "+n" past `capacity`. A cell too narrow for that row
-/// drops dots before it would cut "+n" short. Muted dots, for the days of
-/// the months around the one on screen, are all gray.
+/// drops dots before it would cut "+n" short.
 struct ScheduleDayDots: View {
-    let entries: [ScheduleDayEntry]
+    let marks: [ScheduleDayMark]
     let capacity: Int
-    var isMuted = false
 
     @ScaledMetric(relativeTo: .caption2) private var dotSize = 6.0
 
@@ -21,29 +19,20 @@ struct ScheduleDayDots: View {
     }
 
     private func row(capacity: Int) -> some View {
-        let marks = ScheduleMode.marks(forEntryCount: entries.count, capacity: capacity)
+        let shape = ScheduleMode.marks(forEntryCount: marks.count, capacity: capacity)
         return HStack(spacing: 2) {
-            ForEach(entries.prefix(marks.shown)) { item in
+            ForEach(marks.prefix(shape.shown)) { mark in
                 Circle()
-                    .fill(color(of: item))
+                    .fill(mark.tag.color.opacity(mark.isFaded ? ScheduleTag.fadedOpacity : 1))
                     .frame(width: dotSize, height: dotSize)
             }
-            if marks.more > 0 {
-                Text(.Schedule.moreEntries(marks.more))
+            if shape.more > 0 {
+                Text(.Schedule.moreEntries(shape.more))
                     .font(.caption2.weight(.medium))
-                    .foregroundStyle(isMuted ? .tertiary : .secondary)
+                    .foregroundStyle(.secondary)
                     .lineLimit(1)
                     .fixedSize()
             }
         }
-    }
-
-    private func color(of item: ScheduleDayEntry) -> AnyShapeStyle {
-        if isMuted {
-            return AnyShapeStyle(.tertiary)
-        }
-        return AnyShapeStyle(
-            ScheduleTag(event: item.event).color
-                .opacity(item.event.isFadedInSchedule ? ScheduleTag.fadedOpacity : 1))
     }
 }
