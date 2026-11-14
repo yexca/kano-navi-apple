@@ -30,6 +30,8 @@ actor MediaImageLoader {
 
     /// Images decoded earlier, readable without waiting for the loader.
     nonisolated let memory: MediaImageMemoryCache
+    /// The fetched files on disk, or `nil` for a loader without one.
+    nonisolated private let diskCache: URLCache?
 
     private let fetch: Fetch
     private var loads: [String: Load] = [:]
@@ -39,15 +41,19 @@ actor MediaImageLoader {
     /// A loader that fetches with `session`.
     init(session: URLSession, memoryCostLimit: Int = defaultMemoryCostLimit) {
         let download = MediaImageDownload(session: session)
-        self.init(memoryCostLimit: memoryCostLimit) { url in
+        self.init(memoryCostLimit: memoryCostLimit, diskCache: session.configuration.urlCache) { url in
             try await download.data(from: url)
         }
     }
 
-    /// A loader that fetches with `fetch`, for tests.
-    init(memoryCostLimit: Int = defaultMemoryCostLimit, fetch: @escaping Fetch) {
+    /// A loader that fetches with `fetch`, for tests, reading `diskCache`
+    /// for `cachedImage(for:decodingFromDisk:)`.
+    init(
+        memoryCostLimit: Int = defaultMemoryCostLimit, diskCache: URLCache? = nil, fetch: @escaping Fetch
+    ) {
         let memory = MediaImageMemoryCache(costLimit: memoryCostLimit)
         self.memory = memory
+        self.diskCache = diskCache
         self.fetch = fetch
         memoryPressure = DispatchSource.makeMemoryPressureSource(
             eventMask: [.warning, .critical], queue: .global(qos: .utility))
@@ -80,6 +86,30 @@ actor MediaImageLoader {
         leave(waiter: waiter, key: key, loadID: load.id)
         try Task.checkCancellation()
         return try result.get()
+    }
+
+    /// The image for `request` when it is there without the network: in
+    /// memory, or, with `decodingFromDisk`, decoded now on the caller's
+    /// thread from a file the disk cache holds, and kept in memory from
+    /// then on.
+    ///
+    /// The disk read and the decode cost the calling thread a few
+    /// milliseconds, so a view asks for them only for an image that must be
+    /// on its screen's first frame. Returns `nil` otherwise, leaving the
+    /// load to `image(for:)`.
+    nonisolated func cachedImage(for request: MediaImageRequest, decodingFromDisk: Bool) -> CGImage? {
+        if let image = memory.image(for: request) {
+            return image
+        }
+        guard decodingFromDisk, let diskCache,
+            let cached = diskCache.cachedResponse(for: MediaImageDownload.request(for: request.url)),
+            let response = cached.response as? HTTPURLResponse, (200...299).contains(response.statusCode),
+            let image = try? MediaImageDecoder.image(from: cached.data, for: request)
+        else {
+            return nil
+        }
+        memory.insert(image, for: request)
+        return image
     }
 
     /// How many tasks wait for `request` now, for tests.

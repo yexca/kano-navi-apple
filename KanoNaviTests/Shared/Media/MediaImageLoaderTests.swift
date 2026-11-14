@@ -99,6 +99,33 @@ struct MediaImageLoaderTests {
         #expect(server.requests(to: url).count == 1)
     }
 
+    @Test func cachedImageDecodesAFileTheDiskCacheHoldsOnlyWhenAsked() throws {
+        let url = F.uniqueURL()
+        let disk = URLCache(memoryCapacity: 1024 * 1024, diskCapacity: 0)
+        let response = try #require(
+            HTTPURLResponse(url: url, statusCode: 200, httpVersion: nil, headerFields: nil))
+        disk.storeCachedResponse(
+            CachedURLResponse(response: response, data: F.png(width: 400, height: 200)),
+            for: MediaImageDownload.request(for: url))
+        let loader = MediaImageLoader(diskCache: disk) { _ in throw MediaImageError.failed }
+        let request = F.request(url, width: 100, height: 50)
+
+        #expect(loader.cachedImage(for: request, decodingFromDisk: false) == nil)
+
+        let image = try #require(loader.cachedImage(for: request, decodingFromDisk: true))
+        #expect(image.width == 100)
+        #expect(loader.memory.image(for: request) === image)
+    }
+
+    @Test func cachedImageIsNilForAFileNotCached() {
+        let loader = MediaImageLoader(diskCache: URLCache(memoryCapacity: 1024 * 1024, diskCapacity: 0)) {
+            _ in
+            throw MediaImageError.failed
+        }
+
+        #expect(loader.cachedImage(for: F.request(F.uniqueURL()), decodingFromDisk: true) == nil)
+    }
+
     @Test func addressThatIsNotHTTPSIsNeverFetched() async throws {
         let url = try #require(URL(string: "http://example.com/media/journey/\(UUID().uuidString).png"))
 
