@@ -265,6 +265,102 @@
         }
       }
     },
+    "filterEmpty": {
+      "comment": "Shown when the video shelf's filter matches no video.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No videos match."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "該当する動画はありません。"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "没有符合的视频。"
+          }
+        }
+      }
+    },
+    "kindFilter": {
+      "comment": "VoiceOver label of the video shelf's kind filter.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Filter by kind"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "種類で絞り込む"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "按种类筛选"
+          }
+        }
+      }
+    },
+    "kindStreams": {
+      "comment": "Video shelf filter choice: live streams, stream reservations and stream archives.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Streams"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "配信"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "直播"
+          }
+        }
+      }
+    },
+    "kindVideos": {
+      "comment": "Video shelf filter choice: uploaded videos and premieres.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Videos"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "動画"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "视频"
+          }
+        }
+      }
+    },
     "latestWork": {
       "comment": "Header of the shelf's lead when it is the newest work.",
       "extractionState": "manual",
@@ -309,6 +405,30 @@
           "stringUnit": {
             "state": "translated",
             "value": "历史视频"
+          }
+        }
+      }
+    },
+    "platform": {
+      "comment": "Label of the video shelf's platform menu, which shows all platforms, YouTube or Bilibili.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Platform"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "プラットフォーム"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "平台"
           }
         }
       }

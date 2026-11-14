@@ -19,6 +19,8 @@ struct VideoCard: Equatable, Identifiable {
     var links: [NowLink]
     /// Whether the video is a Short, drawn as a vertical card.
     var isShort: Bool
+    /// The shelf filter's kind for the video's form.
+    var kind: VideoShelfKind
     var durationSeconds: Int?
 
     init(video: Video) {
@@ -38,12 +40,29 @@ struct VideoCard: Equatable, Identifiable {
         }
         links = [own] + alternates.filter { $0.url != video.url }
         isShort = video.view?.formCode == .short || video.isShort == true
+        kind = VideoShelfKind(video: video)
         durationSeconds = video.durationSeconds
     }
 
     /// The form to show: none while a status mark says more.
     var shownFormCode: VideoFormCode? {
         status == nil ? formCode : nil
+    }
+
+    /// Whether the video, or one of its alternates, is on a platform.
+    func isOn(_ platform: VideoShelfPlatform) -> Bool {
+        links.contains { $0.destination == .platform(platform.platform) }
+    }
+
+    /// The card with its first link to a platform moved to the front, so the
+    /// card opens that page; unchanged when it has none.
+    func leading(with platform: VideoShelfPlatform) -> VideoCard {
+        guard let index = links.firstIndex(where: { $0.destination == .platform(platform.platform) }) else {
+            return self
+        }
+        var card = self
+        card.links.insert(card.links.remove(at: index), at: 0)
+        return card
     }
 
     /// The length as the platforms show it, such as `4:49` or `2:01:05`, or
