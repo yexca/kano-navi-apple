@@ -13,8 +13,7 @@ struct WorksParticipationPage: View {
                 WorksParticipationDetail(work: work, notice: model.notice, reload: model.reload)
             } else {
                 WorksNotFoundView(
-                    title: .Works.workNotFoundTitle, message: .Works.workNotFoundMessage,
-                    isLoading: model.phase == .loading, notice: model.notice, reload: model.reload)
+                    title: .Works.workNotFoundTitle, isLoading: model.phase == .loading, notice: model.notice, reload: model.reload)
             }
         }
         .navigationBarTitleDisplayMode(.inline)

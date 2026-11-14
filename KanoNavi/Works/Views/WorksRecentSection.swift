@@ -22,12 +22,7 @@ struct WorksRecentSection: View {
         } header: {
             Text(.Works.recentTitle)
         } footer: {
-            VStack(alignment: .leading, spacing: 2) {
-                Text(.Works.recentSince(WorksDateFormat.date(recent.since, locale: locale), recent.total))
-                if recent.unlistedCount > 0 {
-                    Text(.Works.recentLimit(recent.videos.count))
-                }
-            }
+            Text(.Works.recentSince(WorksDateFormat.date(recent.since, locale: locale), recent.total))
         }
     }
 

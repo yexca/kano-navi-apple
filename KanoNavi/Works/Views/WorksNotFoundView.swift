@@ -4,7 +4,6 @@ import SwiftUI
 /// screen was opened with, such as a link to a release that was renamed.
 struct WorksNotFoundView: View {
     let title: LocalizedStringResource
-    let message: LocalizedStringResource
     /// Whether the collection is being read now. The copy on screen may be
     /// older than the link that led here, so the screen waits for the read
     /// before saying the item is missing.
@@ -28,8 +27,6 @@ struct WorksNotFoundView: View {
                 } icon: {
                     Image(systemName: "questionmark.folder")
                 }
-            } description: {
-                Text(message)
             } actions: {
                 Button(.Document.retry, action: retry)
             }

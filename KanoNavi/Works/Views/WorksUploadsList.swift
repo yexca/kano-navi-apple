@@ -7,7 +7,6 @@ struct WorksUploadsList: View {
     let catalog: WorksUploadCatalog
     /// The videos newer than the collection; `nil` without any or while searching.
     let recent: WorksRecentUploads?
-    let updatedAt: JapanDate
     @Binding var kind: String?
     let order: WorksOrder
     /// Whether a search query narrows the catalog.
@@ -16,8 +15,6 @@ struct WorksUploadsList: View {
     /// Why the covers and newer videos are not a fresh read.
     let storedNotice: DocumentNotice?
     let reload: () async -> Void
-
-    @Environment(\.locale) private var locale
 
     var body: some View {
         let groups = catalog.groups(kind: kind, order: order)
@@ -56,14 +53,12 @@ struct WorksUploadsList: View {
                 }
             }
 
-            Section {
-                if let empty = WorksUploadsEmptyState(
-                    isEmpty: groups.isEmpty, isSearching: isSearching, kind: kind)
-                {
+            if let empty = WorksUploadsEmptyState(
+                isEmpty: groups.isEmpty, isSearching: isSearching, kind: kind)
+            {
+                Section {
                     WorksUploadsEmptyView(state: empty)
                 }
-            } footer: {
-                Text(.Works.uploadsUpdatedThrough(WorksDateFormat.date(updatedAt, locale: locale)))
             }
         }
         .refreshable {
@@ -78,7 +73,6 @@ struct WorksUploadsList: View {
         WorksUploadsList(
             catalog: WorksUploadCatalog(list: WorksPreviewData.uploadList, stored: WorksPreviewData.uploads),
             recent: WorksRecentUploads(WorksPreviewData.uploads),
-            updatedAt: WorksPreviewData.uploadList.updatedAt,
             kind: $kind, order: .newestFirst, isSearching: false, listNotice: nil, storedNotice: .loadFailed
         ) {}
     }

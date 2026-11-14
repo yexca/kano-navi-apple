@@ -20,17 +20,17 @@ struct WorksRecentUploadsTests {
         #expect(recent.shown(expanded: false).map(\.id) == ["n1", "n2", "n3"])
         #expect(recent.shown(expanded: true).count == 5)
         #expect(recent.collapsedCount == 2)
-        #expect(recent.unlistedCount == 0)
+        #expect(recent.total == 5)
         #expect(recent.since == JapanDate(year: 2026, month: 11, day: 7))
     }
 
-    @Test func saysWhenTheServiceCountedMoreThanItSent() throws {
+    @Test func keepsTheTotalTheServiceCountedBeyondWhatItSent() throws {
         let stored = try WorksFixtures.stored(recent: [WorksFixtures.recent(id: "n1")], recentTotal: 60)
 
         let recent = try #require(WorksRecentUploads(stored))
 
         #expect(recent.total == 60)
-        #expect(recent.unlistedCount == 59)
+        #expect(recent.videos.count == 1)
         #expect(recent.collapsedCount == 0)
     }
 
@@ -41,7 +41,6 @@ struct WorksRecentUploadsTests {
         let recent = try #require(WorksRecentUploads(stored))
 
         #expect(recent.total == 2)
-        #expect(recent.unlistedCount == 0)
     }
 
     @Test func aVideoWithoutATimeOrCoverStillDecodes() throws {
