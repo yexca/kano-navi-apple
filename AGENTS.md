@@ -84,8 +84,8 @@ or model providers itself, and never calls admin or MCP control endpoints.
 ## UI and Test Contracts
 
 - Keep the interface concise. Prefer a label, an icon or a short phrase to a
-  sentence. A link to another platform is its logo and name (YouTube, X,
-  Bilibili), not "Open on …". Explanations few people need, such as data
+  sentence. A link to another platform is its logo and name (YouTube,
+  Bilibili; X's logo alone, since it is the name), not "Open on …". Explanations few people need, such as data
   provenance, curation notes, rights notices or how a screen works, are left
   out or folded behind a control such as an info button. Error, saved-copy
   and empty states stay, each in one short line.

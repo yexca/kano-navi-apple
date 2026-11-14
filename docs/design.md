@@ -308,8 +308,8 @@ The app is a `TabView` with five tabs.
    X; a Bilibili account by its platform, never its mid), JST time, text in
    the content language with Show Original, the ready images (up to four,
    "+N" for the rest), the quoted post nested in it (a deleted or withheld
-   quote says so and still links to it) and a link to the post, shown as
-   the X or Bilibili logo and name.
+   quote says so and still links to it) and a link to the post: the X
+   logo alone, or the Bilibili logo and name.
    A promoted related-account post carries an Agency Post chip. Past Posts
    opens the month archive with the account filter: the dashboard's
    `xAccounts`, then its `bilibiliAccounts`.

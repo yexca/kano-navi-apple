@@ -3,8 +3,8 @@ import KanoNaviCore
 import SwiftUI
 
 /// One post: who wrote it and when, its text in the content language, its
-/// images, the post it quotes and a button that opens the original, marked
-/// with its platform's logo and name.
+/// images, the post it quotes and a button that opens the original: the X
+/// logo alone, or the Bilibili logo and name.
 struct PostCardView: View {
     let card: PostCard
 
@@ -21,10 +21,21 @@ struct PostCardView: View {
                 PostQuoteView(quote: quote)
             }
             Button(action: open) {
-                Label {
-                    Text(card.isBilibili ? DisplayCodeLabels.platform(.bilibili) : .Posts.sourceX)
-                } icon: {
-                    (card.isBilibili ? PlatformLogo.bilibili : .x).image
+                if card.isBilibili {
+                    Label {
+                        Text(DisplayCodeLabels.platform(.bilibili))
+                    } icon: {
+                        PlatformLogo.bilibili.image
+                    }
+                } else {
+                    // X's logo is its name, so the logo stands alone;
+                    // VoiceOver still reads "X".
+                    Label {
+                        Text(.Posts.sourceX)
+                    } icon: {
+                        PlatformLogo.x.image
+                    }
+                    .labelStyle(.iconOnly)
                 }
             }
             .buttonStyle(.compactLink)
