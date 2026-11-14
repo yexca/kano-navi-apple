@@ -56,15 +56,17 @@ struct WorksUploadsList: View {
                 }
             }
         }
+        // On the scroll view alone: around the bar, the filter row's own
+        // scroll view would take a refresh control's room and hide its chips.
+        .refreshable {
+            await reload()
+        }
         .safeAreaBar(edge: .top) {
             // Outside the list, so the row scrolls from edge to edge.
             ArchiveFilterRow(options: catalog.options, selection: $kind, title: .Works.filterKind)
         }
         // A firm edge under the chips, so rows never show through them.
         .scrollEdgeEffectStyle(.hard, for: .top)
-        .refreshable {
-            await reload()
-        }
     }
 }
 

@@ -35,6 +35,9 @@ struct PostArchiveScreen: View {
             PostArchiveItems(model: model)
         }
         .listStyle(.insetGrouped)
+        // On the scroll view alone: around the bar, the filter row's own
+        // scroll view would take a refresh control's room and hide its chips.
+        .refreshable(action: model.refresh)
         .safeAreaBar(edge: .top) {
             if let index = model.index, index.months.isEmpty == false {
                 ArchiveFilterRow(
@@ -48,7 +51,6 @@ struct PostArchiveScreen: View {
         .scrollEdgeEffectStyle(.hard, for: .top)
         .navigationTitle(.Posts.archiveTitle)
         .navigationBarTitleDisplayMode(.inline)
-        .refreshable(action: model.refresh)
         .task(id: model.key) {
             await model.loadIfNeeded()
         }

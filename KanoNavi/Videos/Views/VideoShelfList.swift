@@ -65,6 +65,9 @@ struct VideoShelfList: View {
             }
         }
         .listStyle(.insetGrouped)
+        // On the scroll view alone: around the bar, the filter row's own
+        // scroll view would take a refresh control's room and hide its chips.
+        .refreshable(action: dashboard.refresh)
         .safeAreaBar(edge: .top) {
             if kindOptions.isEmpty == false || platforms.count > 1 {
                 VideoShelfFilterBar(
@@ -73,6 +76,8 @@ struct VideoShelfList: View {
         }
         // A firm edge under the chips, so cards never show through them.
         .scrollEdgeEffectStyle(.hard, for: .top)
+        // A large title would scroll under the pinned row's firm edge.
+        .navigationBarTitleDisplayMode(.inline)
         .onChange(of: filter) {
             // A choice the shelf no longer offers goes back to all.
             kind = filter.kind?.rawValue

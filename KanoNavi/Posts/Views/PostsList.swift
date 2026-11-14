@@ -48,6 +48,9 @@ struct PostsList: View {
             }
         }
         .listStyle(.insetGrouped)
+        // On the scroll view alone: around the bar, the filter row's own
+        // scroll view would take a refresh control's room and hide its chips.
+        .refreshable(action: dashboard.refresh)
         .safeAreaBar(edge: .top) {
             if cards.isEmpty == false {
                 ArchiveFilterRow(
@@ -57,6 +60,8 @@ struct PostsList: View {
         }
         // A firm edge under the chips, so posts never show through them.
         .scrollEdgeEffectStyle(.hard, for: .top)
+        // A large title would scroll under the pinned row's firm edge.
+        .navigationBarTitleDisplayMode(.inline)
         .onChange(of: accounts) {
             // An account the board no longer follows shows every post again.
             if let account, accounts.contains(where: { $0.code == account }) == false {

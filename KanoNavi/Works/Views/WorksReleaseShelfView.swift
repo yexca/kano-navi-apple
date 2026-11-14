@@ -35,15 +35,17 @@ struct WorksReleaseShelfView: View {
             }
             .padding(.vertical)
         }
+        // On the scroll view alone: around the bar, the filter row's own
+        // scroll view would take a refresh control's room and hide its chips.
+        .refreshable {
+            await reload()
+        }
         .safeAreaBar(edge: .top) {
             // Full width: the row scrolls from edge to edge and insets itself.
             ArchiveFilterRow(options: shelf.options, selection: $format, title: .Works.filterFormat)
         }
         // A firm edge under the chips, so covers never show through them.
         .scrollEdgeEffectStyle(.hard, for: .top)
-        .refreshable {
-            await reload()
-        }
     }
 }
 

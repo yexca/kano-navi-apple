@@ -26,7 +26,6 @@ struct PostsView: View {
     private var content: some View {
         if let snapshot = dashboard.snapshot {
             PostsList(snapshot: snapshot, dashboard: dashboard, showsArchive: services != nil)
-                .refreshable(action: dashboard.refresh)
         } else {
             DashboardUnavailableView(dashboard: dashboard) {
                 if services != nil {
