@@ -7,7 +7,7 @@ nonisolated enum ScheduleModeSwitch: Equatable {
     case instant
     /// A cross-fade, for Reduce Motion.
     case crossFade
-    /// From List to a grid mode: the month's weeks grow in place into the
+    /// From List to a grid mode: the month's days grow in place into the
     /// grid's, the next months fade in below and the day's entries slide
     /// away, then the grid, laid out the same, takes over.
     case expand(to: ScheduleMode)

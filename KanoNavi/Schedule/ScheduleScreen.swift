@@ -28,7 +28,6 @@ struct ScheduleScreen: View {
     @State private var waitingSwitch: (from: ScheduleMode, to: ScheduleMode)?
     /// Set by a deep link so its switch to List has no animation.
     @State private var switchesInstantly = false
-    @Namespace private var morph
     let feedURL: URL
 
     @Environment(AppRouter.self) private var router
@@ -102,7 +101,7 @@ struct ScheduleScreen: View {
             if displayedMode == .list {
                 ScheduleListContent(
                     model: model, contentLanguage: contentLanguage, open: open,
-                    expansion: expansion.map(gridStyle), morph: morph
+                    expansion: expansion.map(gridStyle)
                 )
                 .transition(.opacity)
             }
