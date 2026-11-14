@@ -1,46 +1,23 @@
 import KanoNaviCore
 import SwiftUI
 
-/// The Videos tab: the dashboard's video shelf and the month archive. See
-/// `docs/design.md`.
-///
-/// `RootView` starts and stops the dashboard store with the scene; this view
-/// only reads it and refreshes it on demand.
+/// The Videos tab: one timeline of every dated video, newest first, with the
+/// kind and platform filter at the leading end of the navigation bar and the
+/// month jump at its trailing end. See `docs/design.md`.
 struct VideosView: View {
-    @Environment(DashboardStore.self) private var dashboard
     @Environment(\.services) private var services
 
     var body: some View {
         NavigationStack {
-            content
-                .navigationTitle(.tabVideos)
-                .navigationDestination(for: VideosDestination.self) { _ in
-                    if let services {
-                        VideoArchiveScreen(client: services.client)
-                    }
-                }
-        }
-    }
-
-    @ViewBuilder
-    private var content: some View {
-        if let snapshot = dashboard.snapshot {
-            VideoShelfList(
-                shelf: VideoShelf(dashboard: snapshot), dashboard: dashboard, showsArchive: services != nil
-            )
-        } else {
-            DashboardUnavailableView(dashboard: dashboard) {
-                if services != nil {
-                    NavigationLink(value: VideosDestination.archive) {
-                        Text(.Videos.pastVideos)
-                    }
-                }
+            if let services {
+                VideoTimelineScreen(client: services.client)
             }
         }
     }
 }
 
 #Preview {
+    let client = APIClient(configuration: .main, cache: MemoryResponseCache())
     VideosView()
-        .environment(DashboardStore(client: APIClient(configuration: .main, cache: MemoryResponseCache())))
+        .environment(\.services, AppServices(client: client, calendar: CalendarReader(client: client)))
 }

@@ -1,7 +1,7 @@
 import Foundation
 import KanoNaviCore
 
-/// The kinds the video shelf's filter offers, in its order.
+/// The kinds the video timeline's filter offers, in its order.
 enum VideoShelfKind: String, CaseIterable, Identifiable {
     /// Broadcasts: stream reservations, live streams and stream archives.
     case streams

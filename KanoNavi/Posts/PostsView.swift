@@ -1,8 +1,9 @@
 import KanoNaviCore
 import SwiftUI
 
-/// The Posts tab: the dashboard's recent posts and the month archive. See
-/// `docs/design.md`.
+/// The Posts tab: the dashboard's recent posts, with the account filter at
+/// the leading end of the navigation bar and Past Posts, the month archive,
+/// at its trailing end. See `docs/design.md`.
 ///
 /// `RootView` starts and stops the dashboard store with the scene; this view
 /// only reads it and refreshes it on demand.
@@ -14,6 +15,20 @@ struct PostsView: View {
         NavigationStack {
             content
                 .navigationTitle(.tabPosts)
+                .toolbar {
+                    if services != nil {
+                        ToolbarItem(placement: .primaryAction) {
+                            NavigationLink(value: PostsDestination.archive) {
+                                Label {
+                                    Text(.Posts.pastPosts)
+                                } icon: {
+                                    Image(systemName: "clock.arrow.circlepath")
+                                }
+                            }
+                            .accessibilityIdentifier("posts.archive")
+                        }
+                    }
+                }
                 .navigationDestination(for: PostsDestination.self) { _ in
                     if let services {
                         PostArchiveScreen(client: services.client, meta: dashboard.snapshot?.meta)
@@ -25,15 +40,9 @@ struct PostsView: View {
     @ViewBuilder
     private var content: some View {
         if let snapshot = dashboard.snapshot {
-            PostsList(snapshot: snapshot, dashboard: dashboard, showsArchive: services != nil)
+            PostsList(snapshot: snapshot, dashboard: dashboard)
         } else {
-            DashboardUnavailableView(dashboard: dashboard) {
-                if services != nil {
-                    NavigationLink(value: PostsDestination.archive) {
-                        Text(.Posts.pastPosts)
-                    }
-                }
-            }
+            DashboardUnavailableView(dashboard: dashboard) {}
         }
     }
 }

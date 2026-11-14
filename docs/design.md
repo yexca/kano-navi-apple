@@ -135,13 +135,18 @@ Every screen keeps what it shows and says where it came from:
   "Couldn't update the schedule. Showing the copy from <JST date and time>"
   with Try Again; a failed reload of a month already on screen, or a first
   load with nothing cached, says so with Try Again.
-- **Videos** and **Posts** mark the shelf and the recent posts, which come
-  from the dashboard, with the same notices as Now. Their month archives keep
-  the month on screen when a read fails. A month read from the cache because
-  the service could not be read shows "Couldn't update this month. Showing the
-  copy from <JST date and time>" with Try Again; a failed reload of a month
-  already on screen, a first load with nothing cached, and a failed next page
-  (at the end of the list) each say so with Try Again.
+- **Posts** marks the recent posts, which come from the dashboard, with the
+  same notices as Now. The post archive keeps the month on screen when a read
+  fails. A month read from the cache because the service could not be read
+  shows "Couldn't update this month. Showing the copy from <JST date and
+  time>" with Try Again; a failed reload of a month already on screen, a
+  first load with nothing cached, and a failed next page (at the end of the
+  list) each say so with Try Again.
+- **Videos** keeps the timeline on screen when a read fails. A first page
+  read from the cache says "Couldn't update videos. Showing the copy from
+  <JST date and time>" with Try Again; a failed reload of videos already on
+  screen, a first load with nothing cached, and a failed next page each say
+  so in the same way.
 - **Widgets** show cached data after a failed read with a cloud mark and "As
   of <JST time>" (the mark alone in the small and rectangular layouts), and
   "Schedule unavailable" when nothing is cached.
@@ -233,8 +238,9 @@ or its comments. It is generic over an `APIRequest` and built on
   Again. With nothing to show, `DocumentUnavailableView` gives the reason
   (offline, the service's error status, unreadable data, update needed) with
   Try Again. `DocumentView` puts the two together for a screen.
-- `StatusNotice` is the notice's layout; the month archives word it through
-  `ArchiveStatusNotice`.
+- `StatusNotice` is the notice's layout; the post archive words it through
+  `ArchiveStatusNotice` and the video timeline through
+  `VideoTimelineStatusNotice`.
 
 ## Language
 
@@ -322,46 +328,51 @@ The app is a `TabView` with five tabs.
    "+N" for the rest), the quoted post nested in it (a deleted or withheld
    quote says so and still links to it) and a link to the post: the X
    logo alone, or the Bilibili logo and name.
-   A promoted related-account post carries an Agency Post chip. An account
-   filter pinned under the inline title narrows the posts on the device:
-   All, each of the dashboard's `xAccounts` as `@handle` (compared without
-   case), then one Bilibili choice with its logo for all its
-   `bilibiliAccounts`, each with its count among the recent posts; a post by
-   another account, such as the agency's, shows only under All. The row is
-   left out when there are no posts, and a choice without posts says so in
-   one line. Past Posts opens the month archive with the account filter:
-   the dashboard's `xAccounts`, then its `bilibiliAccounts`.
-4. **Videos** — the projection's shelf joined to the dashboard's `videos` by
-   ID, each group in the projection's order, leaving out an ID without a
-   record: the lead (marked Featured when `leadIsFeatured`, otherwise Latest
-   Work), then Coming Up (reservations), Works, Stream Archives and Shorts. A
-   card shows the cover, the title in the content language, a status chip from
-   `view.phase` (live, upcoming, started, cancelled) or else the
-   `view.formCode` chip, the tag, availability when not everyone can watch
-   (members, private, removed), the JST time (scheduled start, else
-   publication) and buttons for the video's page and its `alternates`. Shorts
-   are vertical cards in a row that scrolls sideways.
-   A filter pinned under the inline title narrows the shelf on the device,
-   as the web board's does, and lasts for the session:
-   - **Kind**: All, Streams (form `stream` or `archive`, and a reservation
-     whose stored `kind` or `view.tagContext` is `stream`), Videos (`video`,
-     `premiere` and the other reservations) and Shorts (form `short` or
-     `isShort`), with counts. Only the kinds on the shelf are offered, and the
-     chips only when there are two.
-   - **Platform**: a round menu at the row's trailing end, its icon the
-     current choice: All (default), YouTube or Bilibili, offered when the
-     shelf has videos on both. A video is on a platform when it or one of
-     its `alternates` is; with a platform chosen, that platform's page is the
-     card's first link, which a Short's card opens. The kind chips follow
-     the platform: a kind with no videos on it is hidden unless it is the
-     one selected, and the chips show only while two kinds remain.
-   - Each group keeps its matching videos in order. The lead stays the lead
-     when it matches and is left out otherwise. A filter that matches
-     nothing says so in one line; a choice the shelf no longer offers goes
-     back to All.
+   A promoted related-account post carries an Agency Post chip. The title is
+   large, with a control at each end of the navigation bar, as on Schedule:
+   - **Filter** (leading): a menu whose icon fills while a filter is active.
+     It narrows the posts on the device and lists, with checkmarks, All,
+     each of the dashboard's `xAccounts` as `@handle` (compared without
+     case), then one Bilibili choice with its logo for all its
+     `bilibiliAccounts`, each with its count among the recent posts. A post
+     by another account, such as the agency's, shows only under All. The
+     menu is left out when there are no posts, and a choice without posts
+     says so in one line.
+   - **Past Posts** (trailing, a clock icon) opens the month archive. Its
+     account filter is the same menu at the trailing end of its navigation
+     bar: the dashboard's `xAccounts`, then its `bilibiliAccounts`, with the
+     month's counts.
+4. **Videos** — one timeline of every dated video, newest first, read from
+   `/api/videos` in its `until` form and paged as the list scrolls, 50 videos
+   a page. Reservations and live streams are dated in the future or now, so
+   they come first. The videos are grouped under their Japan month. A row
+   shows the cover with its length, a status chip from `view.phase` (live,
+   upcoming, started, cancelled) or else the `view.formCode` chip (a Short,
+   by its form or `isShort`, says Short), the tag, availability when not
+   everyone can watch (members, private, removed), the title in the content
+   language, the JST time (scheduled start, else publication) and buttons for
+   the video's page and its `alternates`. The title is large, with a control
+   at each end of the navigation bar, as on Schedule:
+   - **Filter** (leading): a menu whose icon fills while a filter is active,
+     with two choices, each with a checkmark:
+     - **Kind**: All, Streams (form `stream` or `archive`, and a reservation
+       whose stored `kind` or `view.tagContext` is `stream`), Videos
+       (`video`, `premiere` and the other reservations) and Shorts.
+     - **Platform**: All, YouTube or Bilibili, each with its logo. A video is
+       on a platform when it or one of its `alternates` is; with a platform
+       chosen, that platform's page is the row's first link.
 
-   Pull to refresh reloads the dashboard. Past Videos opens the month
-   archive with the category filter (`game`, `talk`, `song`, `other`).
+     The API cannot narrow the timeline by either, so the filter applies on
+     the device to the pages read, and reads further pages while it shows
+     fewer than ten videos, until the timeline ends. A filter that matches
+     nothing says so in one line. The filter lasts for the session.
+   - **Month** (trailing, a calendar icon): a menu of Newest, then each
+     month of `/api/videos/months`, newest first with its count. A month
+     starts the timeline at its last Japan date (`until`), as Schedule's
+     Today moves the calendar; Newest goes back to every video. Each start
+     keeps the pages read for it and shows them from the top.
+
+   Pull to refresh reads the month index and the first page again.
 5. **More** — Journey, Works and the LINE BLOG archive, each described
    below, then Settings and About. Settings is three rows without
    explanations: Notifications with its status, a Content Language menu, and
@@ -371,14 +382,12 @@ The app is a `TabView` with five tabs.
    with (Claude Opus 5.5, Gemini 4 Carbon, Claude Fable 5.2) and shows the
    version.
 
-Both month archives read their month index (`/api/videos/months`,
-`/api/posts/months`) and show one Japan month at a time, newest first, from
-its first to its last date, 20 items per page; the next page is read when the
-list reaches its end. The post archive's account filter is one row that
-scrolls sideways, pinned under the navigation bar; the video archive's
-category filter wraps above the list. A filter's counts come from the page's
-`categoryCounts` or `accountCounts`, which count the whole month whatever the
-filter (keys are lowercase handles); All is their sum.
+The post archive reads its month index (`/api/posts/months`) and shows one
+Japan month at a time, newest first, from its first to its last date, 20
+posts per page; the next page is read when the list reaches its end. A month
+menu above the list chooses the month. The account filter's counts come from
+the page's `accountCounts`, which count the whole month whatever the filter
+(keys are lowercase handles); All is their sum.
 
 Delivery order: Now, Schedule, widgets, Settings and About first; Videos and
 Posts next; Works, Journey and LINE BLOG last.

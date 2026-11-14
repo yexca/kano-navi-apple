@@ -1,272 +1,32 @@
 {
   "sourceLanguage": "en",
   "strings": {
-    "archiveEmpty": {
-      "comment": "Shown when the video archive holds no month at all.",
+    "filter": {
+      "comment": "Name of the Videos toolbar menu that narrows the timeline by kind and platform.",
       "extractionState": "manual",
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "No videos are stored yet."
+            "value": "Filter"
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "保存された動画はまだありません。"
+            "value": "絞り込み"
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "还没有已保存的视频。"
-          }
-        }
-      }
-    },
-    "archiveMonthEmpty": {
-      "comment": "Shown when the chosen month and type have no stored videos.",
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "No stored videos for this month and type."
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "この月と種類に保存された動画はありません。"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "这个月份和类型没有已保存的视频。"
-          }
-        }
-      }
-    },
-    "archiveTitle": {
-      "comment": "Title of the video month archive.",
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Video Archive"
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "動画アーカイブ"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "视频存档"
-          }
-        }
-      }
-    },
-    "archives": {
-      "comment": "Header of the past streams on the video shelf.",
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Stream Archives"
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "配信アーカイブ"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "直播存档"
-          }
-        }
-      }
-    },
-    "categoryFilter": {
-      "comment": "VoiceOver label of the video archive's category filter.",
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Filter by type"
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "種類で絞り込む"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "按类型筛选"
-          }
-        }
-      }
-    },
-    "categoryGame": {
-      "comment": "Video archive filter: gameplay videos.",
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Games"
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ゲーム"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "游戏"
-          }
-        }
-      }
-    },
-    "categoryOther": {
-      "comment": "Video archive filter: videos without a game, talk or song tag.",
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Other"
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "その他"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "其他"
-          }
-        }
-      }
-    },
-    "categorySong": {
-      "comment": "Video archive filter: singing and songs.",
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Songs"
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "歌"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "歌曲"
-          }
-        }
-      }
-    },
-    "categoryTalk": {
-      "comment": "Video archive filter: talk streams and videos.",
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Talk"
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "雑談"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "杂谈"
-          }
-        }
-      }
-    },
-    "comingUp": {
-      "comment": "Header of the reserved streams and premieres on the video shelf.",
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Coming Up"
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "これからの予定"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "即将开始"
-          }
-        }
-      }
-    },
-    "featured": {
-      "comment": "Header and chip of the shelf's lead when the site's maintainer chose it.",
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Featured"
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ピックアップ"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "精选"
+            "value": "筛选"
           }
         }
       }
     },
     "filterEmpty": {
-      "comment": "Shown when the video shelf's filter matches no video.",
+      "comment": "Shown when the Videos filter matches none of the timeline's videos.",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -289,32 +49,56 @@
         }
       }
     },
-    "kindFilter": {
-      "comment": "VoiceOver label of the video shelf's kind filter.",
+    "jumpToMonth": {
+      "comment": "Name of the Videos toolbar menu that starts the timeline at a chosen month.",
       "extractionState": "manual",
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Filter by kind"
+            "value": "Jump to Month"
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "種類で絞り込む"
+            "value": "月を選ぶ"
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "按种类筛选"
+            "value": "选择月份"
+          }
+        }
+      }
+    },
+    "kind": {
+      "comment": "Heading of the kind choices in the Videos filter menu.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kind"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "種類"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "种类"
           }
         }
       }
     },
     "kindStreams": {
-      "comment": "Video shelf filter choice: live streams, stream reservations and stream archives.",
+      "comment": "Videos filter choice: live streams, stream reservations and stream archives.",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -338,7 +122,7 @@
       }
     },
     "kindVideos": {
-      "comment": "Video shelf filter choice: uploaded videos and premieres.",
+      "comment": "Videos filter choice: uploaded videos and premieres.",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -361,56 +145,32 @@
         }
       }
     },
-    "latestWork": {
-      "comment": "Header of the shelf's lead when it is the newest work.",
+    "newest": {
+      "comment": "Choice of the Videos month menu that starts the timeline at the newest video.",
       "extractionState": "manual",
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Latest Work"
+            "value": "Newest"
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "最新の作品"
+            "value": "最新"
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "最新作品"
-          }
-        }
-      }
-    },
-    "pastVideos": {
-      "comment": "Link from the video shelf to the month archive.",
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Past Videos"
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "過去の動画"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "历史视频"
+            "value": "最新"
           }
         }
       }
     },
     "platform": {
-      "comment": "Label of the video shelf's platform menu, which shows all platforms, YouTube or Bilibili.",
+      "comment": "Heading of the platform choices in the Videos filter menu.",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -433,32 +193,8 @@
         }
       }
     },
-    "shelfEmpty": {
-      "comment": "Shown when the video shelf has no videos.",
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "No videos in the latest data."
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "最新のデータに動画はありません。"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "最新数据中没有视频。"
-          }
-        }
-      }
-    },
     "shorts": {
-      "comment": "Header of the YouTube Shorts on the video shelf.",
+      "comment": "Videos filter choice: YouTube Shorts.",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -481,86 +217,98 @@
         }
       }
     },
-    "videoCount": {
-      "comment": "Header of the archive month's list. %lld is the number of videos in the month under the chosen type.",
+    "timelineEmpty": {
+      "comment": "Shown when the video timeline lists no video at all.",
       "extractionState": "manual",
       "localizations": {
         "en": {
-          "variations": {
-            "plural": {
-              "one": {
-                "stringUnit": {
-                  "state": "translated",
-                  "value": "%lld Video"
-                }
-              },
-              "other": {
-                "stringUnit": {
-                  "state": "translated",
-                  "value": "%lld Videos"
-                }
-              }
-            }
+          "stringUnit": {
+            "state": "translated",
+            "value": "No videos are stored yet."
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "%lld 本"
+            "value": "保存された動画はまだありません。"
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "共 %lld 个"
+            "value": "还没有已保存的视频。"
           }
         }
       }
     },
-    "watch": {
-      "comment": "VoiceOver hint of a Short card that opens the video.",
+    "timelineLoadFailed": {
+      "comment": "Notice when the video timeline could not be loaded and nothing is on screen.",
       "extractionState": "manual",
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Watch"
+            "value": "Couldn’t load videos."
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "見る"
+            "value": "動画を読み込めませんでした。"
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "观看"
+            "value": "无法加载视频。"
           }
         }
       }
     },
-    "works": {
-      "comment": "Header of the uploaded works (songs, videos) on the video shelf.",
+    "timelineSavedCopy": {
+      "comment": "Notice when the service could not be read and the video timeline is the copy saved on this device. %@ is when that copy was read, in Japan time.",
       "extractionState": "manual",
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Works"
+            "value": "Couldn’t update videos. Showing the copy from %@."
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "作品"
+            "value": "動画を更新できませんでした。%@ 時点の内容を表示しています。"
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "作品"
+            "value": "无法更新视频。正在显示截至 %@ 的内容。"
+          }
+        }
+      }
+    },
+    "timelineUpdateFailed": {
+      "comment": "Notice when reloading the video timeline failed; the videos loaded earlier stay on screen.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Couldn’t update videos. Showing what was loaded before."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "動画を更新できませんでした。前に読み込んだ内容を表示しています。"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "无法更新视频。正在显示之前加载的内容。"
           }
         }
       }

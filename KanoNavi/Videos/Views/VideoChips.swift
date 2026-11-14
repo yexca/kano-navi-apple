@@ -6,14 +6,9 @@ import SwiftUI
 /// and who can watch it.
 struct VideoChips: View {
     let card: VideoCard
-    /// Marks the shelf's lead as the operator's featured video.
-    var isFeatured = false
 
     var body: some View {
         FlowLayout(spacing: 4) {
-            if isFeatured {
-                ComponentChip(title: .Videos.featured, systemImage: "star.fill", tint: .pink)
-            }
             if let status = card.status {
                 VideoStatusChip(status: status)
             }
