@@ -2,7 +2,7 @@ import KanoNaviCore
 import SwiftUI
 
 /// The Uploads screen's content: notices, the newer videos, the kind
-/// filter and the uploads by year.
+/// filter as one row that scrolls sideways and the uploads by year.
 struct WorksUploadsList: View {
     let catalog: WorksUploadCatalog
     /// The videos newer than the collection; `nil` without any or while searching.
@@ -38,7 +38,7 @@ struct WorksUploadsList: View {
             }
 
             Section {
-                ArchiveFilterBar(options: catalog.options, selection: $kind, title: .Works.filterKind)
+                ArchiveFilterRow(options: catalog.options, selection: $kind, title: .Works.filterKind)
                     .listRowBackground(Color.clear)
                     .listRowInsets(EdgeInsets())
             }
