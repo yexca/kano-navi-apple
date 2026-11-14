@@ -1,34 +1,44 @@
 import KanoNaviCore
 import SwiftUI
 
-/// The newest uploads as a row of covers that scrolls sideways; each opens
-/// its watch page.
+/// The newest uploads as a grid of covers, two to a row (one at
+/// accessibility text sizes); each opens its watch page.
 struct WorksLatestUploadsShelf: View {
     let cards: [WorksUploadCard]
 
-    @ScaledMetric(relativeTo: .subheadline) private var scaledWidth: CGFloat = 176
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
 
-    /// Wide enough for a two-line title at large text sizes, never wider
-    /// than leaves the next cover in view.
-    private var tileWidth: CGFloat { min(scaledWidth, 240) }
+    private var columnCount: Int { dynamicTypeSize.isAccessibilitySize ? 1 : 2 }
 
     var body: some View {
-        ScrollView(.horizontal) {
-            // Not lazy: a lazy row takes its height from the first tiles, and a
-            // later tile with a longer title would shrink its cover to fit.
-            HStack(alignment: .top, spacing: 12) {
-                ForEach(cards) { card in
-                    WorksUploadWatchButton(card: card) {
-                        WorksUploadCardView(card: card)
-                            .frame(width: tileWidth)
+        // A grid, not a lazy grid: the tiles of a row share its height, so a
+        // longer title never shrinks the cover beside it.
+        Grid(alignment: .topLeading, horizontalSpacing: 12, verticalSpacing: 16) {
+            ForEach(rows, id: \.first?.id) { row in
+                GridRow {
+                    ForEach(row) { card in
+                        WorksUploadWatchButton(card: card) {
+                            WorksUploadCardView(card: card)
+                        }
+                        .buttonStyle(.plain)
+                        .accessibilityIdentifier("works.latestUpload." + card.id)
                     }
-                    .buttonStyle(.plain)
-                    .accessibilityIdentifier("works.latestUpload." + card.id)
+                    // An odd last tile keeps its column's width.
+                    if row.count < columnCount {
+                        Color.clear
+                            .gridCellUnsizedAxes(.vertical)
+                    }
                 }
             }
-            .padding()
         }
-        .scrollIndicators(.hidden)
+        .padding()
+    }
+
+    /// The cards split into rows of `columnCount`.
+    private var rows: [[WorksUploadCard]] {
+        stride(from: 0, to: cards.count, by: columnCount).map {
+            Array(cards[$0..<min($0 + columnCount, cards.count)])
+        }
     }
 }
 
@@ -36,8 +46,11 @@ struct WorksLatestUploadsShelf: View {
     List {
         Section("Latest Uploads") {
             WorksLatestUploadsShelf(
-                cards: WorksUploadCard.newestFirst(
-                    list: WorksPreviewData.uploadList, stored: WorksPreviewData.uploads)
+                cards: Array(
+                    WorksUploadCard.newestFirst(
+                        list: WorksPreviewData.uploadList, stored: WorksPreviewData.uploads
+                    )
+                    .prefix(4))
             )
             .listRowInsets(EdgeInsets())
         }

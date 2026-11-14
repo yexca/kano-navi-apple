@@ -19,7 +19,7 @@ struct WorksHomeList: View {
     @State private var isShowingInfo = false
 
     /// How many of the newest uploads the entry shows.
-    private static let latestCount = 10
+    private static let latestCount = 4
 
     var body: some View {
         let uploads = WorksUploadCard.newestFirst(list: uploadList, stored: storedUploads)

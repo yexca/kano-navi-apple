@@ -607,8 +607,9 @@ without what they add, and Uploads says why when it opens.
   counts (Own Releases, Featured On, Uploads), then two sections. The
   toolbar's info button opens a sheet with the date the collection covers
   works through and the rights notice.
-  - Latest Uploads: the ten newest uploads as cover cards in a row that
-    scrolls sideways, each with its cover, title and Japan date. The videos
+  - Latest Uploads: the four newest uploads as cover cards in two rows of
+    two (one to a row at accessibility text sizes), each with its cover,
+    title and Japan date. The videos
     newer than the collection (`recent`) lead, titled in the content
     language; the collection's uploads follow, newest first, with their
     stored covers. A card opens its watch page in the browser: a newer
