@@ -336,4 +336,60 @@ struct ScheduleModelTests {
         #expect(model.browsableMonths.last == far)
         #expect(model.browsableMonths == model.browsableMonths.sorted())
     }
+
+    @Test func serviceChangeRereadsTheMonthOnScreenAndItsNeighbours() async throws {
+        let october = JapanDate(year: 2026, month: 10, day: 1)
+        let added = try ScheduleFixtures.event(id: "added", startsOn: "2026-11-10")
+        let stub = StubMonthLoader([
+            october: [.success(ScheduleFixtures.month(containing: october, events: []))],
+            november: [
+                .success(ScheduleFixtures.month(containing: november, events: [])),
+                .success(ScheduleFixtures.month(containing: november, events: [added])),
+            ],
+            december: [.success(ScheduleFixtures.month(containing: december, events: []))],
+        ])
+        let model = model(stub)
+        model.select(JapanDate(year: 2026, month: 11, day: 20))
+        await model.loadMonths(around: november)
+        #expect(model.entries(on: ScheduleFixtures.today).isEmpty)
+
+        await model.reloadAfterChange()
+
+        #expect(model.entries(on: ScheduleFixtures.today).map(\.event.id) == ["added"])
+        #expect(await stub.requests.count == 6)
+        #expect(model.staleMonths.isEmpty)
+        #expect(model.selectedDate == JapanDate(year: 2026, month: 11, day: 20))
+        #expect(model.displayedMonth == november)
+    }
+
+    @Test func monthsFurtherAwayAreReadAgainWhenShown() async {
+        let march = JapanDate(year: 2027, month: 3, day: 1)
+        let stub = StubMonthLoader([
+            november: [.success(ScheduleFixtures.month(containing: november, events: []))],
+            march: [.success(ScheduleFixtures.month(containing: march, events: []))],
+        ])
+        let model = model(stub)
+        await model.load(march)
+        await model.loadIfNeeded()
+        #expect(model.monthsToLoad(around: march).contains(march) == false)
+
+        await model.reloadAfterChange()
+
+        #expect(model.staleMonths.contains(march))
+        #expect(model.monthsToLoad(around: march).first == march)
+        #expect(model.months[march] != nil)
+    }
+
+    @Test func failedRereadKeepsTheMonthOnScreen() async throws {
+        let kept = try ScheduleFixtures.event(id: "kept", startsOn: "2026-11-10")
+        let good = ScheduleFixtures.month(containing: november, events: [kept])
+        let model = model(StubMonthLoader([november: [.success(good), .failure(.offline)]]))
+        await model.loadIfNeeded()
+
+        await model.reloadAfterChange()
+
+        #expect(model.entries(on: ScheduleFixtures.today).map(\.event.id) == ["kept"])
+        #expect(model.notice == .updateFailed)
+        #expect(model.staleMonths.contains(november))
+    }
 }
