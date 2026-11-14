@@ -91,7 +91,8 @@ or model providers itself, and never calls admin or MCP control endpoints.
   and empty states stay, each in one short line.
 - Check affected UI in the iOS Simulator on a small and a large iPhone and
   on an iPad, in light and dark appearance, and at the largest Dynamic Type
-  size.
+  size, and in the Mac app in a small and a large window, in light and dark
+  appearance.
 - Tests protect concrete behaviors and contracts. Choose the lowest sufficient
   layer. Unit and integration tests use Swift Testing; UI tests use XCTest.
 - Tests use synthetic records, reserved domains (`example.com`) and recorded
@@ -130,7 +131,7 @@ or model providers itself, and never calls admin or MCP control endpoints.
   output or `.DS_Store`.
 - Agents create commits, amend/rebase, push, or rewrite history only when the
   user explicitly requests it.
-- Releases are unsigned IPAs. The project carries no development team, signing
-  certificate or provisioning profile.
+- Releases are unsigned IPAs and an ad-hoc-signed Mac app. The project
+  carries no development team, signing certificate or provisioning profile.
 - Do not invent identifiers. Bundle ID, version and build number come from the
   Xcode project or the user.
