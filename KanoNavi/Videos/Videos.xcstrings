@@ -1,6 +1,30 @@
 {
   "sourceLanguage": "en",
   "strings": {
+    "copyLink": {
+      "comment": "Context menu action of a video that copies its page's link.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Copy Link"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "リンクをコピー"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "复制链接"
+          }
+        }
+      }
+    },
     "filterEmpty": {
       "comment": "Shown when the Videos filter matches none of the timeline's videos.",
       "extractionState": "manual",
@@ -189,6 +213,30 @@
           "stringUnit": {
             "state": "translated",
             "value": "平台"
+          }
+        }
+      }
+    },
+    "share": {
+      "comment": "Context menu action of a video that shares its page's link.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Share"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "共有"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "分享"
           }
         }
       }

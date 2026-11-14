@@ -17,3 +17,14 @@ enum VideoAvailabilityMark: Equatable {
         }
     }
 }
+
+extension VideoAvailabilityMark {
+    /// The API's availability this mark stands for.
+    var code: VideoAvailability {
+        switch self {
+        case .members: .members
+        case .private: .private
+        case .removed: .removed
+        }
+    }
+}

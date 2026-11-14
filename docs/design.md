@@ -207,6 +207,9 @@ original's pixel size.
   display scale; for a cropped image, the width it is scaled to) and is at or
   below the original's width. With an unknown width, or when no listed width
   qualifies, it loads the original without `w`.
+  The API gives a video cover no size, so the timeline treats it as the
+  1920 × 1080 of the largest copy: it asks for the copy that covers the width
+  drawn, and the route answers the original when it has no copy that large.
 - **Loading.** `MediaImageLoader` is an actor read from the environment. It
   fetches with a `URLSession` of its own whose 512 MB `URLCache` lives in the
   caches directory; archive files are immutable, so a file seen once is
@@ -480,14 +483,33 @@ The app is a `TabView` with five tabs.
    a page. The videos are grouped under their Japan month, after an On Air
    section that leads the newest timeline with the videos whose phase is
    `live` or `started`, ahead of reservations dated later; a timeline
-   started at a chosen month has no On Air section. A row
-   shows the cover with its length, a status chip from `view.phase` (live,
-   upcoming, started, cancelled) or else the `view.formCode` chip (a Short,
-   by its form or `isShort`, says Short), the tag, availability when not
-   everyone can watch (members, private, removed), the title in the content
-   language, the JST time (scheduled start, else publication) and buttons for
-   the video's page and its `alternates`. The title is large, with controls
-   at each end of the navigation bar:
+   started at a chosen month has no On Air section. The feed is a plain
+   list, as a video app's: the On Air and month headers stay pinned on the
+   screen's background, and items are about 16 pt apart with no separators.
+   Each item has:
+   - the cover across the width less the standard margins, in a fixed 16:9
+     box with 12 pt corners, cropped to fill, asking the media route for the
+     copy that covers the width drawn. Its lower trailing corner carries the
+     status from `view.phase` (red Live or Started, Upcoming or Premiere for
+     a reservation, Cancelled) or else the length; the lower leading corner
+     says Shorts for a Short (its form or `isShort`); the upper leading
+     corner says who can watch when not everyone can (members, private,
+     removed).
+   - the platform it opens, as a logo in a small circle, beside the title
+     in the content language, in semibold and at most two lines (unlimited
+     at accessibility text sizes, where the circle is left out), and one
+     secondary line: the form (left out when the cover shows a status or
+     Shorts), the tag and the JST date, or the JST date and time for a video
+     with a status, after a translate glyph when the title is translated.
+
+   Tapping an item opens its page: the video's own, or with a platform
+   chosen in the filter, its page there. Its context menu, over a preview of
+   the cover, lists the video's pages (its own, then its `alternates`, each
+   a logo and name), Show Original or Show Translation for a translated
+   title, Copy Link and Share. VoiceOver reads an item as one element: the
+   title, its status or form, tag, availability, JST date and time and
+   length, with the other pages, the title switch and Copy Link as actions.
+   The title is large, with controls at each end of the navigation bar:
    - **Filters** (leading): two menus side by side, each choice with its
      icon and the current one with a checkmark. All has the same grid
      symbol here and in the Posts filter.
@@ -498,7 +520,7 @@ The app is a `TabView` with five tabs.
      - **Platform**: the chosen platform's logo, or the All symbol. All,
        YouTube or Bilibili. A video is on a platform when it or one of its
        `alternates` is; with a platform chosen, that platform's page is the
-       row's first link.
+       item's first link.
 
      The API cannot narrow the timeline by either, so the filter applies on
      the device to the pages read, and reads further pages while it shows
