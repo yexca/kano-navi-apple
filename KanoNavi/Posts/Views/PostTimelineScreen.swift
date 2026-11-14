@@ -62,7 +62,7 @@ struct PostTimelineScreen: View {
             }
         }
         .readableContentWidth()
-        .background(Color(.systemGroupedBackground))
+        .background(Color.groupedBackground)
         // Reports only when a post comes on or goes off screen, and sets the
         // state only when the top section changes. The posts run under the
         // navigation bar, so a post counts while 30% of it shows.
@@ -77,11 +77,11 @@ struct PostTimelineScreen: View {
         // The images at the top are drawn on the first frame when the disk
         // cache has them.
         .environment(\.mediaImageDecodesCachedFilesAtOnce, true)
-        .refreshable(action: model.refresh)
+        .refreshableScreen(action: model.refresh)
         .navigationTitle(.tabPosts)
         .navigationSubtitle(subtitle ?? Text(verbatim: ""))
         .toolbar {
-            ToolbarItem(placement: .topBarLeading) {
+            ToolbarItem(placement: .barLeading) {
                 ArchiveFilterMenu(
                     options: filterOptions, selection: $model.account, title: .Posts.accountFilter
                 )

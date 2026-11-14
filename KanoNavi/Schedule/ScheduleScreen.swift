@@ -51,7 +51,7 @@ struct ScheduleScreen: View {
         NavigationStack {
             content
                 .toolbar {
-                    ToolbarItem(placement: .topBarLeading) {
+                    ToolbarItem(placement: .barLeading) {
                         Button(.Schedule.today, action: showToday)
                     }
                     ToolbarItem(placement: .primaryAction) {
@@ -65,7 +65,7 @@ struct ScheduleScreen: View {
                 // never collapses with a scroll; the bar keeps the title only
                 // for the app switcher and accessibility.
                 .navigationTitle(Text(verbatim: model.displayedMonth.monthTitle(locale: locale)))
-                .navigationBarTitleDisplayMode(.inline)
+                .inlineNavigationTitle()
                 .toolbar(removing: .title)
                 .onAppear {
                     shownMode = shownMode ?? mode

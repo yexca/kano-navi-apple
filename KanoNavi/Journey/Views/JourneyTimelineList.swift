@@ -68,7 +68,7 @@ struct JourneyTimelineList: View {
             }
         }
         .navigationSubtitle(subtitle(groups) ?? Text(verbatim: ""))
-        .refreshable {
+        .refreshableScreen {
             await reload()
         }
     }

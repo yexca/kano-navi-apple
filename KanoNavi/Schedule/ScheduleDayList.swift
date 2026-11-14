@@ -48,7 +48,7 @@ struct ScheduleDayList: View, Equatable {
                     emptyState
                 }
             }
-            .refreshable {
+            .refreshableScreen {
                 await refresh()
             }
         }

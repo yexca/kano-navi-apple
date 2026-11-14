@@ -14,7 +14,7 @@ struct NowProfileCard: View {
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
 
     /// The row's background, which the avatar's ring repeats.
-    static let background = Color(.secondarySystemGroupedBackground)
+    static let background = Color.groupedCellBackground
 
     private static let bannerHeight: CGFloat = 128
     /// The avatar's size, ring included.

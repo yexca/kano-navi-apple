@@ -86,7 +86,7 @@ struct SettingsView: View {
             }
         }
         .navigationTitle(.More.moreSettings)
-        .navigationBarTitleDisplayMode(.inline)
+        .inlineNavigationTitle()
         .task {
             await notifications?.refreshSystemStatus()
         }

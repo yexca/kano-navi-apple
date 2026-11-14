@@ -55,7 +55,7 @@ struct LineBlogArticleContent: View {
             .padding()
         }
         .readableContentWidth()
-        .refreshable {
+        .refreshableScreen {
             await reload()
             // Tries again the pictographs that could not be loaded.
             await pictographs.load(layout.pictographs, with: loader, displayScale: displayScale)

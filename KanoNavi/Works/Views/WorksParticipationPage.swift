@@ -17,6 +17,6 @@ struct WorksParticipationPage: View {
                     reload: model.reload)
             }
         }
-        .navigationBarTitleDisplayMode(.inline)
+        .inlineNavigationTitle()
     }
 }

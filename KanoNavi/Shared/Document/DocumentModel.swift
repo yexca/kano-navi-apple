@@ -19,7 +19,7 @@ import Observation
 ///                 }
 ///                 …
 ///             }
-///             .refreshable(action: model.reload)
+///             .refreshableScreen(action: model.reload)
 ///         }
 ///     }
 ///

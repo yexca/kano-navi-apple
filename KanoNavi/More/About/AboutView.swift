@@ -43,7 +43,7 @@ struct AboutView: View {
             }
         }
         .navigationTitle(.More.moreAbout)
-        .navigationBarTitleDisplayMode(.inline)
+        .inlineNavigationTitle()
     }
 
     private func link(_ title: LocalizedStringResource, systemImage: String, url: URL) -> some View {

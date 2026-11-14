@@ -45,7 +45,7 @@ struct WorksReleaseDetail: View {
             WorksStoreSection(listings: release.stores)
         }
         .readableContentWidth()
-        .refreshable {
+        .refreshableScreen {
             await reload()
         }
         .navigationTitle(Text(verbatim: release.title))

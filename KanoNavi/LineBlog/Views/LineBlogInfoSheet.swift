@@ -22,7 +22,7 @@ struct LineBlogInfoSheet: View {
                 }
             }
             .navigationTitle(.LineBlog.info)
-            .navigationBarTitleDisplayMode(.inline)
+            .inlineNavigationTitle()
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button(role: .close) {

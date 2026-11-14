@@ -53,7 +53,7 @@ struct ArchiveFilterMenu: View {
     NavigationStack {
         Text(verbatim: selection ?? "All")
             .toolbar {
-                ToolbarItem(placement: .topBarLeading) {
+                ToolbarItem(placement: .barLeading) {
                     ArchiveFilterMenu(
                         options: [
                             ArchiveFilterOption(code: nil, label: .verbatim("All"), count: 12),

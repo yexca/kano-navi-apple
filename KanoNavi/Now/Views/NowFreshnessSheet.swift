@@ -14,7 +14,7 @@ struct NowFreshnessSheet: View {
                 NowFreshnessSection(freshness: freshness, fetchedAt: fetchedAt)
             }
             .navigationTitle(.Now.freshnessHeader)
-            .navigationBarTitleDisplayMode(.inline)
+            .inlineNavigationTitle()
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button(role: .close) {

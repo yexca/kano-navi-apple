@@ -14,9 +14,9 @@ struct WorksParticipationScreen: View {
                 notice: model.notice, reload: model.reload)
         }
         .navigationTitle(.Works.areaParticipation)
-        .navigationBarTitleDisplayMode(.inline)
+        .inlineNavigationTitle()
         .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
+            ToolbarItem(placement: .barTrailing) {
                 WorksOrderMenu(order: $order)
             }
         }

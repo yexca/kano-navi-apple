@@ -27,7 +27,7 @@ struct WorksParticipationList: View {
                 }
             }
         }
-        .refreshable {
+        .refreshableScreen {
             await reload()
         }
     }

@@ -44,7 +44,7 @@ struct VideoKindMenu: View {
     NavigationStack {
         Text(verbatim: selection?.rawValue ?? "all")
             .toolbar {
-                ToolbarItem(placement: .topBarLeading) {
+                ToolbarItem(placement: .barLeading) {
                     VideoKindMenu(selection: $selection)
                 }
             }

@@ -49,7 +49,7 @@ struct VideoPlatformMenu: View {
     NavigationStack {
         Text(verbatim: selection?.rawValue ?? "all")
             .toolbar {
-                ToolbarItem(placement: .topBarLeading) {
+                ToolbarItem(placement: .barLeading) {
                     VideoPlatformMenu(selection: $selection)
                 }
             }

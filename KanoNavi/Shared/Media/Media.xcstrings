@@ -97,6 +97,30 @@
         }
       }
     },
+    "viewerNext": {
+      "comment": "The image viewer's button that shows the picture after this one.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Next"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "次へ"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "下一张"
+          }
+        }
+      }
+    },
     "viewerPosition": {
       "comment": "Counter in the full-screen image viewer. %1$lld is the position of the image shown, %2$lld the number of images.",
       "extractionState": "manual",
@@ -141,6 +165,30 @@
           "stringUnit": {
             "state": "translated",
             "value": "第 %1$lld 张，共 %2$lld 张"
+          }
+        }
+      }
+    },
+    "viewerPrevious": {
+      "comment": "The image viewer's button that shows the picture before this one.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Previous"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "前へ"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "上一张"
           }
         }
       }

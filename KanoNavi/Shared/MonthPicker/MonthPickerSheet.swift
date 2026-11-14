@@ -32,7 +32,7 @@ struct MonthPickerSheet: View {
                 }
             }
             .navigationTitle(.Archive.jumpToMonth)
-            .navigationBarTitleDisplayMode(.inline)
+            .inlineNavigationTitle()
             .toolbar {
                 if showsClose {
                     ToolbarItem(placement: .cancellationAction) {

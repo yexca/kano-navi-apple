@@ -53,11 +53,12 @@ struct KanoNaviApp: App {
                     .handlesExternalEvents(preferring: ["*"], allowing: ["*"])
                 #endif
         }
-        #if os(macOS)
-            .commands {
+        .commands {
+            RefreshCommands()
+            #if os(macOS)
                 CommandGroup(replacing: .newItem) {}
-            }
-        #endif
+            #endif
+        }
         #if os(iOS)
             .backgroundTask(.appRefresh(notifications.backgroundTaskIdentifier)) {
                 await notifications.performBackgroundRefresh()

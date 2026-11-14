@@ -30,10 +30,10 @@ struct ScheduleEventDetailView: View {
                 platformSection
                 sourceSection
             }
-            .listStyle(.insetGrouped)
+            .insetGroupedListStyle()
             .readableContentWidth()
             .navigationTitle(.Schedule.detailTitle)
-            .navigationBarTitleDisplayMode(.inline)
+            .inlineNavigationTitle()
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button(role: .close) {

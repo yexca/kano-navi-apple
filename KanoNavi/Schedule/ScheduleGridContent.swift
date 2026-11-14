@@ -124,7 +124,7 @@ struct ScheduleGridContent: View {
         }
         // Applied before the pinned row, so the row's content does not pick
         // up its own refresh control.
-        .refreshable {
+        .refreshableScreen {
             await model.refresh()
         }
         // The pinned header is opaque; the edge effect would draw the

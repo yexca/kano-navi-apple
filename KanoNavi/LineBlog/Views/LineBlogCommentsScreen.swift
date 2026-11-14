@@ -23,7 +23,7 @@ struct LineBlogCommentsScreen: View {
             }
         }
         .navigationTitle(.LineBlog.comments)
-        .navigationBarTitleDisplayMode(.inline)
+        .inlineNavigationTitle()
         .task {
             await model.load()
         }

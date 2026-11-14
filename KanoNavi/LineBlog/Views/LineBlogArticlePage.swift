@@ -62,7 +62,7 @@ struct LineBlogArticlePage: View {
                 DocumentUnavailableView(reason: model.failureReason, reload: model.reload)
             }
         }
-        .navigationBarTitleDisplayMode(.inline)
+        .inlineNavigationTitle()
         .task {
             await model.load()
         }

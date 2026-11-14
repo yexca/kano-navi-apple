@@ -12,7 +12,7 @@ import SwiftUI
 ///             }
 ///             ForEach(index.articles) { … }
 ///         }
-///         .refreshable(action: model.reload)
+///         .refreshableScreen(action: model.reload)
 ///     }
 ///
 /// `content` owns the notice and pull to refresh, because where they go

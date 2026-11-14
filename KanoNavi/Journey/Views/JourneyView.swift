@@ -23,7 +23,7 @@ struct JourneyView: View {
                 Text(.rootPlaceholderMessage)
             }
             .navigationTitle(.More.moreJourney)
-            .navigationBarTitleDisplayMode(.inline)
+            .inlineNavigationTitle()
         }
     }
 }

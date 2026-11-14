@@ -11,7 +11,7 @@ struct PostTimelineCard: View {
             .padding(.horizontal, 16)
             .padding(.vertical, 6)
             .frame(maxWidth: .infinity, alignment: .leading)
-            .background(Color(.secondarySystemGroupedBackground), in: .rect(cornerRadius: 26))
+            .background(Color.groupedCellBackground, in: .rect(cornerRadius: 26))
             .padding(.horizontal, 16)
             .padding(.vertical, 8)
     }

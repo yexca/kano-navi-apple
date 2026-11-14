@@ -10,6 +10,7 @@ struct MediaViewerTopBar: View {
     var body: some View {
         HStack(alignment: .center) {
             Button(.Media.viewerClose, systemImage: "xmark", action: close)
+                .keyboardShortcut(.cancelAction)
                 .labelStyle(.iconOnly)
                 .font(.body.weight(.semibold))
                 .buttonStyle(.glass)

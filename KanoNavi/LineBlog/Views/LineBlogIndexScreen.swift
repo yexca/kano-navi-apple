@@ -13,6 +13,6 @@ struct LineBlogIndexScreen: View {
                 reload: model.reload)
         }
         .navigationTitle(.LineBlog.title)
-        .navigationBarTitleDisplayMode(.inline)
+        .inlineNavigationTitle()
     }
 }

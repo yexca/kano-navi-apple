@@ -15,6 +15,6 @@ struct JourneyScreen: View {
             JourneyContent(journey: journey, notice: model.notice, reload: model.reload)
         }
         .navigationTitle(.More.moreJourney)
-        .navigationBarTitleDisplayMode(.inline)
+        .inlineNavigationTitle()
     }
 }

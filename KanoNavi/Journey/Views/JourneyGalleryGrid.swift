@@ -47,7 +47,7 @@ struct JourneyGalleryGrid: View {
             }
             .padding(.top, 8)
         }
-        .refreshable {
+        .refreshableScreen {
             await reload()
         }
         .onChange(of: branch) {

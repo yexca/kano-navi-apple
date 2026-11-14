@@ -52,7 +52,7 @@ struct NowScreen: View {
             .overlay(alignment: .bottom) {
                 NowSavedCopyNotice(dashboard: dashboard)
             }
-            .refreshable(action: refresh)
+            .refreshableScreen(action: refresh)
             .task(id: dashboard.fetchedAt) {
                 await comingUp.reload()
             }

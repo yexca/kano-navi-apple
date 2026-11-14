@@ -20,6 +20,6 @@ struct WorksReleaseScreen: View {
                 WorksReleaseLoader(client: services.client, releaseID: releaseID)
             }
         }
-        .navigationBarTitleDisplayMode(.inline)
+        .inlineNavigationTitle()
     }
 }

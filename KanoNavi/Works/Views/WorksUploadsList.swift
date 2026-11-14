@@ -58,7 +58,7 @@ struct WorksUploadsList: View {
         }
         // On the scroll view alone: around the bar, the filter row's own
         // scroll view would take a refresh control's room and hide its chips.
-        .refreshable {
+        .refreshableScreen {
             await reload()
         }
         .safeAreaBar(edge: .top) {

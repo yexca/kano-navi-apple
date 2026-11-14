@@ -24,7 +24,7 @@ struct NotificationSettingsView: View {
             }
         }
         .navigationTitle(.Notifications.screenTitle)
-        .navigationBarTitleDisplayMode(.inline)
+        .inlineNavigationTitle()
         .task {
             await controller?.refreshSystemStatus()
             syncMasterSwitchFromController()

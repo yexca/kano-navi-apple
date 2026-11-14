@@ -35,9 +35,9 @@ struct LineBlogCommentsList: View {
                 }
             }
         }
-        .listStyle(.insetGrouped)
+        .insetGroupedListStyle()
         .readableContentWidth()
-        .refreshable {
+        .refreshableScreen {
             await reload()
         }
     }

@@ -39,13 +39,13 @@ struct WorksUploadsScreen: View {
             kind = nil
         }
         .searchable(
-            text: $query, placement: .navigationBarDrawer(displayMode: .always),
+            text: $query, placement: .alwaysInBar,
             prompt: Text(.Works.uploadsSearchPrompt)
         )
         .navigationTitle(.Works.areaUploads)
-        .navigationBarTitleDisplayMode(.inline)
+        .inlineNavigationTitle()
         .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
+            ToolbarItem(placement: .barTrailing) {
                 WorksOrderMenu(order: $order)
             }
         }
