@@ -17,6 +17,12 @@ extension Dashboard: APIResponse {
         value.focus = value.focus?.resolvingMedia(against: baseURL)
         value.assets = value.assets.map { $0.resolvingMedia(against: baseURL) }
         value.scheduleImages = value.scheduleImages.map { $0.resolvingMedia(against: baseURL) }
+        // The summary carries its own copies of an event, videos and a post,
+        // which the Now tab shows, so their media need the base too.
+        value.summary.nextEvent = value.summary.nextEvent?.resolvingMedia(against: baseURL)
+        value.summary.nextStream = value.summary.nextStream?.resolvingMedia(against: baseURL)
+        value.summary.latestVideo = value.summary.latestVideo?.resolvingMedia(against: baseURL)
+        value.summary.latestPost = value.summary.latestPost?.resolvingMedia(against: baseURL)
         return value
     }
 }

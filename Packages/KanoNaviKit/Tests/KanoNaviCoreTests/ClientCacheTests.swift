@@ -36,6 +36,20 @@ struct ClientCacheTests {
             dashboard.videos.first?.thumbnailURL?.absoluteString == "https://api.example.com/media/thumb")
     }
 
+    @Test func summaryVideosResolveMediaURLs() throws {
+        var dashboard = try JSONDecoder.kanoNavi().decode(Dashboard.self, from: dashboardFixture())
+        dashboard.summary.latestVideo = dashboard.videos.first
+        dashboard.summary.nextStream = dashboard.videos.first
+        let baseURL = try #require(URL(string: "https://api.example.com"))
+        let resolved = dashboard.resolvingMedia(against: baseURL)
+        #expect(
+            resolved.summary.latestVideo?.thumbnailURL?.absoluteString
+                == "https://api.example.com/media/thumb")
+        #expect(
+            resolved.summary.nextStream?.thumbnailURL?.absoluteString == "https://api.example.com/media/thumb"
+        )
+    }
+
     @Test func etag304KeepsCachedBody() async throws {
         let cache = MemoryResponseCache()
         let first = try client(
