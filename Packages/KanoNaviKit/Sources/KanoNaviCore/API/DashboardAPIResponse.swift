@@ -17,6 +17,7 @@ extension Dashboard: APIResponse {
         value.focus = value.focus?.resolvingMedia(against: baseURL)
         value.assets = value.assets.map { $0.resolvingMedia(against: baseURL) }
         value.scheduleImages = value.scheduleImages.map { $0.resolvingMedia(against: baseURL) }
+        value.accountAvatars = resolveKanoAccountAvatars(value.accountAvatars, against: baseURL)
         // The summary carries its own copies of an event, videos and a post,
         // which the Now tab shows, so their media need the base too.
         value.summary.nextEvent = value.summary.nextEvent?.resolvingMedia(against: baseURL)
