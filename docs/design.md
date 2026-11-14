@@ -311,22 +311,27 @@ The app is a `TabView` with five tabs.
      handles are never cut. Only at accessibility text sizes do the links
      wrap instead. The images are decorative; VoiceOver reads the display
      name once as a heading.
-   - The spotlight ticket (live now, or next up, with a countdown and its
-     platform links), and Bilibili `liveNow` on its own card when the
-     spotlight does not show it.
+   - The spotlight ticket, as `projection.spotlight` decides: live now, or
+     the next entry with a countdown and its platform links, or, when
+     nothing is coming, the latest video. Bilibili `liveNow` has its own
+     card when the spotlight does not show it.
    - **Coming Up**: the next five entries of today and the 13 Japan days
      after it, read with `CalendarReader` (the widgets' range) and built from
-     each event's `view.calendarEntries`, so a sale appears at its opening
-     and at its close. Entries are grouped under "Today", "Tomorrow" or the
-     weekday and date; days without entries do not appear. An entry is
-     listed when it is live, on a later day, date-only today, or today and
-     not started yet; an entry of today that has started stays for three
-     hours after its end (its start when it has no end time). The section
-     ends with See Full Schedule, which opens the Schedule tab. When nothing
-     is listed it says "Nothing scheduled in the next two weeks", offers the
-     calendar subscription, and lists under "Recently" the two entries of the
-     dashboard's events that ended last (done, with a clock time, one per
-     event).
+     each event's `view.calendarEntries`. It leaves out what the screen
+     already shows: the spotlight's event (its `eventId`, or an event whose
+     address or links point at the spotlight video or its copies) and every
+     sale entry, opening and close, which On Sale lists. Entries are grouped
+     under "Today", "Tomorrow" or the weekday and date; days without entries
+     do not appear. An entry is listed when it is live, on a later day,
+     date-only today, or today and not started yet; an entry of today that
+     has started stays for three hours after its end (its start when it has
+     no end time). The section ends with See Full Schedule, which opens the
+     Schedule tab. When all that is coming up is in the spotlight or On
+     Sale, the section holds See Full Schedule alone. When nothing is coming
+     up at all it says "Nothing scheduled in the next two weeks", offers the
+     calendar subscription, and lists under "Recently" the two entries of
+     the dashboard's events that ended last (done, with a clock time, one
+     per event).
    - Each entry is an `EventTicketRow`: a stub with the large JST time
      ("About …" for an estimate, "Time TBA" without one) and a relative
      phrase ("in 3 hours", "tomorrow", "in 4 days"; a clock phrase on today's
@@ -336,7 +341,6 @@ The app is a `TabView` with five tabs.
      time; a done entry is dimmed; a cancelled one is struck through and
      says so. Tapping an entry opens it in the Schedule tab.
    - On Sale: the projection's sales with their opening and closing times.
-   - The latest video.
    - A one-line freshness footer: when the service last collected data and,
      when there is one, a summary (collecting, some sources had warnings,
      some data not read for a day, last collection failed). It turns orange
