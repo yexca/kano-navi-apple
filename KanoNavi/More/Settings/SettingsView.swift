@@ -8,6 +8,28 @@ struct SettingsView: View {
     @AppStorage(AppSettings.contentLanguageKey) private var contentLanguage: ContentLanguage = .system
     @Environment(NotificationController.self) private var notifications: NotificationController?
     @Environment(\.openURL) private var openURL
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+
+    private var contentLanguagePicker: some View {
+        Picker(selection: $contentLanguage) {
+            ForEach(ContentLanguageOption.all, id: \.self) { language in
+                Group {
+                    if let autonym = ContentLanguageOption.autonym(of: language) {
+                        Text(verbatim: autonym)
+                    } else {
+                        Text(.More.settingsSameAsApp)
+                    }
+                }
+                .tag(language)
+            }
+        } label: {
+            Label {
+                Text(.More.settingsContentLanguage)
+            } icon: {
+                Image(systemName: "character.bubble")
+            }
+        }
+    }
 
     var body: some View {
         Form {
@@ -27,25 +49,15 @@ struct SettingsView: View {
             }
 
             Section {
-                Picker(selection: $contentLanguage) {
-                    ForEach(ContentLanguageOption.all, id: \.self) { language in
-                        Group {
-                            if let autonym = ContentLanguageOption.autonym(of: language) {
-                                Text(verbatim: autonym)
-                            } else {
-                                Text(.More.settingsSameAsApp)
-                            }
-                        }
-                        .tag(language)
-                    }
-                } label: {
-                    Label {
-                        Text(.More.settingsContentLanguage)
-                    } icon: {
-                        Image(systemName: "character.bubble")
-                    }
+                // A menu's label and value stack and clip at accessibility
+                // sizes, so there the choices open as a list instead.
+                if dynamicTypeSize.isAccessibilitySize {
+                    contentLanguagePicker
+                        .pickerStyle(.navigationLink)
+                } else {
+                    contentLanguagePicker
+                        .pickerStyle(.menu)
                 }
-                .pickerStyle(.menu)
 
                 Button {
                     if let url = URL(string: UIApplication.openSettingsURLString) {

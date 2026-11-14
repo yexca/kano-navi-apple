@@ -1,8 +1,9 @@
 import SwiftUI
 
 /// A secondary link button: bordered and small, with its icon. At
-/// accessibility text sizes it uses the regular size and drops the icon, so
-/// the title wraps between words instead of truncating or breaking inside one.
+/// accessibility text sizes it uses the regular size and keeps the icon, which
+/// is often a platform's logo that a short name such as "X" needs; the title
+/// wraps between words beside it.
 struct CompactLinkButtonStyle: PrimitiveButtonStyle {
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
 
@@ -10,7 +11,8 @@ struct CompactLinkButtonStyle: PrimitiveButtonStyle {
         if dynamicTypeSize.isAccessibilitySize {
             Button(role: configuration.role, action: configuration.trigger) {
                 configuration.label
-                    .labelStyle(.titleOnly)
+                    .labelStyle(.titleAndIcon)
+                    .multilineTextAlignment(.leading)
             }
             .buttonStyle(.bordered)
         } else {
