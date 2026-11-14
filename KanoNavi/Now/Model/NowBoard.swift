@@ -11,7 +11,8 @@ struct NowBoard: Equatable {
     /// The dashboard's events, for Coming Up's recently ended entries.
     var events: [ScheduleEvent]
     var sales: [NowSale]
-    var latestVideo: NowVideo?
+    /// What the spotlight shows, which Coming Up leaves out.
+    var shownAbove: NowComingUp.ShownAbove
     var freshness: NowFreshness
 
     init(dashboard: Dashboard, now: Date) {
@@ -21,7 +22,17 @@ struct NowBoard: Equatable {
         liveBroadcast = NowLiveBroadcast(dashboard: dashboard, spotlight: spotlight)
         events = dashboard.events
         sales = NowSale.sales(in: dashboard)
-        latestVideo = NowVideo.latest(in: dashboard, besides: spotlight)
+        shownAbove = Self.shownAbove(spotlight, in: dashboard)
         freshness = NowFreshness(meta: dashboard.meta, now: now)
+    }
+
+    /// The spotlight's event ID and its video's addresses, the video's own and
+    /// its copies on other platforms.
+    static func shownAbove(_ spotlight: NowSpotlight?, in dashboard: Dashboard) -> NowComingUp.ShownAbove {
+        guard let spotlight else { return NowComingUp.ShownAbove() }
+        let video = spotlight.videoID.flatMap { dashboard.video(id: $0) }
+        let addresses = video.map { [$0.url] + ($0.alternates ?? []).map(\.url) } ?? []
+        return NowComingUp.ShownAbove(
+            eventIDs: Set([spotlight.eventID].compactMap(\.self)), videoURLs: Set(addresses))
     }
 }

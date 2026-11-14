@@ -10,7 +10,8 @@ struct NowComingUpTests {
     private let now = "2026-11-10T01:00:00Z"
 
     private func comingUp(
-        _ calendar: [[String: Any]], dashboard: [[String: Any]] = [], at instant: String? = nil
+        _ calendar: [[String: Any]], dashboard: [[String: Any]] = [],
+        shownAbove: NowComingUp.ShownAbove = NowComingUp.ShownAbove(), at instant: String? = nil
     ) throws -> NowComingUp {
         var calendarFixture = DashboardFixture()
         calendarFixture.events = calendar
@@ -18,7 +19,7 @@ struct NowComingUpTests {
         dashboardFixture.events = dashboard
         return NowComingUp(
             calendarEvents: try calendarFixture.dashboard().events,
-            dashboardEvents: try dashboardFixture.dashboard().events,
+            dashboardEvents: try dashboardFixture.dashboard().events, shownAbove: shownAbove,
             now: try DashboardFixture.instant(instant ?? now))
     }
 
@@ -54,18 +55,77 @@ struct NowComingUpTests {
             result.days.flatMap(\.entries).map(\.eventID) == ["day-1", "day-2", "day-3", "day-4", "day-5"])
     }
 
-    @Test func saleIsListedAtItsOpeningAndAtItsClose() throws {
+    @Test func salesAreLeftOutAtTheirOpeningAndTheirClose() throws {
         let result = try comingUp([
             DashboardFixture.event(
                 id: "sale", startsOn: "2026-11-11", type: "sale",
                 entries: [
                     DashboardFixture.entry("2026-11-11", at: "2026-11-11T03:00:00Z", saleMark: "opens"),
                     DashboardFixture.entry("2026-11-13", at: "2026-11-13T14:59:00Z", saleMark: "closes"),
-                ])
+                ]),
+            DashboardFixture.event(id: "stream", startsOn: "2026-11-12", startsAt: "2026-11-12T12:00:00Z"),
         ])
 
-        #expect(result.days.map(\.date.rawValue) == ["2026-11-11", "2026-11-13"])
-        #expect(result.days.flatMap(\.entries).map(\.calendarEntry.saleMark) == [.opens, .closes])
+        #expect(result.days.flatMap(\.entries).map(\.eventID) == ["stream"])
+    }
+
+    @Test func spotlightEventIsLeftOut() throws {
+        let result = try comingUp(
+            [
+                DashboardFixture.event(id: "next", startsOn: "2026-11-11", startsAt: "2026-11-11T02:00:00Z"),
+                DashboardFixture.event(id: "later", startsOn: "2026-11-12", startsAt: "2026-11-12T12:00:00Z"),
+            ], shownAbove: NowComingUp.ShownAbove(eventIDs: ["next"]))
+
+        #expect(result.days.flatMap(\.entries).map(\.eventID) == ["later"])
+        #expect(result.isAllShownAbove == false)
+    }
+
+    @Test func eventLinkingTheSpotlightVideoIsLeftOut() throws {
+        let watch = "https://example.com/watch/V1"
+        let result = try comingUp(
+            [
+                DashboardFixture.event(
+                    id: "premiere", startsOn: "2026-11-11", startsAt: "2026-11-11T02:00:00Z",
+                    links: [DashboardFixture.link("youtube", watch)]),
+                DashboardFixture.event(
+                    id: "announced", startsOn: "2026-11-11", startsAt: "2026-11-11T03:00:00Z", url: watch),
+                DashboardFixture.event(id: "later", startsOn: "2026-11-12", startsAt: "2026-11-12T12:00:00Z"),
+            ], shownAbove: NowComingUp.ShownAbove(videoURLs: [try #require(URL(string: watch))]))
+
+        #expect(result.days.flatMap(\.entries).map(\.eventID) == ["later"])
+    }
+
+    @Test func onlyTheSpotlightAndSalesComingUpLeaveNothingToCallEmpty() throws {
+        let result = try comingUp(
+            [
+                DashboardFixture.event(id: "next", startsOn: "2026-11-11", startsAt: "2026-11-11T02:00:00Z"),
+                DashboardFixture.event(
+                    id: "sale", startsOn: "2026-11-13", type: "sale",
+                    entries: [
+                        DashboardFixture.entry("2026-11-13", at: "2026-11-13T14:59:00Z", saleMark: "closes")
+                    ]),
+            ],
+            dashboard: [
+                DashboardFixture.event(
+                    id: "done", startsOn: "2026-11-08", startsAt: "2026-11-08T12:00:00Z", state: "done")
+            ], shownAbove: NowComingUp.ShownAbove(eventIDs: ["next"]))
+
+        #expect(result.days.isEmpty)
+        #expect(result.isAllShownAbove)
+        #expect(result.recent.isEmpty)
+    }
+
+    @Test func nothingComingUpIsEmptyAndListsRecentEntries() throws {
+        let result = try comingUp(
+            [],
+            dashboard: [
+                DashboardFixture.event(
+                    id: "done", startsOn: "2026-11-08", startsAt: "2026-11-08T12:00:00Z", state: "done")
+            ])
+
+        #expect(result.days.isEmpty)
+        #expect(result.isAllShownAbove == false)
+        #expect(result.recent.map(\.eventID) == ["done"])
     }
 
     @Test func entriesOutsideTheTwoWeeksAreLeftOut() throws {

@@ -3,7 +3,7 @@ import KanoNaviCore
 import SwiftUI
 
 /// The Now tab's sections for one snapshot: the profile card, the spotlight, Coming Up, on-sale
-/// items, the latest video and the freshness line.
+/// items and the freshness line.
 struct NowBoardList: View {
     let board: NowBoard
     let comingUp: NowComingUpModel
@@ -47,7 +47,10 @@ struct NowBoardList: View {
                 }
             }
 
-            NowComingUpSections(model: comingUp, dashboardEvents: board.events, feedURL: feedURL, now: now)
+            NowComingUpSections(
+                model: comingUp, dashboardEvents: board.events, shownAbove: board.shownAbove,
+                feedURL: feedURL,
+                now: now)
 
             if board.sales.isEmpty == false {
                 Section {
@@ -56,14 +59,6 @@ struct NowBoardList: View {
                     }
                 } header: {
                     Text(.Now.salesHeader)
-                }
-            }
-
-            if let video = board.latestVideo {
-                Section {
-                    NowVideoCard(video: video)
-                } header: {
-                    Text(.Now.spotlightLatest)
                 }
             }
 

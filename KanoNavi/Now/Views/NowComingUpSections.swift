@@ -3,13 +3,17 @@ import KanoNaviCore
 import SwiftUI
 
 /// The Coming Up section: the next entries of the next two weeks under day
-/// headers, ending with a link to the full schedule. When nothing is coming
-/// up it says so, offers the calendar subscription and lists the most
-/// recently ended entries under "Recently". See ``NowComingUp``.
+/// headers, without the spotlight's entry and the sales On Sale lists,
+/// ending with a link to the full schedule. When nothing is coming up it
+/// says so, offers the calendar subscription and lists the most recently
+/// ended entries under "Recently"; when all that is coming up is in the
+/// spotlight or On Sale, it holds the link alone. See ``NowComingUp``.
 struct NowComingUpSections: View {
     let model: NowComingUpModel
     /// The dashboard's events, for the recently ended entries.
     let dashboardEvents: [ScheduleEvent]
+    /// The spotlight's event, left out of the list.
+    let shownAbove: NowComingUp.ShownAbove
     let feedURL: URL?
     let now: Date
 
@@ -21,7 +25,8 @@ struct NowComingUpSections: View {
 
     var body: some View {
         let comingUp = model.events.map {
-            NowComingUp(calendarEvents: $0, dashboardEvents: dashboardEvents, now: now)
+            NowComingUp(
+                calendarEvents: $0, dashboardEvents: dashboardEvents, shownAbove: shownAbove, now: now)
         }
         let showsRecent = comingUp?.recent.isEmpty == false
 
@@ -33,7 +38,11 @@ struct NowComingUpSections: View {
             }
             if let comingUp {
                 if comingUp.days.isEmpty {
-                    emptyRow
+                    // When everything coming up is in the spotlight or On
+                    // Sale, there is nothing to call empty.
+                    if comingUp.isAllShownAbove == false {
+                        emptyRow
+                    }
                 } else {
                     ForEach(comingUp.days) { day in
                         dayHeader(day.date, today: comingUp.today)
