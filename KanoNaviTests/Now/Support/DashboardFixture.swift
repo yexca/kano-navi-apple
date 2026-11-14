@@ -19,6 +19,10 @@ struct DashboardFixture {
     var posts: [[String: Any]] = []
     var xAccounts = ["synthetic"]
     var bilibiliAccounts: [String]?
+    /// The link directory, as `["id": 1, "title": "…", "url": "…"]` records.
+    var resources: [[String: Any]] = []
+    /// Fields that replace the synthetic profile's.
+    var profile: [String: Any] = [:]
 
     func dashboard() throws -> Dashboard {
         var summary: [String: Any] = [:]
@@ -35,7 +39,7 @@ struct DashboardFixture {
                 "bio": "",
                 "xUrl": "https://example.com/x",
                 "youtubeUrl": "https://example.com/youtube",
-            ],
+            ].merging(profile) { $1 },
             "projection": [
                 "version": 1,
                 "focus": ["eventIds": [], "videoIds": []],
@@ -50,7 +54,7 @@ struct DashboardFixture {
             "events": events,
             "videos": videos,
             "timeline": [],
-            "resources": [],
+            "resources": resources,
             "assets": [],
             "scheduleImages": [],
             "meta": meta,

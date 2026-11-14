@@ -601,6 +601,30 @@
         }
       }
     },
+    "profileXAccount": {
+      "comment": "VoiceOver label of a link to an X account on the profile card. %@ is the account's handle without the @.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "X @%@"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "X @%@"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "X @%@"
+          }
+        }
+      }
+    },
     "recentlyHeader": {
       "comment": "Header of the most recently ended entries, shown when nothing is coming up.",
       "extractionState": "manual",

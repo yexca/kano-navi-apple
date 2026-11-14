@@ -2,7 +2,7 @@ import KanoNaviComponents
 import KanoNaviCore
 import SwiftUI
 
-/// The Now tab's sections for one snapshot: the spotlight, Coming Up, on-sale
+/// The Now tab's sections for one snapshot: the profile card, the spotlight, Coming Up, on-sale
 /// items, the latest video and the freshness line.
 struct NowBoardList: View {
     let board: NowBoard
@@ -27,6 +27,12 @@ struct NowBoardList: View {
                 }
             case nil:
                 EmptyView()
+            }
+
+            Section {
+                NowProfileCard(profile: board.profile)
+                    .listRowInsets(EdgeInsets())
+                    .listRowBackground(NowProfileCard.background)
             }
 
             Section {
