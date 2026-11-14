@@ -2,8 +2,8 @@ import KanoNaviCore
 import SwiftUI
 
 /// The post archive: one Japan month at a time from the month index, newest
-/// first, narrowed by account and paged as the list scrolls. A failed read
-/// keeps the posts on screen and says so.
+/// first, narrowed by the account filter pinned in the bar area and paged as
+/// the list scrolls. A failed read keeps the posts on screen and says so.
 struct PostArchiveScreen: View {
     @State private var model: ArchiveModel<Post>
     /// The board's accounts, from the dashboard's metadata when there is a
@@ -29,17 +29,23 @@ struct PostArchiveScreen: View {
             if let index = model.index, index.months.isEmpty == false {
                 Section {
                     ArchiveMonthPicker(index: index, selection: $model.selectedMonth)
-                    ArchiveFilterBar(
-                        options: PostAccountFilter.options(
-                            accounts: PostAccountFilter.accounts(meta: meta, counts: model.counts),
-                            counts: model.counts, allCount: model.allCount),
-                        selection: $model.filter, title: .Posts.accountFilter)
                 }
             }
 
             PostArchiveItems(model: model)
         }
         .listStyle(.insetGrouped)
+        .safeAreaBar(edge: .top) {
+            if let index = model.index, index.months.isEmpty == false {
+                ArchiveFilterRow(
+                    options: PostAccountFilter.options(
+                        accounts: PostAccountFilter.accounts(meta: meta, counts: model.counts),
+                        counts: model.counts, allCount: model.allCount),
+                    selection: $model.filter, title: .Posts.accountFilter)
+            }
+        }
+        // A firm edge under the chips, so posts never show through them.
+        .scrollEdgeEffectStyle(.hard, for: .top)
         .navigationTitle(.Posts.archiveTitle)
         .navigationBarTitleDisplayMode(.inline)
         .refreshable(action: model.refresh)
