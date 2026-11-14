@@ -19,8 +19,7 @@ struct EntryMarks: View {
                     .foregroundStyle(Color.secondary)
             }
         }
-        .font(.caption2.weight(.medium))
-        .foregroundStyle(Color.primary)
+        .font(.caption2.weight(.semibold))
         .lineLimit(1)
         .fixedSize()
     }

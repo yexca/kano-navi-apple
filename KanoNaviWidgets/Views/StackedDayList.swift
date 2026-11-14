@@ -12,17 +12,17 @@ struct StackedDayList: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
             ForEach(days) { day in
-                DayLabel(date: day.date, today: today)
-                    .font(.caption2.weight(.semibold))
+                DayLabel(date: day.date, today: today, isCompact: true)
+                    .font(.caption2.weight(.bold))
                     .foregroundStyle(.secondary)
                 ForEach(day.items) { item in
                     Link(destination: item.url) {
                         VStack(alignment: .leading, spacing: 0) {
                             EntryTime(item: item, now: now, labelsZone: true)
-                                .fontWeight(.semibold)
-                                .foregroundStyle(Color.primary)
-                                .widgetAccentable()
+                                .fontWeight(.bold)
+                                .berryForeground()
                             EntryTitle(item: item)
+                                .fontWeight(.semibold)
                         }
                     }
                 }

@@ -18,7 +18,7 @@ struct RectangularUpcomingView: View {
     @ViewBuilder private var content: some View {
         switch entry.content {
         case .unavailable:
-            UnavailableView(showsMessage: false)
+            UnavailableView(isCompact: true)
         case .schedule(let schedule):
             if let item = schedule.next(at: entry.date) {
                 VStack(alignment: .leading, spacing: 0) {
@@ -27,7 +27,7 @@ struct RectangularUpcomingView: View {
                             LiveIndicator()
                                 .widgetAccentable()
                         } else {
-                            Text(.widgetUpNext)
+                            Text(.widgetNext)
                                 .fontWeight(.semibold)
                                 .widgetAccentable()
                         }

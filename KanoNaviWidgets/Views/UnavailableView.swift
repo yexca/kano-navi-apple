@@ -2,10 +2,11 @@ import SwiftUI
 
 /// Shown when nothing could be read and nothing is cached.
 struct UnavailableView: View {
-    var showsMessage = true
+    /// Whether to keep to one line with a small symbol, for the Lock Screen.
+    var isCompact = false
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 2) {
+        if isCompact {
             Label {
                 Text(.widgetUnavailableTitle)
             } icon: {
@@ -13,12 +14,9 @@ struct UnavailableView: View {
             }
             .font(.footnote.weight(.semibold))
             .minimumScaleFactor(0.6)
-            if showsMessage {
-                Text(.widgetUnavailableMessage)
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+        } else {
+            StateMessage(systemImage: "exclamationmark.icloud", message: .widgetUnavailableTitle)
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
     }
 }

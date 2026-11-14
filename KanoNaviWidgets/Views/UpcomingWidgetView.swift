@@ -12,11 +12,11 @@ struct UpcomingWidgetView: View {
         case .systemSmall:
             SmallUpcomingView(entry: entry)
                 .widgetURL(singleEntryURL)
-                .containerBackground(.background, for: .widget)
+                .containerBackground(for: .widget) { WidgetBackground() }
         case .systemMedium:
             MediumUpcomingView(entry: entry)
                 .widgetURL(entry.scheduleURL)
-                .containerBackground(.background, for: .widget)
+                .containerBackground(for: .widget) { WidgetBackground() }
         case .accessoryRectangular:
             RectangularUpcomingView(entry: entry)
                 .widgetURL(singleEntryURL)
@@ -28,7 +28,7 @@ struct UpcomingWidgetView: View {
         default:
             LargeUpcomingView(entry: entry)
                 .widgetURL(entry.scheduleURL)
-                .containerBackground(.background, for: .widget)
+                .containerBackground(for: .widget) { WidgetBackground() }
         }
     }
 

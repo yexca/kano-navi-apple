@@ -1,38 +1,69 @@
 import KanoNaviCore
 import SwiftUI
 
-/// The large widget: the seven Japan days from today with their entries. At
-/// accessibility sizes, where seven day rows cannot fit, it lists the next
-/// entries by day instead.
+/// The large widget: the seven Japan days from today as a strip, the live or
+/// next entry, and the week's other entries by day. At accessibility sizes,
+/// where the strip and card leave no room, it lists the next entries by day
+/// instead.
 struct LargeUpcomingView: View {
     let entry: UpcomingEntry
 
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+    @Environment(\.locale) private var locale
 
     var body: some View {
-        switch entry.content {
-        case .unavailable:
-            UnavailableView()
-        case .schedule(let schedule):
-            VStack(alignment: .leading, spacing: 6) {
-                ListHeader(schedule: schedule, isCompact: dynamicTypeSize.isAccessibilitySize)
+        Group {
+            switch entry.content {
+            case .unavailable:
+                UnavailableView()
+            case .schedule(let schedule):
                 if dynamicTypeSize.isAccessibilitySize {
-                    let days = schedule.upcomingDays(
-                        at: entry.date, lineBudget: WidgetLineBudget.large(dynamicTypeSize),
-                        itemLines: WidgetLineBudget.itemLines(dynamicTypeSize))
-                    if days.isEmpty {
-                        NothingScheduledView()
-                    } else {
-                        StackedDayList(days: days, today: entry.today, now: entry.date)
-                    }
+                    stacked(schedule)
                 } else {
-                    WeekGrid(
-                        days: schedule.week(
-                            at: entry.date, lineBudget: WidgetLineBudget.large(dynamicTypeSize)),
-                        today: entry.today, now: entry.date)
+                    week(schedule)
                 }
-                Spacer(minLength: 0)
             }
+        }
+        .fontDesign(.rounded)
+        // Links would otherwise draw their labels in the accent color.
+        .tint(.primary)
+    }
+
+    private func week(_ schedule: WidgetSchedule) -> some View {
+        let lastDay = entry.today.addingDays(6)
+        return VStack(alignment: .leading, spacing: 10) {
+            WidgetHeader(
+                title: .widgetThisWeek, schedule: schedule,
+                detail: WidgetFormat.dayRange(from: entry.today, through: lastDay, locale: locale))
+            DayStrip(days: schedule.week(at: entry.date), today: entry.today)
+            if let hero = schedule.next(at: entry.date) {
+                Link(destination: hero.url) {
+                    HeroCard(item: hero, now: entry.date, today: entry.today)
+                }
+                DayGroupedList(
+                    days: schedule.upcomingDays(
+                        at: entry.date, lineBudget: WidgetLineBudget.large(dynamicTypeSize),
+                        excluding: hero.id, through: lastDay),
+                    today: entry.today, now: entry.date)
+                Spacer(minLength: 0)
+            } else {
+                NothingScheduledView()
+            }
+        }
+    }
+
+    private func stacked(_ schedule: WidgetSchedule) -> some View {
+        VStack(alignment: .leading, spacing: 6) {
+            WidgetHeader(title: .widgetUpcomingName, schedule: schedule)
+            let days = schedule.upcomingDays(
+                at: entry.date, lineBudget: WidgetLineBudget.large(dynamicTypeSize),
+                itemLines: WidgetLineBudget.itemLines(dynamicTypeSize))
+            if days.isEmpty {
+                NothingScheduledView()
+            } else {
+                StackedDayList(days: days, today: entry.today, now: entry.date)
+            }
+            Spacer(minLength: 0)
         }
     }
 }

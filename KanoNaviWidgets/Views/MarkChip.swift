@@ -6,7 +6,8 @@ struct MarkChip: View {
 
     var body: some View {
         Text(label)
-            .padding(.horizontal, 4)
+            .foregroundStyle(.secondary)
+            .padding(.horizontal, 5)
             .padding(.vertical, 1)
             .background(.quaternary, in: .capsule)
     }

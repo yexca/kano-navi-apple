@@ -10,5 +10,6 @@ struct EntryTitle: View {
             .strikethrough(item.isCancelled)
             .foregroundStyle(item.isCancelled ? Color.secondary : Color.primary)
             .lineLimit(lineLimit)
+            .multilineTextAlignment(.leading)
     }
 }

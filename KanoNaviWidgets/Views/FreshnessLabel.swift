@@ -25,7 +25,8 @@ struct FreshnessLabel: View {
             }
             .font(.caption2)
             .foregroundStyle(.secondary)
-            .lineLimit(1)
+            // The time wraps rather than truncating.
+            .lineLimit(iconOnly ? 1 : 2)
         }
     }
 
