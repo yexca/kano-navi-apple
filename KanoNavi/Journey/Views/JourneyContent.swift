@@ -64,10 +64,12 @@ struct JourneyContent: View {
     }
 }
 
-#Preview {
-    NavigationStack {
-        JourneyContent(journey: JourneyPreviewData.journey, notice: nil) {}
-            .navigationTitle(.More.moreJourney)
-            .navigationBarTitleDisplayMode(.inline)
+#if DEBUG
+    #Preview {
+        NavigationStack {
+            JourneyContent(journey: JourneyPreviewData.journey, notice: nil) {}
+                .navigationTitle(.More.moreJourney)
+                .navigationBarTitleDisplayMode(.inline)
+        }
     }
-}
+#endif

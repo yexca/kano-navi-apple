@@ -54,10 +54,12 @@ struct JourneyMilestoneDetail: View {
     }
 }
 
-#Preview {
-    NavigationStack {
-        JourneyMilestoneDetail(
-            milestone: JourneyPreviewData.journey.milestones[1],
-            branch: JourneyPreviewData.journey.branches[0])
+#if DEBUG
+    #Preview {
+        NavigationStack {
+            JourneyMilestoneDetail(
+                milestone: JourneyPreviewData.journey.milestones[1],
+                branch: JourneyPreviewData.journey.branches[0])
+        }
     }
-}
+#endif
