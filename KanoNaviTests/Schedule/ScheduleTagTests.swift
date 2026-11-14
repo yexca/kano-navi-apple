@@ -2,7 +2,6 @@ import KanoNaviComponents
 import KanoNaviCore
 import SwiftUI
 import Testing
-import UIKit
 
 @testable import KanoNavi
 
@@ -33,12 +32,11 @@ struct ScheduleTagTests {
         #expect(ScheduleTag(event: bare) == .other)
     }
 
-    @Test(arguments: [UIUserInterfaceStyle.light, .dark])
-    func streamsUseTheAppsBerry(_ style: UIUserInterfaceStyle) {
-        let traits = UITraitCollection(userInterfaceStyle: style)
-        let berry = components(UIColor(resource: .journeyBerry).resolvedColor(with: traits))
+    @Test(arguments: [ColorScheme.light, .dark])
+    func streamsUseTheAppsBerry(_ scheme: ColorScheme) {
+        let berry = ColorComponents.rgb(Color(.journeyBerry), in: scheme)
 
-        #expect(rounded(rgb(of: .stream, style)) == rounded(berry))
+        #expect(rounded(rgb(of: .stream, scheme)) == rounded(berry))
     }
 
     @Test(arguments: [EventState.done, .cancelled])
@@ -51,17 +49,16 @@ struct ScheduleTagTests {
         #expect(ScheduleTag.isFaded(state) == false)
     }
 
-    @Test(arguments: [UIUserInterfaceStyle.light, .dark])
-    func everyTagHasItsOwnColor(_ style: UIUserInterfaceStyle) {
-        let colors = ScheduleTag.allCases.map { rounded(rgb(of: $0, style)) }
+    @Test(arguments: [ColorScheme.light, .dark])
+    func everyTagHasItsOwnColor(_ scheme: ColorScheme) {
+        let colors = ScheduleTag.allCases.map { rounded(rgb(of: $0, scheme)) }
         #expect(Set(colors).count == ScheduleTag.allCases.count)
     }
 
-    @Test(arguments: ScheduleTag.allCases, [UIUserInterfaceStyle.light, .dark])
-    func tagTextIsReadableOnItsTint(_ tag: ScheduleTag, _ style: UIUserInterfaceStyle) {
-        let traits = UITraitCollection(userInterfaceStyle: style)
-        let text = rgb(of: tag, style)
-        let base = components(UIColor.systemBackground.resolvedColor(with: traits))
+    @Test(arguments: ScheduleTag.allCases, [ColorScheme.light, .dark])
+    func tagTextIsReadableOnItsTint(_ tag: ScheduleTag, _ scheme: ColorScheme) {
+        let text = rgb(of: tag, scheme)
+        let base = ColorComponents.rgb(ColorComponents.screenBackground, in: scheme)
         let tint = zip(text, base).map { $0 * ScheduleTag.tintOpacity + $1 * (1 - ScheduleTag.tintOpacity) }
 
         #expect(contrast(text, tint) >= 4.5)
@@ -71,10 +68,10 @@ struct ScheduleTagTests {
     @Test(
         arguments: ScheduleTag.allCases,
         [
-            (UIUserInterfaceStyle.light, ["FDF9F6", "FBEAEE"]), (.dark, ["16121C", "241A2C"]),
+            (ColorScheme.light, ["FDF9F6", "FBEAEE"]), (.dark, ["16121C", "241A2C"]),
         ])
     func tagTextIsReadableOnTheWidgetBackgrounds(
-        _ tag: ScheduleTag, _ appearance: (UIUserInterfaceStyle, [String])
+        _ tag: ScheduleTag, _ appearance: (ColorScheme, [String])
     ) {
         let text = rgb(of: tag, appearance.0)
         for hex in appearance.1 {
@@ -82,9 +79,8 @@ struct ScheduleTagTests {
         }
     }
 
-    private func rgb(of tag: ScheduleTag, _ style: UIUserInterfaceStyle) -> [Double] {
-        let traits = UITraitCollection(userInterfaceStyle: style)
-        return components(UIColor(tag.color).resolvedColor(with: traits))
+    private func rgb(of tag: ScheduleTag, _ scheme: ColorScheme) -> [Double] {
+        ColorComponents.rgb(tag.color, in: scheme)
     }
 
     private func rounded(_ color: [Double]) -> [Double] {
@@ -94,15 +90,6 @@ struct ScheduleTagTests {
     private func srgb(_ hex: String) -> [Double] {
         let value = Int(hex, radix: 16) ?? 0
         return [16, 8, 0].map { Double((value >> $0) & 0xFF) / 255 }
-    }
-
-    private func components(_ color: UIColor) -> [Double] {
-        var red: CGFloat = 0
-        var green: CGFloat = 0
-        var blue: CGFloat = 0
-        var alpha: CGFloat = 0
-        color.getRed(&red, green: &green, blue: &blue, alpha: &alpha)
-        return [red, green, blue].map(Double.init)
     }
 
     /// The WCAG contrast ratio of two sRGB colours.

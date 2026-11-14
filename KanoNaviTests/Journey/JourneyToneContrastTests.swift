@@ -1,6 +1,5 @@
 import SwiftUI
 import Testing
-import UIKit
 
 @testable import KanoNavi
 
@@ -11,12 +10,11 @@ import UIKit
 struct JourneyToneContrastTests {
     nonisolated static let tones: [JourneyTone] = [.honey, .leaf, .berry, .lavender, .sky]
 
-    @Test(arguments: tones, [UIUserInterfaceStyle.light, .dark])
-    func toneTextIsReadableOnItsTints(_ tone: JourneyTone, _ style: UIUserInterfaceStyle) throws {
-        let traits = UITraitCollection(userInterfaceStyle: style)
+    @Test(arguments: tones, [ColorScheme.light, .dark])
+    func toneTextIsReadableOnItsTints(_ tone: JourneyTone, _ scheme: ColorScheme) throws {
         let resource = try #require(tone.colorResource)
-        let text = rgb(UIColor(resource: resource).resolvedColor(with: traits))
-        let base = rgb(UIColor.systemBackground.resolvedColor(with: traits))
+        let text = ColorComponents.rgb(Color(resource), in: scheme)
+        let base = ColorComponents.rgb(ColorComponents.screenBackground, in: scheme)
         let card = blend(text, over: base, opacity: JourneyTone.highlightOpacity)
         let backgrounds = [
             base, blend(text, over: base, opacity: JourneyTone.tagOpacity), card,
@@ -29,15 +27,6 @@ struct JourneyToneContrastTests {
 
     @Test func unknownToneHasNoAsset() {
         #expect(JourneyTone.neutral.colorResource == nil)
-    }
-
-    private func rgb(_ color: UIColor) -> [Double] {
-        var red: CGFloat = 0
-        var green: CGFloat = 0
-        var blue: CGFloat = 0
-        var alpha: CGFloat = 0
-        color.getRed(&red, green: &green, blue: &blue, alpha: &alpha)
-        return [red, green, blue].map(Double.init)
     }
 
     private func blend(_ top: [Double], over bottom: [Double], opacity: Double) -> [Double] {
