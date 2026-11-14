@@ -11,11 +11,30 @@ struct ScheduleScreen: View {
     /// Counts Today taps, so a grid scrolls to today's month even when that
     /// month is already the one named in the title.
     @State private var todayTaps = 0
+    /// The mode on screen, which follows `mode` through each switch's
+    /// animation; `nil` until the first switch.
+    @State private var shownMode: ScheduleMode?
+    /// The grid mode List's month is drawn as while it turns into or out of
+    /// that grid.
+    @State private var expansion: ScheduleMode?
+    /// The grid mode laid out, hidden, under List while List grows into it,
+    /// so it has landed on the month when it takes over.
+    @State private var pendingGrid: ScheduleMode?
+    /// Counts requests for the grid to bring the month to the top before
+    /// List takes over.
+    @State private var alignRequests = 0
+    /// The switch waiting for the grid to bring the month to the top: the
+    /// grid mode it leaves and the mode it goes to.
+    @State private var waitingSwitch: (from: ScheduleMode, to: ScheduleMode)?
+    /// Set by a deep link so its switch to List has no animation.
+    @State private var switchesInstantly = false
+    @Namespace private var morph
     let feedURL: URL
 
     @Environment(AppRouter.self) private var router
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @Environment(\.locale) private var locale
+    @Environment(\.accessibilityReduceMotion) private var reducesMotion
     @AppStorage(AppSettings.contentLanguageKey) private var contentLanguage: ContentLanguage = .system
     @AppStorage(AppSettings.scheduleModeKey) private var mode = ScheduleMode.defaultMode
 
@@ -44,6 +63,12 @@ struct ScheduleScreen: View {
                 .navigationTitle(Text(verbatim: model.displayedMonth.monthTitle(locale: locale)))
                 .navigationBarTitleDisplayMode(.inline)
                 .toolbar(removing: .title)
+                .onAppear {
+                    shownMode = shownMode ?? mode
+                }
+                .onChange(of: mode) { old, new in
+                    switchMode(from: old, to: new)
+                }
                 .task(id: model.displayedMonth) {
                     await model.loadMonths(around: model.displayedMonth)
                 }
@@ -56,22 +81,114 @@ struct ScheduleScreen: View {
         }
     }
 
-    @ViewBuilder
+    /// The mode on screen.
+    private var displayedMode: ScheduleMode {
+        shownMode ?? mode
+    }
+
     private var content: some View {
-        switch mode {
-        case .list:
-            ScheduleListContent(model: model, contentLanguage: contentLanguage, open: open)
-        case .compact, .stacked, .details:
-            ScheduleGridContent(
-                model: model, style: gridStyle, contentLanguage: contentLanguage, todayTaps: todayTaps,
-                openDay: openDay)
+        let gridMode = displayedMode.isGrid ? displayedMode : pendingGrid
+        return ZStack {
+            if let gridMode {
+                ScheduleGridContent(
+                    model: model, style: gridStyle(gridMode), contentLanguage: contentLanguage,
+                    todayTaps: todayTaps, alignRequests: alignRequests, onAligned: finishAligned,
+                    openDay: openDay
+                )
+                .opacity(displayedMode.isGrid ? 1 : 0)
+                .allowsHitTesting(displayedMode.isGrid)
+                .transition(.opacity)
+            }
+            if displayedMode == .list {
+                ScheduleListContent(
+                    model: model, contentLanguage: contentLanguage, open: open,
+                    expansion: expansion.map(gridStyle), morph: morph
+                )
+                .transition(.opacity)
+            }
         }
     }
 
-    /// The grid's cells: at accessibility text sizes Stacked and Details
+    /// A grid mode's cells: at accessibility text sizes Stacked and Details
     /// fall back to Compact's dots, since titles and bars no longer fit.
-    private var gridStyle: ScheduleMode {
+    private func gridStyle(_ mode: ScheduleMode) -> ScheduleMode {
         dynamicTypeSize.isAccessibilitySize ? .compact : mode
+    }
+
+    /// Moves the screen from the mode on it to `new`; see
+    /// ``ScheduleModeSwitch``.
+    private func switchMode(from old: ScheduleMode, to new: ScheduleMode) {
+        let isRunning = expansion != nil || pendingGrid != nil || waitingSwitch != nil
+        let change = ScheduleModeSwitch.between(
+            shownMode ?? old, new, reducesMotion: reducesMotion, isInstant: switchesInstantly || isRunning)
+        switchesInstantly = false
+        switch change {
+        case .instant:
+            settle(on: new)
+        case .crossFade:
+            withAnimation(ScheduleModeSwitch.crossFadeAnimation) { settle(on: new) }
+        case .restyle:
+            waitForAlignment(from: displayedMode, to: new)
+        case .expand(let grid):
+            pendingGrid = grid
+            withAnimation(ScheduleModeSwitch.morphAnimation, completionCriteria: .logicallyComplete) {
+                expansion = grid
+            } completion: {
+                guard mode == grid else { return }
+                settle(on: grid)
+            }
+        case .collapse(let grid):
+            waitForAlignment(from: grid, to: .list)
+        }
+    }
+
+    /// Asks the grid to bring the month to the top, then goes on with the
+    /// switch once it has, or after the time that takes at the latest.
+    private func waitForAlignment(from grid: ScheduleMode, to target: ScheduleMode) {
+        waitingSwitch = (grid, target)
+        alignRequests += 1
+        Task {
+            try? await Task.sleep(for: ScheduleModeSwitch.alignDuration)
+            finishAligned()
+        }
+    }
+
+    /// Hands a grid that has brought the month to the top over to List drawn
+    /// exactly as the grid is, then morphs it: into List itself, its weeks
+    /// shrinking, the next months fading out and the day's entries sliding
+    /// up; or into another grid mode, the cells changing height and content
+    /// in place while that grid lands underneath and then takes over.
+    private func finishAligned() {
+        guard let (grid, target) = waitingSwitch else { return }
+        waitingSwitch = nil
+        guard mode == target else { return }
+        var swap = Transaction()
+        swap.disablesAnimations = true
+        withTransaction(swap) {
+            expansion = grid
+            pendingGrid = target.isGrid ? target : nil
+            shownMode = .list
+        }
+        Task {
+            await Task.yield()
+            if target.isGrid {
+                withAnimation(ScheduleModeSwitch.morphAnimation, completionCriteria: .logicallyComplete) {
+                    expansion = target
+                } completion: {
+                    guard mode == target else { return }
+                    settle(on: target)
+                }
+            } else {
+                withAnimation(ScheduleModeSwitch.morphAnimation) { expansion = nil }
+            }
+        }
+    }
+
+    private func settle(on mode: ScheduleMode) {
+        shownMode = mode
+        expansion = nil
+        pendingGrid = nil
+        waitingSwitch = nil
     }
 
     private func showToday() {
@@ -90,7 +207,10 @@ struct ScheduleScreen: View {
     /// Applies a deep link's focus once in the List mode, then clears it.
     private func consumeFocus() async {
         guard let focus = router.scheduleFocus else { return }
-        mode = .list
+        if mode != .list {
+            switchesInstantly = true
+            mode = .list
+        }
         switch focus {
         case .date(let date):
             model.select(date)

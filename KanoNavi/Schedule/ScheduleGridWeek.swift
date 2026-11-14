@@ -9,6 +9,8 @@ struct ScheduleGridWeek: View {
     let marks: [JapanDate: [ScheduleDayMark]]
     let style: ScheduleMode
     let openDay: (JapanDate) -> Void
+    /// Pairs this week with its List mode twin while modes switch.
+    var morph: Namespace.ID?
 
     var body: some View {
         HStack(alignment: .top, spacing: 0) {
@@ -28,5 +30,6 @@ struct ScheduleGridWeek: View {
             }
         }
         .fixedSize(horizontal: false, vertical: true)
+        .scheduleWeekMorph(week, in: morph)
     }
 }
