@@ -32,4 +32,25 @@ struct ScheduleMonthSwipeTests {
         #expect(ScheduleMonthSwipe.settledOffset(direction: -1, height: 300, previousHeight: 250) == 250)
         #expect(ScheduleMonthSwipe.settledOffset(direction: 0, height: 300, previousHeight: 250) == 0)
     }
+
+    @Test(arguments: [
+        (-99.0, 0), (-100.0, 1), (-180.0, 1), (99.0, 0), (100.0, -1), (40.0, 0), (0.0, 0),
+    ])
+    func headerNamesTheNextMonthOnceTheDragPassesAThird(_ translation: Double, _ preview: Int) {
+        #expect(ScheduleMonthSwipe.preview(translation: translation, height: height) == preview)
+    }
+
+    @Test func headerSwitchesBackWhenTheDragReturnsUnderTheThreshold() {
+        let path: [CGFloat] = [-20, -80, -120, -150, -90, -30, 40, 110]
+        let previews = path.map { ScheduleMonthSwipe.preview(translation: $0, height: height) }
+
+        #expect(previews == [0, 0, 1, 1, 0, 0, 0, -1])
+    }
+
+    @Test func settlingCarriesTheFingersSpeed() {
+        #expect(ScheduleMonthSwipe.relativeVelocity(-600, from: -100, to: -300) == 3)
+        #expect(ScheduleMonthSwipe.relativeVelocity(200, from: 50, to: 0) == -4)
+        #expect(ScheduleMonthSwipe.relativeVelocity(-5000, from: -299, to: -300) == 0)
+        #expect(ScheduleMonthSwipe.relativeVelocity(-90_000, from: 0, to: -300) == 30)
+    }
 }

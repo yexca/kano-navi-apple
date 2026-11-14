@@ -20,6 +20,8 @@ struct ScheduleMonthHeader: View {
             .padding(.horizontal, 16)
             .padding(.top, 2)
             .padding(.bottom, 6)
+            // A month named while dragging cross-fades in place.
+            .contentTransition(.interpolate)
             .accessibilityAddTraits(.isHeader)
     }
 }
