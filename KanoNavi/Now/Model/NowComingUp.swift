@@ -11,8 +11,10 @@ import KanoNaviCore
 ///   on a later day, date-only today, or today and not yet started. An entry
 ///   of today that has started stays for ``endedGrace`` after it ends (its
 ///   start when it has no end time), so a stream that just finished is still
-///   there, dimmed. The first ``limit`` entries are shown; days without
-///   entries do not appear.
+///   there, dimmed. Entries the screen shows elsewhere are left out: the
+///   spotlight's event (``ShownAbove``) and every sale entry, opening and
+///   close, which On Sale lists. The first ``limit`` of the rest are shown;
+///   days without entries do not appear.
 /// - Recent entries come from the dashboard's events: the entries that are
 ///   done and have a clock time, latest end first, one per event, at most
 ///   ``recentLimit``. They are listed only when nothing is coming up.
@@ -33,17 +35,42 @@ struct NowComingUp: Equatable {
     /// The number of recent entries shown when nothing is coming up.
     static let recentLimit = 2
 
+    /// The spotlight's event, which Coming Up leaves out: its ID, and the
+    /// addresses of the spotlight's video, which an event of the same stream
+    /// links to.
+    struct ShownAbove: Equatable {
+        var eventIDs: Set<String> = []
+        var videoURLs: Set<URL> = []
+
+        func contains(_ event: ScheduleEvent) -> Bool {
+            if eventIDs.contains(event.id) {
+                return true
+            }
+            let addresses =
+                [event.url, event.liveURL].compactMap(\.self) + (event.links ?? []).compactMap(\.url)
+            return addresses.contains { videoURLs.contains($0) }
+        }
+    }
+
     var today: JapanDate
     var days: [Day]
-    /// The most recently ended entries; empty unless `days` is empty.
+    /// The most recently ended entries; empty unless nothing at all is coming
+    /// up.
     var recent: [NowEntry]
+    /// Whether something is coming up but all of it is in the spotlight or
+    /// On Sale, so there is nothing to list and nothing to call empty.
+    var isAllShownAbove: Bool
 
-    init(calendarEvents: [ScheduleEvent], dashboardEvents: [ScheduleEvent], now: Date) {
+    init(
+        calendarEvents: [ScheduleEvent], dashboardEvents: [ScheduleEvent],
+        shownAbove: ShownAbove = ShownAbove(),
+        now: Date
+    ) {
         let today = JapanDate.today(at: now)
         self.today = today
-        let upcoming = NowEntry.entries(in: calendarEvents)
+        let comingUp = NowEntry.entries(in: calendarEvents)
             .filter { Self.isComingUp($0, today: today, now: now) }
-            .prefix(Self.limit)
+        let upcoming = comingUp.filter { Self.isListed($0, shownAbove: shownAbove) }.prefix(Self.limit)
         var days: [Day] = []
         for entry in upcoming {
             if days.last?.date == entry.date {
@@ -53,7 +80,15 @@ struct NowComingUp: Equatable {
             }
         }
         self.days = days
-        recent = days.isEmpty ? Self.recent(in: dashboardEvents, now: now) : []
+        isAllShownAbove = days.isEmpty && comingUp.isEmpty == false
+        recent = comingUp.isEmpty ? Self.recent(in: dashboardEvents, now: now) : []
+    }
+
+    /// Whether an entry that is coming up is listed: not a sale's, which On
+    /// Sale lists, and not the spotlight's event.
+    static func isListed(_ entry: NowEntry, shownAbove: ShownAbove) -> Bool {
+        guard entry.calendarEntry.saleMark == nil, entry.event.view?.typeCode != "sale" else { return false }
+        return shownAbove.contains(entry.event) == false
     }
 
     /// Whether an entry belongs in Coming Up at `now`.
