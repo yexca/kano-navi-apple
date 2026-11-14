@@ -370,6 +370,16 @@ The app is a `TabView` with five tabs.
        top, and that month and the months on each side of it are read as it
        comes into view. Tapping a day opens it in List. At accessibility text
        sizes Stacked and Details use Compact's dots.
+   - **Switching modes** moves as in Calendar, with the month name fixed:
+     from List to a grid mode, the month's weeks grow in place into the
+     grid's (each week row is matched to its twin) while the next months
+     fade in below and the day's entries slide away, then the grid, laid out
+     the same, takes over. From a grid mode to List, including a tapped day,
+     the grid first brings the month to the top, then the weeks shrink, the
+     next months fade out and the day's entries slide up. Between grid
+     modes the cells change height and content in place. Each is a 0.4 s
+     spring; Reduce Motion cross-fades instead, and a deep link switches
+     without motion.
    - **Drawing**: a month's entries are indexed by day once, when it loads
      (`ScheduleMonthDays`). Months and days take plain values and compare
      equal without their actions, so selecting a day redraws two days,
