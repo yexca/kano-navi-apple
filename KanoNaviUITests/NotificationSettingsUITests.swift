@@ -43,7 +43,7 @@ final class NotificationSettingsUITests: XCTestCase {
         ]
         app.launch()
 
-        app.tabBars.buttons.element(boundBy: 4).tap()
+        app.tabButton("更多").tap()
         let settingsButton = app.collectionViews.buttons["设置"]
         XCTAssertTrue(settingsButton.waitForExistence(timeout: 10))
         settingsButton.tap()
@@ -71,7 +71,7 @@ final class NotificationSettingsUITests: XCTestCase {
 
     @MainActor
     private func openNotificationSettings(in app: XCUIApplication) {
-        app.tabBars.buttons["More"].tap()
+        app.tabButton("More").tap()
         XCTAssertTrue(app.navigationBars["More"].waitForExistence(timeout: 10))
 
         app.collectionViews.buttons["Settings"].tap()
