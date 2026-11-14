@@ -36,7 +36,8 @@ struct VideoCover: View {
                 if let availability = card.availability {
                     VideoCoverCapsule(
                         text: Text(DisplayCodeLabels.availability(availability.code)),
-                        systemImage: Self.symbol(for: availability))
+                        systemImage: Self.symbol(for: availability)
+                    )
                     .padding(8)
                 }
             }
@@ -65,13 +66,16 @@ struct VideoCover: View {
                 text: Text(DisplayCodeLabels.videoPhase(.live)), background: .red, isUppercased: true)
         case .started:
             VideoCoverCapsule(
-                text: Text(DisplayCodeLabels.videoPhase(.started)), systemImage: "play.circle", background: .red)
+                text: Text(DisplayCodeLabels.videoPhase(.started)), systemImage: "play.circle",
+                background: .red)
         case .upcoming(let isPremiere):
             VideoCoverCapsule(
-                text: Text(isPremiere ? DisplayCodeLabels.form(.premiere) : DisplayCodeLabels.videoPhase(.upcoming)),
+                text: Text(
+                    isPremiere ? DisplayCodeLabels.form(.premiere) : DisplayCodeLabels.videoPhase(.upcoming)),
                 systemImage: "clock")
         case .cancelled:
-            VideoCoverCapsule(text: Text(DisplayCodeLabels.videoPhase(.cancelled)), systemImage: "xmark.circle")
+            VideoCoverCapsule(
+                text: Text(DisplayCodeLabels.videoPhase(.cancelled)), systemImage: "xmark.circle")
         case nil:
             if let lengthText = card.lengthText {
                 VideoCoverCapsule(text: Text(verbatim: lengthText))

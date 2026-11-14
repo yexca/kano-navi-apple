@@ -48,7 +48,9 @@ struct VideoTimelineItem: View {
                 .frame(width: 360)
         }
         .accessibilityLabel(Text(verbatim: card.accessibilityLabel(title: title, locale: locale)))
-        .accessibilityHint(card.primaryLink.map { Text(NowLinkButtons.title(for: $0.destination)) } ?? Text(verbatim: ""))
+        .accessibilityHint(
+            card.primaryLink.map { Text(NowLinkButtons.title(for: $0.destination)) } ?? Text(verbatim: "")
+        )
         .accessibilityActions {
             ForEach(card.links.dropFirst()) { link in
                 Button(NowLinkButtons.title(for: link.destination)) {
