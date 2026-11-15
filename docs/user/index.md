@@ -28,8 +28,9 @@ These pages describe what you see and can do in the app:
 The app has five tabs (**Now**, **Schedule**, **Posts**, **Videos**, and
 **More**) in a tab bar on iPhone and on iPad. On Mac, and on iPad when you turn
 the tab bar into a sidebar, the sidebar lists More's screens directly instead:
-**Journey**, **Works**, and **LINE BLOG** under **Archive**, and **Settings**
-and **About** under **App**.
+**Journey**, **Works**, and **LINE BLOG** under **Archive**, and on iPad
+**Settings** and **About** under **App**. On Mac, **Settings…** (`⌘,`) and
+**About Kano Navi** are in the app menu and open windows of their own.
 
 - **Languages:** The interface supports English, Japanese, and Simplified
   Chinese through your system's per-app language setting (Language & Region on
@@ -43,8 +44,9 @@ and **About** under **App**.
   reached, the saved copy remains visible beside a one-line notice and a **Try
   Again** button.
 - **About:** **About** shows the app icon, name, and version, notes that the
-  app is an unofficial fan project, links the Kano Navi web board and source
-  repository, and names the AI models used to build the app.
+  app is an unofficial fan project, links the Kano Navi web board, the source
+  code of the app and of the service behind it, and the app's license (GNU
+  AGPL v3.0), and names the AI models used to build the app.
 
 ## Freshness and Official Sources
 

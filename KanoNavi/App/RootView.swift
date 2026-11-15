@@ -4,8 +4,9 @@ import SwiftUI
 /// The app's tabs: a tab bar on iPhone, a sidebar on Mac, and on iPad a tab
 /// bar that the person can turn into a sidebar. A tab bar shows Now,
 /// Schedule, Posts, Videos and More; a sidebar shows the first four, then
-/// More's screens as tabs in two sections. Each tab owns its own navigation
-/// stack.
+/// More's screens as tabs in two sections, or on Mac, where Settings and
+/// About open in windows of their own, the archives alone. Each tab owns its
+/// own navigation stack.
 ///
 /// The dashboard store refreshes only while the scene is active. Timed
 /// reminders are rebuilt from a fresh calendar read when the scene becomes
@@ -80,12 +81,15 @@ struct RootView: View {
                     Text(.sidebarArchive)
                 }
 
-                TabSection {
-                    ForEach(MoreItem.app) { item in
-                        moreItemTab(item)
+                // On Mac, Settings and About open in windows of their own.
+                if !router.usesAppWindows {
+                    TabSection {
+                        ForEach(MoreItem.app) { item in
+                            moreItemTab(item)
+                        }
+                    } header: {
+                        Text(.sidebarApp)
                     }
-                } header: {
-                    Text(.sidebarApp)
                 }
             } else {
                 Tab(value: AppTab.more) {
@@ -101,6 +105,7 @@ struct RootView: View {
             }
         }
         .tabViewStyle(.sidebarAdaptable)
+        .opensSettingsWindowOnRequest()
         .onOpenURL { url in
             router.open(url)
         }

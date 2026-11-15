@@ -110,6 +110,28 @@ struct AppRouterTests {
         #expect(router.stackRequest == StackRequest(tab: .settings, path: [.notifications]))
     }
 
+    @Test func notificationSettingsWithAppWindowsAskForTheSettingsWindow() {
+        let router = AppRouter(showsSidebar: true, usesAppWindows: true)
+        router.selectedTab = .posts
+
+        router.open(.notificationSettings)
+
+        #expect(router.settingsWindowRequested)
+        #expect(router.settingsPane == .notifications)
+        #expect(router.selectedTab == .posts)
+        #expect(router.stackRequest == nil)
+    }
+
+    @Test func settingsWithAppWindowsOpenTheGeneralPane() {
+        let router = AppRouter(showsSidebar: true, usesAppWindows: true)
+        router.settingsPane = .notifications
+
+        router.show([.settings])
+
+        #expect(router.settingsWindowRequested)
+        #expect(router.settingsPane == .general)
+    }
+
     @Test(arguments: [false, true])
     func aLinkWaitsForThePresentation(showsSidebar: Bool) {
         let router = AppRouter()

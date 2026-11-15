@@ -4,6 +4,10 @@ import SwiftUI
 /// The Notifications link, the content language menu, and a link to the
 /// system's per-app language setting for the interface.
 struct SettingsView: View {
+    /// Whether the view is the General pane of the Mac's Settings window,
+    /// which titles it General and shows the notification settings as a
+    /// pane of their own instead of linking them.
+    var isSettingsWindowPane = false
     @AppStorage(AppSettings.contentLanguageKey) private var contentLanguage: ContentLanguage = .system
     @Environment(NotificationController.self) private var notifications: NotificationController?
     @Environment(\.openURL) private var openURL
@@ -32,21 +36,27 @@ struct SettingsView: View {
         }
     }
 
-    var body: some View {
-        Form {
-            Section {
-                NavigationLink(value: MoreDestination.notifications) {
-                    LabeledContent {
-                        Text(notificationStatusLabel)
-                            .foregroundStyle(.secondary)
-                    } label: {
-                        Label {
-                            Text(.More.settingsNotificationsRow)
-                        } icon: {
-                            Image(systemName: "bell.badge")
-                        }
+    private var notificationsSection: some View {
+        Section {
+            NavigationLink(value: MoreDestination.notifications) {
+                LabeledContent {
+                    Text(notificationStatusLabel)
+                        .foregroundStyle(.secondary)
+                } label: {
+                    Label {
+                        Text(.More.settingsNotificationsRow)
+                    } icon: {
+                        Image(systemName: "bell.badge")
                     }
                 }
+            }
+        }
+    }
+
+    var body: some View {
+        Form {
+            if !isSettingsWindowPane {
+                notificationsSection
             }
 
             Section {
@@ -92,7 +102,7 @@ struct SettingsView: View {
         }
         .formStyle(.grouped)
         .readableContentWidth()
-        .navigationTitle(.More.moreSettings)
+        .navigationTitle(isSettingsWindowPane ? .More.settingsGeneral : .More.moreSettings)
         .inlineNavigationTitle()
         .task {
             await notifications?.refreshSystemStatus()

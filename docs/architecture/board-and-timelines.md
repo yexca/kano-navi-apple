@@ -7,7 +7,9 @@ The app uses a sidebar-adaptable `TabView` in two presentations:
 - **Sidebar** (macOS, and iPad when the bar at the top turns into one): the
   first four tabs, then More's screens as tabs of their own in two sections,
   **Archive** (**Journey**, **Works**, **LINE BLOG**) and **App**
-  (**Settings**, **About**). More is not listed.
+  (**Settings**, **About**). More is not listed. On macOS the sidebar has only
+  **Archive**: Settings and About open in windows of their own (see
+  [Targets and platforms](targets-and-platforms.md)).
 
 `AppRouter` follows the presentation the tabs report through `tabBarPlacement`
 and builds the tab list from it. When an iPad switches presentations, a
@@ -16,7 +18,8 @@ to More opened at that screen, and More to the sidebar tab of the screen it
 shows (**Journey** while it shows its list). Only that root screen carries
 over. Deep links and cross-tab buttons select tabs uniformly; the notification
 settings link opens Settings ▸ Notifications in either presentation, waiting
-for the first report when it arrives before the first frame.
+for the first report when it arrives before the first frame. On macOS it opens
+the Settings window on its **Notifications** pane instead.
 
 On wide iPad and Mac windows, reading-focused views (`Now`, `Posts`, `Videos`,
 entry details, `Journey` timeline/milestones, `Works` releases/participation,
@@ -200,8 +203,10 @@ is in.
   languages apart.
 - **About:** A centered header with the app icon (`AboutIcon`, a 72 pt copy of
   the app icon), the app name, the version, and the unofficial project
-  statement; links to the web board and the `kano-navi` repository; and a
-  footnote naming the `AboutCredits.models`.
+  statement; a link to the web board; links to the app's source
+  (`kano-navi-apple`), the service's source (`kano-navi`), and the app's
+  license (GNU AGPL v3.0, `AGPL-3.0`); and a footnote naming the
+  `AboutCredits.models`.
 
 Settings, Notifications, and About are `Form`s in the grouped style on every
 platform, so a Mac window shows the same rounded groups as iPhone and iPad

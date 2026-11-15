@@ -1,6 +1,30 @@
 {
   "sourceLanguage": "en",
   "strings": {
+    "aboutAppSourceCode": {
+      "comment": "Link to the app's source code repository.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "App Source Code"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "アプリのソースコード"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "应用源代码"
+          }
+        }
+      }
+    },
     "aboutBuiltWithModels": {
       "comment": "Footnote naming the AI models the app was developed with. %@ is the list of model names, which are not translated.",
       "extractionState": "manual",
@@ -25,26 +49,50 @@
         }
       }
     },
-    "aboutSourceCode": {
-      "comment": "Link to the service's source code repository.",
+    "aboutLicense": {
+      "comment": "Row linking the app's license; its value is the license name, AGPL-3.0.",
       "extractionState": "manual",
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Source Code"
+            "value": "License"
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "ソースコード"
+            "value": "ライセンス"
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "源代码"
+            "value": "许可证"
+          }
+        }
+      }
+    },
+    "aboutServiceSourceCode": {
+      "comment": "Link to the source code repository of the service the app reads.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Service Source Code"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "サービスのソースコード"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "服务源代码"
           }
         }
       }
@@ -117,6 +165,30 @@
           "stringUnit": {
             "state": "translated",
             "value": "鹿乃 Navi 网页版"
+          }
+        }
+      }
+    },
+    "aboutWindowTitle": {
+      "comment": "App menu item and window title for the Mac's About window.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "About Kano Navi"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "鹿乃ナビについて"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "关于鹿乃 Navi"
           }
         }
       }
@@ -309,6 +381,30 @@
           "stringUnit": {
             "state": "translated",
             "value": "内容语言"
+          }
+        }
+      }
+    },
+    "settingsGeneral": {
+      "comment": "Pane of the Mac's Settings window holding the language settings.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "General"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "一般"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "通用"
           }
         }
       }

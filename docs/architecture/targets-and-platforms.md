@@ -52,8 +52,13 @@ On macOS:
   `FocusedValues.screenRefresh`.
 - Sheets close with their Close button or `Esc`. The image viewer is a large
   sheet (see [Media and viewer](media-and-viewer.md#image-viewer)).
-- Settings is a sidebar tab rather than a separate Settings window. **App
-  Language** opens Language & Region in System Settings.
+- App menu ▸ Settings… (`⌘,`) opens a Settings window (`SettingsWindow`)
+  with a **General** pane (the language settings) and a **Notifications**
+  pane. The notification settings link opens it on **Notifications**.
+  **App Language** opens Language & Region in System Settings.
+- App menu ▸ About Kano Navi opens a fixed-size About window showing the
+  About screen. The Window menu does not list it, and links never open in it.
+- Neither Settings nor About is a sidebar tab.
 - Notifications and background refresh run as on iOS (see
   [Notifications](notifications.md)).
 - Widgets offer Home Screen sizes on the desktop and in Notification Center

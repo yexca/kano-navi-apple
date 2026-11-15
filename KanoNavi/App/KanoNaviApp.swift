@@ -16,8 +16,9 @@ struct KanoNaviApp: App {
         // invalid API base URL fail at launch, not on its first request.
         let services = AppServices.live()
         #if os(macOS)
-            // A Mac window always shows the tabs in a sidebar.
-            let router = AppRouter(showsSidebar: true)
+            // A Mac window always shows the tabs in a sidebar, and Settings
+            // and About open in windows of their own.
+            let router = AppRouter(showsSidebar: true, usesAppWindows: true)
         #else
             let router = AppRouter()
         #endif
@@ -62,6 +63,7 @@ struct KanoNaviApp: App {
             RefreshCommands()
             #if os(macOS)
                 CommandGroup(replacing: .newItem) {}
+                AboutCommands()
             #endif
         }
         #if os(iOS)
@@ -70,6 +72,29 @@ struct KanoNaviApp: App {
             }
         #else
             .defaultSize(width: 1100, height: 760)
+        #endif
+
+        #if os(macOS)
+            // App menu ▸ Settings… (⌘,) opens this window.
+            Settings {
+                SettingsWindow()
+                    .environment(\.services, services)
+                    .environment(router)
+                    .environment(notifications)
+            }
+
+            Window(Text(.More.aboutWindowTitle), id: AboutCommands.windowID) {
+                AboutView()
+                    .toolbar(removing: .title)
+                    .windowMinimizeBehavior(.disabled)
+                    .frame(width: 420, height: 420)
+            }
+            .windowResizability(.contentSize)
+            .restorationBehavior(.disabled)
+            // App menu ▸ About opens it; the Window menu does not list it.
+            .commandsRemoved()
+            // A link opens in the main window, never here.
+            .handlesExternalEvents(matching: [])
         #endif
     }
 }

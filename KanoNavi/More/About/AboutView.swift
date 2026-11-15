@@ -1,8 +1,9 @@
 import SwiftUI
 
 /// Shows the app icon, name and version, states that the app is an
-/// unofficial fan project, links the web board and the source repository,
-/// and names the models the app was built with.
+/// unofficial fan project, links the web board, the app's and the service's
+/// source repositories and the app's license, and names the models the app
+/// was built with.
 struct AboutView: View {
     @ScaledMetric(relativeTo: .title2) private var scaledIconSize: CGFloat = 72
 
@@ -21,10 +22,21 @@ struct AboutView: View {
                 if let url = AboutLinks.webBoard {
                     link(.More.aboutWebBoard, systemImage: "safari", url: url)
                 }
-                if let url = AboutLinks.sourceRepository {
+            }
+
+            Section {
+                if let url = AboutLinks.appRepository {
                     link(
-                        .More.aboutSourceCode, systemImage: "chevron.left.forwardslash.chevron.right",
+                        .More.aboutAppSourceCode, systemImage: "chevron.left.forwardslash.chevron.right",
                         url: url)
+                }
+                if let url = AboutLinks.serviceRepository {
+                    link(.More.aboutServiceSourceCode, systemImage: "server.rack", url: url)
+                }
+                if let url = AboutLinks.appLicense {
+                    link(.More.aboutLicense, systemImage: "doc.text", url: url) {
+                        Text(verbatim: "AGPL-3.0")
+                    }
                 }
             } footer: {
                 Text(.More.aboutBuiltWithModels(AboutCredits.models.formatted(.list(type: .and))))
@@ -61,12 +73,19 @@ struct AboutView: View {
         .accessibilityElement(children: .combine)
     }
 
-    private func link(_ title: LocalizedStringResource, systemImage: String, url: URL) -> some View {
+    private func link(
+        _ title: LocalizedStringResource, systemImage: String, url: URL,
+        @ViewBuilder value: () -> some View = { EmptyView() }
+    ) -> some View {
         Link(destination: url) {
             LabeledContent {
-                Image(systemName: "arrow.up.right")
-                    .foregroundStyle(.secondary)
-                    .accessibilityHidden(true)
+                HStack(spacing: 6) {
+                    value()
+                        .foregroundStyle(.secondary)
+                    Image(systemName: "arrow.up.right")
+                        .foregroundStyle(.secondary)
+                        .accessibilityHidden(true)
+                }
             } label: {
                 Label {
                     Text(title)
@@ -75,11 +94,5 @@ struct AboutView: View {
                 }
             }
         }
-    }
-}
-
-#Preview {
-    NavigationStack {
-        AboutView()
     }
 }

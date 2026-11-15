@@ -15,6 +15,10 @@ import Observation
 /// to the same screen in the new one: a sidebar tab to More opened at its
 /// screen, and More to the sidebar tab of the screen it shows (Journey when
 /// it shows its list). Only the root screen carries over, not deeper pushes.
+///
+/// On Mac, Settings and About open in windows of their own instead, so the
+/// sidebar leaves them out and a link to a Settings screen asks for the
+/// Settings window at the matching pane.
 @Observable
 final class AppRouter {
     var selectedTab = AppTab.now
@@ -24,6 +28,14 @@ final class AppRouter {
     /// Whether the tab view shows a sidebar rather than a tab bar; `nil`
     /// until a tab reports it.
     private(set) var showsSidebar: Bool?
+    /// Whether Settings and About open in windows of their own rather than
+    /// as screens in the tabs.
+    let usesAppWindows: Bool
+    /// The pane the Settings window shows.
+    var settingsPane = SettingsPane.general
+    /// Whether a link asked for the Settings window; the main window opens
+    /// it and clears this.
+    var settingsWindowRequested = false
     /// The screen More shows at its root, `nil` while it shows its list.
     @ObservationIgnored var moreRoot: MoreDestination?
     /// More screens to show once the presentation is known.
@@ -33,10 +45,14 @@ final class AppRouter {
     /// is skipped, so a focus is not applied twice.
     @ObservationIgnored private var launchRoute: NotificationRoute?
 
-    /// - Parameter showsSidebar: The presentation, where the platform fixes
-    ///   it; otherwise the tabs report it once drawn.
-    init(showsSidebar: Bool? = nil) {
+    /// - Parameters:
+    ///   - showsSidebar: The presentation, where the platform fixes it;
+    ///     otherwise the tabs report it once drawn.
+    ///   - usesAppWindows: Whether Settings and About open in windows of
+    ///     their own.
+    init(showsSidebar: Bool? = nil, usesAppWindows: Bool = false) {
         self.showsSidebar = showsSidebar
+        self.usesAppWindows = usesAppWindows
     }
 
     /// Applies a `kanonavi://` URL. Returns `false` for any other URL.
@@ -84,11 +100,17 @@ final class AppRouter {
         }
     }
 
-    /// Shows More's screens `path`, first to last: in a sidebar on the tab
-    /// with the first one at its root, in a tab bar on More. Before the
-    /// presentation is known it waits for it.
+    /// Shows More's screens `path`, first to last: in the Settings window
+    /// when it holds them, in a sidebar on the tab with the first one at its
+    /// root, in a tab bar on More. Before the presentation is known it waits
+    /// for it.
     func show(_ path: [MoreDestination]) {
         guard let root = path.first else { return }
+        if usesAppWindows, root == .settings {
+            settingsPane = path.contains(.notifications) ? .notifications : .general
+            settingsWindowRequested = true
+            return
+        }
         guard let showsSidebar else {
             pendingPath = path
             return
