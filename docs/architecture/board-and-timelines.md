@@ -32,8 +32,9 @@ changes.
 
 ## Now
 
-The navigation bar's leading end carries an **Unofficial** mark, a small
-Berry capsule as on the web board's header.
+The navigation title is Kano's greeting `こんまほ〜` in every language (the
+tab keeps its **Now** label), and the bar's leading end carries an
+**Unofficial** mark, a small Berry capsule as on the web board's header.
 
 Top-to-bottom layout (below any failure banner):
 

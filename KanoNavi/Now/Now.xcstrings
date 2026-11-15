@@ -1083,6 +1083,31 @@
         }
       }
     },
+    "screenTitle": {
+      "comment": "Navigation title of the Now tab, Kano's greeting. Japanese copy, the same in every language; the tab itself keeps its Now label.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "こんまほ〜"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "こんまほ〜"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "こんまほ〜"
+          }
+        }
+      },
+      "shouldTranslate": false
+    },
     "seeFullSchedule": {
       "comment": "Last row of Coming Up; opens the Schedule tab.",
       "extractionState": "manual",

@@ -30,7 +30,8 @@ struct NowScreen: View {
     var body: some View {
         NavigationStack {
             content
-                .navigationTitle(.tabNow)
+                // Kano's greeting; the tab keeps its Now label.
+                .navigationTitle(.Now.screenTitle)
                 .toolbar {
                     // A mark, not a control, so the bar's glass behind it
                     // is hidden.

@@ -11,7 +11,7 @@ final class LaunchTests: XCTestCase {
         app.launchArguments += ["-AppleLanguages", "(en)", "-AppleLocale", "en_US"]
         app.launch()
 
-        XCTAssertTrue(app.navigationBars["Now"].waitForExistence(timeout: 10))
+        XCTAssertTrue(app.navigationBars["こんまほ〜"].waitForExistence(timeout: 10))
 
         // In order along the tab bar, the iPad's bar at the top or its
         // sidebar, which lists More's screens instead of More.

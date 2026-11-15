@@ -7,7 +7,8 @@
   Berry, and a row of counts (upcoming entries, recent posts, recent videos)
   that open Schedule, Posts, and Videos. On iPhone it is a compact card with
   a shorter banner, the name beside the avatar, and no tagline.
-- The Now tab carries an Unofficial mark at the top of its bar.
+- The Now tab carries an Unofficial mark at the top of its bar, and its
+  title is Kano's greeting, こんまほ〜.
 - The Now tab names the last data update in its navigation subtitle; the
   freshness footer shows only the data's status.
 - Tapping the Now profile banner, avatar, or spotlight cover opens it in the

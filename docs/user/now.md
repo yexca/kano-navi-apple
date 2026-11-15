@@ -1,6 +1,7 @@
 # Now
 
 The **Now** tab answers "is she live, what is next, and when" without scrolling.
+Its title is Kano's greeting, こんまほ〜.
 An **Unofficial** mark at the top corner is a reminder that Kano Navi is a fan
 app.
 
@@ -46,7 +47,7 @@ the shop or announcement.
 
 ## Freshness Footer
 
-The time the service last collected data appears under the **Now** title. A
+The time the service last collected data appears under the tab's title. A
 one-line footer at the bottom reports the data's status and warns in orange
 when the last collection failed or a source has not been read for a day.
 Tapping the footer opens a sheet with per-source read times and when your
