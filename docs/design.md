@@ -663,8 +663,8 @@ orientation; every screen adapts to its width.
    Mac, Language & Region). About
    says in one line that the app is an unofficial fan project, links the web
    board and the `kano-navi` repository, lists the models the app was built
-   with (Claude Opus 5.5, Gemini 4 Carbon, Claude Fable 5.2) and shows the
-   version.
+   with (Claude Opus 5.5, Gemini 4 Hydrogen, Gemini 4 Carbon, Claude Fable
+   5.2, GPT-6-Astra) and shows the version.
 
 Delivery order: Now, Schedule, widgets, Settings and About first; Videos and
 Posts next; Works, Journey and LINE BLOG last.
