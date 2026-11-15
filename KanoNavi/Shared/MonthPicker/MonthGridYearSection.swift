@@ -7,7 +7,7 @@ struct MonthGridYearSection: View {
     let year: MonthGridYear
     let selection: ArchiveMonthKey?
     let unit: MonthPickerUnit
-    let choose: (ArchiveMonthKey) -> Void
+    @Binding var choice: MonthPickerChoice?
 
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
 
@@ -21,9 +21,9 @@ struct MonthGridYearSection: View {
                 ForEach(rows, id: \.first?.id) { row in
                     GridRow {
                         ForEach(row) { cell in
-                            MonthGridCellButton(cell: cell, isSelected: cell.month == selection, unit: unit) {
-                                choose(cell.month)
-                            }
+                            MonthGridCellButton(
+                                cell: cell, isSelected: cell.month == selection, unit: unit, choice: $choice
+                            )
                             .id(cell.month)
                         }
                     }

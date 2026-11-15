@@ -7,12 +7,13 @@ struct MonthGridCellButton: View {
     let cell: MonthGridCell
     let isSelected: Bool
     let unit: MonthPickerUnit
-    let action: () -> Void
+    /// Set to this month when it is chosen.
+    @Binding var choice: MonthPickerChoice?
 
     @Environment(\.locale) private var locale
 
     var body: some View {
-        Button(action: action) {
+        Button(action: choose) {
             VStack(spacing: 2) {
                 Text(verbatim: cell.month.first.shortMonthTitle(locale: locale))
                     .font(.body.weight(.semibold))
@@ -36,6 +37,10 @@ struct MonthGridCellButton: View {
         .accessibilityValue(cell.count > 0 ? Text(unit.count(cell.count)) : Text(verbatim: ""))
         .accessibilityAddTraits(isSelected ? [.isButton, .isSelected] : .isButton)
         .accessibilityIdentifier("month." + cell.month.rawValue)
+    }
+
+    private func choose() {
+        choice = MonthPickerChoice(month: cell.month)
     }
 
     private var foreground: AnyShapeStyle {

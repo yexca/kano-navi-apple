@@ -4,9 +4,16 @@ import SwiftUI
 /// The month grid: Newest at the top, then each year, newest first, as a
 /// grid of its twelve months. Months with items show their count and can be
 /// chosen; the others are dimmed. Choosing closes the grid.
+///
+/// Its months take the choice through a binding rather than a closure, so a
+/// change of the sheet alone, such as its dismissal, leaves them as they are
+/// instead of drawing every month again.
 struct MonthPickerSheet: View {
     let grid: MonthGrid
-    @Binding var selection: ArchiveMonthKey?
+    /// The month the timeline starts at, or `nil` for Newest.
+    let selection: ArchiveMonthKey?
+    /// Set to the month or Newest when one is chosen, which closes the grid.
+    @Binding var choice: MonthPickerChoice?
     let unit: MonthPickerUnit
     let showsClose: Bool
 
@@ -20,7 +27,8 @@ struct MonthPickerSheet: View {
                         MonthPickerNewestButton(isSelected: selection == nil, action: chooseNewest)
 
                         ForEach(grid.years) { year in
-                            MonthGridYearSection(year: year, selection: selection, unit: unit, choose: choose)
+                            MonthGridYearSection(
+                                year: year, selection: selection, unit: unit, choice: $choice)
                         }
                     }
                     .padding()
@@ -41,16 +49,15 @@ struct MonthPickerSheet: View {
                 }
             }
         }
+        .onChange(of: choice) {
+            if choice != nil {
+                dismiss()
+            }
+        }
     }
 
     private func chooseNewest() {
-        selection = nil
-        dismiss()
-    }
-
-    private func choose(_ month: ArchiveMonthKey) {
-        selection = month
-        dismiss()
+        choice = MonthPickerChoice(month: nil)
     }
 
     private func close() {
@@ -59,7 +66,7 @@ struct MonthPickerSheet: View {
 }
 
 #Preview {
-    @Previewable @State var selection: ArchiveMonthKey?
+    @Previewable @State var choice: MonthPickerChoice?
     let index = ArchiveMonthIndex(
         months: [
             .init(month: "2025-11", total: 3, counts: [:]), .init(month: "2026-02", total: 41, counts: [:]),
@@ -68,7 +75,7 @@ struct MonthPickerSheet: View {
     Color.clear
         .sheet(isPresented: .constant(true)) {
             MonthPickerSheet(
-                grid: MonthGrid(index: index, today: .today), selection: $selection, unit: .posts,
-                showsClose: true)
+                grid: MonthGrid(index: index, today: .today), selection: nil, choice: $choice,
+                unit: .posts, showsClose: true)
         }
 }

@@ -197,7 +197,9 @@ Shared by **Posts** and **Videos** (`KanoNavi/Shared/MonthPicker/`): sheet on
 iPhone, popover on iPad/Mac. Leads with **Newest**, followed by years from the
 current Japan year down to the oldest indexed month in a four-column grid (two
 columns at accessibility text sizes). Active months display item counts and
-allow selection; empty or future months stay dimmed.
+allow selection; empty or future months stay dimmed. Choosing closes the grid,
+and the timeline moves to the month once the grid has closed, so it is not
+rebuilt under the closing animation.
 
 ## More and Sidebar Tabs
 

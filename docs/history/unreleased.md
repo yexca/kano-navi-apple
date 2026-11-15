@@ -28,6 +28,8 @@
   under each.
 - Videos and GIFs in posts show a play mark or a GIF tag and open the post on
   X, where they play.
+- The month picker in Posts and Videos opens and closes without a stutter;
+  a chosen month replaces the timeline once the picker has closed.
 
 </details>
 
