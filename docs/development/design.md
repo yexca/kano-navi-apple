@@ -15,10 +15,10 @@ traceability.
   scale like SF Symbols; other platforms and sites use SF Symbols. See
   [PlatformLogos README](../../Packages/KanoNaviKit/Sources/KanoNaviComponents/Resources/PlatformLogos.xcassets/README.md).
 - **Accent and category colors:** Home Screen widgets use the Berry accent
-  (`#DC4560` light, `#FF7088` dark). `ScheduleTag` and `JourneyColors.xcassets`
-  keep text at ≥ 4.5:1 contrast across light/dark system backgrounds, Details
-  tints, tag pills, and highlight cards (dark Berry adjusts to `#FF768E` on
-  macOS `#1E1E1E` dark backgrounds).
+  (`#DC4560` light, `#FF7088` dark). `ScheduleTag`, `JourneyColors.xcassets`,
+  and the app's `Berry` keep text at ≥ 4.5:1 contrast across light/dark
+  system backgrounds, Details tints, tag pills, and highlight cards (dark
+  Berry adjusts to `#FF768E` on macOS `#1E1E1E` dark backgrounds).
 - **Status cues:** Live state uses a red dot and the word "Live" (never color
   alone). Members-only items carry a members chip. Cancelled and suspected
   cancellations are struck through or badged with their state in words.

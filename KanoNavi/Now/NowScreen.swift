@@ -31,6 +31,14 @@ struct NowScreen: View {
         NavigationStack {
             content
                 .navigationTitle(.tabNow)
+                .toolbar {
+                    // A mark, not a control, so the bar's glass behind it
+                    // is hidden.
+                    ToolbarItem(placement: .barLeading) {
+                        NowUnofficialMark()
+                    }
+                    .sharedBackgroundVisibility(.hidden)
+                }
         }
     }
 

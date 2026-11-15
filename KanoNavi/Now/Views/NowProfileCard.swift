@@ -7,6 +7,10 @@ import SwiftUI
 /// name, the catchphrase, the profile's X accounts, YouTube and Bilibili, and
 /// the dashboard's counts. The banner and the avatar open the viewer.
 ///
+/// In a compact width it is the web board's phone card, so the board below
+/// comes up sooner: a shorter banner, a smaller avatar with the name beside
+/// it, the catchphrase under them, and no tagline.
+///
 /// It fills its list row edge to edge; give the row no insets and
 /// ``background`` as its background, which the avatar's ring matches.
 struct NowProfileCard: View {
@@ -15,6 +19,7 @@ struct NowProfileCard: View {
     @Environment(\.openURL) private var openURL
     @Environment(AppRouter.self) private var router
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
 
     /// The image the viewer opens on; `nil` while it is closed.
     @State private var openedPicture: NowPicture?
@@ -22,39 +27,35 @@ struct NowProfileCard: View {
     /// The row's background, which the avatar's ring repeats.
     static let background = Color.groupedCellBackground
 
-    private static let bannerHeight: CGFloat = 128
-    /// The avatar's size, ring included.
-    private static let avatarSize: CGFloat = 84
-    private static let ringWidth: CGFloat = 4
     /// Keeps the top third of the banner in view, as the web board does.
     private static let bannerAnchor = UnitPoint(x: 0.5, y: 0.3)
+
+    /// The card's measures in a regular and a compact width, the web board's
+    /// wide and phone cards.
+    private struct Metrics {
+        var bannerHeight: CGFloat
+        /// The avatar's size, ring included.
+        var avatarSize: CGFloat
+        var ringWidth: CGFloat
+
+        static let regular = Metrics(bannerHeight: 128, avatarSize: 84, ringWidth: 4)
+        static let compact = Metrics(bannerHeight: 88, avatarSize: 64, ringWidth: 3)
+    }
+
+    /// Whether the card takes its compact form. A Mac window has no size
+    /// class and keeps the regular one.
+    private var isCompact: Bool { horizontalSizeClass == .compact }
+
+    private var metrics: Metrics { isCompact ? .compact : .regular }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             banner
-            VStack(alignment: .leading, spacing: 12) {
-                avatar
-                    // Half of the avatar rises over the banner.
-                    .padding(.top, -Self.avatarSize / 2)
-                VStack(alignment: .leading, spacing: 4) {
-                    // Japanese copy in every language, in the Japanese face.
-                    Text(.Now.profileTagline)
-                        .font(.japanese(.caption))
-                        .foregroundStyle(.secondary)
-                        // Wraps rather than truncates at accessibility sizes.
-                        .fixedSize(horizontal: false, vertical: true)
-                    name
-                }
-                Text(.Now.profileCatchphrase)
-                    .font(.japanese(.subheadline))
-                    .foregroundStyle(.secondary)
-                links
-                if let counts = profile.counts {
-                    countsRow(counts)
-                }
+            if isCompact {
+                compactBody
+            } else {
+                regularBody
             }
-            .padding(.horizontal, 16)
-            .padding(.bottom, 16)
         }
         .mediaViewer(item: $openedPicture, in: NowPicture.profile(profile)) { picture in
             MediaImageSource(url: picture.url)
@@ -72,12 +73,72 @@ struct NowProfileCard: View {
         }
     }
 
+    private var regularBody: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            avatar
+                // Half of the avatar rises over the banner.
+                .padding(.top, -metrics.avatarSize / 2)
+            VStack(alignment: .leading, spacing: 4) {
+                // Japanese copy in every language, in the Japanese face.
+                Text(.Now.profileTagline)
+                    .font(.japanese(.caption))
+                    .foregroundStyle(.berry)
+                    // Wraps rather than truncates at accessibility sizes.
+                    .fixedSize(horizontal: false, vertical: true)
+                name
+            }
+            catchphrase
+            links
+            if let counts = profile.counts {
+                countsRow(counts)
+            }
+        }
+        .padding(.horizontal, 16)
+        .padding(.bottom, 16)
+    }
+
+    /// The avatar on the left with the name beside it, then the catchphrase,
+    /// the links and the counts across the card. At accessibility text sizes
+    /// the name goes under the avatar, where it has the card's width.
+    private var compactBody: some View {
+        let identity =
+            dynamicTypeSize.isAccessibilitySize
+            ? AnyLayout(VStackLayout(alignment: .leading, spacing: 8))
+            : AnyLayout(HStackLayout(alignment: .top, spacing: 12))
+        return VStack(alignment: .leading, spacing: 10) {
+            identity {
+                avatar
+                    // Half of the avatar rises over the banner, past the
+                    // body's top padding.
+                    .padding(.top, -(metrics.avatarSize / 2 + Self.compactTopPadding))
+                compactName
+            }
+            catchphrase
+            links
+            if let counts = profile.counts {
+                countsRow(counts)
+            }
+        }
+        .padding(.top, Self.compactTopPadding)
+        .padding(.horizontal, 16)
+        .padding(.bottom, 14)
+    }
+
+    private static let compactTopPadding: CGFloat = 8
+
+    private var catchphrase: some View {
+        Text(.Now.profileCatchphrase)
+            .font(.japanese(.subheadline))
+            .foregroundStyle(.berry)
+            .fixedSize(horizontal: false, vertical: true)
+    }
+
     private var banner: some View {
         opener(for: .banner, url: profile.bannerURL) {
             Rectangle()
                 .fill(.fill.tertiary)
                 .frame(maxWidth: .infinity)
-                .frame(height: Self.bannerHeight)
+                .frame(height: metrics.bannerHeight)
                 .overlay {
                     if let url = profile.bannerURL {
                         MediaImage(
@@ -100,10 +161,11 @@ struct NowProfileCard: View {
                     }
                 }
                 .frame(
-                    width: Self.avatarSize - 2 * Self.ringWidth, height: Self.avatarSize - 2 * Self.ringWidth
+                    width: metrics.avatarSize - 2 * metrics.ringWidth,
+                    height: metrics.avatarSize - 2 * metrics.ringWidth
                 )
                 .clipShape(.circle)
-                .padding(Self.ringWidth)
+                .padding(metrics.ringWidth)
                 .background(Self.background, in: .circle)
                 .contentShape(.circle)
         }
@@ -132,20 +194,54 @@ struct NowProfileCard: View {
     }
 
     private var name: some View {
-        VStack(alignment: .leading, spacing: 4) {
-            Text(verbatim: profile.displayName)
-                .font(.title2.bold())
-            if profile.romanizedName.isEmpty == false {
-                Text(verbatim: profile.romanizedName)
-                    .font(.caption.weight(.semibold).monospaced())
-                    .textCase(.uppercase)
-                    .tracking(2)
-                    .foregroundStyle(.secondary)
-            }
+        nameElement(
+            VStack(alignment: .leading, spacing: 4) {
+                displayName
+                romanizedName
+            })
+    }
+
+    /// The romanized name after the name on one line, as on the web board's
+    /// phone card, or under it when the line is too narrow.
+    private var compactName: some View {
+        nameElement(
+            ViewThatFits(in: .horizontal) {
+                HStack(alignment: .firstTextBaseline, spacing: 8) {
+                    displayName
+                    romanizedName
+                }
+                VStack(alignment: .leading, spacing: 2) {
+                    displayName
+                    romanizedName
+                }
+            })
+    }
+
+    /// The name as one heading that VoiceOver reads without the romanized
+    /// name.
+    private func nameElement(_ content: some View) -> some View {
+        content
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel(Text(verbatim: profile.displayName))
+            .accessibilityAddTraits(.isHeader)
+    }
+
+    private var displayName: some View {
+        Text(verbatim: profile.displayName)
+            .font(.title2.bold())
+            .fixedSize(horizontal: false, vertical: true)
+    }
+
+    @ViewBuilder
+    private var romanizedName: some View {
+        if profile.romanizedName.isEmpty == false {
+            Text(verbatim: profile.romanizedName)
+                .font(.caption.weight(.semibold).monospaced())
+                .textCase(.uppercase)
+                .tracking(2)
+                .foregroundStyle(.secondary)
+                .fixedSize(horizontal: false, vertical: true)
         }
-        .accessibilityElement(children: .ignore)
-        .accessibilityLabel(Text(verbatim: profile.displayName))
-        .accessibilityAddTraits(.isHeader)
     }
 
     /// The links in one row: the X handles, then YouTube and Bilibili as

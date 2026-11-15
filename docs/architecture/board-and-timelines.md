@@ -32,6 +32,9 @@ changes.
 
 ## Now
 
+The navigation bar's leading end carries an **Unofficial** mark, a small
+Berry capsule as on the web board's header.
+
 Top-to-bottom layout (below any failure banner):
 
 - **Profile card:** 128 pt cropped banner (top third in view, or soft fill),
@@ -39,6 +42,11 @@ Top-to-bottom layout (below any failure banner):
   neutral circle), the tagline (`Virtual Artist · ミリプロ SONA`) as a small
   kicker, display name, small uppercase romanized name, the catchphrase
   (`みんなの毎日を、まほろばに。`), one row of links, and one row of counts.
+  In a compact width the card follows the web board's phone card: an 88 pt
+  banner, a 64 pt avatar with the display name and romanized name beside it
+  (under it at accessibility text sizes), the catchphrase across the card
+  below them, and no tagline. Tagline and catchphrase are drawn in the app's
+  Berry (`Color.berry`, the web board's accent at text contrast).
   Tagline and catchphrase are untranslated app copy set in Hiragino Sans
   (`Font.japanese`, scaled with their text styles) in every language, since
   the system font gives Japanese text Chinese glyphs under Simplified Chinese.

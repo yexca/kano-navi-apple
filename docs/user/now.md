@@ -1,6 +1,8 @@
 # Now
 
 The **Now** tab answers "is she live, what is next, and when" without scrolling.
+An **Unofficial** mark at the top corner is a reminder that Kano Navi is a fan
+app.
 
 ## Profile Card
 
@@ -10,7 +12,8 @@ and bilibili space. A row of counts below shows how many entries are coming up,
 how many posts arrived in the last few days, and how many videos came out in
 the last seven days; tapping a count opens **Schedule**, **Posts**, or
 **Videos**. Tapping the banner or the avatar opens it in the full-screen image
-viewer.
+viewer. On iPhone the card is compact, as on the web board's phone layout: a
+shorter banner, the name beside the avatar, and no tagline.
 
 ## Spotlight and Live Streams
 

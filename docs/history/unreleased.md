@@ -3,9 +3,11 @@
 <details>
 <summary><strong>Now and Schedule</strong></summary>
 
-- The Now profile card shows Kano's tagline and catchphrase, and a row of
-  counts (upcoming entries, recent posts, recent videos) that open Schedule,
-  Posts, and Videos.
+- The Now profile card shows Kano's tagline and catchphrase in the board's
+  Berry, and a row of counts (upcoming entries, recent posts, recent videos)
+  that open Schedule, Posts, and Videos. On iPhone it is a compact card with
+  a shorter banner, the name beside the avatar, and no tagline.
+- The Now tab carries an Unofficial mark at the top of its bar.
 - The Now tab names the last data update in its navigation subtitle; the
   freshness footer shows only the data's status.
 - Tapping the Now profile banner, avatar, or spotlight cover opens it in the
