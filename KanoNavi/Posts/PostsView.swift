@@ -3,7 +3,7 @@ import SwiftUI
 
 /// The Posts tab: one timeline of every post, newest first, with the account
 /// filter at the leading end of the navigation bar and the month picker at
-/// its trailing end. See `docs/design.md`.
+/// its trailing end. See `docs/architecture/board-and-timelines.md`.
 ///
 /// The dashboard gives the accounts the filter offers, the avatars a page
 /// leaves out and the data revision that makes the timeline read its pages

@@ -2,7 +2,7 @@ import SwiftUI
 
 /// The Journey screen the More tab opens: Kano's milestones as a timeline
 /// and every image as a gallery, from `GET /api/journey`. See
-/// `docs/design.md`.
+/// `docs/architecture/archives.md`.
 ///
 /// It is pushed inside More's `NavigationStack` and registers its own
 /// destinations.

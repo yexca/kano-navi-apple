@@ -2,7 +2,7 @@ import SwiftUI
 
 /// The More tab: the Journey, Works and LINE BLOG archive screens, Settings
 /// and About. A Journey milestone with a release opens that release's Works
-/// screen on the same stack. See `docs/design.md`.
+/// screen on the same stack. See `docs/architecture/board-and-timelines.md`.
 struct MoreView: View {
     @Environment(AppRouter.self) private var router: AppRouter?
     @State private var path = NavigationPath()

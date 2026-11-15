@@ -3,7 +3,7 @@ import SwiftUI
 
 /// The LINE BLOG archive screen the More tab opens: the list of recovered
 /// articles, which leads to the reader and each article's comments. See
-/// `docs/design.md`.
+/// `docs/architecture/archives.md`.
 struct LineBlogView: View {
     @Environment(\.services) private var services
 

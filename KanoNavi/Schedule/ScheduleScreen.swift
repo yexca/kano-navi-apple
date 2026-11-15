@@ -4,7 +4,7 @@ import SwiftUI
 
 /// The Schedule tab: the month in one of four modes under its name as a
 /// fixed header, Today at the leading end, and the entry sheet. See
-/// `docs/design.md`.
+/// `docs/architecture/board-and-timelines.md`.
 struct ScheduleScreen: View {
     @State private var model: ScheduleModel
     @State private var presented: PresentedEvent?

@@ -3,7 +3,7 @@ import SwiftUI
 
 /// The Now tab: what is live or next, the next two weeks' entries, sales,
 /// the latest video and a line on how fresh the data is. See
-/// `docs/design.md`.
+/// `docs/architecture/board-and-timelines.md`.
 struct NowView: View {
     @Environment(\.services) private var services
 

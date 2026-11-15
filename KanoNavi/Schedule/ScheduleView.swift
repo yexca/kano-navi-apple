@@ -1,7 +1,7 @@
 import KanoNaviCore
 import SwiftUI
 
-/// The Schedule tab. See `docs/design.md`.
+/// The Schedule tab. See `docs/architecture/board-and-timelines.md`.
 struct ScheduleView: View {
     @Environment(\.services) private var services
     @Environment(DashboardStore.self) private var dashboard: DashboardStore?

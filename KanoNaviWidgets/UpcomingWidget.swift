@@ -2,7 +2,7 @@ import SwiftUI
 import WidgetKit
 
 /// The calendar widget: what happens next and when, on the Home Screen and
-/// the Lock Screen. See `docs/design.md`.
+/// the Lock Screen. See `docs/architecture/widgets.md`.
 struct UpcomingWidget: Widget {
     static let kind = "com.yexca.kanonavi.upcoming"
 
