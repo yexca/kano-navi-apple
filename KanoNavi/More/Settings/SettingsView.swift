@@ -82,9 +82,16 @@ struct SettingsView: View {
                         }
                     }
                 }
+                // Draws the row like the menu above it, not as the gray bar
+                // a Mac form gives a bordered button.
+                .buttonStyle(.plain)
                 .accessibilityHint(Text(.More.settingsAppLanguageHint))
+            } footer: {
+                Text(.More.settingsLanguageFooter)
             }
         }
+        .formStyle(.grouped)
+        .readableContentWidth()
         .navigationTitle(.More.moreSettings)
         .inlineNavigationTitle()
         .task {

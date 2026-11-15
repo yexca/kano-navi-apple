@@ -1,26 +1,26 @@
 {
   "sourceLanguage": "en",
   "strings": {
-    "aboutBuiltWith": {
-      "comment": "Header above the names of the AI models the app was developed with. The names are not translated.",
+    "aboutBuiltWithModels": {
+      "comment": "Footnote naming the AI models the app was developed with. %@ is the list of model names, which are not translated.",
       "extractionState": "manual",
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Built With"
+            "value": "Built with %@"
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "開発に使用したモデル"
+            "value": "%@ で開発"
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "开发所用模型"
+            "value": "使用 %@ 开发"
           }
         }
       }
@@ -73,26 +73,26 @@
         }
       }
     },
-    "aboutVersion": {
-      "comment": "Label of the app's version number.",
+    "aboutVersionNumber": {
+      "comment": "The app's version under its name in About. %@ is the version and build, such as “0.1.0 (1)”.",
       "extractionState": "manual",
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Version"
+            "value": "Version %@"
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "バージョン"
+            "value": "バージョン %@"
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "版本"
+            "value": "版本 %@"
           }
         }
       }
@@ -309,6 +309,30 @@
           "stringUnit": {
             "state": "translated",
             "value": "内容语言"
+          }
+        }
+      }
+    },
+    "settingsLanguageFooter": {
+      "comment": "Footer under the language settings, telling the content and interface languages apart.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Content Language sets post text and titles; App Language sets the interface."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "コンテンツの言語は投稿や動画タイトルに、アプリの言語は画面表示に使われます。"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "内容语言用于帖子和标题，应用语言用于界面。"
           }
         }
       }

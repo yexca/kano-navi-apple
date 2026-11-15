@@ -24,8 +24,9 @@ traceability.
   cancellations are struck through or badged with their state in words.
 - **Branding and media:** No official logos or branding, and no custom artwork
   beyond the app icon (derived from the web board's avatar). The widget
-  extension bundles a small copy for Large and Extra Large headers. API media is
-  displayed as served without alteration.
+  extension bundles a small copy for Large and Extra Large headers, and the app
+  a copy for the About header. API media is displayed as served without
+  alteration.
 
 ## Concise UI Rules
 

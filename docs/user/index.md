@@ -42,9 +42,9 @@ and **About** under **App**.
   saved on your device and updates in the background. When the service cannot be
   reached, the saved copy remains visible beside a one-line notice and a **Try
   Again** button.
-- **About:** **About** notes that the app is an unofficial fan project, links
-  the Kano Navi web board and source repository, lists the AI models used to
-  build the app, and shows the app version.
+- **About:** **About** shows the app icon, name, and version, notes that the
+  app is an unofficial fan project, links the Kano Navi web board and source
+  repository, and names the AI models used to build the app.
 
 ## Freshness and Official Sources
 

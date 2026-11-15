@@ -94,6 +94,8 @@ struct NotificationSettingsView: View {
                 #endif
             }
         }
+        .formStyle(.grouped)
+        .readableContentWidth()
     }
 
     private var permissionDeniedSection: some View {

@@ -20,7 +20,8 @@ for the first report when it arrives before the first frame.
 
 On wide iPad and Mac windows, reading-focused views (`Now`, `Posts`, `Videos`,
 entry details, `Journey` timeline/milestones, `Works` releases/participation,
-and `LINE BLOG` reader/comments) center their content using
+`LINE BLOG` reader/comments, `Settings`, `Notifications`, and `About`) center
+their content using
 `readableContentWidth()` (672 pt base width, scaling with text size). List
 indexes (`More`, `Works`, `LINE BLOG` index), grids, `Schedule` months, and
 `MediaViewer` span the full width and adapt to free resizing and orientation
@@ -194,10 +195,17 @@ the root. Both presentations draw the same screens (`MoreDestinationScreen`),
 so a Journey milestone's **View in Works** pushes the release onto the stack it
 is in.
 
-- **Settings:** Notifications status, Content Language menu, and the system App
-  Language / Language & Region link.
-- **About:** Unofficial project statement, links to the web board and the
-  `kano-navi` repository, the `AboutCredits.models` list, and the app version.
+- **Settings:** Notifications status, Content Language menu, the system App
+  Language / Language & Region link, and a one-line footer telling the two
+  languages apart.
+- **About:** A centered header with the app icon (`AboutIcon`, a 72 pt copy of
+  the app icon), the app name, the version, and the unofficial project
+  statement; links to the web board and the `kano-navi` repository; and a
+  footnote naming the `AboutCredits.models`.
+
+Settings, Notifications, and About are `Form`s in the grouped style on every
+platform, so a Mac window shows the same rounded groups as iPhone and iPad
+instead of the Mac's default two-column form.
 
 ## Related Docs
 

@@ -36,5 +36,8 @@
 - The sidebar on Mac and iPad lists Journey, Works, LINE BLOG, Settings, and
   About directly, under Archive and App, in place of More. Switching an iPad
   between the sidebar and the tab bar keeps the open screen.
+- Settings, Notifications, and About show rounded groups in a centered column
+  on wide iPad and Mac windows. About opens with the app icon, name, and
+  version, and names the models it was built with in one line.
 
 </details>
