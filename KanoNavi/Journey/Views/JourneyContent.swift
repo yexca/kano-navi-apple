@@ -32,9 +32,12 @@ struct JourneyContent: View {
         // through them.
         .scrollEdgeEffectStyle(.hard, for: .top)
         .toolbar {
+            // The segmented control draws its own capsule, so the bar's
+            // glass behind it is hidden.
             ToolbarItem(placement: .barTrailing) {
                 JourneyModePicker(mode: $mode)
             }
+            .sharedBackgroundVisibility(.hidden)
         }
         .navigationDestination(for: JourneyDestination.self) { destination in
             JourneyDestinationView(destination: destination, journey: journey)

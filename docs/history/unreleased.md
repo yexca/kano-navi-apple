@@ -45,5 +45,7 @@
   version, and names the models it was built with in one line.
 - About links the app's source code and its license (AGPL-3.0) next to the
   service's source code.
+- The Journey toolbar shows its Timeline and Gallery switch as one control,
+  without a second capsule behind it.
 
 </details>
