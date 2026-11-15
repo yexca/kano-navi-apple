@@ -31,6 +31,9 @@ against `API_BASE_URL` and, when known, the original pixel dimensions).
   LRU memory cache (`MediaImageMemoryCache`) that clears on memory warnings.
   Concurrent views requesting the same URL and size share one fetch and decode;
   in-flight work cancels when all waiting views disappear.
+  A view already showing an image waits 150 ms before loading it at a new
+  size, so a window being resized fetches and decodes only the size it stops
+  at; first loads, new sources, and **Try Again** start at once.
 - **First-frame rendering.** When a view resolves its size, it checks the memory
   cache synchronously on the main actor to draw hits in the same frame. Launch
   screens (Now, Posts, Videos) set `\.mediaImageDecodesCachedFilesAtOnce` to

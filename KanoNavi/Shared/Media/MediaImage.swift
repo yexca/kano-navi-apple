@@ -146,6 +146,12 @@ struct MediaImage: View {
             phase = .loaded(image)
             return
         }
+        // A new size of the picture on screen: the sizes a resize passes
+        // through are cancelled while waiting, before anything is read.
+        if let delay = MediaImageLoadID.delay(showingImage: phase.image != nil) {
+            try? await Task.sleep(for: delay)
+            guard Task.isCancelled == false else { return }
+        }
         if phase.image == nil, let smaller = loader.memory.largestImage(of: source.url) {
             phase = .loaded(smaller)
         }

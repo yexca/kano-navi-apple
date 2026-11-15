@@ -20,3 +20,12 @@
   loaded.
 
 </details>
+
+<details>
+<summary><strong>Platform and Build</strong></summary>
+
+- Resizing a window on Mac or iPad keeps showing each picture while it moves
+  and decodes it once at the size the window stops at, instead of at every
+  size on the way.
+
+</details>
