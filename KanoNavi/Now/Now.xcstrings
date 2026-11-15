@@ -337,30 +337,6 @@
         }
       }
     },
-    "freshnessLine %@ %@": {
-      "comment": "The freshness line: the first %@ is when data was last collected, the second a summary such as “Some sources had warnings”.",
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%1$@ · %2$@"
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%1$@・%2$@"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%1$@ · %2$@"
-          }
-        }
-      }
-    },
     "freshnessNotReadForADay": {
       "comment": "Marks a source not read for more than a day.",
       "extractionState": "manual",
@@ -597,6 +573,224 @@
           "stringUnit": {
             "state": "translated",
             "value": "打开 %@"
+          }
+        }
+      }
+    },
+    "profileCatchphrase": {
+      "comment": "Catchphrase below the name on the profile card. Japanese copy, the same in every language.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "みんなの毎日を、まほろばに。"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "みんなの毎日を、まほろばに。"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "みんなの毎日を、まほろばに。"
+          }
+        }
+      },
+      "shouldTranslate": false
+    },
+    "profilePostCount %lld %lld": {
+      "comment": "VoiceOver label and tooltip of the profile card's post count, which opens Posts. The first %lld is the number of posts, the second the days they cover.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%#@count@ in %#@days@"
+          },
+          "substitutions": {
+            "count": {
+              "argNum": 1,
+              "formatSpecifier": "lld",
+              "variations": {
+                "plural": {
+                  "one": {
+                    "stringUnit": {
+                      "state": "translated",
+                      "value": "%arg post"
+                    }
+                  },
+                  "other": {
+                    "stringUnit": {
+                      "state": "translated",
+                      "value": "%arg posts"
+                    }
+                  }
+                }
+              }
+            },
+            "days": {
+              "argNum": 2,
+              "formatSpecifier": "lld",
+              "variations": {
+                "plural": {
+                  "one": {
+                    "stringUnit": {
+                      "state": "translated",
+                      "value": "%arg day"
+                    }
+                  },
+                  "other": {
+                    "stringUnit": {
+                      "state": "translated",
+                      "value": "%arg days"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%2$lld 日間のポスト %1$lld 件"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%2$lld 天内动态 %1$lld 条"
+          }
+        }
+      }
+    },
+    "profileTagline": {
+      "comment": "Tagline above the name on the profile card. Japanese copy, the same in every language.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Virtual Artist · ミリプロ SONA"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Virtual Artist · ミリプロ SONA"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Virtual Artist · ミリプロ SONA"
+          }
+        }
+      },
+      "shouldTranslate": false
+    },
+    "profileUpcomingCount": {
+      "comment": "VoiceOver label and tooltip of the profile card's upcoming count, which opens Schedule. %lld is the number of upcoming entries.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld upcoming entry"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld upcoming entries"
+                }
+              }
+            }
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "今後の予定 %lld 件"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld 项未来安排"
+          }
+        }
+      }
+    },
+    "profileVideoCount %lld %lld": {
+      "comment": "VoiceOver label and tooltip of the profile card's video count, which opens Videos. The first %lld is the number of videos, the second the days they cover.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%#@count@ in %#@days@"
+          },
+          "substitutions": {
+            "count": {
+              "argNum": 1,
+              "formatSpecifier": "lld",
+              "variations": {
+                "plural": {
+                  "one": {
+                    "stringUnit": {
+                      "state": "translated",
+                      "value": "%arg video"
+                    }
+                  },
+                  "other": {
+                    "stringUnit": {
+                      "state": "translated",
+                      "value": "%arg videos"
+                    }
+                  }
+                }
+              }
+            },
+            "days": {
+              "argNum": 2,
+              "formatSpecifier": "lld",
+              "variations": {
+                "plural": {
+                  "one": {
+                    "stringUnit": {
+                      "state": "translated",
+                      "value": "%arg day"
+                    }
+                  },
+                  "other": {
+                    "stringUnit": {
+                      "state": "translated",
+                      "value": "%arg days"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%2$lld 日間の動画 %1$lld 本"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%2$lld 天内视频 %1$lld 个"
           }
         }
       }

@@ -14,6 +14,7 @@ struct NowScreen: View {
     let feedURL: URL?
 
     @Environment(DashboardStore.self) private var dashboard
+    @Environment(\.locale) private var locale
 
     init(calendar: CalendarReader?, feedURL: URL?) {
         // Reads the cached range at once, so Coming Up is on the first frame.
@@ -37,8 +38,9 @@ struct NowScreen: View {
     private var content: some View {
         if let snapshot = dashboard.snapshot {
             TimelineView(.everyMinute) { context in
+                let board = NowBoard(dashboard: snapshot, now: context.date)
                 NowBoardList(
-                    board: NowBoard(dashboard: snapshot, now: context.date),
+                    board: board,
                     comingUp: comingUp,
                     feedURL: feedURL,
                     now: context.date,
@@ -48,6 +50,10 @@ struct NowScreen: View {
                     fetchedAt: dashboard.fetchedAt,
                     retry: refresh
                 )
+                // When the service last collected data; blank until its
+                // time can be trusted.
+                .navigationSubtitle(
+                    Text(verbatim: board.freshness.updatedLine(now: context.date, locale: locale) ?? ""))
             }
             .overlay(alignment: .bottom) {
                 NowSavedCopyNotice(dashboard: dashboard)

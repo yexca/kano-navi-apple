@@ -4,8 +4,12 @@ The **Now** tab answers "is she live, what is next, and when" without scrolling.
 
 ## Profile Card
 
-The top card shows Kano's banner, avatar, display name, romanized name, and
-links to her X accounts (by `@handle`), YouTube channel, and bilibili space.
+The top card shows Kano's banner, avatar, tagline, display name, romanized
+name, catchphrase, and links to her X accounts (by `@handle`), YouTube channel,
+and bilibili space. A row of counts below shows how many entries are coming up,
+how many posts arrived in the last few days, and how many videos came out in
+the last seven days; tapping a count opens **Schedule**, **Posts**, or
+**Videos**.
 
 ## Spotlight and Live Streams
 
@@ -37,10 +41,11 @@ the shop or announcement.
 
 ## Freshness Footer
 
-A one-line footer at the bottom reports when the service last collected data
-and warns in orange when the last collection failed or a source has not been
-read for a day. Tapping the footer opens a sheet with per-source read times and
-when your device last checked.
+The time the service last collected data appears under the **Now** title. A
+one-line footer at the bottom reports the data's status and warns in orange
+when the last collection failed or a source has not been read for a day.
+Tapping the footer opens a sheet with per-source read times and when your
+device last checked.
 
 ## Related Docs
 

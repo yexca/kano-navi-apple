@@ -14,6 +14,9 @@ struct DashboardFixture {
     var nextEvent: [String: Any]?
     var lastSync: [String: Any]?
     var sourceFetchedAt: [String: Any]?
+    /// The summary's `counts`; left out when `nil`.
+    var counts: [String: Any]?
+    var postWindowDays = 7
     /// The projection's shelf; an empty shelf when `nil`.
     var shelf: [String: Any]?
     var posts: [[String: Any]] = []
@@ -31,7 +34,8 @@ struct DashboardFixture {
         var summary: [String: Any] = [:]
         summary["latestVideo"] = latestVideo
         summary["nextEvent"] = nextEvent
-        var meta: [String: Any] = ["postWindowDays": 7, "xAccounts": xAccounts]
+        summary["counts"] = counts
+        var meta: [String: Any] = ["postWindowDays": postWindowDays, "xAccounts": xAccounts]
         meta["bilibiliAccounts"] = bilibiliAccounts
         meta["lastSync"] = lastSync
         meta["sourceFetchedAt"] = sourceFetchedAt

@@ -1,4 +1,5 @@
 import Foundation
+import KanoNaviComponents
 import KanoNaviCore
 import Testing
 
@@ -122,5 +123,61 @@ struct NowFreshnessSummaryTests {
 
         #expect(freshness.summary == .healthy)
         #expect(freshness.needsAttention == false)
+    }
+}
+
+@MainActor
+struct NowFreshnessUpdatedLineTests {
+    @Test(arguments: [
+        // 17:01 JST, read later the same Japan day.
+        ("2026-11-10T08:01:00Z", "2026-11-10T09:00:00Z", "Updated 17:01 JST"),
+        // A run on the day before names its day.
+        ("2026-11-09T08:01:00Z", "2026-11-10T01:00:00Z", "Updated Mon 9 Nov 17:01 JST"),
+    ])
+    func updatedLineNamesTheDayOnlyForAnEarlierJapanDay(syncAt: String, now: String, line: String) throws {
+        var fixture = DashboardFixture()
+        fixture.lastSync = ["status": "success", "finishedAt": syncAt]
+        let now = try DashboardFixture.instant(now)
+
+        let freshness = NowFreshness(meta: try fixture.dashboard().meta, now: now)
+
+        #expect(freshness.updatedLine(now: now, locale: Locale(identifier: "en_GB")) == line)
+    }
+
+    @Test func updatedLineCountsTheDayInJapan() throws {
+        // 00:30 JST on Nov 10 is still Nov 9 in UTC, but today in Japan.
+        var fixture = DashboardFixture()
+        fixture.lastSync = ["status": "success", "finishedAt": "2026-11-09T15:30:00Z"]
+        let syncAt = try DashboardFixture.instant("2026-11-09T15:30:00Z")
+        let now = try DashboardFixture.instant("2026-11-10T01:00:00Z")
+        let english = Locale(identifier: "en_GB")
+
+        let freshness = NowFreshness(meta: try fixture.dashboard().meta, now: now)
+
+        #expect(
+            freshness.updatedLine(now: now, locale: english)
+                == "Updated " + JSTTimeFormat.time(syncAt, locale: english))
+    }
+
+    @Test func updatedLineFollowsTheInterfaceLanguage() throws {
+        var fixture = DashboardFixture()
+        fixture.lastSync = ["status": "success", "finishedAt": "2026-11-10T08:01:00Z"]
+        let now = try DashboardFixture.instant("2026-11-10T09:00:00Z")
+
+        let freshness = NowFreshness(meta: try fixture.dashboard().meta, now: now)
+
+        #expect(freshness.updatedLine(now: now, locale: Locale(identifier: "ja_JP")) == "17:01 JST 更新")
+    }
+
+    @Test(arguments: [nil, "2026-11-10T01:10:00Z"] as [String?])
+    func noUpdatedLineWhileTheRunsTimeIsWaiting(syncAt: String?) throws {
+        var fixture = DashboardFixture()
+        fixture.lastSync = syncAt.map { ["status": "success", "finishedAt": $0] }
+        let now = try DashboardFixture.instant("2026-11-10T01:00:00Z")
+
+        let freshness = NowFreshness(meta: try fixture.dashboard().meta, now: now)
+
+        #expect(freshness.syncState == .waiting)
+        #expect(freshness.updatedLine(now: now, locale: Locale(identifier: "en_GB")) == nil)
     }
 }

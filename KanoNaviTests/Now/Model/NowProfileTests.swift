@@ -89,4 +89,48 @@ struct NowProfileTests {
         #expect(profile.bannerURL == nil)
         #expect(profile.youtubeURL.absoluteString == "https://example.com/youtube")
     }
+
+    @Test func countsComeFromTheSummaryWithThePostWindow() throws {
+        var fixture = DashboardFixture()
+        fixture.counts = ["upcomingEvents": 12, "posts": 34, "videos": 5]
+        fixture.postWindowDays = 3
+
+        let profile = NowProfile(dashboard: try fixture.dashboard())
+
+        #expect(
+            profile.counts
+                == NowProfile.Counts(upcomingEvents: 12, posts: 34, postWindowDays: 3, videos: 5))
+    }
+
+    @Test func noCountsWithoutSummaryCounts() throws {
+        let profile = NowProfile(dashboard: try DashboardFixture().dashboard())
+
+        #expect(profile.counts == nil)
+    }
+
+    @Test func videosCountTheAPIsSevenDayWindow() {
+        #expect(NowProfile.Counts.videoWindowDays == 7)
+    }
+
+    @Test func countLabelsArePluralizedInEachLanguage() {
+        #expect(resolved(.Now.profileUpcomingCount(1), "en") == "1 upcoming entry")
+        #expect(resolved(.Now.profileUpcomingCount(12), "en") == "12 upcoming entries")
+        #expect(resolved(.Now.profilePostCount(count: 1, days: 1), "en") == "1 post in 1 day")
+        #expect(resolved(.Now.profilePostCount(count: 34, days: 3), "en") == "34 posts in 3 days")
+        #expect(resolved(.Now.profileVideoCount(count: 5, days: 7), "en") == "5 videos in 7 days")
+        #expect(resolved(.Now.profilePostCount(count: 34, days: 3), "ja") == "3 日間のポスト 34 件")
+        #expect(resolved(.Now.profileVideoCount(count: 5, days: 7), "zh-Hans") == "7 天内视频 5 个")
+    }
+
+    @Test(arguments: ["en", "ja", "zh-Hans"])
+    func taglineAndCatchphraseAreTheSameInEveryLanguage(language: String) {
+        #expect(resolved(.Now.profileTagline, language) == "Virtual Artist · ミリプロ SONA")
+        #expect(resolved(.Now.profileCatchphrase, language) == "みんなの毎日を、まほろばに。")
+    }
+
+    private func resolved(_ resource: LocalizedStringResource, _ identifier: String) -> String {
+        var resource = resource
+        resource.locale = Locale(identifier: identifier)
+        return String(localized: resource)
+    }
 }

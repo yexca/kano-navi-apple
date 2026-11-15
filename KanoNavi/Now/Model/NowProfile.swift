@@ -13,6 +13,19 @@ struct NowProfile: Equatable {
         var id: URL { url }
     }
 
+    /// The dashboard's counts, each opening the tab it counts.
+    struct Counts: Equatable {
+        /// The window `counts.videos` covers, by the public API's contract:
+        /// public videos published within the most recent seven days.
+        static let videoWindowDays = 7
+
+        var upcomingEvents: Int
+        var posts: Int
+        /// The days `posts` covers, the dashboard's post window.
+        var postWindowDays: Int
+        var videos: Int
+    }
+
     var displayName: String
     var romanizedName: String
     var avatarURL: URL?
@@ -23,6 +36,8 @@ struct NowProfile: Equatable {
     var youtubeURL: URL
     /// The first Bilibili page in the link directory, if any.
     var bilibiliURL: URL?
+    /// The dashboard summary's counts; `nil` when it has none.
+    var counts: Counts?
 
     init(dashboard: Dashboard) {
         let profile = dashboard.profile
@@ -44,6 +59,12 @@ struct NowProfile: Equatable {
         xAccounts = accounts
 
         bilibiliURL = dashboard.resources.first { $0.url.absoluteString.contains("bilibili.com") }?.url
+
+        counts = dashboard.summary.counts.map { counts in
+            Counts(
+                upcomingEvents: counts.upcomingEvents, posts: counts.posts,
+                postWindowDays: dashboard.meta.postWindowDays, videos: counts.videos)
+        }
     }
 
     /// Whether `url` is an account's page on X: `https://x.com/<handle>` or

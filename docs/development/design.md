@@ -7,8 +7,9 @@ traceability.
 ## Visual Language
 
 - **Typography and iconography:** System fonts (rounded system font in Home
-  Screen widgets), SF Symbols, and semantic system colors across light and dark
-  appearances.
+  Screen widgets; Hiragino Sans for fixed Japanese copy, so it keeps Japanese
+  glyphs in every interface language), SF Symbols, and semantic system colors
+  across light and dark appearances.
 - **Platform logos:** YouTube, X, and Bilibili use custom monochrome vector
   symbols in `PlatformLogos.xcassets` built from Simple Icons so they tint and
   scale like SF Symbols; other platforms and sites use SF Symbols. See

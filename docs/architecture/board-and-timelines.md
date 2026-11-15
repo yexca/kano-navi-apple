@@ -20,15 +20,26 @@ Top-to-bottom layout (below any failure banner):
 
 - **Profile card:** 128 pt cropped banner (top third in view, or soft fill),
   84 pt round avatar overlapping halfway in a ring of the card background (or
-  neutral circle), display name, small uppercase romanized name, and one row of
-  links. Links list an X logo + `@handle` for each X account in `resources`
-  (`x.com/<handle>` or `twitter.com`, falling back to `xUrl`), then YouTube
-  (`youtubeUrl`) and Bilibili (first `bilibili.com` resource) as round logo-only
-  buttons with VoiceOver platform names (the profile card is the deliberate
-  exception to the logo-and-name link rule in [Design](../development/design.md)).
-  Narrow cards try tighter spacing, cap link text at extra-large then large
-  sizes, and scale handles before wrapping only at accessibility text sizes.
-  Images are decorative; VoiceOver reads the display name once as a heading.
+  neutral circle), the tagline (`Virtual Artist · ミリプロ SONA`) as a small
+  kicker, display name, small uppercase romanized name, the catchphrase
+  (`みんなの毎日を、まほろばに。`), one row of links, and one row of counts.
+  Tagline and catchphrase are untranslated app copy set in Hiragino Sans
+  (`Font.japanese`, scaled with their text styles) in every language, since
+  the system font gives Japanese text Chinese glyphs under Simplified Chinese.
+  Links list an X logo + `@handle` for each X account in
+  `resources` (`x.com/<handle>` or `twitter.com`, falling back to `xUrl`), then
+  YouTube (`youtubeUrl`) and Bilibili (first `bilibili.com` resource) as round
+  logo-only buttons with VoiceOver platform names (the profile card is the
+  deliberate exception to the logo-and-name link rule in
+  [Design](../development/design.md)). Narrow cards try tighter spacing, cap
+  link text at extra-large then large sizes, and scale handles before wrapping
+  only at accessibility text sizes. Counts show `summary.counts` as symbol +
+  number buttons: `upcomingEvents` opens **Schedule** on today, `posts` (over
+  `meta.postWindowDays`) opens **Posts**, and `videos` (the API's seven-day
+  window) opens **Videos**; each carries its full phrase, such as "34 posts in
+  3 days", as VoiceOver label and pointer tooltip. The row is omitted without
+  `summary.counts` and wraps at accessibility text sizes. Images are
+  decorative; VoiceOver reads the display name once as a heading.
 - **Spotlight ticket and Bilibili live:** Shows `projection.spotlight` (live,
   next with countdown and links, or latest video). Bilibili `liveNow` renders
   its own card when not in the spotlight.
@@ -49,10 +60,14 @@ Top-to-bottom layout (below any failure banner):
   `● Live` and end time; done rows dim; cancelled rows strike through and show
   their state. Tapping opens the entry in **Schedule**.
 - **On Sale:** Projection sales with opening and closing JST times.
-- **Freshness footer:** One line showing last collection time and status
-  summary, turning orange with a warning symbol when the last run failed or any
-  source is over a day old. Tapping opens a detail sheet with per-source read
-  times and device check time.
+- **Freshness footer:** One line showing the status summary (warnings,
+  running, failed, or not read for a day; the freshness header when healthy),
+  turning orange with a warning symbol when the last run failed or any source
+  is over a day old. Tapping opens a detail sheet with per-source read times
+  and device check time.
+- **Navigation subtitle:** "Updated" with the last collection run's JST time,
+  adding its Japan day when the run is before today; blank while the run's time
+  is unknown or too far ahead of the device clock.
 
 Pull to refresh reloads the dashboard and Coming Up's range; Coming Up also
 reloads whenever a new dashboard snapshot arrives.

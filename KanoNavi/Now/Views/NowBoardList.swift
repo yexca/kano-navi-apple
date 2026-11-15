@@ -64,7 +64,7 @@ struct NowBoardList: View {
 
             Section {
             } footer: {
-                NowFreshnessFooter(freshness: board.freshness, fetchedAt: fetchedAt, now: now)
+                NowFreshnessFooter(freshness: board.freshness, fetchedAt: fetchedAt)
             }
         }
         .readableContentWidth()

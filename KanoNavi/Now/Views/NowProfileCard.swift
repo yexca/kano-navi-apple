@@ -1,9 +1,11 @@
 import KanoNaviComponents
+import KanoNaviCore
 import SwiftUI
 
 /// The identity card at the top of the Now tab, as on the web board: a
-/// cropped banner, the avatar rising over its lower edge, the name, and the
-/// profile's X accounts, YouTube and Bilibili.
+/// cropped banner, the avatar rising over its lower edge, the tagline, the
+/// name, the catchphrase, the profile's X accounts, YouTube and Bilibili, and
+/// the dashboard's counts.
 ///
 /// It fills its list row edge to edge; give the row no insets and
 /// ``background`` as its background, which the avatar's ring matches.
@@ -11,6 +13,7 @@ struct NowProfileCard: View {
     let profile: NowProfile
 
     @Environment(\.openURL) private var openURL
+    @Environment(AppRouter.self) private var router
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
 
     /// The row's background, which the avatar's ring repeats.
@@ -30,8 +33,22 @@ struct NowProfileCard: View {
                 avatar
                     // Half of the avatar rises over the banner.
                     .padding(.top, -Self.avatarSize / 2)
-                name
+                VStack(alignment: .leading, spacing: 4) {
+                    // Japanese copy in every language, in the Japanese face.
+                    Text(.Now.profileTagline)
+                        .font(.japanese(.caption))
+                        .foregroundStyle(.secondary)
+                        // Wraps rather than truncates at accessibility sizes.
+                        .fixedSize(horizontal: false, vertical: true)
+                    name
+                }
+                Text(.Now.profileCatchphrase)
+                    .font(.japanese(.subheadline))
+                    .foregroundStyle(.secondary)
                 links
+                if let counts = profile.counts {
+                    countsRow(counts)
+                }
             }
             .padding(.horizontal, 16)
             .padding(.bottom, 16)
@@ -177,5 +194,68 @@ struct NowProfileCard: View {
             .labelStyle(.iconOnly)
         }
         .buttonBorderShape(.circle)
+    }
+
+    /// The counts in one row, wrapping only at accessibility text sizes.
+    @ViewBuilder
+    private func countsRow(_ counts: NowProfile.Counts) -> some View {
+        if dynamicTypeSize.isAccessibilitySize {
+            NowFlowLayout(spacing: 20) {
+                countButtons(counts)
+            }
+        } else {
+            HStack(spacing: 20) {
+                countButtons(counts)
+            }
+        }
+    }
+
+    /// Upcoming entries, posts and videos, each opening its tab: Schedule on
+    /// today, Posts and Videos at their newest.
+    private func countButtons(_ counts: NowProfile.Counts) -> some View {
+        Group {
+            countButton(
+                counts.upcomingEvents, systemImage: "calendar",
+                label: .Now.profileUpcomingCount(counts.upcomingEvents)
+            ) {
+                router.selectedTab = .schedule
+                router.scheduleFocus = .date(JapanDate.today(at: .now))
+            }
+            countButton(
+                counts.posts, systemImage: "bubble.left",
+                label: .Now.profilePostCount(count: counts.posts, days: counts.postWindowDays)
+            ) {
+                router.selectedTab = .posts
+            }
+            countButton(
+                counts.videos, systemImage: "play.rectangle",
+                label: .Now.profileVideoCount(count: counts.videos, days: NowProfile.Counts.videoWindowDays)
+            ) {
+                router.selectedTab = .videos
+            }
+        }
+        .font(.footnote)
+        .foregroundStyle(.secondary)
+        .buttonStyle(.plain)
+    }
+
+    /// A count after its symbol; VoiceOver and the pointer's tooltip read
+    /// the full label, such as "12 upcoming events".
+    private func countButton(
+        _ count: Int, systemImage: String, label: LocalizedStringResource, action: @escaping () -> Void
+    ) -> some View {
+        Button(action: action) {
+            Label {
+                Text(count, format: .number)
+                    .monospacedDigit()
+            } icon: {
+                Image(systemName: systemImage)
+            }
+            .labelStyle(NowCompactLabelStyle())
+            .padding(.vertical, 4)
+            .contentShape(.rect)
+        }
+        .accessibilityLabel(Text(label))
+        .help(Text(label))
     }
 }

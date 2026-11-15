@@ -1,4 +1,5 @@
 import Foundation
+import KanoNaviComponents
 import KanoNaviCore
 
 /// How current the snapshot's data is: the last collection run and the last
@@ -57,9 +58,9 @@ struct NowFreshness: Equatable {
         return ["success", "ok", "partial"].contains(syncStatus) == false
     }
 
-    /// What the one-line footer adds after the last run's time.
+    /// What the one-line footer reports.
     enum Summary: Equatable {
-        /// Nothing to add.
+        /// Nothing to report.
         case healthy
         /// A run is collecting now.
         case running
@@ -91,6 +92,20 @@ struct NowFreshness: Equatable {
     /// run or a source was not read for a day.
     var needsAttention: Bool {
         summary == .failed || summary == .notReadForADay
+    }
+
+    /// When the last run collected data, such as "Updated 17:01 JST"; a run
+    /// before today in Japan also names its day. `nil` while the run's time
+    /// is waiting.
+    func updatedLine(now: Date, locale: Locale) -> String? {
+        guard let syncAt, syncState != .waiting else { return nil }
+        let time =
+            JapanDate.date(from: syncAt) == JapanDate.today(at: now)
+            ? JSTTimeFormat.time(syncAt, locale: locale)
+            : JSTTimeFormat.dateTime(syncAt, locale: locale)
+        var resource = LocalizedStringResource.Now.freshnessUpdated(time)
+        resource.locale = locale
+        return String(localized: resource)
     }
 
     static func state(of date: Date?, now: Date) -> State {
