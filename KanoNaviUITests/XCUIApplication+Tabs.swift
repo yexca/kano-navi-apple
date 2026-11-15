@@ -1,12 +1,23 @@
 import XCTest
 
 extension XCUIApplication {
-    /// The button of the tab named `label`. On iPhone it is in the tab bar;
-    /// on iPad the tabs are plain buttons in the bar at the top or in the
+    /// The item of the tab named `label`. On iPhone it is a button in the tab
+    /// bar; on iPad a plain button in the bar at the top, or a cell in the
     /// sidebar, with no tab bar around them. On a narrow iPad the bar at the
     /// top can hold a tab scrolled out of view, which `selectTab(_:)` reaches.
     func tabButton(_ label: String) -> XCUIElement {
-        buttons[label].firstMatch
+        descendants(matching: .any).matching(
+            NSPredicate(
+                format: "label == %@ AND (elementType == %d OR elementType == %d)", label,
+                XCUIElement.ElementType.button.rawValue, XCUIElement.ElementType.cell.rawValue)
+        ).firstMatch
+    }
+
+    /// Whether the tabs are in a sidebar, which lists More's screens as tabs
+    /// of their own, rather than a tab bar with More. The sidebar's first
+    /// item, Now, is a cell; in a tab bar it is a button.
+    var showsTabSidebar: Bool {
+        cells.matching(NSPredicate(format: "label IN %@", ["Now", "いま", "现在"])).firstMatch.exists
     }
 
     /// Selects the tab named `label`. A tab the bar at the top has scrolled
@@ -35,6 +46,22 @@ extension XCUIApplication {
             return
         }
         item.tap()
+    }
+
+    /// Opens the screen More lists as `label`: in a sidebar it is a tab of
+    /// its own, in a tab bar a row of the `moreLabel` tab.
+    func openMoreScreen(
+        _ label: String, more moreLabel: String, file: StaticString = #filePath, line: UInt = #line
+    ) {
+        let sidebarItem = cells[label].firstMatch
+        if sidebarItem.waitForExistence(timeout: 2), sidebarItem.isHittable {
+            sidebarItem.tap()
+            return
+        }
+        selectTab(moreLabel, file: file, line: line)
+        let row = collectionViews.buttons[label].firstMatch
+        XCTAssertTrue(row.waitForExistence(timeout: 10), "No More row \(label)", file: file, line: line)
+        row.tap()
     }
 
     /// Whether another button, such as the iPad bar's arrow to its next page,

@@ -15,7 +15,12 @@ struct KanoNaviApp: App {
         // Reading the configuration here makes a build with a missing or
         // invalid API base URL fail at launch, not on its first request.
         let services = AppServices.live()
-        let router = AppRouter()
+        #if os(macOS)
+            // A Mac window always shows the tabs in a sidebar.
+            let router = AppRouter(showsSidebar: true)
+        #else
+            let router = AppRouter()
+        #endif
         let stream = URLSessionRevisionStream(baseURL: services.client.baseURL)
         let notifications = NotificationController(
             client: services.client,

@@ -57,8 +57,8 @@ Choose the lowest sufficient test layer that protects the contract:
     content language intent handling, deep links, and rendering layouts (Home,
     Lock Screen, Monochrome).
 - **UI tests** (`KanoNaviUITests`, iOS/iPadOS only) use **XCTest**: launch
-  smoke, tab navigation, Schedule mode switching, and notification settings
-  flows.
+  smoke, tab navigation, iPad sidebar tabs, Schedule mode switching, and
+  notification settings flows.
 
 Do not add tests for prose changes or purely visual styling without an
 observable contract or interaction rule.

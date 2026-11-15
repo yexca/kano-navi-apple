@@ -26,13 +26,15 @@ These pages describe what you see and can do in the app:
 ## Navigation and Settings
 
 The app has five tabs (**Now**, **Schedule**, **Posts**, **Videos**, and
-**More**) shown as a tab bar on iPhone, an adaptable tab bar or sidebar on iPad,
-and a sidebar on Mac.
+**More**) in a tab bar on iPhone and on iPad. On Mac, and on iPad when you turn
+the tab bar into a sidebar, the sidebar lists More's screens directly instead:
+**Journey**, **Works**, and **LINE BLOG** under **Archive**, and **Settings**
+and **About** under **App**.
 
 - **Languages:** The interface supports English, Japanese, and Simplified
   Chinese through your system's per-app language setting (Language & Region on
-  Mac). A separate **Content Language** setting under **More → Settings**
-  chooses the language of post text, video titles, schedule titles, and archive
+  Mac). A separate **Content Language** setting under **Settings** chooses the
+  language of post text, video titles, schedule titles, and archive
   descriptions (**Same as app**, English, 日本語, or 简体中文).
 - **Appearance:** Light and dark appearances follow your system setting.
 - **Japan time:** Event dates and times follow Japan Standard Time (JST).
@@ -40,9 +42,9 @@ and a sidebar on Mac.
   saved on your device and updates in the background. When the service cannot be
   reached, the saved copy remains visible beside a one-line notice and a **Try
   Again** button.
-- **About:** Under **More → About**, the app notes that it is an unofficial fan
-  project, links the Kano Navi web board and source repository, lists the AI
-  models used to build the app, and shows the app version.
+- **About:** **About** notes that the app is an unofficial fan project, links
+  the Kano Navi web board and source repository, lists the AI models used to
+  build the app, and shows the app version.
 
 ## Freshness and Official Sources
 

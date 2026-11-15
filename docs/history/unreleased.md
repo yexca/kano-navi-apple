@@ -27,5 +27,8 @@
 - Resizing a window on Mac or iPad keeps showing each picture while it moves
   and decodes it once at the size the window stops at, instead of at every
   size on the way.
+- The sidebar on Mac and iPad lists Journey, Works, LINE BLOG, Settings, and
+  About directly, under Archive and App, in place of More. Switching an iPad
+  between the sidebar and the tab bar keeps the open screen.
 
 </details>

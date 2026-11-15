@@ -1,6 +1,6 @@
 # Journey
 
-The **Journey** section under **More** presents Kano Mahoro's public milestones
+The **Journey** section (in **More**, or the sidebar) presents Kano Mahoro's public milestones
 since 2010 alongside a visual gallery.
 
 ## Timeline and Gallery

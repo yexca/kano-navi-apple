@@ -13,8 +13,13 @@ final class LaunchTests: XCTestCase {
 
         XCTAssertTrue(app.navigationBars["Now"].waitForExistence(timeout: 10))
 
-        // In order along the tab bar, the iPad's bar at the top or its sidebar.
-        let labels = ["Now", "Schedule", "Posts", "Videos", "More"]
+        // In order along the tab bar, the iPad's bar at the top or its
+        // sidebar, which lists More's screens instead of More.
+        let shared = ["Now", "Schedule", "Posts", "Videos"]
+        let labels =
+            app.showsTabSidebar
+            ? shared + ["Journey", "Works", "LINE BLOG Archive", "Settings", "About"]
+            : shared + ["More"]
         for label in labels {
             XCTAssertTrue(app.tabButton(label).exists, label)
         }

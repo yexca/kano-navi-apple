@@ -43,10 +43,7 @@ final class NotificationSettingsUITests: XCTestCase {
         ]
         app.launch()
 
-        app.selectTab("更多")
-        let settingsButton = app.collectionViews.buttons["设置"]
-        XCTAssertTrue(settingsButton.waitForExistence(timeout: 10))
-        settingsButton.tap()
+        app.openMoreScreen("设置", more: "更多")
 
         let notificationsButton = app.collectionViews.buttons.matching(
             NSPredicate(format: "label CONTAINS %@", "通知")
@@ -71,10 +68,7 @@ final class NotificationSettingsUITests: XCTestCase {
 
     @MainActor
     private func openNotificationSettings(in app: XCUIApplication) {
-        app.selectTab("More")
-        XCTAssertTrue(app.navigationBars["More"].waitForExistence(timeout: 10))
-
-        app.collectionViews.buttons["Settings"].tap()
+        app.openMoreScreen("Settings", more: "More")
         XCTAssertTrue(app.navigationBars["Settings"].waitForExistence(timeout: 5))
 
         let notificationsButton = app.collectionViews.buttons.matching(

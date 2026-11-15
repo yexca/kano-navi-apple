@@ -9,15 +9,15 @@ the `kano-navi` web board.
   Chinese (`zh-Hans`) are supported via Xcode String Catalogs (`.xcstrings`)
   with generated Swift symbols (feature tables are namespaced, such as
   `Text(.Schedule.today)`).
-- The app follows the system's per-app language setting. **More → Settings → App
-  Language** opens the system per-app language screen on iOS/iPadOS and Language
-  & Region on macOS.
+- The app follows the system's per-app language setting. **Settings → App
+  Language** opens the system per-app language screen on iOS/iPadOS and
+  Language & Region on macOS.
 
 ## Content Language
 
-- **More → Settings → Content Language** (`ContentLanguageOption`) lets users
-  pick **Same as app** (default), English, 日本語, or 简体中文 independently of
-  the interface language. Widgets expose the same choice through
+- **Settings → Content Language** (`ContentLanguageOption`) lets users pick
+  **Same as app** (default), English, 日本語, or 简体中文 independently of the
+  interface language. Widgets expose the same choice through
   `UpcomingConfigurationIntent`.
 - The API's `zh-CN` locale key maps to the app's `zh-Hans`.
 - `ContentLanguageResolver` resolves post text, video titles, and schedule

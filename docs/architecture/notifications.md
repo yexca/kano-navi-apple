@@ -6,7 +6,7 @@ Local notifications and scheduled reminders run entirely on device through
 Group, keeping unsigned and ad-hoc builds functional.
 
 Authorization is requested only when the user enables **Allow Notifications**
-in **More → Settings → Notifications**, never at launch.
+in **Settings → Notifications**, never at launch.
 
 ## Baseline and Backfill Guard
 

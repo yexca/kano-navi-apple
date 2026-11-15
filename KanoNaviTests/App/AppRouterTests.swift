@@ -32,7 +32,7 @@ struct AppRouterTests {
         #expect(router.open(url) == false)
         #expect(router.selectedTab == .now)
         #expect(router.scheduleFocus == nil)
-        #expect(router.moreDestination == nil)
+        #expect(router.stackRequest == nil)
     }
 
     @Test func openingALinkSelectsSchedule() throws {
@@ -85,7 +85,7 @@ struct AppRouterTests {
     }
 
     @Test func openingNotificationTabAndSettingsRoutes() throws {
-        let router = AppRouter()
+        let router = AppRouter(showsSidebar: false)
 
         #expect(router.open(try #require(URL(string: "kanonavi://posts"))))
         #expect(router.selectedTab == .posts)
@@ -98,6 +98,91 @@ struct AppRouterTests {
 
         #expect(router.open(try #require(URL(string: "kanonavi://settings/notifications"))))
         #expect(router.selectedTab == .more)
-        #expect(router.moreDestination == .notifications)
+        #expect(router.stackRequest == StackRequest(tab: .more, path: [.settings, .notifications]))
+    }
+
+    @Test func notificationSettingsInASidebarOpenTheSettingsTab() {
+        let router = AppRouter(showsSidebar: true)
+
+        router.open(.notificationSettings)
+
+        #expect(router.selectedTab == .settings)
+        #expect(router.stackRequest == StackRequest(tab: .settings, path: [.notifications]))
+    }
+
+    @Test(arguments: [false, true])
+    func aLinkWaitsForThePresentation(showsSidebar: Bool) {
+        let router = AppRouter()
+        router.openAtLaunch(.notificationSettings)
+        #expect(router.selectedTab == .now)
+        #expect(router.stackRequest == nil)
+
+        router.tabPresentationChanged(showsSidebar: showsSidebar)
+
+        if showsSidebar {
+            #expect(router.selectedTab == .settings)
+            #expect(router.stackRequest == StackRequest(tab: .settings, path: [.notifications]))
+        } else {
+            #expect(router.selectedTab == .more)
+            #expect(router.stackRequest == StackRequest(tab: .more, path: [.settings, .notifications]))
+        }
+    }
+
+    @Test(arguments: [
+        (AppTab.journey, MoreDestination.journey), (.works, .works), (.lineBlog, .lineBlog),
+        (.settings, .settings), (.about, .about),
+    ])
+    func aSidebarTabMovesToMoreInATabBar(tab: AppTab, screen: MoreDestination) {
+        let router = AppRouter(showsSidebar: true)
+        router.selectedTab = tab
+
+        router.tabPresentationChanged(showsSidebar: false)
+
+        #expect(router.selectedTab == .more)
+        #expect(router.stackRequest == StackRequest(tab: .more, path: [screen]))
+        #expect(router.moreRoot == screen)
+    }
+
+    @Test func moreMovesToTheTabOfItsScreenInASidebar() {
+        let router = AppRouter(showsSidebar: false)
+        router.selectedTab = .more
+        router.moreRoot = .works
+
+        router.tabPresentationChanged(showsSidebar: true)
+
+        #expect(router.selectedTab == .works)
+        #expect(router.stackRequest == StackRequest(tab: .works, path: []))
+        #expect(router.moreRoot == nil)
+    }
+
+    @Test func moreShowingItsListMovesToJourneyInASidebar() {
+        let router = AppRouter(showsSidebar: false)
+        router.selectedTab = .more
+
+        router.tabPresentationChanged(showsSidebar: true)
+
+        #expect(router.selectedTab == .journey)
+    }
+
+    @Test(arguments: [AppTab.now, .schedule, .posts, .videos])
+    func tabsBothPresentationsShowStaySelected(tab: AppTab) {
+        let router = AppRouter(showsSidebar: false)
+        router.selectedTab = tab
+
+        router.tabPresentationChanged(showsSidebar: true)
+        #expect(router.selectedTab == tab)
+        router.tabPresentationChanged(showsSidebar: false)
+        #expect(router.selectedTab == tab)
+        #expect(router.stackRequest == nil)
+    }
+
+    @Test func anUnchangedPresentationLeavesTheSelection() {
+        let router = AppRouter(showsSidebar: true)
+        router.selectedTab = .journey
+
+        router.tabPresentationChanged(showsSidebar: true)
+
+        #expect(router.selectedTab == .journey)
+        #expect(router.stackRequest == nil)
     }
 }

@@ -45,14 +45,15 @@ provides the counterpart so screens carry no platform checks of their own:
 On macOS:
 
 - The app opens in one window (minimum 720 × 520 points, default 1100 × 760
-  points). Tabs appear in the sidebar of the sidebar-adaptable tab view, links
-  and notifications open inside that window, and File has no New Window command.
+  points). Tabs appear in the sidebar of the sidebar-adaptable tab view (see
+  [Board and timelines](board-and-timelines.md)), links and notifications open
+  inside that window, and File has no New Window command.
 - View ▸ Refresh (`⌘R`) reads the screen in front again through
   `FocusedValues.screenRefresh`.
 - Sheets close with their Close button or `Esc`. The image viewer is a large
   sheet (see [Media and viewer](media-and-viewer.md#image-viewer)).
-- Settings stays in the **More** tab rather than a separate Settings window.
-  **App Language** opens Language & Region in System Settings.
+- Settings is a sidebar tab rather than a separate Settings window. **App
+  Language** opens Language & Region in System Settings.
 - Notifications and background refresh run as on iOS (see
   [Notifications](notifications.md)).
 - Widgets offer Home Screen sizes on the desktop and in Notification Center

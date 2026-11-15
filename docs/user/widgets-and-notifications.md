@@ -18,7 +18,7 @@ Kano Navi includes **Upcoming** widgets for the Home Screen and desktop
 
 Notifications run entirely on your device without an account or remote push
 tokens. Permission is requested only when you enable **Allow Notifications**
-under **More → Settings → Notifications**.
+under **Settings → Notifications**.
 
 - **Immediate alerts:** Enable alerts for **Live Now**, **Posts** (own X,
   bilibili, and agency posts), **Videos** (works, Shorts, and optionally stream

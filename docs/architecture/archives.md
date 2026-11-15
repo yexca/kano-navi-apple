@@ -1,8 +1,9 @@
 # Archives
 
 The **Journey**, **Works**, and **LINE BLOG** archive screens open from the
-**More** tab and load whole documents via `DocumentModel`
-(`KanoNavi/Shared/Document/`).
+**More** tab or as sidebar tabs of their own (see
+[Board and timelines](board-and-timelines.md#more-and-sidebar-tabs)) and load
+whole documents via `DocumentModel` (`KanoNavi/Shared/Document/`).
 
 ## Journey
 
@@ -22,7 +23,7 @@ pinned horizontal row of identity chips (`safeAreaBar` with hard scroll edge):
 - **Milestone page:** Full date, whole detail text, sized images opening the
   viewer, **Source and Links** (or "Third-party stream archive"), and **View in
   Works** when `releaseId` is present (invoking `journeyOpenRelease` from the
-  More stack environment). Missing milestones after a reload show "Milestone
+  environment of the stack it is in). Missing milestones after a reload show "Milestone
   Not Found".
 - **Gallery:** Deduplicates images in timeline order (milestone images, release
   covers, gallery-only images) with a category filter (artwork, models,

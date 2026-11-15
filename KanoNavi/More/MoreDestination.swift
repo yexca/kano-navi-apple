@@ -1,4 +1,4 @@
-/// A screen the More tab opens.
+/// A screen the More tab, or a sidebar tab of its own, opens.
 enum MoreDestination: Hashable {
     case journey
     case works

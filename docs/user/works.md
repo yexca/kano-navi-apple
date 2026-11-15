@@ -1,6 +1,6 @@
 # Works
 
-The **Works** section under **More** collects Kano's discography and song
+The **Works** section (in **More**, or the sidebar) collects Kano's discography and song
 uploads.
 
 ## Entry Screen

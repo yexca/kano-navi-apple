@@ -1,6 +1,6 @@
 # LINE BLOG Archive
 
-The **LINE BLOG** section under **More** preserves Kano's 2015–2019 blog
+The **LINE BLOG** section (in **More**, or the sidebar) preserves Kano's 2015–2019 blog
 articles recovered from web archives after LINE BLOG closed.
 
 ## Browsing and Reading

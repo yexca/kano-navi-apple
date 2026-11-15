@@ -1,10 +1,22 @@
 # Board and Timelines
 
-The app uses a sidebar-adaptable `TabView` with five tabs: **Now**,
-**Schedule**, **Posts**, **Videos**, and **More**. On iPhone they appear as a
-tab bar, on macOS as a sidebar, and on iPadOS as an adaptable top bar or
-sidebar; deep links and cross-tab buttons select tabs uniformly across all
-three.
+The app uses a sidebar-adaptable `TabView` in two presentations:
+
+- **Tab bar** (iPhone, iPad's bar at the top, compact iPad windows): **Now**,
+  **Schedule**, **Posts**, **Videos**, and **More**.
+- **Sidebar** (macOS, and iPad when the bar at the top turns into one): the
+  first four tabs, then More's screens as tabs of their own in two sections,
+  **Archive** (**Journey**, **Works**, **LINE BLOG**) and **App**
+  (**Settings**, **About**). More is not listed.
+
+`AppRouter` follows the presentation the tabs report through `tabBarPlacement`
+and builds the tab list from it. When an iPad switches presentations, a
+selected tab the new one does not list moves to the same screen: a sidebar tab
+to More opened at that screen, and More to the sidebar tab of the screen it
+shows (**Journey** while it shows its list). Only that root screen carries
+over. Deep links and cross-tab buttons select tabs uniformly; the notification
+settings link opens Settings ▸ Notifications in either presentation, waiting
+for the first report when it arrives before the first frame.
 
 On wide iPad and Mac windows, reading-focused views (`Now`, `Posts`, `Videos`,
 entry details, `Journey` timeline/milestones, `Works` releases/participation,
@@ -160,13 +172,19 @@ current Japan year down to the oldest indexed month in a four-column grid (two
 columns at accessibility text sizes). Active months display item counts and
 allow selection; empty or future months stay dimmed.
 
-## More
+## More and Sidebar Tabs
 
-Pushes **Journey**, **Works**, and **LINE BLOG** onto the More tab's
-`NavigationStack`, followed by **Settings** (Notifications status, Content
-Language menu, system App Language / Language & Region link) and **About**
-(unofficial project statement, links to web board and `kano-navi` repository,
-`AboutCredits.models` list, and app version).
+In the tab bar, **More** lists **Journey**, **Works**, and **LINE BLOG**, then
+**Settings** and **About**, and pushes each onto its `NavigationStack`. In the
+sidebar each of these screens is a tab whose own `NavigationStack` shows it at
+the root. Both presentations draw the same screens (`MoreDestinationScreen`),
+so a Journey milestone's **View in Works** pushes the release onto the stack it
+is in.
+
+- **Settings:** Notifications status, Content Language menu, and the system App
+  Language / Language & Region link.
+- **About:** Unofficial project statement, links to the web board and the
+  `kano-navi` repository, the `AboutCredits.models` list, and the app version.
 
 ## Related Docs
 
