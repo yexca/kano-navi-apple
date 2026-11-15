@@ -73,6 +73,30 @@
         }
       }
     },
+    "gif": {
+      "comment": "VoiceOver name of a post image that is the still of an X GIF.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "GIF"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "GIF"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "GIF"
+          }
+        }
+      }
+    },
     "image": {
       "comment": "VoiceOver label of a post image that has no description.",
       "extractionState": "manual",
@@ -97,6 +121,30 @@
         }
       }
     },
+    "mediaWithDescription": {
+      "comment": "VoiceOver label of a post video or GIF with a description. The first %@ is “Video” or “GIF”, the second the description.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@, %2$@"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@、%2$@"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@，%2$@"
+          }
+        }
+      }
+    },
     "moreImages": {
       "comment": "Shown over the last image drawn when a post has more. %lld is the number of images not drawn.",
       "extractionState": "manual",
@@ -117,6 +165,54 @@
           "stringUnit": {
             "state": "translated",
             "value": "+%lld"
+          }
+        }
+      }
+    },
+    "openImageHint": {
+      "comment": "VoiceOver hint of a post image that opens the image viewer.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Opens the image."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "画像を開きます。"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "打开图片。"
+          }
+        }
+      }
+    },
+    "openPost": {
+      "comment": "Button under a post image in the image viewer that opens the post on X or Bilibili.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Open Post"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ポストを開く"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "打开动态"
           }
         }
       }
@@ -165,6 +261,54 @@
           "stringUnit": {
             "state": "translated",
             "value": "打开转发的动态"
+          }
+        }
+      }
+    },
+    "playGif": {
+      "comment": "Opens a post on X to play its GIF: VoiceOver hint of the GIF's still, and the button under it in the image viewer.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Play GIF on X"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "X で GIF を再生"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "在 X 上播放 GIF"
+          }
+        }
+      }
+    },
+    "playVideo": {
+      "comment": "Opens a post on X to play its video: VoiceOver hint of the video's still, and the button under it in the image viewer.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Play Video on X"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "X で動画を再生"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "在 X 上播放视频"
           }
         }
       }
@@ -309,6 +453,30 @@
           "stringUnit": {
             "state": "translated",
             "value": "无法更新动态。正在显示之前加载的内容。"
+          }
+        }
+      }
+    },
+    "video": {
+      "comment": "VoiceOver name of a post image that is the still of an X video.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Video"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "動画"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "视频"
           }
         }
       }

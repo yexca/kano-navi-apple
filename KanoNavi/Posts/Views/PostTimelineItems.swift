@@ -8,6 +8,8 @@ import SwiftUI
 /// scrolls with the posts. Each card is identified by its `TimelineSlot`.
 struct PostTimelineItems: View {
     let model: PostTimelineModel
+    /// Opens the viewer over a post's or a quote's images.
+    let openImage: (PostGallery, PostImage) -> Void
 
     @Environment(\.locale) private var locale
 
@@ -17,7 +19,7 @@ struct PostTimelineItems: View {
             ForEach(sections) { section in
                 Section {
                     ForEach(section.cards) { card in
-                        PostTimelineCard(card: card)
+                        PostTimelineCard(card: card, openImage: openImage)
                             .id(TimelineSlot(sectionID: section.id, itemID: card.id))
                     }
                 } header: {

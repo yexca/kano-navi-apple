@@ -46,7 +46,11 @@ or UDID), or of every booted iOS simulator when none is named, the same row `xcr
 (that command hangs on this Xcode). It shuts a booted simulator down for the
 write and boots it again. It never changes the macOS login or system keychain.
 The database contains synthetic titles,
-URLs, posts, events, videos, translations and PNG media. `reseed` rebuilds
+URLs, posts, events, videos, translations and PNG media. The posts include
+photos beside an X video's and a GIF's stills (media `kind`), a quote with a
+video still, a post of six photos, and promoted related-account posts; the
+own X accounts and one related account have uploaded account avatars in
+distinct colors, and another related account's avatar is hidden. `reseed` rebuilds
 those records relative to the current Japan time while preserving the server's
 schema, so old snapshots intentionally become stale unless reseeded.
 

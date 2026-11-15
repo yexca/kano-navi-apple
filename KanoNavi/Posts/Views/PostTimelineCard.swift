@@ -5,9 +5,11 @@ import SwiftUI
 /// inset from the screen's edges.
 struct PostTimelineCard: View {
     let card: PostCard
+    /// Opens the viewer over the post's or the quote's images.
+    let openImage: (PostGallery, PostImage) -> Void
 
     var body: some View {
-        PostCardView(card: card)
+        PostCardView(card: card, openImage: openImage)
             .padding(.horizontal, 16)
             .padding(.vertical, 6)
             .frame(maxWidth: .infinity, alignment: .leading)

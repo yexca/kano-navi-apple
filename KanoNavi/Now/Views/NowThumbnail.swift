@@ -1,6 +1,7 @@
 import SwiftUI
 
-/// A 16:9 cover from the API, cropped to fill its box.
+/// A 16:9 cover from the API, cropped to fill its box. It has no label of
+/// its own; the button showing it names it.
 struct NowThumbnail: View {
     let url: URL?
 
@@ -14,6 +15,6 @@ struct NowThumbnail: View {
                 }
             }
             .clipShape(.rect(cornerRadius: 12))
-            .accessibilityHidden(true)
+            .contentShape(.rect(cornerRadius: 12))
     }
 }

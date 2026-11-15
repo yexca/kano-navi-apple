@@ -2,10 +2,13 @@ import KanoNaviComponents
 import KanoNaviCore
 import SwiftUI
 
-/// The ticket at the top of the Now tab.
+/// The ticket at the top of the Now tab. Its cover opens the viewer.
 struct NowSpotlightTicket: View {
     let spotlight: NowSpotlight
     let now: Date
+
+    /// The cover while the viewer shows it; `nil` while it is closed.
+    @State private var openedCover: NowPicture?
 
     @Environment(\.locale) private var locale
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
@@ -15,7 +18,15 @@ struct NowSpotlightTicket: View {
             // At accessibility sizes the cover would push the time and links
             // off the first screen.
             if let url = spotlight.thumbnailURL, dynamicTypeSize.isAccessibilitySize == false {
-                NowThumbnail(url: url)
+                Button {
+                    openedCover = NowPicture(role: .cover, url: url)
+                } label: {
+                    NowThumbnail(url: url)
+                }
+                .buttonStyle(.plain)
+                .accessibilityLabel(Text(.Now.spotlightCover))
+                .accessibilityAddTraits(.isImage)
+                .accessibilityHint(Text(.Now.openImageHint))
             }
 
             NowFlowLayout(spacing: 8) {
@@ -43,6 +54,15 @@ struct NowSpotlightTicket: View {
             }
         }
         .padding(.vertical, 8)
+        .mediaViewer(item: $openedCover, in: openedCover.map { [$0] } ?? []) { picture in
+            MediaImageSource(url: picture.url)
+        } label: { picture in
+            Text(picture.role.name)
+        } caption: { [title = spotlight.title] _ in
+            NowTitle(text: title, switchable: false)
+                .font(.headline)
+                .frame(maxWidth: .infinity, alignment: .leading)
+        }
     }
 
     /// The ticket's heading. A live ticket's badge already says "Live", so

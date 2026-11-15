@@ -553,6 +553,30 @@
         }
       }
     },
+    "openImageHint": {
+      "comment": "VoiceOver hint of an image on the Now tab that opens the image viewer.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Opens the image."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "画像を開きます。"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "打开图片。"
+          }
+        }
+      }
+    },
     "openSite": {
       "comment": "Button that opens a page on another site. %@ is the site's host name, such as shop.example.com.",
       "extractionState": "manual",
@@ -573,6 +597,54 @@
           "stringUnit": {
             "state": "translated",
             "value": "打开 %@"
+          }
+        }
+      }
+    },
+    "profileAvatar": {
+      "comment": "The profile card's avatar image: its VoiceOver label and its caption in the image viewer.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Avatar"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "アイコン"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "头像"
+          }
+        }
+      }
+    },
+    "profileBanner": {
+      "comment": "The profile card's banner image: its VoiceOver label and its caption in the image viewer.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Banner"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ヘッダー画像"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "横幅图片"
           }
         }
       }
@@ -1175,6 +1247,30 @@
           "stringUnit": {
             "state": "translated",
             "value": "YouTube"
+          }
+        }
+      }
+    },
+    "spotlightCover": {
+      "comment": "VoiceOver label of the spotlight ticket's cover image, which opens the image viewer.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cover"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "カバー画像"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "封面"
           }
         }
       }

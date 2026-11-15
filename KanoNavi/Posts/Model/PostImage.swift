@@ -1,13 +1,15 @@
 import Foundation
 import KanoNaviCore
 
-/// One ready image of a post or a quote, served by the Kano Navi service.
+/// One ready image of a post or a quote, served by the Kano Navi service: a
+/// photo, or the still of a video or GIF that plays on X.
 struct PostImage: Equatable, Identifiable {
     var id: String
     var url: URL
     var width: Int?
     var height: Int?
     var alt: String?
+    var kind: MediaKind = .photo
 
     /// The ready media with a URL, in their order. Media still being cached
     /// or failed are left out.
@@ -16,7 +18,7 @@ struct PostImage: Equatable, Identifiable {
             guard item.status == "ready", let url = item.url else { return nil }
             return PostImage(
                 id: item.id ?? "\(index)-\(url.absoluteString)", url: url, width: item.width,
-                height: item.height, alt: item.alt)
+                height: item.height, alt: item.alt, kind: item.kind ?? .photo)
         }
     }
 
@@ -28,6 +30,17 @@ struct PostImage: Equatable, Identifiable {
         }
         guard post.mediaStatus == "ready", let url = post.mediaURL else { return [] }
         return [PostImage(id: url.absoluteString, url: url)]
+    }
+
+    /// Whether the image is the still of a video or GIF, which plays only on
+    /// the post's page. An unknown kind shows as a photo.
+    var playsOnPost: Bool {
+        kind == .video || kind == .gif
+    }
+
+    /// The image's file, at its original size when known.
+    var source: MediaImageSource {
+        MediaImageSource(url: url, width: width, height: height)
     }
 
     /// Width over height, kept between tall and wide bounds so one image

@@ -9,13 +9,15 @@ name, catchphrase, and links to her X accounts (by `@handle`), YouTube channel,
 and bilibili space. A row of counts below shows how many entries are coming up,
 how many posts arrived in the last few days, and how many videos came out in
 the last seven days; tapping a count opens **Schedule**, **Posts**, or
-**Videos**.
+**Videos**. Tapping the banner or the avatar opens it in the full-screen image
+viewer.
 
 ## Spotlight and Live Streams
 
 - **Spotlight ticket:** Displays the live stream when she is on air, otherwise
   the next scheduled entry with a countdown and platform links, or the latest
-  video when nothing is scheduled.
+  video when nothing is scheduled. Tapping its cover opens it in the image
+  viewer.
 - **Bilibili live:** When she is live on bilibili outside the spotlight entry, a
   dedicated live card appears.
 

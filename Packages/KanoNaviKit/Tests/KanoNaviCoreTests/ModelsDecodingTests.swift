@@ -43,4 +43,18 @@ struct ModelsDecodingTests {
         #expect(platform == .unknown("new-platform"))
         #expect(eventState == .unknown("new-state"))
     }
+
+    @Test func mediaKindDecodesKnownAndNewCodesAndMayBeMissing() throws {
+        let decoder = JSONDecoder.kanoNavi()
+        func kind(_ field: String) throws -> MediaKind? {
+            let json = #"{"status":"ready","url":"https://example.com/media/a""# + field + "}"
+            return try decoder.decode(MediaItem.self, from: Data(json.utf8)).kind
+        }
+
+        #expect(try kind(#","kind":"photo""#) == .photo)
+        #expect(try kind(#","kind":"video""#) == .video)
+        #expect(try kind(#","kind":"gif""#) == .gif)
+        #expect(try kind(#","kind":"sticker""#) == .unknown("sticker"))
+        #expect(try kind("") == nil)
+    }
 }

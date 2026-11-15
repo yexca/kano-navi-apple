@@ -7,6 +7,8 @@ import SwiftUI
 /// quote says so and still links to where it was.
 struct PostQuoteView: View {
     let quote: PostQuoteCard
+    /// Opens the viewer over the quote's images.
+    let openImage: (PostGallery, PostImage) -> Void
 
     @Environment(\.openURL) private var openURL
 
@@ -26,7 +28,7 @@ struct PostQuoteView: View {
                     NowTitle(text: text, switchable: true)
                         .font(.subheadline)
                 }
-                PostImageGrid(images: quote.images, limit: 2)
+                PostImageGrid(gallery: quote.gallery, limit: 2, open: openImage)
             }
             Button(action: open) {
                 Label {

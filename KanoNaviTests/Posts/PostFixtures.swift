@@ -29,11 +29,16 @@ enum PostFixtures {
         return post
     }
 
-    static func media(_ id: String, status: String = "ready", url: String? = nil) -> [String: Any] {
-        [
+    /// - Parameter kind: The media's `kind`; `nil` leaves the field out.
+    static func media(
+        _ id: String, status: String = "ready", url: String? = nil, kind: String? = nil
+    ) -> [String: Any] {
+        var media: [String: Any] = [
             "id": id, "status": status, "url": url ?? "https://example.com/media/" + id, "width": 96,
             "height": 64,
         ]
+        media["kind"] = kind
+        return media
     }
 
     static func quote(

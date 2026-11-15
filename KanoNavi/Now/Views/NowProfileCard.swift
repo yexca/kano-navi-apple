@@ -5,7 +5,7 @@ import SwiftUI
 /// The identity card at the top of the Now tab, as on the web board: a
 /// cropped banner, the avatar rising over its lower edge, the tagline, the
 /// name, the catchphrase, the profile's X accounts, YouTube and Bilibili, and
-/// the dashboard's counts.
+/// the dashboard's counts. The banner and the avatar open the viewer.
 ///
 /// It fills its list row edge to edge; give the row no insets and
 /// ``background`` as its background, which the avatar's ring matches.
@@ -15,6 +15,9 @@ struct NowProfileCard: View {
     @Environment(\.openURL) private var openURL
     @Environment(AppRouter.self) private var router
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+
+    /// The image the viewer opens on; `nil` while it is closed.
+    @State private var openedPicture: NowPicture?
 
     /// The row's background, which the avatar's ring repeats.
     static let background = Color.groupedCellBackground
@@ -53,36 +56,79 @@ struct NowProfileCard: View {
             .padding(.horizontal, 16)
             .padding(.bottom, 16)
         }
+        .mediaViewer(item: $openedPicture, in: NowPicture.profile(profile)) { picture in
+            MediaImageSource(url: picture.url)
+        } label: { picture in
+            Text(picture.role.name)
+        } caption: { [displayName = profile.displayName] picture in
+            VStack(alignment: .leading, spacing: 2) {
+                Text(verbatim: displayName)
+                    .font(.headline)
+                Text(picture.role.name)
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+        }
     }
 
     private var banner: some View {
-        Rectangle()
-            .fill(.fill.tertiary)
-            .frame(maxWidth: .infinity)
-            .frame(height: Self.bannerHeight)
-            .overlay {
-                if let url = profile.bannerURL {
-                    MediaImage(
-                        decorative: MediaImageSource(url: url), contentMode: .fill, anchor: Self.bannerAnchor)
+        opener(for: .banner, url: profile.bannerURL) {
+            Rectangle()
+                .fill(.fill.tertiary)
+                .frame(maxWidth: .infinity)
+                .frame(height: Self.bannerHeight)
+                .overlay {
+                    if let url = profile.bannerURL {
+                        MediaImage(
+                            decorative: MediaImageSource(url: url), contentMode: .fill,
+                            anchor: Self.bannerAnchor)
+                    }
                 }
-            }
-            .clipped()
-            .accessibilityHidden(true)
+                .clipped()
+                .contentShape(.rect)
+        }
     }
 
     private var avatar: some View {
-        Circle()
-            .fill(.fill.secondary)
-            .overlay {
-                if let url = profile.avatarURL {
-                    MediaImage(decorative: MediaImageSource(url: url), contentMode: .fill)
+        opener(for: .avatar, url: profile.avatarURL) {
+            Circle()
+                .fill(.fill.secondary)
+                .overlay {
+                    if let url = profile.avatarURL {
+                        MediaImage(decorative: MediaImageSource(url: url), contentMode: .fill)
+                    }
                 }
+                .frame(
+                    width: Self.avatarSize - 2 * Self.ringWidth, height: Self.avatarSize - 2 * Self.ringWidth
+                )
+                .clipShape(.circle)
+                .padding(Self.ringWidth)
+                .background(Self.background, in: .circle)
+                .contentShape(.circle)
+        }
+    }
+
+    /// The banner or the avatar as a button that opens the viewer on it; the
+    /// bare fill, hidden from VoiceOver, while the profile has no such image.
+    @ViewBuilder
+    private func opener(
+        for role: NowPicture.Role, url: URL?, @ViewBuilder label: () -> some View
+    ) -> some View {
+        if let url {
+            Button {
+                openedPicture = NowPicture(role: role, url: url)
+            } label: {
+                label()
             }
-            .frame(width: Self.avatarSize - 2 * Self.ringWidth, height: Self.avatarSize - 2 * Self.ringWidth)
-            .clipShape(.circle)
-            .padding(Self.ringWidth)
-            .background(Self.background, in: .circle)
-            .accessibilityHidden(true)
+            .buttonStyle(.plain)
+            .accessibilityLabel(Text(role.name))
+            .accessibilityAddTraits(.isImage)
+            .accessibilityHint(Text(.Now.openImageHint))
+        } else {
+            label()
+                .accessibilityHidden(true)
+        }
     }
 
     private var name: some View {

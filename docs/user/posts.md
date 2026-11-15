@@ -12,10 +12,15 @@ bilibili. Promoted posts from related accounts carry an **Agency Post** chip.
 - **Translations:** Post text follows your **Content Language** setting.
   Translated posts display a small origin mark and can be switched between the
   translation and the original text in place.
-- **Media and quotes:** Attached photos (up to four thumbnails, with **+N** for
-  more) open in the full-screen image viewer. Quoted posts appear nested inside
-  the card, including deleted or withheld quote notices that keep the link to
-  the original post.
+- **Media and quotes:** Up to four thumbnails show per post, with **+N** for
+  more. Tapping a photo, or **+N**, opens the full-screen image viewer over the
+  post's pictures, with an **Open Post** link under each. Videos and GIFs from
+  X show a play mark or a **GIF** tag and open the post on X, where they play.
+  Quoted posts appear nested inside the card with their own thumbnails,
+  including deleted or withheld quote notices that keep the link to the
+  original post.
+- **Avatars:** Each account shows its own avatar, related accounts included.
+  An account whose avatar the board hides shows its handle's initial.
 
 ## Filtering and Jumping
 

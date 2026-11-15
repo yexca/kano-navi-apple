@@ -39,4 +39,9 @@ struct PostQuoteCard: Equatable {
         images = quote.unavailable ? [] : PostImage.ready(quote.media)
         url = quote.url
     }
+
+    /// The quote's images, for the viewer.
+    var gallery: PostGallery {
+        PostGallery(images: images, url: url, isBilibili: isBilibili)
+    }
 }

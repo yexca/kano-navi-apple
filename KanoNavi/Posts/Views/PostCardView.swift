@@ -7,6 +7,8 @@ import SwiftUI
 /// its images and the post it quotes.
 struct PostCardView: View {
     let card: PostCard
+    /// Opens the viewer over the post's or the quote's images.
+    let openImage: (PostGallery, PostImage) -> Void
 
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
@@ -14,9 +16,9 @@ struct PostCardView: View {
             if let text = card.text {
                 NowTitle(text: text, switchable: true)
             }
-            PostImageGrid(images: card.images)
+            PostImageGrid(gallery: card.gallery, open: openImage)
             if let quote = card.quote {
-                PostQuoteView(quote: quote)
+                PostQuoteView(quote: quote, openImage: openImage)
             }
         }
         .padding(.vertical, 6)

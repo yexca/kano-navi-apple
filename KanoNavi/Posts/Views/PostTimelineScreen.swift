@@ -14,6 +14,10 @@ struct PostTimelineScreen: View {
     /// again and posts are added or removed above it; empty while the list
     /// is at its top.
     @State private var position = ScrollPosition(idType: TimelineSlot.self)
+    /// The images the viewer pages through, a post's or a quote's.
+    @State private var gallery: PostGallery?
+    /// The image the viewer opens on; `nil` while it is closed.
+    @State private var openedImage: PostImage?
     /// The board's accounts, from the dashboard's metadata when there is a
     /// snapshot.
     let meta: DashboardMeta?
@@ -46,7 +50,7 @@ struct PostTimelineScreen: View {
                         .padding()
                 }
 
-                PostTimelineItems(model: model)
+                PostTimelineItems(model: model, openImage: openImage(in:at:))
             }
             .scrollTargetLayout()
         }
@@ -78,6 +82,17 @@ struct PostTimelineScreen: View {
         // cache has them.
         .environment(\.mediaImageDecodesCachedFilesAtOnce, true)
         .refreshableScreen(action: model.refresh)
+        // The viewer belongs to the screen rather than to a card, which the
+        // lazy stack may release while it is open.
+        .mediaViewer(item: $openedImage, in: gallery?.images ?? []) { image in
+            image.source
+        } label: { image in
+            PostImageTile.label(of: image)
+        } caption: { [gallery] image in
+            if let gallery {
+                PostImageCaption(image: image, gallery: gallery)
+            }
+        }
         .navigationTitle(.tabPosts)
         .navigationSubtitle(subtitle ?? Text(verbatim: ""))
         .toolbar {
@@ -136,6 +151,11 @@ struct PostTimelineScreen: View {
         let title = top.month.first.monthTitle(
             locale: locale, abbreviated: dynamicTypeSize.isAccessibilitySize)
         return Text(verbatim: title)
+    }
+
+    private func openImage(in gallery: PostGallery, at image: PostImage) {
+        self.gallery = gallery
+        openedImage = image
     }
 
     private func retry() {

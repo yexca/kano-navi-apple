@@ -38,4 +38,9 @@ struct PostCard: Equatable, Identifiable {
     }
 
     var isBilibili: Bool { account == .bilibili }
+
+    /// The post's own images, for the viewer.
+    var gallery: PostGallery {
+        PostGallery(images: images, url: url, isBilibili: isBilibili)
+    }
 }

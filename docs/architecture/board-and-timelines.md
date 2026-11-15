@@ -50,11 +50,15 @@ Top-to-bottom layout (below any failure banner):
   `meta.postWindowDays`) opens **Posts**, and `videos` (the API's seven-day
   window) opens **Videos**; each carries its full phrase, such as "34 posts in
   3 days", as VoiceOver label and pointer tooltip. The row is omitted without
-  `summary.counts` and wraps at accessibility text sizes. Images are
-  decorative; VoiceOver reads the display name once as a heading.
+  `summary.counts` and wraps at accessibility text sizes. The banner and
+  the avatar open the [image viewer](media-and-viewer.md#image-viewer) over
+  both (banner first), captioned with the display name and **Banner** or
+  **Avatar**, which VoiceOver also reads for each; VoiceOver reads the
+  display name once as a heading.
 - **Spotlight ticket and Bilibili live:** Shows `projection.spotlight` (live,
-  next with countdown and links, or latest video). Bilibili `liveNow` renders
-  its own card when not in the spotlight.
+  next with countdown and links, or latest video); its cover opens the image
+  viewer captioned with its title. Bilibili `liveNow` renders its own card
+  when not in the spotlight.
 - **Coming Up:** Lists up to five entries across today and the next 13 Japan
   days via `CalendarReader`, omitting the spotlight's event (matched by
   `eventId` or shared stream/video URLs) and all sale entries (shown in **On
@@ -139,6 +143,15 @@ naming the topmost visible month:
   link, content-language text with **Show Original**, up to four ready images
   with `+N`, nested quoted posts (including deleted/withheld placeholders with
   links), and **Agency Post** chip when promoted.
+- **Images:** A photo opens the image viewer over its post's ready images, or
+  its quote's, captioned with its `alt` and an **Open Post** link (platform
+  logo). A media item of `kind` `video` or `gif` is the still of something
+  that plays only on X: its tile carries a round play mark or a GIF tag and
+  opens the post (or the quoted post) through `openURL`, and in the viewer
+  its caption offers **Play Video on X** or **Play GIF on X**. The `+N` tile
+  always opens the viewer, which reaches the images it hides. An unknown
+  `kind` shows as a photo. VoiceOver reads `alt` (after "Video" or "GIF" for
+  a still) or the kind, with a hint saying what the tile does.
 - **Controls:** Leading **Filter** menu (**All**, dashboard `xAccounts`,
   `bilibiliAccounts` with `accountCounts` totals; unknown/unfollowed accounts
   fall back to **All**) and trailing **Month** picker over `/api/posts/months`.

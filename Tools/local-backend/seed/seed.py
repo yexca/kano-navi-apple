@@ -82,11 +82,12 @@ def ensure_image(data_root: pathlib.Path, key: str, seed: int, namespace: str, w
     return relative.as_posix(), content_hash, len(content)
 
 
-def media(conn: sqlite3.Connection, data_root: pathlib.Path, now: str, url: str, source: str, seed: int, owner: tuple[str, str, str, int] | None = None, *, cover: bool = False) -> str:
-    """Cache one synthetic PNG for url; a cover is a 320x180 upload cover."""
+def media(conn: sqlite3.Connection, data_root: pathlib.Path, now: str, url: str, source: str, seed: int, owner: tuple[str, str, str, int] | None = None, *, cover: bool = False, kind: str | None = None, size: tuple[int, int] | None = None) -> str:
+    """Cache one synthetic PNG for url; a cover is a 320x180 upload cover.
+    kind is the owner link's photo, video or gif (NULL reads as photo)."""
     media_id = hashlib.sha256(url.encode()).hexdigest()
     namespace = source if source in {"x", "youtube", "bilibili", "niconico"} else "x"
-    width, height = (320, 180) if cover else (96, 64)
+    width, height = (320, 180) if cover else size or (96, 64)
     content = cover_png_bytes(width, height, seed) if cover else None
     cache_path, content_hash, size = ensure_image(data_root, media_id, seed, namespace, width, height, content)
     conn.execute(
@@ -102,8 +103,8 @@ def media(conn: sqlite3.Connection, data_root: pathlib.Path, now: str, url: str,
     if owner:
         owner_type, owner_id, role, position = owner
         conn.execute(
-            "INSERT OR IGNORE INTO media_links(media_id,owner_type,owner_id,role,position,created_at,updated_at) VALUES(?,?,?,?,?,?,?)",
-            (media_id, owner_type, owner_id, role, position, now, now),
+            "INSERT OR IGNORE INTO media_links(media_id,owner_type,owner_id,role,position,created_at,updated_at,kind) VALUES(?,?,?,?,?,?,?,?)",
+            (media_id, owner_type, owner_id, role, position, now, now, kind),
         )
     return media_id
 
@@ -276,6 +277,7 @@ def main() -> int:
         "media_links", "media_versions", "media_assets", "profile_media", "posts", "x_statuses", "x_reposts",
         "bilibili_statuses", "events", "event_sources", "videos", "focus", "assets", "schedule_asset_reviews",
         "translations", "translation_states", "sync_state", "sync_runs", "work_cover_lookups",
+        "account_avatars", "account_avatar_candidates",
     ]
     for table in dynamic_tables:
         conn.execute(f"DELETE FROM {table}")
@@ -372,15 +374,49 @@ def main() -> int:
         ("900000000003", "x", "kano_2525", "announcement", "Synthetic quote", "Synthetic post with a quote", now_dt - dt.timedelta(hours=3), "https://x.com/kano_2525/status/900000000003", 9, 1, 0, "https://example.com/synthetic/post-quote.png", "Synthetic quote image", quote_json, None),
         ("bilibili-900000000004", "bilibili", "316381099", "dynamic", None, "Synthetic Bilibili dynamic", now_dt - dt.timedelta(hours=4), "https://www.bilibili.com/opus/900000000004", 0, 0, 0, "https://example.com/synthetic/post-bili.png", "Synthetic Bilibili image", None, None),
         ("900000000005", "x", "synthetic_agency", "promoted", "Synthetic related", "Synthetic promoted related-account post", now_dt - dt.timedelta(hours=6), "https://x.com/synthetic_agency/status/900000000005", 1, 0, 0, "https://example.com/synthetic/post-promo.png", "Synthetic promoted image", None, now),
+        ("900000000006", "x", "kano_2525", "daily", "Synthetic gallery", "Synthetic post with six photos", now_dt - dt.timedelta(hours=7), "https://x.com/kano_2525/status/900000000006", 30, 4, 1, "https://example.com/synthetic/post-gallery-0.png", "Synthetic gallery photo 1", None, None),
+        ("900000000007", "x", "synthetic_hidden", "promoted", "Synthetic hidden avatar", "Synthetic promoted post whose avatar is hidden", now_dt - dt.timedelta(hours=8), "https://x.com/synthetic_hidden/status/900000000007", 0, 0, 0, "https://example.com/synthetic/post-hidden.png", "Synthetic hidden-avatar image", None, now),
     ]
     post_columns = "id,source,account_handle,type,label,text,published_at,url,likes,reposts,replies,media_url,media_alt,raw_json,quote_json,promoted_at"
     for i, row in enumerate(posts):
         values = (row[0], row[1], row[2], row[3], row[4], row[5], iso(row[6]), row[7], row[8], row[9], row[10], row[11], row[12], "{}", row[13], row[14])
         conn.execute(f"INSERT INTO posts({post_columns}) VALUES({','.join('?' for _ in values)})", values)
-        media(conn, data_root, now, row[11], row[1], 80 + i, ("post", row[0], "post-image", 0))
+        media(conn, data_root, now, row[11], row[1], 80 + i, ("post", row[0], "post-image", 0), size=(640, 480))
         add_translations(conn, "post", row[0], "text", row[5], "zh" if row[1] == "bilibili" else "ja", row[1], now)
+    # Further media: a video's and a GIF's stills beside photos, and a post of
+    # six photos for the +N tile and paging in the viewer.
+    extra_media = [
+        ("900000000001", 1, "https://example.com/synthetic/post-main-video.png", "video", (1280, 720)),
+        ("900000000001", 2, "https://example.com/synthetic/post-main-photo.png", "photo", (480, 640)),
+        ("900000000002", 1, "https://example.com/synthetic/post-sub-gif.png", "gif", (480, 360)),
+        *[("900000000006", n, f"https://example.com/synthetic/post-gallery-{n}.png", "photo", (800, 600)) for n in range(1, 6)],
+    ]
+    for j, (owner, position, url, kind, size) in enumerate(extra_media):
+        media(conn, data_root, now, url, "x", 140 + j, ("post", owner, "post-image", position), kind=kind, size=size)
     conn.execute("INSERT INTO x_statuses(id,author_handle,author_name,text,published_at,url,raw_json,quoted_at,first_seen_at,updated_at) VALUES(?,?,?,?,?,?,?,?,?,?)", (quote_id, "quoted_synthetic", "Synthetic Quoted", "Synthetic quoted status", iso(quote_time), f"https://x.com/quoted_synthetic/status/{quote_id}", "{}", iso(now_dt - dt.timedelta(hours=3)), now, now))
     media(conn, data_root, now, "https://example.com/synthetic/quote-image.png", "x", 99, ("post", "900000000003", "quote-image", 0))
+    media(conn, data_root, now, "https://example.com/synthetic/quote-video.png", "x", 98, ("post", "900000000003", "quote-image", 1), kind="video", size=(1280, 720))
+
+    # Account avatars: uploaded files for both own X accounts and the related
+    # account, and a hidden one, keyed by lowercase handle.
+    for k, (handle, mode) in enumerate((("kano_2525", "manual"), ("_Kanotic", "manual"), ("synthetic_agency", "manual"), ("synthetic_hidden", "hidden"))):
+        key = handle.lower()
+        # A distinct hue per account, unlike the patterned profile avatar.
+        content = cover_png_bytes(96, 96, k * 2 + 1)
+        digest = hashlib.sha256(content).hexdigest()
+        rel = pathlib.PurePosixPath("avatar", "account", f"{key}.png")
+        path = data_root / pathlib.Path(*rel.parts)
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_bytes(content)
+        candidate = hashlib.sha256(f"account-avatar\nupload\nx\n{key}\n{digest}".encode()).hexdigest()
+        conn.execute(
+            "INSERT INTO account_avatar_candidates(id,source,account_key,origin,cache_path,mime_type,byte_size,sha256,width,height,status,created_at,updated_at) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)",
+            (candidate, "x", key, "upload", rel.as_posix(), "image/png", len(content), digest, 96, 96, "ready", now, now),
+        )
+        conn.execute(
+            "INSERT INTO account_avatars(source,account_key,account_handle,mode,active_candidate_id,updated_at) VALUES(?,?,?,?,?,?)",
+            ("x", key, handle, mode, candidate, now),
+        )
     add_translations(conn, "x_status", quote_id, "text", "Synthetic quoted status", "ja", "x", now)
 
     # A rich focus card and a schedule image exercise the remaining dashboard

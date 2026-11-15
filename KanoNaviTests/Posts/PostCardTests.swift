@@ -47,6 +47,34 @@ struct PostCardTests {
         #expect(card.images.first?.aspectRatio == 1.5)
     }
 
+    @Test func mediaKeepTheirKindAndAPhotoIsTheDefault() throws {
+        let card = try PostFixtures.card(
+            PostFixtures.json(
+                id: "1",
+                media: [
+                    PostFixtures.media("v", kind: "video"), PostFixtures.media("g", kind: "gif"),
+                    PostFixtures.media("p", kind: "photo"), PostFixtures.media("none"),
+                    PostFixtures.media("new", kind: "sticker"),
+                ]))
+
+        #expect(card.images.map(\.kind) == [.video, .gif, .photo, .photo, .unknown("sticker")])
+        #expect(card.images.map(\.playsOnPost) == [true, true, false, false, false])
+    }
+
+    @Test func galleriesLinkThePostAndTheQuote() throws {
+        let card = try PostFixtures.card(
+            PostFixtures.json(
+                id: "1", media: [PostFixtures.media("a")],
+                quote: PostFixtures.quote(media: [PostFixtures.media("q", kind: "video")])))
+
+        #expect(card.gallery.images.map(\.id) == ["a"])
+        #expect(card.gallery.url.absoluteString == "https://example.com/post/1")
+        #expect(card.gallery.isBilibili == false)
+        let quote = try #require(card.quote)
+        #expect(quote.gallery.images.map(\.id) == ["q"])
+        #expect(quote.gallery.url.absoluteString == "https://example.com/post/Q1")
+    }
+
     @Test func olderSingleMediaURLIsShownWhenReady() throws {
         let ready = try PostFixtures.card(
             PostFixtures.json(id: "1", mediaURL: "https://example.com/media/one", mediaStatus: "ready"))

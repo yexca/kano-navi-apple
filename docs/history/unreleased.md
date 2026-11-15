@@ -8,6 +8,8 @@
   Posts, and Videos.
 - The Now tab names the last data update in its navigation subtitle; the
   freshness footer shows only the data's status.
+- Tapping the Now profile banner, avatar, or spotlight cover opens it in the
+  image viewer.
 
 </details>
 
@@ -18,6 +20,10 @@
   first frame and springs back with the viewer's own motion when let go.
 - The Posts and Videos timelines stay smooth to scroll after many pages are
   loaded.
+- Post and quote photos open in the image viewer, with a link to the post
+  under each.
+- Videos and GIFs in posts show a play mark or a GIF tag and open the post on
+  X, where they play.
 
 </details>
 
