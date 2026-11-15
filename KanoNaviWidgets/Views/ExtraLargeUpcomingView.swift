@@ -39,7 +39,8 @@ struct ExtraLargeUpcomingView: View {
                     FittingDayList(
                         schedule: schedule, now: entry.date, today: entry.today,
                         lineBudget: WidgetLineBudget.extraLarge(dynamicTypeSize), excludedID: hero.id,
-                        lastDay: lastDay)
+                        lastDay: lastDay
+                    )
                     .frame(maxWidth: .infinity, alignment: .topLeading)
                 }
             } else {

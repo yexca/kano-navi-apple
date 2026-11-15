@@ -468,21 +468,21 @@ final class NotificationController {
 }
 
 #if os(iOS)
-/// One UIKit background task, ended once by whichever comes first: the work
-/// finishing or the system's expiration handler.
-private final class BackgroundExecution {
-    private var identifier: UIBackgroundTaskIdentifier = .invalid
+    /// One UIKit background task, ended once by whichever comes first: the work
+    /// finishing or the system's expiration handler.
+    private final class BackgroundExecution {
+        private var identifier: UIBackgroundTaskIdentifier = .invalid
 
-    func begin(named name: String) {
-        identifier = UIApplication.shared.beginBackgroundTask(withName: name) { [weak self] in
-            self?.end()
+        func begin(named name: String) {
+            identifier = UIApplication.shared.beginBackgroundTask(withName: name) { [weak self] in
+                self?.end()
+            }
+        }
+
+        func end() {
+            guard identifier != .invalid else { return }
+            UIApplication.shared.endBackgroundTask(identifier)
+            identifier = .invalid
         }
     }
-
-    func end() {
-        guard identifier != .invalid else { return }
-        UIApplication.shared.endBackgroundTask(identifier)
-        identifier = .invalid
-    }
-}
 #endif

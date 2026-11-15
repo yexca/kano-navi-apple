@@ -146,7 +146,8 @@ struct WidgetRenderTests {
                 let renderer = ImageRenderer(content: sheet)
                 renderer.scale = 2
                 let image = try #require(renderer.cgImage)
-                try writePNG(image, to: directory.appending(path: "\(name)-\(family.rawValue)-\(device.name).png"))
+                try writePNG(
+                    image, to: directory.appending(path: "\(name)-\(family.rawValue)-\(device.name).png"))
             }
         }
     }

@@ -19,12 +19,15 @@ extension View {
     ) -> some View {
         #if os(iOS)
             fullScreenCover(item: item) { start in
-                MediaViewer(items: items, startingAt: start.id, source: source, label: label, caption: caption)
+                MediaViewer(
+                    items: items, startingAt: start.id, source: source, label: label, caption: caption)
             }
         #else
             sheet(item: item) { start in
-                MediaViewer(items: items, startingAt: start.id, source: source, label: label, caption: caption)
-                    .frame(minWidth: 640, idealWidth: 1000, minHeight: 480, idealHeight: 720)
+                MediaViewer(
+                    items: items, startingAt: start.id, source: source, label: label, caption: caption
+                )
+                .frame(minWidth: 640, idealWidth: 1000, minHeight: 480, idealHeight: 720)
             }
         #endif
     }
