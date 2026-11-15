@@ -23,9 +23,13 @@ enum CalendarFixture {
     // swift-format-ignore: FunctionParameterCount
     static func event(
         id: String, day: String, startsAt: String?, endsAt: String? = nil, state: String = "upcoming",
-        typeCode: String = "stream", title: String? = nil, sourceLanguage: String? = nil,
+        typeCode: String = "stream", activityCode: String? = nil, title: String? = nil,
+        sourceLanguage: String? = nil,
         translations: [String: String] = [:], entries: [Entry]? = nil
     ) -> [String: Any] {
+        // As the service does, an activity label stands in for a plain
+        // stream's type code.
+        let viewTypeCode: String? = activityCode != nil && typeCode == "stream" ? nil : typeCode
         let calendarEntries = (entries ?? [Entry(day: day, startsAt: startsAt)]).map { entry in
             [
                 "saleMark": entry.saleMark as Any,
@@ -50,8 +54,9 @@ enum CalendarFixture {
             "cancellationStatus": "none",
             "view": [
                 "state": state,
-                "typeCode": typeCode,
-                "activityContext": "",
+                "typeCode": viewTypeCode as Any,
+                "activityCode": activityCode as Any,
+                "activityContext": activityCode == nil ? "" : "stream",
                 "isWork": false,
                 "calendarEntries": calendarEntries,
             ],

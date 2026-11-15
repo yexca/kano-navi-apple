@@ -1,7 +1,9 @@
 import KanoNaviCore
 import SwiftUI
 
-/// The color family of a schedule entry, from its `view.typeCode`. The app's
+/// The color family of a schedule entry, from its `view.typeCode`, or its
+/// `eventType` when the service leaves the type code out because an
+/// activity label stands in for a plain stream. The app's
 /// calendar and the widgets draw an entry in its tag's color; the type's name
 /// stays in words in the entry's chips, so color never stands alone. An
 /// unknown or missing code is `other`. Safe in widgets.
@@ -36,8 +38,13 @@ nonisolated public enum ScheduleTag: String, Equatable, CaseIterable, Sendable {
             }
     }
 
+    /// The tag of an entry with a `view`; one without a view is `other`.
     public init(event: ScheduleEvent) {
-        self.init(typeCode: event.view?.typeCode)
+        guard let view = event.view else {
+            self = .other
+            return
+        }
+        self.init(typeCode: view.typeCode ?? event.eventType)
     }
 
     /// Whether an entry in `state` is over or called off, so its marks fade.

@@ -3,7 +3,8 @@ import KanoNaviComponents
 import KanoNaviCore
 
 /// What a List mode row shows for one entry of the selected day, as in
-/// Calendar: its title, a quiet line with its notable state and type, and
+/// Calendar: its title, a quiet line with its notable state, type and
+/// activity, and
 /// its start and end in Japan time on the trailing side, or "All Day" for an
 /// entry without a clock time.
 nonisolated struct ScheduleDayRowModel: Equatable {
@@ -27,8 +28,11 @@ nonisolated struct ScheduleDayRowModel: Equatable {
     let tag: ScheduleTag
     let time: Time
     let status: Status?
-    /// The type's display code, named in the row's quiet line.
+    /// The type's display code, named in the row's quiet line. The service
+    /// leaves it out when the activity label stands in for a plain stream.
     let typeCode: String?
+    /// The activity's display code, named after the type.
+    let activityCode: String?
     let isFaded: Bool
     let isCancelled: Bool
 
@@ -38,6 +42,7 @@ nonisolated struct ScheduleDayRowModel: Equatable {
         title = event.resolvedTitle(preference: contentLanguage, interfaceLocale: locale).text
         tag = ScheduleTag(event: event)
         typeCode = event.view?.typeCode
+        activityCode = event.view?.activityCode
         isFaded = event.isFadedInSchedule
         isCancelled = event.isCancelled
         time = Self.time(of: item, locale: locale)
@@ -71,6 +76,11 @@ nonisolated struct ScheduleDayRowModel: Equatable {
                 timeZone: JapanDate.timeZone
             ).month(.defaultDigits).day())
         return .clock(start: start, end: date)
+    }
+
+    /// Whether the quiet line has anything to name.
+    var hasDetail: Bool {
+        status != nil || typeCode != nil || activityCode != nil
     }
 
     /// Whether the time column shows a clock time, so the list names the

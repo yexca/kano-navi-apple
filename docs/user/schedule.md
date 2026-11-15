@@ -22,10 +22,11 @@ to dots so layouts remain legible.
 ## Entry Details
 
 Each entry shows its tag color, title, status (**Live**, **On Sale**, **Opens**,
-**Closes**, **Pending**, **Cancellation Suspected**, or **Cancelled**), type,
-and Japan start/end time (or **All Day**). Tapping an entry opens a detail sheet
-with its full title, Japan time, **Auto-detected** or **Confirmed** label, sale
-window, platform links, and a link to the original announcement.
+**Closes**, **Pending**, **Cancellation Suspected**, or **Cancelled**), type and
+activity (such as **Gameplay**), and Japan start/end time (or **All Day**).
+Tapping an entry opens a detail sheet with its full title, Japan time,
+**Auto-detected** or **Confirmed** label, sale window, platform links, and a
+link to the original announcement.
 
 ## Calendar Subscription
 

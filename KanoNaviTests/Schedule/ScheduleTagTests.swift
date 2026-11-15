@@ -5,7 +5,8 @@ import Testing
 
 @testable import KanoNavi
 
-/// Entries take their color from `view.typeCode`, and their text stays
+/// Entries take their color from `view.typeCode`, or `eventType` when an
+/// activity label stands in for the type code, and their text stays
 /// readable on the Details tint and on the widgets' backgrounds in both
 /// appearances.
 @MainActor
@@ -30,6 +31,13 @@ struct ScheduleTagTests {
 
         #expect(ScheduleTag(event: event) == .sale)
         #expect(ScheduleTag(event: bare) == .other)
+    }
+
+    @Test func labelledStreamKeepsTheStreamTag() throws {
+        let event = try ScheduleFixtures.event(id: "game", startsOn: "2026-11-10", activityCode: "game")
+
+        #expect(event.view?.typeCode == nil)
+        #expect(ScheduleTag(event: event) == .stream)
     }
 
     @Test(arguments: [ColorScheme.light, .dark])

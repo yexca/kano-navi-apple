@@ -19,6 +19,14 @@ struct WidgetItemTagTests {
         #expect(try self.tag(of: id) == tag)
     }
 
+    @Test func labelledStreamKeepsTheStreamTag() {
+        let schedule = CalendarFixture.schedule([
+            CalendarFixture.event(id: "game", day: "2026-11-10", startsAt: nil, activityCode: "game")
+        ])
+
+        #expect(schedule.items.map(\.tag) == [.stream])
+    }
+
     @Test func unknownOrMissingTypeIsOther() {
         let schedule = CalendarFixture.schedule([
             CalendarFixture.event(id: "concert", day: "2026-11-10", startsAt: nil, typeCode: "concert")

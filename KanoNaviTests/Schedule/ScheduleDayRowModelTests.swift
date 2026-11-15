@@ -50,6 +50,19 @@ struct ScheduleDayRowModelTests {
         #expect(row.time == .allDay)
         #expect(row.isTimed == false)
         #expect(row.typeCode == "release")
+        #expect(row.activityCode == nil)
+    }
+
+    @Test func labelledStreamNamesItsActivityInsteadOfAType() throws {
+        let event = try ScheduleFixtures.event(
+            id: "game", startsOn: "2026-11-10", startsAt: "2026-11-10T11:00:00Z", activityCode: "game")
+
+        let row = try row(event)
+
+        #expect(row.typeCode == nil)
+        #expect(row.activityCode == "game")
+        #expect(row.hasDetail)
+        #expect(row.tag == .stream)
     }
 
     @Test func saleEntryNamesItsMarkWithoutAnEnd() throws {

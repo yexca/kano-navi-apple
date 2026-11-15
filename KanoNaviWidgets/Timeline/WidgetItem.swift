@@ -22,11 +22,10 @@ nonisolated struct WidgetItem: Equatable, Identifiable, Sendable {
     var endsAt: Date?
     var saleMark: SaleMark?
     var state: EventState
-    var typeCode: String?
-
     /// The entry's color family, as in the app's calendar.
-    var tag: ScheduleTag { ScheduleTag(typeCode: typeCode) }
-    var isMembers: Bool { typeCode == "member" }
+    var tag: ScheduleTag
+
+    var isMembers: Bool { tag == .member }
     var isCancelled: Bool { state == .cancelled }
     var isCancellationSuspected: Bool { state == .cancellationReview }
 

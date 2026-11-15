@@ -3,10 +3,11 @@ import KanoNaviCore
 import SwiftUI
 
 /// One entry of the List mode's selected day, as in Calendar: a bar in its
-/// tag color, its title, a quiet line with its notable state and type, and
-/// its start over its end in Japan time on the trailing side, or "All Day".
+/// tag color, its title, a quiet line with its notable state, type and
+/// activity, and its start over its end in Japan time on the trailing side, or "All Day".
 /// A done entry fades. At accessibility text sizes the time moves under
-/// the title. VoiceOver reads the title, state, type and time range in JST.
+/// the title. VoiceOver reads the title, state, type, activity and time
+/// range in JST.
 struct ScheduleDayEntryRow: View {
     let row: ScheduleDayRowModel
 
@@ -30,7 +31,9 @@ struct ScheduleDayEntryRow: View {
                         .font(.body.weight(.semibold))
                         .strikethrough(row.isCancelled)
                         .lineLimit(stacks ? nil : 2)
-                    detail
+                    if row.hasDetail {
+                        detail
+                    }
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .alignmentGuide(.listRowSeparatorLeading) { $0[.leading] }
@@ -43,7 +46,8 @@ struct ScheduleDayEntryRow: View {
         .accessibilityElement(children: .combine)
     }
 
-    /// The notable state, then the type, in small secondary text.
+    /// The notable state, then the type and the activity, in small
+    /// secondary text.
     private var detail: some View {
         HStack(spacing: 4) {
             switch row.status {
@@ -55,18 +59,26 @@ struct ScheduleDayEntryRow: View {
                 Text(DisplayCodeLabels.eventState(.live))
                     .fontWeight(.semibold)
                     .foregroundStyle(.red)
-                separator
             case .sale(let mark):
                 Text(DisplayCodeLabels.saleMark(mark))
-                separator
             case .state(let state):
                 Text(DisplayCodeLabels.eventState(state))
                     .foregroundStyle(state == .cancelled ? AnyShapeStyle(.red) : AnyShapeStyle(.secondary))
-                separator
             case nil:
                 EmptyView()
             }
-            Text(DisplayCodeLabels.eventType(row.typeCode))
+            if row.status != nil, row.typeCode != nil || row.activityCode != nil {
+                separator
+            }
+            if let typeCode = row.typeCode {
+                Text(DisplayCodeLabels.eventType(typeCode))
+            }
+            if row.typeCode != nil, row.activityCode != nil {
+                separator
+            }
+            if let activityCode = row.activityCode {
+                Text(DisplayCodeLabels.tag(activityCode))
+            }
         }
         .font(.subheadline)
         .foregroundStyle(.secondary)

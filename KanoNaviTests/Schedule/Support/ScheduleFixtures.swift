@@ -12,9 +12,13 @@ enum ScheduleFixtures {
         endsAt: String? = nil,
         state: String = "upcoming",
         typeCode: String = "stream",
+        activityCode: String? = nil,
         calendarEntries: [[String: Any]]? = nil
     ) throws -> ScheduleEvent {
         let precision = startsAt == nil ? "date" : "exact"
+        // As the service does, an activity label stands in for a plain
+        // stream's type code.
+        let viewTypeCode: String? = activityCode != nil && typeCode == "stream" ? nil : typeCode
         let json: [String: Any] = [
             "id": id,
             "source": "youtube",
@@ -30,8 +34,9 @@ enum ScheduleFixtures {
             "url": "https://example.com/\(id)",
             "view": [
                 "state": state,
-                "typeCode": typeCode,
-                "activityContext": "",
+                "typeCode": viewTypeCode as Any,
+                "activityCode": activityCode as Any,
+                "activityContext": activityCode == nil ? "" : "stream",
                 "isWork": false,
                 "calendarEntries": calendarEntries ?? [
                     ["startsOn": startsOn, "startsAt": startsAt as Any, "timePrecision": precision]

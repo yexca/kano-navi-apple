@@ -12,7 +12,7 @@ struct EntryMarks: View {
                 MarkChip(label: DisplayCodeLabels.saleMark(saleMark))
             }
             if item.isMembers {
-                MarkChip(label: DisplayCodeLabels.eventType(item.typeCode))
+                MarkChip(label: DisplayCodeLabels.eventType("member"))
             }
             if item.isCancelled || item.isCancellationSuspected {
                 Text(DisplayCodeLabels.eventState(item.state))

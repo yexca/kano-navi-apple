@@ -1,4 +1,5 @@
 import Foundation
+import KanoNaviComponents
 import KanoNaviCore
 
 /// The calendar range the widgets show, flattened into entries.
@@ -32,12 +33,13 @@ nonisolated struct WidgetSchedule: Equatable, Sendable {
                 translations: event.translations, preference: language,
                 interfaceLocale: interfaceLocale
             ).text
+            let tag = ScheduleTag(event: event)
             return view.calendarEntries.enumerated().map { index, entry in
                 WidgetItem(
                     id: event.id + "#" + String(index), eventID: event.id, title: title,
                     day: entry.startsOn, startsAt: entry.startsAt, timePrecision: entry.timePrecision,
                     endsAt: entry.saleMark == nil ? event.endsAt : nil, saleMark: entry.saleMark,
-                    state: view.state, typeCode: view.typeCode)
+                    state: view.state, tag: tag)
             }
         }
         self.init(

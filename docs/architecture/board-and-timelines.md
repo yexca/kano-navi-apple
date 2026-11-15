@@ -127,7 +127,9 @@ Monday-first Japan-date months modeled after iOS Calendar:
   entries off the main actor; value equality excluding action closures limits
   redraws to changed days or loaded months.
 - **Colors and entries:** Colors derive from `view.typeCode` in `ScheduleTag`
-  (`KanoNaviComponents`) and stay ≥ 4.5:1 on Details tints and widget
+  (`KanoNaviComponents`), falling back to `eventType` when the service omits
+  the type code because an activity label (`view.activityCode`) stands in for a
+  plain stream, and stay ≥ 4.5:1 on Details tints and widget
   backgrounds. Day entries come from `view.calendarEntries`. Tapping opens a
   detail sheet showing title, JST time, state, type/tag, platforms/links,
   **Confirmed** (when `provenance == "manual"` or `manualLocked` is set) vs.

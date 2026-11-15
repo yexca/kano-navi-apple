@@ -10,6 +10,8 @@
   freshness footer shows only the data's status.
 - Tapping the Now profile banner, avatar, or spotlight cover opens it in the
   image viewer.
+- Schedule's List mode names a labelled stream by its activity, such as
+  Gameplay, in the stream color, instead of an unknown type.
 
 </details>
 
