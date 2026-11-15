@@ -40,7 +40,8 @@ struct MediaViewer<Item: Identifiable, Caption: View>: View {
     @State private var currentID: Item.ID?
     @State private var showsBars = true
     @State private var isZoomed = false
-    @State private var drag = MediaViewerDismissDrag()
+    /// Whether the viewer is being pulled down to close.
+    @State private var isPulled = false
     @State private var height: CGFloat = 0
     @FocusState private var isFocused: Bool
 
@@ -75,18 +76,15 @@ struct MediaViewer<Item: Identifiable, Caption: View>: View {
         .scrollTargetBehavior(.paging)
         .scrollPosition(id: $currentID)
         .scrollIndicators(.hidden)
-        .scrollDisabled(isZoomed || drag.isActive)
+        .scrollDisabled(isZoomed || isPulled)
         .ignoresSafeArea()
-        .offset(y: drag.translation)
-        .simultaneousGesture(dismissDrag, isEnabled: Self.closesOnDrag && isZoomed == false)
-        .background {
-            Color.black
-                .opacity(1 - 0.6 * drag.progress)
-                .ignoresSafeArea()
-        }
+        .modifier(
+            MediaViewerDismissGesture(
+                isEnabled: Self.closesOnDrag && isZoomed == false, isActive: $isPulled, close: close)
+        )
         .overlay(alignment: .top) {
             MediaViewerTopBar(position: (index ?? 0) + 1, count: items.count, close: close)
-                .opacity(barsOpacity)
+                .barOpacity(barsOpacity)
         }
         .overlay {
             #if os(macOS)
@@ -94,7 +92,7 @@ struct MediaViewer<Item: Identifiable, Caption: View>: View {
                     MediaViewerPageButtons(
                         hasPrevious: index > 0, hasNext: index < items.count - 1, turn: turnPage
                     )
-                    .opacity(barsOpacity)
+                    .barOpacity(barsOpacity)
                 }
             #endif
         }
@@ -103,10 +101,9 @@ struct MediaViewer<Item: Identifiable, Caption: View>: View {
                 MediaViewerCaptionBar(maxHeight: height * 0.4) {
                     caption(items[index])
                 }
-                .opacity(barsOpacity)
+                .barOpacity(barsOpacity)
             }
         }
-        .animation(.easeInOut(duration: 0.2), value: barsOpacity)
         .onGeometryChange(for: CGFloat.self) { proxy in
             proxy.size.height
         } action: { newHeight in
@@ -146,23 +143,7 @@ struct MediaViewer<Item: Identifiable, Caption: View>: View {
     /// The bars stay for VoiceOver, which cannot tap the picture to bring
     /// them back, and hide while the viewer is pulled down.
     private var barsOpacity: Double {
-        (showsBars || isVoiceOverOn) && drag.isActive == false ? 1 : 0
-    }
-
-    private var dismissDrag: some Gesture {
-        DragGesture(minimumDistance: 12)
-            .onChanged { value in
-                drag.update(translation: value.translation)
-            }
-            .onEnded { value in
-                if drag.closes(predicted: value.predictedEndTranslation) {
-                    close()
-                } else {
-                    withAnimation(.snappy(duration: 0.3)) {
-                        drag = MediaViewerDismissDrag()
-                    }
-                }
-            }
+        (showsBars || isVoiceOverOn) && isPulled == false ? 1 : 0
     }
 
     /// Shows the picture `step` places away, unless the picture is zoomed,
@@ -182,6 +163,15 @@ struct MediaViewer<Item: Identifiable, Caption: View>: View {
 
     private func close() {
         dismiss()
+    }
+}
+
+extension View {
+    /// Fades a bar of the viewer in and out. The animation covers the
+    /// opacity alone, so it never takes over the pages' own motion, such as
+    /// a pull springing back.
+    fileprivate func barOpacity(_ opacity: Double) -> some View {
+        animation(.easeInOut(duration: 0.2)) { $0.opacity(opacity) }
     }
 }
 

@@ -10,3 +10,13 @@
   freshness footer shows only the data's status.
 
 </details>
+
+<details>
+<summary><strong>Posts and Videos</strong></summary>
+
+- Pulling a picture down to close the viewer follows the finger from the
+  first frame and springs back with the viewer's own motion when let go.
+- The Posts and Videos timelines stay smooth to scroll after many pages are
+  loaded.
+
+</details>

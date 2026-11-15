@@ -25,8 +25,18 @@ final class VideoTimelineModel {
     private(set) var index: ArchiveMonthIndex?
     /// The month the timeline on screen starts at, or `nil` for the newest
     /// video. Its first page loads with `loadIfNeeded()`.
-    var start: ArchiveMonthKey?
-    var filter = VideoTimelineFilter()
+    var start: ArchiveMonthKey? {
+        didSet {
+            guard start != oldValue else { return }
+            updateShown()
+        }
+    }
+    var filter = VideoTimelineFilter() {
+        didSet {
+            guard filter != oldValue else { return }
+            updateShown()
+        }
+    }
     /// The pages loaded per start.
     private(set) var listings: [ArchiveMonthKey?: ArchiveListing<Video>] = [:]
     /// Each listing's videos as cards, built once per page read.
@@ -70,17 +80,14 @@ final class VideoTimelineModel {
     /// Every video loaded for the timeline on screen, whatever the filter.
     var loadedCount: Int { listing?.items.count ?? 0 }
 
-    /// The loaded videos the filter shows, in the timeline's order.
-    var cards: [VideoCard] {
-        (loadedCards[start] ?? []).compactMap(filter.apply)
-    }
+    /// The loaded videos the filter shows, in the timeline's order. Kept
+    /// with `sections` for the timeline on screen and rebuilt only when its
+    /// pages, start or filter change, not on every look while the list
+    /// scrolls.
+    private(set) var cards: [VideoCard] = []
 
     /// The shown videos by Japan month, after the videos on air.
-    var sections: [VideoTimelineSection] {
-        // Only the newest timeline reaches the present, so only it leads
-        // with the videos on air.
-        VideoTimelineSection.grouping(cards, liftsOnAir: start == nil)
-    }
+    private(set) var sections: [VideoTimelineSection] = []
 
     /// Whether the first page of the timeline on screen is loading.
     var isLoading: Bool { loadingStarts.contains(start) }
@@ -163,6 +170,17 @@ final class VideoTimelineModel {
     private func store(_ listing: ArchiveListing<Video>, for start: ArchiveMonthKey?) {
         listings[start] = listing
         loadedCards[start] = listing.items.map(VideoCard.init(video:))
+        if start == self.start {
+            updateShown()
+        }
+    }
+
+    /// Rebuilds the cards and sections of the timeline on screen.
+    private func updateShown() {
+        cards = (loadedCards[start] ?? []).compactMap(filter.apply)
+        // Only the newest timeline reaches the present, so only it leads
+        // with the videos on air.
+        sections = VideoTimelineSection.grouping(cards, liftsOnAir: start == nil)
     }
 
     private func readIndex(onlyIfMissing: Bool = false) async {

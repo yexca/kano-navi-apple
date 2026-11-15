@@ -43,7 +43,7 @@ final class PostTimelineModel {
         didSet {
             guard avatarFallback != oldValue else { return }
             for (key, listing) in listings {
-                loadedCards[key] = cards(of: listing.items)
+                setCards(cards(of: listing.items), for: key)
             }
         }
     }
@@ -51,6 +51,9 @@ final class PostTimelineModel {
     private(set) var listings: [PostTimelineKey: ArchiveListing<PostTimelineEntry>] = [:]
     /// Each listing's posts as cards, built once per read.
     private var loadedCards: [PostTimelineKey: [PostCard]] = [:]
+    /// Each listing's cards by Japan month, grouped once per read rather
+    /// than on every look while the list scrolls.
+    private var loadedSections: [PostTimelineKey: [PostTimelineSection]] = [:]
     /// The last failure reading the first pages, per timeline.
     private(set) var failures: [PostTimelineKey: any Error] = [:]
     /// The last failure reading a later page, per timeline.
@@ -102,7 +105,7 @@ final class PostTimelineModel {
     var cards: [PostCard] { loadedCards[key] ?? [] }
 
     /// The loaded posts by Japan month.
-    var sections: [PostTimelineSection] { PostTimelineSection.grouping(cards) }
+    var sections: [PostTimelineSection] { loadedSections[key] ?? [] }
 
     /// Whether the pages of the timeline on screen are being read.
     var isLoading: Bool { loadingKeys.contains(key) }
@@ -235,7 +238,7 @@ final class PostTimelineModel {
 
     private func store(_ listing: ArchiveListing<PostTimelineEntry>, for key: PostTimelineKey) {
         listings[key] = listing
-        loadedCards[key] = cards(of: listing.items)
+        setCards(cards(of: listing.items), for: key)
         // A newer revision outdates the timelines read before it.
         guard let revision = listing.revision else { return }
         for (other, earlier) in listings where other != key {
@@ -243,6 +246,11 @@ final class PostTimelineModel {
                 staleKeys.insert(other)
             }
         }
+    }
+
+    private func setCards(_ cards: [PostCard], for key: PostTimelineKey) {
+        loadedCards[key] = cards
+        loadedSections[key] = PostTimelineSection.grouping(cards)
     }
 
     private func cards(of entries: [PostTimelineEntry]) -> [PostCard] {
