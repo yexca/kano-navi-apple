@@ -1,0 +1,57 @@
+{
+  "version": 1,
+  "hosts": [
+    {
+      "host": "fsf.org",
+      "reason": "Free Software Foundation link in the unmodified GNU AGPL v3 license text."
+    },
+    {
+      "host": "gnu.org",
+      "reason": "GNU license reference in the unmodified GNU AGPL v3 license text."
+    },
+    {
+      "host": "kano.yexca.net",
+      "reason": "Production Kano Navi public API service configured in Config/Base.xcconfig and linked from the About screen and documentation."
+    },
+    {
+      "host": "github.com",
+      "reason": "Public source repository, kano-navi upstream documentation, and third-party asset/tool documentation links."
+    },
+    {
+      "host": "x.com",
+      "reason": "Public X profile host checked by profile-link parsing and opened via openURL only."
+    },
+    {
+      "host": "twitter.com",
+      "reason": "Legacy X profile host recognized by profile-link parsing in tests and model logic; opened via openURL only."
+    },
+    {
+      "host": "youtube.com",
+      "reason": "Public YouTube watch URLs constructed by PlatformVideoIDs and profile-link tests; opened via openURL only."
+    },
+    {
+      "host": "youtu.be",
+      "reason": "Short YouTube link used in synthetic notification planner tests; never fetched by the app."
+    },
+    {
+      "host": "bilibili.com",
+      "reason": "Public Bilibili watch and space URLs constructed by PlatformVideoIDs and recognized in profile links; opened via openURL only."
+    },
+    {
+      "host": "nicovideo.jp",
+      "reason": "Public niconico watch URLs constructed by PlatformVideoIDs; opened via openURL only."
+    },
+    {
+      "host": "lineblog.me",
+      "reason": "Original LINE BLOG address shown in the archive info sheet and opened via openURL only."
+    },
+    {
+      "host": "www.apple.com",
+      "reason": "Apple Property List DTD schema identifier in Info.plist and entitlements files; never fetched."
+    },
+    {
+      "host": "www.w3.org",
+      "reason": "SVG XML namespace identifier in PlatformLogos.xcassets vector assets; never fetched."
+    }
+  ]
+}
