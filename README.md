@@ -12,6 +12,12 @@ her 2015–2019 LINE BLOG, Home Screen and Lock Screen widgets, and on-device
 notifications. It supports English, Japanese, and Simplified Chinese across
 light and dark appearances.
 
+![Kano Navi on Mac, iPad, and iPhone in the light appearance](docs/assets/readme/showcase.jpg)
+
+<p align="center"><sub>Screenshots of the live board, captured November 16, 2026 at
+20:30–20:48 JST. The app's content follows the board and changes as new
+streams and posts arrive.</sub></p>
+
 > [!NOTE]
 > Kano Navi is an independent fan project with no official affiliation or
 > endorsement. Original announcements always take precedence; see the
