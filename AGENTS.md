@@ -101,8 +101,9 @@ or model providers itself, and never calls admin or MCP control endpoints.
 
 ## Security and Media Boundaries
 
-- The app talks only to `API_BASE_URL` (the Kano Navi service) and media URLs
-  resolved against it. External provenance and watch links open via `openURL`
+- The app talks only to the selected Kano Navi server (a built-in one from
+  `API_BASE_URL` or `MAINLAND_API_BASE_URL`, or an HTTPS one the person adds)
+  and media URLs resolved against it. External provenance and watch links open via `openURL`
   only and are never fetched by the app.
 - Use HTTPS only and add no App Transport Security exceptions. Register any new
   allowlisted repository host with a stated reason in
@@ -110,9 +111,9 @@ or model providers itself, and never calls admin or MCP control endpoints.
   source rather than hiding it.
 - Do not add analytics, tracking, advertising SDKs, or any third-party
   dependency without an explicit request.
-- Keep `API_BASE_URL` in `Config/Base.xcconfig` (overridden only in git-ignored
-  `Config/Local.xcconfig`). Never commit secrets, signing certificates,
-  provisioning profiles, or personal paths.
+- Keep `API_BASE_URL` and `MAINLAND_API_BASE_URL` in `Config/Base.xcconfig`
+  (overridden only in git-ignored `Config/Local.xcconfig`). Never commit
+  secrets, signing certificates, provisioning profiles, or personal paths.
 
 ## UI and Test Contracts
 

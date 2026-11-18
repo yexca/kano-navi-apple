@@ -14,6 +14,10 @@
       "reason": "Production Kano Navi public API service configured in Config/Base.xcconfig and linked from the About screen and documentation."
     },
     {
+      "host": "xiaolubao.com",
+      "reason": "Built-in Kano Navi public API server in mainland China, configured as MAINLAND_API_BASE_URL in Config/Base.xcconfig."
+    },
+    {
       "host": "github.com",
       "reason": "Public source repository, kano-navi upstream documentation, and third-party asset/tool documentation links."
     },

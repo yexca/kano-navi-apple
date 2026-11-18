@@ -107,7 +107,14 @@ final class AppRouter {
     func show(_ path: [MoreDestination]) {
         guard let root = path.first else { return }
         if usesAppWindows, root == .settings {
-            settingsPane = path.contains(.notifications) ? .notifications : .general
+            settingsPane =
+                if path.contains(.notifications) {
+                    .notifications
+                } else if path.contains(.server) {
+                    .server
+                } else {
+                    .general
+                }
             settingsWindowRequested = true
             return
         }

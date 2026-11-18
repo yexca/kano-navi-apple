@@ -1,17 +1,18 @@
 import KanoNaviCore
 import SwiftUI
 
-/// The app's shared, long-lived data services. Screens read them from the
-/// environment instead of building their own clients.
+/// The app's shared, long-lived data services for one server. Screens read
+/// them from the environment instead of building their own clients.
 struct AppServices {
     let client: APIClient
     let calendar: CalendarReader
 
-    /// Services for the running app, reading the API base URL from Info.plist
-    /// and caching responses in the app's caches directory.
-    static func live() -> AppServices {
+    /// Services for the running app, reading `server` and caching responses
+    /// in the app's caches directory. Cached responses are keyed by URL, so
+    /// each server keeps its own.
+    static func live(server: ServiceServer) -> AppServices {
         let client = APIClient(
-            configuration: .main,
+            server: server,
             cache: FileResponseCache(directory: FileResponseCache.defaultDirectory(named: "KanoNavi"))
         )
         return AppServices(client: client, calendar: CalendarReader(client: client))

@@ -27,7 +27,8 @@ defines the exact JSON shapes and closed code sets.
   non-empty, falling back to English, Japanese, then Chinese (or Japanese,
   English, Chinese for LINE BLOG). Release titles, names, and upload fields are
   plain strings shown as written.
-- Relative media URLs (`/media/...`) resolve against `API_BASE_URL`. Third-party
+- Relative media URLs (`/media/...`) resolve against the selected server's
+  origin ([Servers](servers.md)). Third-party
   addresses (`sourceUrl`, `sourcePage`, `archiveUrl`, `watchUrl`, link `href`s,
   and X/YouTube/Bilibili pages) are never resolved against the service or
   fetched; they open via `openURL`. Watch pages for Works platform IDs are built

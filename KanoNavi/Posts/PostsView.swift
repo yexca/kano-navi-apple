@@ -24,6 +24,8 @@ struct PostsView: View {
                     avatarFallback: avatars)
             }
         }
+        // Another server starts the timeline and its stack over.
+        .id(services?.client.baseURL)
     }
 }
 

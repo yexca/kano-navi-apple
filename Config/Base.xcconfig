@@ -3,9 +3,14 @@
 // `//` starts a comment in an xcconfig file, so the scheme separator is written
 // as `/$()/`, which expands to `//`.
 
-// Origin of the Kano Navi service. The app reads it from Info.plist through
-// `KanoNaviAPIBaseURL`; it must use HTTPS.
+// Origin of the default Kano Navi service, in Japan. The app reads it from
+// Info.plist through `KanoNaviAPIBaseURL`; it must use HTTPS.
 API_BASE_URL = https:/$()/kano.fans
+
+// Origin of the Kano Navi service in mainland China, a second built-in server
+// read through `KanoNaviMainlandAPIBaseURL`. It must use HTTPS; leave it empty
+// to ship without it.
+MAINLAND_API_BASE_URL = https:/$()/xiaolubao.com
 
 // An optional, git-ignored override for this machine, for example a local
 // backend. See Tools/local-backend/README.md.

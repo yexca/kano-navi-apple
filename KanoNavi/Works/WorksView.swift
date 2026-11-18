@@ -13,6 +13,8 @@ struct WorksView: View {
         ZStack {
             if let services {
                 WorksHomeScreen(client: services.client)
+                    // Another server starts the screen over.
+                    .id(services.client.baseURL)
             }
         }
         .navigationTitle(.Works.title)

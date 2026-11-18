@@ -16,8 +16,8 @@ native layout and does not mirror the web board page by page.
   data and displays the failure beside it; it never blanks the view.
 - **Japan time.** Event times appear in `Asia/Tokyo` and are labelled JST; date
   ranges, calendar days, and "today" are Japan dates.
-- **Public API boundary.** The app reads only the configured Kano Navi HTTPS
-  service and the media routes it serves. It never fetches X, YouTube,
+- **Public API boundary.** The app reads only the selected Kano Navi HTTPS
+  service ([Servers](servers.md)) and the media routes it serves. It never fetches X, YouTube,
   Bilibili, shops, LINE BLOG captures, or model providers directly, and never
   calls `/admin` or `/mcp` control endpoints.
 

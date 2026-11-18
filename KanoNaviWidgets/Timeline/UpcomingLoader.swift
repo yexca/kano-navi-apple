@@ -6,11 +6,13 @@ import KanoNaviCore
 nonisolated struct UpcomingLoader: Sendable {
     let client: APIClient
 
-    /// The loader for the running extension, caching in its own container.
-    static func live() -> UpcomingLoader {
+    /// The loader for the running extension, reading `server` and caching in
+    /// its own container. Cached responses are keyed by URL, so each server
+    /// keeps its own.
+    static func live(server: WidgetServer) -> UpcomingLoader {
         UpcomingLoader(
             client: APIClient(
-                configuration: .main,
+                server: server.server(in: .main),
                 cache: FileResponseCache(
                     directory: FileResponseCache.defaultDirectory(named: "KanoNaviWidgets"))
             ))

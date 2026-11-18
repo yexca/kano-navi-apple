@@ -1,6 +1,6 @@
 import SwiftUI
 
-/// The Mac's Settings window: the language settings and the notification
+/// The Mac's Settings window: the language, notification, and server
 /// settings as panes, on the pane the router names. The window takes each
 /// pane's height.
 struct SettingsWindow: View {
@@ -28,6 +28,17 @@ struct SettingsWindow: View {
                     Text(.Notifications.screenTitle)
                 } icon: {
                     Image(systemName: "bell.badge")
+                }
+            }
+
+            Tab(value: SettingsPane.server) {
+                ServerSettingsView()
+                    .frame(height: 360)
+            } label: {
+                Label {
+                    Text(.More.settingsServer)
+                } icon: {
+                    Image(systemName: "server.rack")
                 }
             }
         }

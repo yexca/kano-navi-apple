@@ -35,10 +35,25 @@
 </details>
 
 <details>
+<summary><strong>Widgets and Notifications</strong></summary>
+
+- Each Upcoming widget has a Server setting to read the Japan Server or the
+  Mainland China Server.
+- Switching servers in the app starts notifications over from the new
+  server's data instead of alerting about the difference between servers.
+
+</details>
+
+<details>
 <summary><strong>Platform and Build</strong></summary>
 
 - The app reads the Kano Navi service at its new address, kano.fans, and
   About links the web board there.
+- Settings has a Server screen (a pane on Mac) to read the board from the
+  Japan Server or the Mainland China Server, or from another Kano Navi service
+  added by name and HTTPS address. The app checks an address before adding it,
+  each server keeps its own saved copy, and About links the selected server's
+  web board.
 - Resizing a window on Mac or iPad keeps showing each picture while it moves
   and decodes it once at the size the window stops at, instead of at every
   size on the way.

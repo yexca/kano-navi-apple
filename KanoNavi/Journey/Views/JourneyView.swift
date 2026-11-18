@@ -1,3 +1,4 @@
+import KanoNaviCore
 import SwiftUI
 
 /// The Journey screen the More tab opens: Kano's milestones as a timeline
@@ -12,6 +13,8 @@ struct JourneyView: View {
     var body: some View {
         if let services {
             JourneyScreen(client: services.client)
+                // Another server starts the screen over.
+                .id(services.client.baseURL)
         } else {
             ContentUnavailableView {
                 Label {

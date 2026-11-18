@@ -42,7 +42,8 @@ flowchart LR
   UI -- "openURL" --> External["Original public pages"]
 ```
 
-1. The app reads the configured HTTPS origin of `kano-navi` through
+1. The app reads the selected HTTPS server running `kano-navi` (a built-in one
+   or one added by address; see [Servers](architecture/servers.md)) through
    `KanoNaviCore`'s `APIClient`, sending `If-None-Match` with stored ETags.
 2. On launch, launch-visible screens and widgets draw cached JSON snapshots on
    their first frame and revalidate in the background. When the service cannot

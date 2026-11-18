@@ -14,6 +14,7 @@ Navi public API and keeps the last good snapshot on failure.
 | [Core boundaries](core-boundaries.md)                  | Principles, request and failure flow, external link policy, extension points  |
 | [Targets and platforms](targets-and-platforms.md)      | App, widget, package and test targets, platform helpers, macOS sandbox        |
 | [API and caching](api-and-caching.md)                  | Public API contract, ETag caching, SSE/polling, `DocumentModel`, stale notices |
+| [Servers](servers.md)                                  | Built-in and added servers, address checks, switching, per-widget server       |
 | [Media and viewer](media-and-viewer.md)                | `MediaImage`, `MediaImageLoader`, size variants, disk/memory caches, `MediaViewer` |
 | [Board and timelines](board-and-timelines.md)          | Tabs, Now, Schedule modes/drawing, Posts, Videos, Month Picker, More          |
 | [Archives](archives.md)                                | Journey, Works, and the LINE BLOG reader, playback, and comments              |
@@ -29,6 +30,8 @@ Navi public API and keeps the last good snapshot on failure.
   `Shared/Platform/` helpers, macOS behavior, or entitlements.
 - Read [API and caching](api-and-caching.md) before modifying `KanoNaviCore`
   models, stores, caching, or stale-state UI notices.
+- Read [Servers](servers.md) before changing where the app reads the service,
+  the server settings, or the services a screen holds.
 - Read [Media and viewer](media-and-viewer.md) before changing image loading,
   width selection, or `MediaViewer`.
 - Read [Board and timelines](board-and-timelines.md) or

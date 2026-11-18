@@ -1,15 +1,16 @@
 import KanoNaviCore
 import SwiftUI
 
-/// The Notifications link, the content language menu, and a link to the
-/// system's per-app language setting for the interface.
+/// The Notifications and Server links, the content language menu, and a
+/// link to the system's per-app language setting for the interface.
 struct SettingsView: View {
     /// Whether the view is the General pane of the Mac's Settings window,
-    /// which titles it General and shows the notification settings as a
-    /// pane of their own instead of linking them.
+    /// which titles it General and shows the notification and server
+    /// settings as panes of their own instead of linking them.
     var isSettingsWindowPane = false
     @AppStorage(AppSettings.contentLanguageKey) private var contentLanguage: ContentLanguage = .system
     @Environment(NotificationController.self) private var notifications: NotificationController?
+    @Environment(AppSession.self) private var session: AppSession?
     @Environment(\.openURL) private var openURL
     #if os(iOS)
         @Environment(\.dynamicTypeSize) private var dynamicTypeSize
@@ -53,10 +54,30 @@ struct SettingsView: View {
         }
     }
 
+    private var serverSection: some View {
+        Section {
+            NavigationLink(value: MoreDestination.server) {
+                LabeledContent {
+                    if let server = session?.servers.selected {
+                        server.nameText
+                            .foregroundStyle(.secondary)
+                    }
+                } label: {
+                    Label {
+                        Text(.More.settingsServer)
+                    } icon: {
+                        Image(systemName: "server.rack")
+                    }
+                }
+            }
+        }
+    }
+
     var body: some View {
         Form {
             if !isSettingsWindowPane {
                 notificationsSection
+                serverSection
             }
 
             Section {

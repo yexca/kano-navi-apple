@@ -10,13 +10,16 @@
 
 ## Configuration
 
-`Config/Base.xcconfig` sets `API_BASE_URL` to the production Kano Navi HTTPS
-origin (`https://kano.fans`, written as `https:/$()/kano.fans`
-because `//` starts a comment in `.xcconfig` files).
+`Config/Base.xcconfig` sets the built-in [servers](../architecture/servers.md):
+`API_BASE_URL` to the default Kano Navi HTTPS origin (`https://kano.fans`,
+written as `https:/$()/kano.fans` because `//` starts a comment in `.xcconfig`
+files) and `MAINLAND_API_BASE_URL` to the mainland China one
+(`https://xiaolubao.com`). Both `Info.plist` and `Widgets-Info.plist` expose
+them as `KanoNaviAPIBaseURL` and `KanoNaviMainlandAPIBaseURL`.
 
-An optional, git-ignored `Config/Local.xcconfig` overrides `API_BASE_URL` for a
-single machine (such as a local backend endpoint). Both `Info.plist` and
-`Widgets-Info.plist` expose `API_BASE_URL` via `KanoNaviAPIBaseURL`.
+An optional, git-ignored `Config/Local.xcconfig` overrides either for a single
+machine (such as a local backend endpoint). A running app can also add a
+server by address under **Settings → Server**.
 
 ## Local HTTPS Backend
 

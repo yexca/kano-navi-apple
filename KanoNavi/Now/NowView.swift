@@ -9,6 +9,8 @@ struct NowView: View {
 
     var body: some View {
         NowScreen(calendar: services?.calendar, feedURL: services?.client.calendarSubscriptionURL)
+            // Another server starts the screen over.
+            .id(services?.client.baseURL)
     }
 }
 

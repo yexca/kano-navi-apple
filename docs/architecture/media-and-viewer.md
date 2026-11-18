@@ -7,7 +7,7 @@ loader and viewer in `KanoNavi/Shared/Media/`.
 ## Images
 
 `MediaImage` renders a file from a `MediaImageSource` (an absolute URL resolved
-against `API_BASE_URL` and, when known, the original pixel dimensions).
+against the selected server and, when known, the original pixel dimensions).
 
 - **Shape.** A fitted image reserves the width offered and the height implied by
   its original aspect ratio before loading so lists do not jump; without known

@@ -30,8 +30,8 @@ final class NotificationController {
     private(set) var authorizationState: NotificationAuthorizationState = .notDetermined
     private(set) var isBackgroundRefreshAvailable = true
 
-    private let client: APIClient
-    private let calendar: CalendarReader
+    private var client: APIClient
+    private var calendar: CalendarReader
     private let stateStore: any NotificationStateStore
     private let preferencesStore: NotificationPreferencesStore
     private let center: any UserNotificationCenterClient
@@ -45,6 +45,9 @@ final class NotificationController {
     /// The 14-day calendar read now running, shared by every caller that asks
     /// for the same dashboard revision.
     @ObservationIgnored private var calendarRead: CalendarRead?
+    /// Drops the last server's diff baseline after a server switch; reads of
+    /// the baseline wait for it.
+    @ObservationIgnored private var baselineClear: Task<Void, Never>?
     /// Counts foreground snapshots so a reminder plan built from an older
     /// snapshot's calendar read is dropped once a newer snapshot arrived.
     @ObservationIgnored private var snapshotGeneration = 0
@@ -152,7 +155,11 @@ final class NotificationController {
         }
         guard generation == snapshotGeneration else { return }
 
+        await finishServiceSwitch()
         let existing = await stateStore.load()
+        // A server switch while the baseline was read makes this snapshot
+        // another server's.
+        guard generation == snapshotGeneration else { return }
         let evaluation = NotificationPlanner.evaluate(
             dashboard: dashboard,
             calendarEvents: latestCalendarEvents,
@@ -171,6 +178,31 @@ final class NotificationController {
                 interfaceLocale: interfaceLocale
             )
         }
+    }
+
+    /// Reads another server from now on. What was known of the last server
+    /// is dropped, along with the saved diff baseline, so a background check
+    /// before the new server's first snapshot does not alert about the
+    /// difference between the two servers. Scheduled reminders stay until
+    /// the new server's first snapshot replans them.
+    func switchService(client: APIClient, calendar: CalendarReader) {
+        self.client = client
+        self.calendar = calendar
+        calendarRead?.task.cancel()
+        calendarRead = nil
+        latestDashboard = nil
+        latestCalendarEvents = []
+        snapshotGeneration += 1
+        let previousClear = baselineClear
+        baselineClear = Task { [stateStore] in
+            await previousClear?.value
+            await stateStore.clear()
+        }
+    }
+
+    /// Waits until the baseline of a server switched away from is dropped.
+    func finishServiceSwitch() async {
+        await baselineClear?.value
     }
 
     /// Rebuilds timed reminders from a fresh read of the 14-day calendar, when
@@ -255,6 +287,7 @@ final class NotificationController {
             }
             guard !Task.isCancelled else { return }
 
+            await finishServiceSwitch()
             let baseline = await stateStore.load()
             let evaluation = NotificationPlanner.evaluate(
                 dashboard: dashboard,

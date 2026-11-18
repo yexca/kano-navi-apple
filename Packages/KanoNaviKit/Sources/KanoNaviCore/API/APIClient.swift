@@ -32,6 +32,17 @@ public struct APIClient: Sendable {
         self.cache = cache
     }
 
+    /// A client of a listed server, whose address is HTTPS by construction.
+    public init(
+        server: ServiceServer,
+        transport: any APITransport = URLSessionTransport(),
+        cache: any ResponseCache = APIClient.defaultCache()
+    ) {
+        self.baseURL = server.baseURL
+        self.transport = transport
+        self.cache = cache
+    }
+
     public func send<R: APIRequest>(_ request: R) async throws -> R.Response {
         try request.validate()
         let urlRequest = try makeURLRequest(request)

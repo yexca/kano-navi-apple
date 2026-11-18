@@ -7,5 +7,7 @@ enum MoreDestination: Hashable {
     case lineBlog
     case settings
     case notifications
+    /// The servers the app can read.
+    case server
     case about
 }

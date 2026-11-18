@@ -1,10 +1,12 @@
+import KanoNaviCore
 import SwiftUI
 
 /// Shows the app icon, name and version, states that the app is an
-/// unofficial fan project, links the web board, the app's and the service's
-/// source repositories and the app's license, and names the models the app
-/// was built with.
+/// unofficial fan project, links the selected server's web board, the app's
+/// and the service's source repositories and the app's license, and names
+/// the models the app was built with.
 struct AboutView: View {
+    @Environment(\.services) private var services
     @ScaledMetric(relativeTo: .title2) private var scaledIconSize: CGFloat = 72
 
     /// The icon grows with the text size, but only so far, so the name and
@@ -19,7 +21,8 @@ struct AboutView: View {
             .listRowBackground(Color.clear)
 
             Section {
-                if let url = AboutLinks.webBoard {
+                // Each server serves its web board at its origin.
+                if let url = services?.client.baseURL ?? AboutLinks.webBoard {
                     link(.More.aboutWebBoard, systemImage: "safari", url: url)
                 }
             }

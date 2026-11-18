@@ -70,6 +70,16 @@ discarded.
 - Notification titles follow the interface language and item titles follow the
   content language; changing either rebuilds pending reminders.
 
+## Server Switching
+
+Selecting another [server](servers.md) points the controller at its client and
+calendar, forgets the last server's dashboard and calendar, and drops the
+diff baseline. Reads of the baseline wait for the drop, and a snapshot of the
+last server that is still being evaluated is discarded, so a background check
+before the new server's first snapshot builds a fresh baseline silently instead
+of alerting about the difference between two services. Pending reminders stay
+until the new server's first snapshot replans them.
+
 ## Debugging
 
 `NotificationController.performBackgroundRefresh()` logs revision, immediate

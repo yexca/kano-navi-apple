@@ -145,6 +145,30 @@
         }
       }
     },
+    "widgetIntentServer": {
+      "comment": "Name of the widget setting that picks the Kano Navi server the widget reads.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Server"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "サーバー"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "服务器"
+          }
+        }
+      }
+    },
     "widgetIntentTitle": {
       "comment": "Title of the Upcoming widget's settings.",
       "extractionState": "manual",
@@ -381,6 +405,78 @@
           "stringUnit": {
             "state": "translated",
             "value": "未来两周没有安排。"
+          }
+        }
+      }
+    },
+    "widgetServerJapan": {
+      "comment": "Server choice: the built-in server in Japan, the default.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Japan Server"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "日本サーバー"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "日本服务器"
+          }
+        }
+      }
+    },
+    "widgetServerMainlandChina": {
+      "comment": "Server choice: the built-in server in mainland China.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mainland China Server"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "中国大陸サーバー"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "中国大陆服务器"
+          }
+        }
+      }
+    },
+    "widgetServerType": {
+      "comment": "The kind of value the server widget setting holds.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Server"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "サーバー"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "服务器"
           }
         }
       }

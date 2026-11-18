@@ -13,6 +13,7 @@ struct MoreDestinationScreen: View {
         case .lineBlog: LineBlogView()
         case .settings: SettingsView()
         case .notifications: NotificationSettingsView()
+        case .server: ServerSettingsView()
         case .about: AboutView()
         }
     }

@@ -18,6 +18,8 @@ struct WorksReleaseScreen: View {
         ZStack {
             if let services {
                 WorksReleaseLoader(client: services.client, releaseID: releaseID)
+                    // Another server reads the release again.
+                    .id(services.client.baseURL)
             }
         }
         .inlineNavigationTitle()

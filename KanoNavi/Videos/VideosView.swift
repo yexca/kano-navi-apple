@@ -13,6 +13,8 @@ struct VideosView: View {
                 VideoTimelineScreen(client: services.client)
             }
         }
+        // Another server starts the timeline and its stack over.
+        .id(services?.client.baseURL)
     }
 }
 

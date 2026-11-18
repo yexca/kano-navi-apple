@@ -45,15 +45,16 @@
 ## Timeline Provider, Caching, and Deep Links
 
 - `UpcomingProvider` queries `/api/calendar` directly via `CalendarReader` for
-  today through 13 Japan days ahead using the widget extension's own cache
-  directory, requiring no App Group. Failed reads fall back to cached pages
+  today through 13 Japan days ahead from the widget's own server, using the
+  widget extension's own cache directory, requiring no App Group. Failed reads fall back to cached pages
   marked stale (`isStale`).
 - Timeline entries regenerate at each entry start time and sale open/close
   boundary, requesting reload at the next transition or within 30 minutes,
   whichever comes first.
-- `UpcomingConfigurationIntent` (`AppIntentConfiguration`) provides an
-  independent **Content Language** parameter because widgets do not share
-  `AppSettings` across an App Group.
+- `UpcomingConfigurationIntent` (`AppIntentConfiguration`) provides
+  independent **Content Language** and **Server** parameters because widgets
+  do not share `AppSettings` across an App Group. **Server** offers the
+  built-in servers only ([Servers](servers.md#widgets)).
 - Tapping an entry opens `kanonavi://event/<id>`; tapping a day in the strip
   opens `kanonavi://schedule?date=<YYYY-MM-DD>`; tapping elsewhere opens
   today's date in **Schedule**.

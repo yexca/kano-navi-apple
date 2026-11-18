@@ -2,7 +2,7 @@ import Foundation
 
 /// The web addresses About links to.
 enum AboutLinks {
-    /// The Kano Navi web board.
+    /// The default server's web board, linked where no server is selected.
     static let webBoard = URL(string: "https://kano.fans")
     /// The app's source repository, `kano-navi-apple`.
     static let appRepository = URL(string: "https://github.com/yexca/kano-navi-apple")

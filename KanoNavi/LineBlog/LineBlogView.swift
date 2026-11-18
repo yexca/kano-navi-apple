@@ -10,6 +10,8 @@ struct LineBlogView: View {
     var body: some View {
         if let client = services?.client {
             LineBlogArchive(client: client)
+                // Another server starts the archive over.
+                .id(client.baseURL)
         }
     }
 }

@@ -2,9 +2,11 @@
 
 ## Transport and Outbound Boundaries
 
-- The app talks only to the configured Kano Navi HTTPS origin (`API_BASE_URL` in
-  `Config/Base.xcconfig` or git-ignored `Config/Local.xcconfig`) and media
-  routes resolved against it.
+- The app talks only to the selected Kano Navi HTTPS server and media routes
+  resolved against it: a built-in one (`API_BASE_URL` and
+  `MAINLAND_API_BASE_URL` in `Config/Base.xcconfig` or git-ignored
+  `Config/Local.xcconfig`) or one the person adds, which must be HTTPS and
+  serve a compatible dashboard ([Servers](../architecture/servers.md)).
 - Use HTTPS only and add no App Transport Security (`NSAppTransportSecurity`)
   exceptions.
 - External provenance and watch links (`x.com`, `youtube.com`, `bilibili.com`,

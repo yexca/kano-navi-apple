@@ -3,4 +3,5 @@ enum SettingsPane: Hashable {
     /// The language settings.
     case general
     case notifications
+    case server
 }

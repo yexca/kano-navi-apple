@@ -129,6 +129,13 @@ struct RootView: View {
                 dashboard.stop()
             }
         }
+        .onChange(of: ObjectIdentifier(dashboard)) { _, _ in
+            // Another server was selected: its store takes over while the
+            // scene is active.
+            if scenePhase == .active {
+                dashboard.start()
+            }
+        }
         .onChange(of: dashboard.snapshot, initial: true) { _, snapshot in
             guard let snapshot else { return }
             Task {

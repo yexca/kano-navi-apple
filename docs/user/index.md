@@ -37,6 +37,11 @@ the tab bar into a sidebar, the sidebar lists More's screens directly instead:
   Mac). A separate **Content Language** setting under **Settings** chooses the
   language of post text, video titles, schedule titles, and archive
   descriptions (**Same as app**, English, 日本語, or 简体中文).
+- **Server:** **Settings → Server** chooses where the app reads the board:
+  **Japan Server** (the default) or **Mainland China Server**. **Add Server**
+  adds another Kano Navi service by name and HTTPS address, such as one you run
+  yourself; the app checks the address before adding it. Each server keeps its
+  own saved copy, and servers you added can be removed.
 - **Appearance:** Light and dark appearances follow your system setting.
 - **Japan time:** Event dates and times follow Japan Standard Time (JST).
 - **Offline and cached data:** Each screen opens immediately with the copy last
@@ -44,9 +49,9 @@ the tab bar into a sidebar, the sidebar lists More's screens directly instead:
   reached, the saved copy remains visible beside a one-line notice and a **Try
   Again** button.
 - **About:** **About** shows the app icon, name, and version, notes that the
-  app is an unofficial fan project, links the Kano Navi web board, the source
-  code of the app and of the service behind it, and the app's license (GNU
-  AGPL v3.0), and names the AI models used to build the app.
+  app is an unofficial fan project, links the selected server's web board,
+  the source code of the app and of the service behind it, and the app's
+  license (GNU AGPL v3.0), and names the AI models used to build the app.
 
 ## Freshness and Official Sources
 

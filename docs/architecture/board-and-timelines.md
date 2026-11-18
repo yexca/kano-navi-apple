@@ -211,12 +211,14 @@ the root. Both presentations draw the same screens (`MoreDestinationScreen`),
 so a Journey milestone's **View in Works** pushes the release onto the stack it
 is in.
 
-- **Settings:** Notifications status, Content Language menu, the system App
+- **Settings:** Notifications status, the selected server's name linking the
+  server list ([Servers](servers.md)), Content Language menu, the system App
   Language / Language & Region link, and a one-line footer telling the two
-  languages apart.
+  languages apart. On Mac the Settings window shows General, Notifications,
+  and Server panes.
 - **About:** A centered header with the app icon (`AboutIcon`, a 72 pt copy of
   the app icon), the app name, the version, and the unofficial project
-  statement; a link to the web board; links to the app's source
+  statement; a link to the selected server's web board; links to the app's source
   (`kano-navi-apple`), the service's source (`kano-navi`), and the app's
   license (GNU AGPL v3.0, `AGPL-3.0`); and a footnote naming the
   `AboutCredits.models`.

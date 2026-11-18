@@ -9,9 +9,13 @@ struct UpcomingConfigurationIntent: WidgetConfigurationIntent {
     @Parameter(title: "widgetIntentLanguage", default: .sameAsApp)
     var language: WidgetContentLanguage
 
+    @Parameter(title: "widgetIntentServer", default: .japan)
+    var server: WidgetServer
+
     init() {}
 
-    init(language: WidgetContentLanguage) {
+    init(language: WidgetContentLanguage, server: WidgetServer = .japan) {
         self.language = language
+        self.server = server
     }
 }

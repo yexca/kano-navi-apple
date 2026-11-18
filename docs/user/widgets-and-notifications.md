@@ -10,8 +10,9 @@ Kano Navi includes **Upcoming** widgets for the Home Screen and desktop
   Japan time; Medium adds up to three upcoming entries.
 - Large and Extra Large add a seven-day Japan week strip with tag-colored dots
   and the week's schedule entries.
-- Each widget lets you configure its **Content Language** independently in
-  widget settings. Tapping an entry or day opens the corresponding event or date
+- Each widget lets you configure its **Content Language** and its **Server**
+  (**Japan Server** or **Mainland China Server**) independently in widget
+  settings; servers added in the app are not offered. Tapping an entry or day opens the corresponding event or date
   in the **Schedule** tab.
 
 ## Notifications and Reminders

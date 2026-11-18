@@ -13,7 +13,10 @@ struct ScheduleView: View {
                     try await calendar.month(containing: month)
                 },
                 feedURL: services.client.calendarSubscriptionURL,
-                revision: dashboard?.snapshot?.meta.revision)
+                revision: dashboard?.snapshot?.meta.revision
+            )
+            // Another server starts the screen over.
+            .id(services.client.baseURL)
         } else {
             FeaturePlaceholder(title: .tabSchedule)
         }

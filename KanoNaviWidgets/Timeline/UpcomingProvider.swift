@@ -19,7 +19,7 @@ nonisolated struct UpcomingProvider: AppIntentTimelineProvider {
     {
         let now = Date.now
         let content: UpcomingContent =
-            if let result = await UpcomingLoader.live().load(now: now) {
+            if let result = await UpcomingLoader.live(server: configuration.server).load(now: now) {
                 .schedule(
                     WidgetSchedule(
                         result: result, language: configuration.language.contentLanguage,
