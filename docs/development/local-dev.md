@@ -11,7 +11,7 @@
 ## Configuration
 
 `Config/Base.xcconfig` sets `API_BASE_URL` to the production Kano Navi HTTPS
-origin (`https://kano.yexca.net`, written as `https:/$()/kano.yexca.net`
+origin (`https://kano.fans`, written as `https:/$()/kano.fans`
 because `//` starts a comment in `.xcconfig` files).
 
 An optional, git-ignored `Config/Local.xcconfig` overrides `API_BASE_URL` for a

@@ -2,7 +2,7 @@
 
 Kano Navi for iOS and macOS is an unofficial fan app for Kano Mahoro (鹿乃まほろ)
 on iPhone, iPad, and Mac. It reads the public
-[Kano Navi](https://kano.yexca.net/) status board and brings her upcoming
+[Kano Navi](https://kano.fans/) status board and brings her upcoming
 schedule, recent posts and videos, discography, journey since 2010, and LINE
 BLOG archive into one native app.
 

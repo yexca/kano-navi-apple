@@ -46,24 +46,24 @@ class DocLinksTests(unittest.TestCase):
 class SensitiveCheckTests(unittest.TestCase):
     def test_parse_allowlist_validates_schema(self) -> None:
         hosts = check_sensitive.parse_privacy_allowlist(
-            '{"version": 1, "hosts": [{"host": "kano.yexca.net", "reason": "Public API"}]}'
+            '{"version": 1, "hosts": [{"host": "kano.fans", "reason": "Public API"}]}'
         )
-        self.assertEqual(hosts["kano.yexca.net"], "Public API")
+        self.assertEqual(hosts["kano.fans"], "Public API")
 
         with self.assertRaises(ValueError):
             check_sensitive.parse_privacy_allowlist('{"version": 2, "hosts": []}')
 
         with self.assertRaises(ValueError):
             check_sensitive.parse_privacy_allowlist(
-                '{"version": 1, "hosts": [{"host": "https://kano.yexca.net", "reason": "Bad"}]}'
+                '{"version": 1, "hosts": [{"host": "https://kano.fans", "reason": "Bad"}]}'
             )
 
     def test_scan_line_flags_sensitive_values_and_allows_reserved(self) -> None:
-        approved = {"kano.yexca.net": "API"}
+        approved = {"kano.fans": "API"}
 
         findings: list = []
         check_sensitive.scan_line("a.swift", 1, 'let u = "https://api.example.com/v1"', findings, approved)
-        check_sensitive.scan_line("a.swift", 2, 'let u = "https://kano.yexca.net/api/health"', findings, approved)
+        check_sensitive.scan_line("a.swift", 2, 'let u = "https://kano.fans/api/health"', findings, approved)
         check_sensitive.scan_line("a.swift", 3, 'let token = "<REDACTED>"', findings, approved)
         self.assertEqual(findings, [])
 

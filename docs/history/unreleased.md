@@ -37,6 +37,8 @@
 <details>
 <summary><strong>Platform and Build</strong></summary>
 
+- The app reads the Kano Navi service at its new address, kano.fans, and
+  About links the web board there.
 - Resizing a window on Mac or iPad keeps showing each picture while it moves
   and decodes it once at the size the window stops at, instead of at every
   size on the way.

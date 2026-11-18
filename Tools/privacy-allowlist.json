@@ -10,7 +10,7 @@
       "reason": "GNU license reference in the unmodified GNU AGPL v3 license text."
     },
     {
-      "host": "kano.yexca.net",
+      "host": "kano.fans",
       "reason": "Production Kano Navi public API service configured in Config/Base.xcconfig and linked from the About screen and documentation."
     },
     {

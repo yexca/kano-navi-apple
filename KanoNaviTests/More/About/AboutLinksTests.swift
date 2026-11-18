@@ -11,7 +11,7 @@ struct AboutLinksTests {
         let license = try #require(AboutLinks.appLicense)
         let service = try #require(AboutLinks.serviceRepository)
 
-        #expect(board.absoluteString == "https://kano.yexca.net")
+        #expect(board.absoluteString == "https://kano.fans")
         #expect(app.absoluteString == "https://github.com/yexca/kano-navi-apple")
         #expect(license.absoluteString == "https://github.com/yexca/kano-navi-apple/blob/main/LICENSE")
         #expect(service.absoluteString == "https://github.com/yexca/kano-navi")
